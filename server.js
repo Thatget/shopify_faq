@@ -22,6 +22,8 @@ db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.");
 });
 
+require("./app/routes/user.routes")(app);
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });
