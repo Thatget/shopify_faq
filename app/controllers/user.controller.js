@@ -117,7 +117,7 @@ exports.delete = (req, res) => {
 
 // Delete all Tutorials from the database.
 exports.deleteAll = (req, res) => {
-  Tutorial.destroy({
+  User.destroy({
     where: {},
     truncate: false
   })
