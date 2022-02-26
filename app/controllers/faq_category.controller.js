@@ -40,12 +40,12 @@ exports.findAll = (req, res) => {
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving user."
+                    err.message || "Some error occurred while retrieving category."
             });
         });
 };
 
-// Find a single User with an id
+// Find a single Category with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
     FaqCategory.findByPk(id)
@@ -54,18 +54,18 @@ exports.findOne = (req, res) => {
                 res.send(data);
             } else {
                 res.status(404).send({
-                    message: `Cannot find User with id=${id}.`
+                    message: `Cannot find category with id=${id}.`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving user with id=" + id
+                message: "Error retrieving category with id=" + id
             });
         });
 };
 
-// Update a User by the id in the request
+// Update a Category by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
     FaqCategory.update(req.body, {
@@ -74,22 +74,22 @@ exports.update = (req, res) => {
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "User was updated successfully."
+                    message: "Category was updated successfully."
                 });
             } else {
                 res.send({
-                    message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
+                    message: `Cannot update category with id=${id}. Maybe category was not found or req.body is empty!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating user with id=" + id
+                message: "Error updating category with id=" + id
             });
         });
 };
 
-// Delete a Tutorial with the specified id in the request
+// Delete a Category with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;
     FaqCategory.destroy({
@@ -97,30 +97,33 @@ exports.delete = (req, res) => {
     })
         .then(num => {
             if (num == 1) {
+
                 res.send({
-                    message: "User was deleted successfully!"
+                    message: "Category was deleted successfully!"
                 });
             } else {
                 res.send({
-                    message: `Cannot delete user with id=${id}. Maybe user was not found!`
+                    message: `Cannot delete category with id=${id}. Maybe category was not found!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete user with id=" + id
+                message: "Could not delete category with id=" + id
             });
         });
 };
 
-// Delete all Faq from the database.
+// Delete all Category of a User from the database.
 exports.deleteAll = (req, res) => {
+    const user_id = req.query.user_id;
+    var condition = user_id ? { user_id: { [Op.eq]: `${user_id}` } } : null;
     FaqCategory.destroy({
-        where: {},
+        where: {condition},
         truncate: false
     })
         .then(nums => {
-            res.send({ message: `${nums} user were deleted successfully!` });
+            res.send({ message: `${nums} categories were deleted successfully!` });
         })
         .catch(err => {
             res.status(500).send({

@@ -12,11 +12,10 @@ exports.create = (req, res) => {
     }
     // Create a user
     const faq = {
-        store_name: req.body.store_name,
-        shopify_domain: req.body.shopify_domain,
-        shopify_access_token: req.body.shopify_access_token,
-        email: req.body.email,
-        phone: req.body.phone
+        category_id: req.body.category_id,
+        title: req.body.title,
+        content: req.body.content,
+        is_visible: req.body.is_visible
     };
 
     Faq.create(faq)
@@ -31,10 +30,10 @@ exports.create = (req, res) => {
         });
 };
 
-// Retrieve all User from the database.
+// Retrieve all Faq of a category from the database.
 exports.findAll = (req, res) => {
-    const email = req.query.title;
-    var condition = email ? { title: { [Op.like]: `%${email}%` } } : null;
+    const category_id = req.query.category_id;
+    var condition = category_id ? { category_id: { [Op.eq]: `${category_id}` } } : null;
     User.findAll({ where: condition })
         .then(data => {
             res.send(data);
@@ -47,7 +46,7 @@ exports.findAll = (req, res) => {
         });
 };
 
-// Find a single User with an id
+// Find a single Faq with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
     User.findByPk(id)
@@ -67,7 +66,7 @@ exports.findOne = (req, res) => {
         });
 };
 
-// Update a User by the id in the request
+// Update a Faq by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
     User.update(req.body, {
@@ -76,17 +75,17 @@ exports.update = (req, res) => {
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "User was updated successfully."
+                    message: "Faq was updated successfully."
                 });
             } else {
                 res.send({
-                    message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
+                    message: `Cannot update faq with id=${id}. Maybe faq was not found or req.body is empty!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating user with id=" + id
+                message: "Error updating faq with id=" + id
             });
         });
 };
@@ -117,17 +116,19 @@ exports.delete = (req, res) => {
 
 // Delete all Faq from the database.
 exports.deleteAll = (req, res) => {
+    const category_id = req.query.category_id;
+    var condition = category_id ? { category_id: { [Op.eq]: `${category_id}` } } : null;
     Faq.destroy({
-        where: {},
+        where: {condition},
         truncate: false
     })
         .then(nums => {
-            res.send({ message: `${nums} user were deleted successfully!` });
+            res.send({ message: `${nums} faqs were deleted successfully!` });
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while removing all users."
+                    err.message || "Some error occurred while removing all faqs."
             });
         });
 };
