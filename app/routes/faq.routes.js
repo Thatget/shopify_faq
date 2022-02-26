@@ -1,5 +1,5 @@
 module.exports = app => {
-    const user = require("../controllers/faq.controller.js");
+    const faq = require("../controllers/faq.controller.js");
     var router = require("express").Router();
     // Create a new Faq
     router.post("/", faq.create);

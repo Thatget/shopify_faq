@@ -1,17 +1,15 @@
 module.exports = app => {
-    const user = require("../controllers/setting.controller");
+    const setting = require("../controllers/setting.controller");
     var router = require("express").Router();
-    // Create a new Faq
-    router.post("/", faq.create);
-    // Retrieve all Faq of a user
-    router.get("/user_id/:id", faq.findAll);
-    // Retrieve a single Faq by a User
-    router.get("/:id", faq.findOne);
-    // Update a Faq with id
-    router.put("/:id", faq.update);
-    // Delete a User with id
-    router.delete("/:id", faq.delete);
-    // Delete all User
-    router.delete("/user_id/:id", faq.deleteAll);
-    app.use('/api/faq', router);
+    // Create a new Setting
+    router.post("/", setting.create);
+    // Retrieve all Setting of a user
+    router.get("/user_id/:id", setting.findAll);
+    // Retrieve a single Setting by a User
+    router.get("/:id", setting.findOne);
+    // Update a Setting with id
+    router.put("/:id", setting.update);
+    // Delete a Setting with id
+    router.delete("/:id", setting.delete);
+    app.use('/api/setting', router);
 };

@@ -1,17 +1,17 @@
 module.exports = app => {
-    const user = require("../controllers/faq.controller.js");
+    const category = require("../controllers/faq.controller.js");
     var router = require("express").Router();
     // Create a new Category
-    router.post("/", faq.create);
+    router.post("/", category.create);
     // Retrieve all Category of a user
-    router.get("/:user_id", faq.findAll);
+    router.get("/:user_id", category.findAll);
     // Retrieve a single Category
-    router.get("/:id", faq.findOne);
+    router.get("/:id", category.findOne);
     // Update a Category with id
-    router.put("/:id", faq.update);
+    router.put("/:id", category.update);
     // Delete a Category with id
-    router.delete("/:id", faq.delete);
+    router.delete("/:id", category.delete);
     // Delete all User
-    router.delete("/:user_id", faq.deleteAll);
-    app.use('/api/faq', router);
+    router.delete("/:user_id", category.deleteAll);
+    app.use('/api/category', router);
 };
