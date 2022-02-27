@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require("../../models");
 const FaqCategory = db.faq_category;
 const Faq = db.faq;
 const Op = db.Sequelize.Op;
@@ -6,7 +6,7 @@ const Op = db.Sequelize.Op;
 // Delete a Category with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;
-    deleteFaq([id])
+    deleteFaq(parseInt(id))
     /**
      * Delete this category !
      */
@@ -65,9 +65,8 @@ exports.deleteAll = (req, res) => {
      * Delete all faq of this category !
      */
     function deleteFaq ( category_id ) {
-        var condition = category_id ? { category_id: { [Op.in]: `${category_id}` } } : null;
         Faq.destroy({
-            where: {condition}
+            where: {category_id: category_id}
         })
         .then(num => {
             if (num == 1) {

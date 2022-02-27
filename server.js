@@ -23,6 +23,9 @@ db.sequelize.sync({ force: false }).then(() => {
 });
 
 require("./app/routes/user.routes")(app);
+require("./app/routes/faq.routes")(app);
+require("./app/routes/faq_category.routes")(app);
+require("./app/routes/faq/delete_category.routes")(app);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);

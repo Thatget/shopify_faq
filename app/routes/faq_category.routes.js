@@ -1,5 +1,5 @@
 module.exports = app => {
-    const category = require("../controllers/faq.controller.js");
+    const category = require("../controllers/faq_category.controller.js");
     var router = require("express").Router();
     // Create a new Category
     router.post("/", category.create);
@@ -13,5 +13,5 @@ module.exports = app => {
     router.delete("/:id", category.delete);
     // Delete all User
     router.delete("/:user_id", category.deleteAll);
-    app.use('/api/category', router);
+    app.use('/api/faq-category', router);
 };
