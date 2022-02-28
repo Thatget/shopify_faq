@@ -34,9 +34,10 @@ exports.delete = (req, res) => {
 
 // Delete all Category of a User from the database.
 exports.deleteAll = (req, res) => {
-    const user_id = req.query.user_id;
-    var condition = user_id ? { user_id: { [Op.eq]: `${user_id}` } } : null;
-    FaqCategory.findAll({ where: condition })
+    const user_id = req.params.user_id;
+    console.log(user_id)
+    var z;
+    FaqCategory.findAll({ where: { user_id: parseInt(user_id) } })
         .then(data => {
             res.send(data);
         })

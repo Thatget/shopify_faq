@@ -19,6 +19,7 @@ exports.create = (req, res) => {
     // Create a faq
     const faq = {
         category_id: req.body.category_id,
+        user_id: req.body.user_id,
         title: req.body.title,
         content: req.body.content,
         is_visible: req.body.is_visible
@@ -38,9 +39,10 @@ exports.create = (req, res) => {
 
 // Retrieve all Faq of a category from the database.
 exports.findAll = (req, res) => {
-    const category_id = req.query.category_id;
-    var condition = category_id ? { category_id: { [Op.eq]: `${category_id}` } } : null;
-    Faq.findAll({ where: condition })
+    const user_id = req.query.category_id;
+    Faq.findAll({ where: {
+        user_id:user_id
+     } })
         .then(data => {
             res.send(data);
         })

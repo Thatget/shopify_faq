@@ -4,7 +4,7 @@ module.exports = app => {
     // Create a new Faq
     router.post("/", faq.create);
     // Retrieve all Faq of a user
-    router.get("/:category_id", faq.findAll);
+    router.get("/:user_id", faq.findAll);
     // Retrieve a single Faq by a Category
     router.get("/:id", faq.findOne);
     // Update a Faq with id
