@@ -5,7 +5,16 @@ const nonce = require('nonce')();
 const querystring = require('querystring');
 const request = require('request-promise');
 const cookie = require('cookie');
+const ngrok = require('ngrok');
 const app = express();
+
+// const cors = require("cors");
+// var corsOptions = {
+//     origin: "http://localhost:8080"
+// };
+// app.use(cors(corsOptions));
+
+require("./app/routes/user.routes")(app());
 
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
@@ -72,15 +81,36 @@ app.get('/shopify/callback', (req, res) => {
 
                 request.get(shopRequestUrl, {headers: shopRequestHeaders})
                     .then((shopResonse) => {
-                        res.end(shopResonse)
-                        console.log(shopResonse)
+                        console.log(JSON.parse(shopResonse))
+                        shopResonse = JSON.parse(shopResonse);
+
+                        request.post(
+                            'http://localhost:8080/api/user',
+                            {
+                                json: {
+                                    store_name: shopResonse.shop.name,
+                                    shopify_domain: shopResonse.shop.domain,
+                                    shopify_access_token: accessToken,
+                                    email: shopResonse.shop.email,
+                                    phone: shopResonse.shop.phone
+                                }
+                            })
+                            .then((data) => {
+                                console.log('created an user !');
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                                res.status(error.code).send(error.error);
+                            })
+
                     })
                     .catch((error) => {
-                        res.status(error.statusCode).send(error.error.error_description);
+                        console.log(error)
+                        res.status(error.code).send(error.error);
                     })
 
             }).catch((error) => {
-                res.status(error.statusCode).send(error.error.error_description)
+                res.status(error.code).send(error.error)
         })
 
     } else {
