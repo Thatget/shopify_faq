@@ -39,7 +39,7 @@ exports.create = (req, res) => {
 
 // Retrieve all Faq of a category from the database.
 exports.findAll = (req, res) => {
-    const user_id = req.query.category_id;
+    const user_id = req.params.user_id;
     Faq.findAll({ where: {
         user_id:user_id
      } })
@@ -50,8 +50,7 @@ exports.findAll = (req, res) => {
             res.status(500).send({
                 message:
                     err.message || "Some error occurred while retrieving faq."
-            });
-        });
+            })});
 };
 
 // Find a single Faq with an id
