@@ -4,7 +4,7 @@ module.exports = app => {
     // Create a new Category
     router.post("/", category.create);
     // Retrieve all Category of a user
-    router.get("/:user_id", category.findAll);
+    router.get("/user/:user_id", category.findAll);
     // Retrieve a single Category
     router.get("/:id", category.findOne);
     // Update a Category with id
