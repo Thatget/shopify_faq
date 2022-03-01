@@ -4,7 +4,9 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.store_name) {
+    console.log(req.body)
+    data = JSON.parse(req.body)
+    if (!data.store_name) {
       res.status(400).send({
         message: "Content can not be empty!"
       });
@@ -12,11 +14,11 @@ exports.create = (req, res) => {
     }
     // Create a user
     const user = {
-      store_name: req.body.store_name,
-      shopify_domain: req.body.shopify_domain,
-      shopify_access_token: req.body.shopify_access_token,
-      email: req.body.email,
-      phone: req.body.phone
+      store_name: data.store_name,
+      shopify_domain: data.shopify_domain,
+      shopify_access_token: data.shopify_access_token,
+      email: data.email,
+      phone: data.phone
     };
 
     User.create(user)

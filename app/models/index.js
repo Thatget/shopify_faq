@@ -3,7 +3,7 @@ const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
     dialect: dbConfig.dialect,
-    operatorsAliases: false,
+    operatorsAliases: 0,
     pool: {
         max: dbConfig.pool.max,
         min: dbConfig.pool.min,
@@ -16,6 +16,6 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.faq = require("./faq.model.js")(sequelize, Sequelize);
 db.faq_category = require("./faq_category.model.js")(sequelize, Sequelize);
-db.user = require("./user.model")(sequelize, Sequelize);
-db.setting = require("./setting.model")(sequelize, Sequelize);
+db.user = require("./user.model.js")(sequelize, Sequelize);
+db.setting = require("./setting.model.js")(sequelize, Sequelize);
 module.exports = db;
