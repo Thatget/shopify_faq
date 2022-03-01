@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const dotenv = require('dotenv').config();
 const crypto = require('crypto');
 const nonce = require('nonce')();
@@ -8,21 +8,15 @@ const cookie = require('cookie');
 const ngrok = require('ngrok');
 const app = express();
 
-// const cors = require("cors");
-// var corsOptions = {
-//     origin: "http://localhost:8080"
-// };
-// app.use(cors(corsOptions));
-
-require("./app/routes/user.routes")(app());
-
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
 const scopes = process.env.SCOPES
 const forwardingAddress = process.env.HOST;
+const app_link = process.env.FRONT_END;
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+    app.get('/', (req, res) => {
+        res.write(`<a target="_blank" href="${app_link}">to vue page</a>`);
+        res.end();
 });
 
 app.get('/shopify', (req, res) => {
@@ -81,27 +75,26 @@ app.get('/shopify/callback', (req, res) => {
 
                 request.get(shopRequestUrl, {headers: shopRequestHeaders})
                     .then((shopResonse) => {
-                        console.log(JSON.parse(shopResonse))
                         shopResonse = JSON.parse(shopResonse);
 
-                        request.post(
-                            'http://localhost:8080/api/user',
-                            {
-                                json: {
-                                    store_name: shopResonse.shop.name,
-                                    shopify_domain: shopResonse.shop.domain,
-                                    shopify_access_token: accessToken,
-                                    email: shopResonse.shop.email,
-                                    phone: shopResonse.shop.phone
-                                }
-                            })
-                            .then((data) => {
-                                console.log('created an user !');
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                                res.status(error.code).send(error.error);
-                            })
+                        const db = require("./app/models");
+                        const User = db.user;
+                        const user = {
+                            store_name: shopResonse.shop.name,
+                            shopify_domain: shopResonse.shop.domain,
+                            shopify_access_token: accessToken,
+                            email: shopResonse.shop.email,
+                            phone: shopResonse.shop.phone
+                        }
+                        User.create(user).then(data => {
+                            console.log(data);
+                        }).catch(err => {
+                            res.status(err.code).send(err.error);
+                        });
+                        res.writeHead(302, {
+                            'Location': app_link
+                        });
+                        res.end();
 
                     })
                     .catch((error) => {
@@ -117,6 +110,8 @@ app.get('/shopify/callback', (req, res) => {
         res.status(400).send('Required parameters missing')
     }
 })
+
+// Api
 
 app.listen(8080, () => {
     console.log('Exmple !')
