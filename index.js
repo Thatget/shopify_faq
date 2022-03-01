@@ -5,14 +5,17 @@ const nonce = require('nonce')();
 const querystring = require('querystring');
 const request = require('request-promise');
 const cookie = require('cookie');
-const ngrok = require('ngrok');
+const jwt = require('jsonwebtoken');
+
 const app = express();
 
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
-const scopes = process.env.SCOPES
+const scopes = process.env.SCOPES;
 const forwardingAddress = process.env.HOST;
+const port = process.env.PORT;
 const app_link = process.env.FRONT_END;
+const jwt_key = process.env.JWT_KEY;
 
     app.get('/', (req, res) => {
         res.write(`<a target="_blank" href="${app_link}">to vue page</a>`);
@@ -82,12 +85,26 @@ app.get('/shopify/callback', (req, res) => {
                         const user = {
                             store_name: shopResonse.shop.name,
                             shopify_domain: shopResonse.shop.domain,
-                            shopify_access_token: accessToken,
                             email: shopResonse.shop.email,
                             phone: shopResonse.shop.phone
-                        }
-                        User.create(user).then(data => {
-                            console.log(data);
+                        };
+                         User.create(user).then(data => {
+                            const token = jwt.sign({id: data.id},jwt_key,{ expiresIn: '1h' });
+                            User.update({
+                                shopify_access_token: token
+                            }, {
+                                where: { id: data.id }
+                            })
+                                .then(num => {
+                                    if (num == 1) {
+                                        res.send( "Access token was created.");
+                                    } else {
+                                        res.send(`Cannot create access Token with id=${id}.`);
+                                    }
+                                })
+                                .catch(err => {
+                                    res.status(500).send("Error updating user");
+                                });
                         }).catch(err => {
                             res.status(err.code).send(err.error);
                         });
@@ -98,7 +115,7 @@ app.get('/shopify/callback', (req, res) => {
 
                     })
                     .catch((error) => {
-                        console.log(error)
+                        console.log(error);
                         res.status(error.code).send(error.error);
                     })
 
@@ -109,10 +126,14 @@ app.get('/shopify/callback', (req, res) => {
     } else {
         res.status(400).send('Required parameters missing')
     }
-})
+});
 
 // Api
+require("./app/routes/user.routes")(app);
+require("./app/routes/faq.routes")(app);
+require("./app/routes/faq_category.routes")(app);
+require("./app/routes/faq/delete_category.routes")(app);
 
-app.listen(8080, () => {
+app.listen(port, () => {
     console.log('Exmple !')
 });

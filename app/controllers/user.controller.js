@@ -4,9 +4,7 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
     // Validate request
-    console.log(req.body)
-    data = JSON.parse(req.body)
-    if (!data.store_name) {
+    if (!req.body.store_name) {
       res.status(400).send({
         message: "Content can not be empty!"
       });
@@ -14,11 +12,11 @@ exports.create = (req, res) => {
     }
     // Create a user
     const user = {
-      store_name: data.store_name,
-      shopify_domain: data.shopify_domain,
-      shopify_access_token: data.shopify_access_token,
-      email: data.email,
-      phone: data.phone
+      store_name: req.body.store_name,
+      shopify_domain: req.body.shopify_domain,
+      shopify_access_token: req.body.shopify_access_token,
+      email: req.body.email,
+      phone: req.body.phone
     };
 
     User.create(user)
@@ -35,8 +33,19 @@ exports.create = (req, res) => {
 
 // Retrieve all User from the database.
 exports.findAll = (req, res) => {
-    const email = req.query.title;
-    var condition = email ? { title: { [Op.like]: `%${email}%` } } : null;
+    if(
+        !req.headers.authorization ||
+        !req.headers.authorization.startsWith('Bearer') ||
+        !req.headers.authorization.split(' ')[1]
+    ){
+        return res.status(422).json({
+            message: "Please provide the token",
+        });
+    }
+    const theToken = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(theToken, 'HuongVNQ');
+    const email = req.query.email;
+    var condition = email ? { email: { [Op.like]: `%${email}%` } } : null;
     User.findAll({ where: condition })
       .then(data => {
         res.send(data);
