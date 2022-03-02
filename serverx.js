@@ -5,38 +5,43 @@ const nonce = require('nonce')();
 const querystring = require('querystring');
 const request = require('request-promise');
 const cookie = require('cookie');
-const jwt = require('jsonwebtoken');
-
+const ngrok = require('ngrok');
 const app = express();
 
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
-const scopes = process.env.SCOPES;
+const scopes = process.env.SCOPES
 const forwardingAddress = process.env.HOST;
-const port = process.env.PORT;
 const app_link = process.env.FRONT_END;
-const jwt_key = process.env.JWT_KEY;
 
-    app.get('/', (req, res) => {
-        res.write(`<a target="_blank" href="${app_link}">to vue page</a>`);
-        res.end();
+// const Shopify = require('shopify-api-node');
+
+app.get('/', (req, res) => {
+
+    // const shopify = new Shopify({
+    //     shopName: 'checktestdevelopstore.myshopify.com',
+    //     accessToken: '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'
+    // });
+
+    res.write(`<a target="_blank" href="${app_link}">to vue page</a>`);
+    res.end();
 });
 
 app.get('/shopify', (req, res) => {
-   const shop = req.query.shop;
-   if (shop) {
-       const state = nonce();
-       const redirectUri = forwardingAddress + '/shopify/callback';
-       const installUrl = 'https://' + shop +
-           '/admin/oauth/authorize?client_id=' + apiKey +
-           '&scope=' + scopes +
-           '&state=' + state +
-           '&redirect_uri=' + redirectUri;
-       res.cookie('state',state);
-       res.redirect(installUrl);
-   } else {
-       return res.status(400).send('Missing shop parameter')
-   }
+    const shop = req.query.shop;
+    if (shop) {
+        const state = nonce();
+        const redirectUri = forwardingAddress + '/shopify/callback';
+        const installUrl = 'https://' + shop +
+            '/admin/oauth/authorize?client_id=' + apiKey +
+            '&scope=' + scopes +
+            '&state=' + state +
+            '&redirect_uri=' + redirectUri;
+        res.cookie('state',state);
+        res.redirect(installUrl);
+    } else {
+        return res.status(400).send('Missing shop parameter')
+    }
 });
 
 app.get('/shopify/callback', (req, res) => {
@@ -85,26 +90,12 @@ app.get('/shopify/callback', (req, res) => {
                         const user = {
                             store_name: shopResonse.shop.name,
                             shopify_domain: shopResonse.shop.domain,
+                            shopify_access_token: accessToken,
                             email: shopResonse.shop.email,
                             phone: shopResonse.shop.phone
-                        };
-                         User.create(user).then(data => {
-                            const token = jwt.sign({id: data.id},jwt_key,{ expiresIn: '1h' });
-                            User.update({
-                                shopify_access_token: token
-                            }, {
-                                where: { id: data.id }
-                            })
-                                .then(num => {
-                                    if (num == 1) {
-                                        res.send( "Access token was created.");
-                                    } else {
-                                        res.send(`Cannot create access Token with id=${id}.`);
-                                    }
-                                })
-                                .catch(err => {
-                                    res.status(500).send("Error updating user");
-                                });
+                        }
+                        User.create(user).then(data => {
+                            console.log(data);
                         }).catch(err => {
                             res.status(err.code).send(err.error);
                         });
@@ -115,25 +106,23 @@ app.get('/shopify/callback', (req, res) => {
 
                     })
                     .catch((error) => {
-                        console.log(error);
+                        console.log(error)
                         res.status(error.code).send(error.error);
                     })
 
             }).catch((error) => {
-                res.status(error.code).send(error.error)
+            res.status(error.code).send(error.error)
         })
 
     } else {
         res.status(400).send('Required parameters missing')
     }
-});
+})
 
-// Api
-require("./app/routes/user.routes")(app);
-require("./app/routes/faq.routes")(app);
-require("./app/routes/faq_category.routes")(app);
-require("./app/routes/faq/delete_category.routes")(app);
+//Api
+const initAPIs = require("./app/routes/api");
+initAPIs(app);
 
-app.listen(port, () => {
+app.listen(8080, () => {
     console.log('Exmple !')
 });
