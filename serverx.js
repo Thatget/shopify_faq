@@ -5,28 +5,91 @@ const nonce = require('nonce')();
 const querystring = require('querystring');
 const request = require('request-promise');
 const cookie = require('cookie');
-const ngrok = require('ngrok');
 const app = express();
 
+const port = process.env.PORT;
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
 const scopes = process.env.SCOPES
 const forwardingAddress = process.env.HOST;
 const app_link = process.env.FRONT_END;
 
-// const Shopify = require('shopify-api-node');
-
 app.get('/', (req, res) => {
-
-    // const shopify = new Shopify({
-    //     shopName: 'checktestdevelopstore.myshopify.com',
-    //     accessToken: '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'
-    // });
-
-    res.write(`<a target="_blank" href="${app_link}">to vue page</a>`);
-    res.end();
+    const state = nonce();
+    const redirectUri = forwardingAddress + '/shopify/vue-page';
+    const pageUri = 'https://' + 'checktestdevelopstore.myshopify.com' +
+        '/admin/oauth/authorize?client_id=' + apiKey +
+        '&scope=' + scopes +
+        '&state=' + state +
+        '&redirect_uri=' + redirectUri;
+    res.cookie('state',state);
+    res.redirect(pageUri);
 });
 
+app.get('/shopify/vue-page', (req, res) => {
+    const { shop, hmac, code, state } = req.query;
+    if (shop && hmac && code) {
+        const map = Object.assign({}, req.query);
+        delete map['signature'];
+        delete map['hmac'];
+        const message = querystring.stringify(map);
+        const generateHash = crypto.createHmac('sha256', apiSecret)
+            .update(message)
+            .digest('hex');
+
+        if (generateHash !== hmac) {
+            return res.status(400).send('HMAC validation failed');
+        }
+
+        const accessTokendRequestUrl = 'https://' + shop +
+            '/admin/oauth/access_token';
+        const accessTokenPayload = {
+            client_id: apiKey,
+            client_secret: apiSecret,
+            code
+        };
+        request.post(accessTokendRequestUrl, { json: accessTokenPayload })
+            .then((accessTokenResponse) => {
+                const accessToken = accessTokenResponse.access_token;
+                const shopRequestUrl = 'https://' + shop + '/admin/shop.json';
+                const shopRequestHeaders = {
+                    'X-Shopify-Access-Token': accessToken
+                };
+                request.get(shopRequestUrl, {headers: shopRequestHeaders})
+                    .then((shopResonse) => {
+                        shopResonse = JSON.parse(shopResonse);
+                        const db = require("./app/models");
+                        const User = db.user;
+                        const user = {
+                            store_name: shopResonse.shop.name,
+                            shopify_domain: shopResonse.shop.domain,
+                            shopify_access_token: accessToken,
+                            email: shopResonse.shop.email,
+                            phone: shopResonse.shop.phone
+                        }
+                        User.update(user, {
+                            where: { shopify_domain: shopResonse.shop.domain, }
+                        }).then(data => {
+                            console.log(accessToken);
+                            console.log('updated !');
+                        }).catch(err => {
+                            res.status(err.code).send(err.error);
+                        });
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        res.status(error.code).send(error.error);
+                    })
+
+            }).catch((error) => {
+            res.status(error.code).send(error.error)
+        })
+        res.redirect(app_link + `?shopify_domain=${shop}`);
+    } else {
+        res.status(400).send('Required parameters missing')
+    }
+    res.end();
+});
 app.get('/shopify', (req, res) => {
     const shop = req.query.shop;
     if (shop) {
@@ -123,6 +186,6 @@ app.get('/shopify/callback', (req, res) => {
 const initAPIs = require("./app/routes/api");
 initAPIs(app);
 
-app.listen(8080, () => {
+app.listen(port, () => {
     console.log('Exmple !')
 });
