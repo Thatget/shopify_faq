@@ -13,15 +13,6 @@ const refreshTokenLife = process.env.REFRESH_JWT_KEY_LIFE;
 
 const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
 
-
-User.findAll({where: {email: 'quyet.nguyen.7712826@gmail.com'}})
-    .then(data => {
-        debug(data[0].dataValues.shopify_access_token);
-    })
-    .catch(err => {
-        debug(err);
-    });
-
 /**
  * controller login
  * @param {*} req
@@ -29,17 +20,26 @@ User.findAll({where: {email: 'quyet.nguyen.7712826@gmail.com'}})
  */
 let login = async (req, res) => {
     try {
-        const userFakeData = {
-            id: "1234-5678-910JQK-tqd",
-            name: "Trung Quân",
-            email: req.body.email,
+        let shopify_access_token = '';
+        User.findAll({where: {email: req.query.email, shopify_domain: req.query.shopify_domain }})
+            .then(data => {
+                shopify_access_token = data[0].dataValues.shopify_access_token;
+                debug(shopify_access_token);
+            })
+            .catch(err => {
+                debug(err);
+            });
+        const userData = {
+            email: req.query.email,
+            shopify_domain:req.query.shopify_domain,
+            shopify_access_token:shopify_access_token
         };
 
         debug(`Thực hiện tạo mã Token, [thời gian sống 1 giờ.]`);
-        const accessToken = await jwtHelper.generateToken(userFakeData, accessTokenSecret, accessTokenLife);
+        const accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife);
 
         debug(`Thực hiện tạo mã Refresh Token, [thời gian sống 10 năm] =))`);
-        const refreshToken = await jwtHelper.generateToken(userFakeData, refreshTokenSecret, refreshTokenLife);
+        const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
 
         tokenList[refreshToken] = {accessToken, refreshToken};
 

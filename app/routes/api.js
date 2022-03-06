@@ -10,6 +10,7 @@ const user = require("../controllers/user.controller");
  */
 let initAPIs = (app) => {
 // Api
+    router.post("/login", AuthController.login);
     router.post("/refresh-token", AuthController.refreshToken);
     require("../routes/faq.routes");
     require("../routes/faq_category.routes");

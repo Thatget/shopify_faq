@@ -80,9 +80,9 @@ exports.findOne = (req, res) => {
 
 // Update a User by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.id;
+    console.log(req);
   User.update(req.body, {
-    where: { id: id }
+    where: { shopify_domain: req.body.shopify_domain, }
   })
     .then(num => {
       if (num == 1) {
