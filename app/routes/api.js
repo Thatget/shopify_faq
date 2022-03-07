@@ -15,10 +15,8 @@ let initAPIs = (app) => {
     require("../routes/faq.routes");
     require("../routes/faq_category.routes");
     require("../routes/faq/delete_category.routes");
-    // router.get("/api/faq/:user_id", faq.findAll);
     // Sử dụng authMiddleware.isAuth trước những api cần xác thực
     router.use(AuthMiddleWare.isAuth);
-    // router.get("/api/user", user.findAll);
     // List Protect APIs:
     require("../routes/user.routes");
     return app.use("/", router);

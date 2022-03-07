@@ -24,7 +24,6 @@ let login = async (req, res) => {
         User.findAll({where: {email: req.query.email, shopify_domain: req.query.shopify_domain }})
             .then(data => {
                 shopify_access_token = data[0].dataValues.shopify_access_token;
-                debug(shopify_access_token);
             })
             .catch(err => {
                 debug(err);

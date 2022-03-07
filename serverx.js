@@ -7,17 +7,33 @@ const request = require('request-promise');
 const cookie = require('cookie');
 const app = express();
 
+const db = require("./app/models");
+const User = db.user;
+
 const port = process.env.PORT;
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
-const scopes = process.env.SCOPES
+const scopes = process.env.SCOPES;
 const forwardingAddress = process.env.HOST;
 const app_link = process.env.FRONT_END;
 
-app.get('/', (req, res) => {
+const debug = console.log.bind(console);
+
+app.get('/', async (req, res) => {
+    var isInstalled;
+    await User.findAll({where: {shopify_domain: req.query.shop}})
+        .then(data => {
+            isInstalled = data.length;
+        })
+        .catch(err => {
+            debug(err);
+        });
     const state = nonce();
-    const redirectUri = forwardingAddress + '/shopify/vue-page';
-    const pageUri = 'https://' + 'checktestdevelopstore.myshopify.com' +
+    var redirectUri = forwardingAddress + '/shopify/vue-page';
+    if (!isInstalled) {
+        redirectUri = forwardingAddress + '/shopify/callback';
+    }
+    const pageUri = 'https://' + req.query.shop +
         '/admin/oauth/authorize?client_id=' + apiKey +
         '&scope=' + scopes +
         '&state=' + state +
@@ -58,53 +74,34 @@ app.get('/shopify/vue-page', (req, res) => {
                 request.get(shopRequestUrl, {headers: shopRequestHeaders})
                     .then((shopResonse) => {
                         shopResonse = JSON.parse(shopResonse);
-                        const db = require("./app/models");
-                        const User = db.user;
                         const user = {
                             store_name: shopResonse.shop.name,
                             shopify_domain: shopResonse.shop.domain,
                             shopify_access_token: accessToken,
                             email: shopResonse.shop.email,
                             phone: shopResonse.shop.phone
-                        }
+                        };
                         User.update(user, {
                             where: { shopify_domain: shopResonse.shop.domain, }
                         }).then(data => {
-                            console.log(accessToken);
-                            console.log('updated !');
+                            console.log('User updated !');
                         }).catch(err => {
                             res.status(err.code).send(err.error);
                         });
                     })
                     .catch((error) => {
-                        console.log(error)
+                        console.log(error);
                         res.status(error.code).send(error.error);
                     })
 
             }).catch((error) => {
             res.status(error.code).send(error.error)
-        })
+        });
         res.redirect(app_link + `?shopify_domain=${shop}`);
     } else {
         res.status(400).send('Required parameters missing')
     }
     res.end();
-});
-app.get('/shopify', (req, res) => {
-    const shop = req.query.shop;
-    if (shop) {
-        const state = nonce();
-        const redirectUri = forwardingAddress + '/shopify/callback';
-        const installUrl = 'https://' + shop +
-            '/admin/oauth/authorize?client_id=' + apiKey +
-            '&scope=' + scopes +
-            '&state=' + state +
-            '&redirect_uri=' + redirectUri;
-        res.cookie('state',state);
-        res.redirect(installUrl);
-    } else {
-        return res.status(400).send('Missing shop parameter')
-    }
 });
 
 app.get('/shopify/callback', (req, res) => {
@@ -148,8 +145,6 @@ app.get('/shopify/callback', (req, res) => {
                     .then((shopResonse) => {
                         shopResonse = JSON.parse(shopResonse);
 
-                        const db = require("./app/models");
-                        const User = db.user;
                         const user = {
                             store_name: shopResonse.shop.name,
                             shopify_domain: shopResonse.shop.domain,
@@ -162,9 +157,7 @@ app.get('/shopify/callback', (req, res) => {
                         }).catch(err => {
                             res.status(err.code).send(err.error);
                         });
-                        res.writeHead(302, {
-                            'Location': app_link
-                        });
+                        res.redirect(app_link + `?shopify_domain=${shop}`);
                         res.end();
 
                     })
