@@ -20,6 +20,8 @@ const app_link = process.env.FRONT_END;
 const debug = console.log.bind(console);
 
 app.get('/', async (req, res) => {
+    debug('x1');
+    debug(req.query);
     var isInstalled;
     await User.findAll({where: {shopify_domain: req.query.shop}})
         .then(data => {
@@ -46,6 +48,7 @@ app.get('/shopify/vue-page', (req, res) => {
     const { shop, hmac, code, state } = req.query;
     if (shop && hmac && code) {
         const map = Object.assign({}, req.query);
+        var user;
         delete map['signature'];
         delete map['hmac'];
         const message = querystring.stringify(map);
@@ -74,7 +77,7 @@ app.get('/shopify/vue-page', (req, res) => {
                 request.get(shopRequestUrl, {headers: shopRequestHeaders})
                     .then((shopResonse) => {
                         shopResonse = JSON.parse(shopResonse);
-                        const user = {
+                        user = {
                             store_name: shopResonse.shop.name,
                             shopify_domain: shopResonse.shop.domain,
                             shopify_access_token: accessToken,
@@ -97,7 +100,12 @@ app.get('/shopify/vue-page', (req, res) => {
             }).catch((error) => {
             res.status(error.code).send(error.error)
         });
-        res.redirect(app_link + `?shopify_domain=${shop}`);
+
+        var redirectUri = forwardingAddress + '/login';
+        request.post(redirectUri, { json: user }).then( data => {
+            debug(data);
+        }).catch();
+        res.redirect(app_link + `?shop=${shop}`);
     } else {
         res.status(400).send('Required parameters missing')
     }
@@ -151,18 +159,18 @@ app.get('/shopify/callback', (req, res) => {
                             shopify_access_token: accessToken,
                             email: shopResonse.shop.email,
                             phone: shopResonse.shop.phone
-                        }
+                        };
                         User.create(user).then(data => {
                             console.log(data);
                         }).catch(err => {
                             res.status(err.code).send(err.error);
                         });
-                        res.redirect(app_link + `?shopify_domain=${shop}`);
+                        res.redirect(app_link + `?shop=${shop}`);
                         res.end();
 
                     })
                     .catch((error) => {
-                        console.log(error)
+                        console.log(error);
                         res.status(error.code).send(error.error);
                     })
 
@@ -173,12 +181,44 @@ app.get('/shopify/callback', (req, res) => {
     } else {
         res.status(400).send('Required parameters missing')
     }
-})
+});
 
 //Api
 const initAPIs = require("./app/routes/api");
 initAPIs(app);
 
 app.listen(port, () => {
-    console.log('Exmple !')
+    console.log(`Server runing on port ${port} !`);
 });
+
+
+async function login(user) {
+
+    return new Promise(async function (resolve, reject) {
+        debug('fa');
+        debug(user);
+        debug('af');
+        let db = require('./app/models');
+        let User = db.user;
+        let shopify_access_token = '';
+        let jwtHelper = require("./app/helpers/jwt.helper");
+
+        const data = await User.findOne({where: {email: user.email, shopify_domain: user.shopify_domain }});
+
+
+        const userData = {
+            email: data.email,
+            shopify_domain: data.shopify_domain,
+            shopify_access_token: data.shopify_access_token
+        };
+
+        const accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife);
+
+        const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
+
+        resolve({
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        })
+    })
+}

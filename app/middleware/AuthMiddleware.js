@@ -1,7 +1,7 @@
 const jwtHelper = require("../helpers/jwt.helper");
 const debug = console.log.bind(console);
 
-const accessTokenSecret = process.env.JWT_KEY
+const accessTokenSecret = process.env.JWT_KEY;
 
 let isAuth = async (req, res, next) => {
     const tokenFromClient = req.params.token || req.headers["x-access-token"] || '';
