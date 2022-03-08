@@ -4,12 +4,12 @@ module.exports = app => {
     // Create a new Setting
     router.post("/", setting.create);
     // Retrieve all Setting of a user
-    router.get("/user_id/:id", setting.findAll);
+    router.get("/user/user_id", setting.findAll);
     // Retrieve a single Setting by a User
-    router.get("/:id", setting.findOne);
+    router.get("/:user_id", setting.findOne);
     // Update a Setting with id
-    router.put("/:id", setting.update);
+    router.put("/:userid", setting.update);
     // Delete a Setting with id
-    router.delete("/:id", setting.delete);
+    router.delete("/:user_id", setting.delete);
     app.use('/api/setting', router);
 };

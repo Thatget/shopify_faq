@@ -12,6 +12,6 @@ module.exports = app => {
     // Delete a Category with id
     router.delete("/:id", category.delete);
     // Delete all User
-    router.delete("/:user_id", category.deleteAll);
+    router.delete("/user/:user_id", category.deleteAll);
     app.use('/api/faq-category', router);
 };

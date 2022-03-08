@@ -31,33 +31,6 @@ exports.create = (req, res) => {
     });
 };
 
-// Retrieve all User from the database.
-exports.findAll = (req, res) => {
-    if(
-        !req.headers.authorization ||
-        !req.headers.authorization.startsWith('Bearer') ||
-        !req.headers.authorization.split(' ')[1]
-    ){
-        return res.status(422).json({
-            message: "Please provide the token",
-        });
-    }
-    const theToken = req.headers.authorization.split(' ')[1];
-    const decoded = jwt.verify(theToken, 'HuongVNQ');
-    const email = req.query.email;
-    var condition = email ? { email: { [Op.like]: `%${email}%` } } : null;
-    User.findAll({ where: condition })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving user."
-        });
-      });
-  };
-
 // Find a single User with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
