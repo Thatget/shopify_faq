@@ -203,7 +203,6 @@ app.get('/shopify/callback', (req, res) => {
 });
 
 // Api
-
 app.listen(port, () => {
     console.log('Example !')
 });
