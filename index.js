@@ -6,6 +6,7 @@ const querystring = require('querystring');
 const request = require('request-promise');
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
+const {DataType} = require("@shopify/shopify-api");
 
 const app = express();
 
@@ -71,14 +72,12 @@ app.get('/shopify/page', async (req, res) => {
                 const shopRequestHeaders = {
                     'X-Shopify-Access-Token': accessToken
                 };
-debug('x1');
-                const pageData = {
+                const page = {
                     path: 'pages',
-                    data: {"page":{"title":"Warranty information","body_html":"e"}},
+                        data: {"page":{"title":"Warranty information","body_html":"\u003ch2\u003eWarranty\u003c\/h2\u003e\n\u003cp\u003eReturns accepted if we receive items \u003cstrong\u003e30 days after purchase\u003c\/strong\u003e.\u003c\/p\u003e"}},
                     type: DataType.JSON,
                 };
-                debug('x2');
-                await request.post(shopRequestUrl, {headers: shopRequestHeaders, json: pageData})
+                await request.post(shopRequestUrl, {headers: shopRequestHeaders, page: page})
                     .then((data) => {
                         debug(data);
                     })
@@ -201,10 +200,6 @@ app.get('/shopify/callback', (req, res) => {
 });
 
 // Api
-require("./app/routes/user.routes")(app);
-require("./app/routes/faq.routes")(app);
-require("./app/routes/faq_category.routes")(app);
-require("./app/routes/faq/delete_category.routes")(app);
 
 app.listen(port, () => {
     console.log('Example !')
