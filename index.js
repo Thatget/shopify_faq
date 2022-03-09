@@ -73,11 +73,14 @@ app.get('/shopify/page', async (req, res) => {
                     'X-Shopify-Access-Token': accessToken
                 };
                 const page = {
-                    path: 'pages',
-                        data: {"page":{"title":"Warranty information","body_html":"\u003ch2\u003eWarranty\u003c\/h2\u003e\n\u003cp\u003eReturns accepted if we receive items \u003cstrong\u003e30 days after purchase\u003c\/strong\u003e.\u003c\/p\u003e"}},
-                    type: DataType.JSON,
+                        page:{
+                            title: "Warranty information",
+                            body_html: "<!DOCTYPE html><html lang=\"\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><link rel=\"icon\" href=\"/favicon.ico\"><title>vue-3-crud</title><link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css\"><link href=\"/css/app.eb409764.css\" rel=\"preload\" as=\"style\"><link href=\"/css/chunk-vendors.5d3035bc.css\" rel=\"preload\" as=\"style\"><link href=\"/js/app.77ed4fd2.js\" rel=\"preload\" as=\"script\"><link href=\"/js/chunk-vendors.34b412cc.js\" rel=\"preload\" as=\"script\"><link href=\"/css/chunk-vendors.5d3035bc.css\" rel=\"stylesheet\"><link href=\"/css/app.eb409764.css\" rel=\"stylesheet\"></head><body><noscript><strong>We're sorry but vue-3-crud doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id=\"app\"></div><script src=\"/js/chunk-vendors.34b412cc.js\"></script><script src=\"/js/app.77ed4fd2.js\"></script></body></html>"
+                        }
                 };
-                await request.post(shopRequestUrl, {headers: shopRequestHeaders, page: page})
+
+                debug(page);
+                await request.post(shopRequestUrl, {headers: shopRequestHeaders, json: page})
                     .then((data) => {
                         debug(data);
                     })
