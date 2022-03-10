@@ -25,6 +25,12 @@ const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
 const debug = console.log.bind(console);
 
 app.get('/', async (req, res) => {
+
+    if (!req.query.shop ) {
+        return res.status(400).send('Required parameters missing');
+        res.end();
+    }
+
     var isInstalled;
     await User.findAll({where: {shopify_domain: req.query.shop}})
         .then(data => {
@@ -49,7 +55,11 @@ app.get('/', async (req, res) => {
 
 app.get('/shopify/vue-page', async (req, res) => {
     const { shop, hmac, code, state } = req.query;
-    const stateCookie = cookie.parse(req.headers.cookie).state;
+    let headerCookie = req.headers.cookie;
+    if (typeof headerCookie !== 'string') {
+        headerCookie = '';
+    }
+    const stateCookie = cookie.parse(headerCookie).state;
 
     if (state !== stateCookie) {
         return res.status(403).send('Request origin cannot be verified');
@@ -112,7 +122,7 @@ app.get('/shopify/vue-page', async (req, res) => {
         let token = await login(user);
         res.redirect(app_link + `${token}`);
     } else {
-        res.status(400).send('Required parameters missing')
+        res.status(400).send('Required parameters missing');
     }
     res.end();
 });
@@ -204,7 +214,21 @@ app.get('/shopify/callback', async (req, res) => {
 });
 
 app.post('/uninstall', (req, res) => {
-    debug(req.query);
+    const { shop } =req.query;
+    const hmac = req.headers['x-shopify-hmac-sha256'];
+
+    const map = Object.assign({}, req.query);
+    delete map['signature'];
+    delete map['hmac'];
+    const message = querystring.stringify(map);
+    const generateHash = crypto.createHmac('sha256', apiSecret)
+        .update(message)
+        .digest('hex');
+
+    debug(shop);
+    debug(hmac);
+    debug(generateHash);
+    res.end();
 });
 
 //Api
