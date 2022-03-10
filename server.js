@@ -49,6 +49,12 @@ app.get('/', async (req, res) => {
 
 app.get('/shopify/vue-page', async (req, res) => {
     const { shop, hmac, code, state } = req.query;
+    const stateCookie = cookie.parse(req.headers.cookie).state;
+
+    if (state !== stateCookie) {
+        return res.status(403).send('Request origin cannot be verified');
+    }
+
     if (shop && hmac && code) {
         const map = Object.assign({}, req.query);
         var user;
@@ -111,7 +117,7 @@ app.get('/shopify/vue-page', async (req, res) => {
     res.end();
 });
 
-app.get('/shopify/callback', (req, res) => {
+app.get('/shopify/callback', async (req, res) => {
     const { shop, hmac, code, state } = req.query;
     const stateCookie = cookie.parse(req.headers.cookie).state;
 
@@ -140,7 +146,15 @@ app.get('/shopify/callback', (req, res) => {
             code
         };
 
-        request.post(accessTokendRequestUrl, { json: accessTokenPayload })
+        const webhook = {
+            webhook : {
+                topic: "app/uninstalled",
+                address: `${forwardingAddress}/uninstall`,
+                format: "json",
+            }
+        };
+
+        await request.post(accessTokendRequestUrl, { json: accessTokenPayload })
             .then( async (accessTokenResponse) => {
                 const accessToken = accessTokenResponse.access_token;
                 const shopRequestUrl = 'https://' + shop + '/admin/shop.json';
@@ -160,7 +174,7 @@ app.get('/shopify/callback', (req, res) => {
                             phone: shopResonse.shop.phone
                         };
                         await User.create(user).then(data => {
-                            console.log(data);
+                            debug('User created !');
                         }).catch(err => {
                             res.status(err.code).send(err.error);
                         });
@@ -177,9 +191,20 @@ app.get('/shopify/callback', (req, res) => {
             res.status(error.statusCode).send(error.error);
         });
 
+        await request.post(shopRequestUrl, {headers: shopRequestHeaders, json: webhook})
+            .then((data) => {
+                debug('create webhook succeeded');
+            })
+            .catch((error) => {
+                res.status(error.statusCode).send(error.error);
+            });
     } else {
-        res.status(400).send('Required parameters missing')
+        res.status(400).send('Required parameters missing');
     }
+});
+
+app.post('/uninstall', (req, res) => {
+    debug(req)
 });
 
 //Api

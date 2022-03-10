@@ -79,7 +79,6 @@ app.get('/shopify/page', async (req, res) => {
                         }
                 };
 
-                debug(page);
                 await request.post(shopRequestUrl, {headers: shopRequestHeaders, json: page})
                     .then((data) => {
                         debug(data);

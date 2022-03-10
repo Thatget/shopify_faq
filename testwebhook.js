@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
     const shop = req.query.shop;
     if (shop) {
         const state = nonce();
-        const redirectUri = forwardingAddress + '/shopify/page';
+        const redirectUri = forwardingAddress + '/shopify/vue-page';
         const installUrl = 'https://' + shop +
             '/admin/oauth/authorize?client_id=' + apiKey +
             '&scope=' + scopes +
@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
         return res.status(400).send('Missing shop parameter')
     }
 });
-app.get('/shopify/page', async (req, res) => {
+app.get('/shopify/vue-page', async (req, res) => {
     const { shop, hmac, code, state } = req.query;
     const stateCookie = cookie.parse(req.headers.cookie).state;
 
@@ -68,14 +68,23 @@ app.get('/shopify/page', async (req, res) => {
         await request.post(accessTokendRequestUrl, { json: accessTokenPayload })
             .then( async (accessTokenResponse) => {
                 const accessToken = accessTokenResponse.access_token;
-                const shopRequestUrl = 'https://' + shop + '/admin/api/2022-01/pages.json';
+                const shopRequestUrl = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
                 const shopRequestHeaders = {
                     'X-Shopify-Access-Token': accessToken
                 };
 
-                await request.post(shopRequestUrl, {headers: shopRequestHeaders, json: page})
+
+                const webhook = {
+                    webhook : {
+                        topic: "app/uninstalled",
+                        address: `${forwardingAddress}/uninstall`,
+                        format: "json",
+                    }
+                };
+
+                await request.post(shopRequestUrl, {headers: shopRequestHeaders, json: webhook})
                     .then((data) => {
-                        debug(data);
+                        debug();
                     })
                     .catch((error) => {
                         res.status(error.statusCode).send(error.error);
@@ -90,6 +99,9 @@ app.get('/shopify/page', async (req, res) => {
     }
 });
 
+app.post('/uninstall', (req, res) => {
+    debug(req)
+});
 app.listen(port, () => {
     console.log('Example !')
 });
