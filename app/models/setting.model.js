@@ -91,6 +91,12 @@ module.exports = (sequelize, Sequelize) => {
     dont_category_faq: {
       type: Sequelize.BOOLEAN
     },
+    main_page_url: {
+      type: Sequelize.STRING
+    },
+    faq_page_url: {
+      type: Sequelize.STRING
+    },
   }, 
   {
     freezeTableName: true
