@@ -12,6 +12,8 @@ exports.create = (req, res) => {
   }
   // Create a setting
   const setting = {
+    main_page_url: req.body.main_page_url,
+    faq_page_url: req.body.faq_page_url,
     intro_text_content: req.body.intro_text_content,
     footer_text_content: req.body.footer_text_content,
     page_title_content: req.body.page_title_content,

@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Setting = sequelize.define("setting", 
+  const Setting = sequelize.define("setting",
   {
     user_id: {
       type: Sequelize.INTEGER
@@ -91,7 +91,13 @@ module.exports = (sequelize, Sequelize) => {
     dont_category_faq: {
       type: Sequelize.BOOLEAN
     },
-  }, 
+    main_page_url: {
+      type: Sequelize.STRING
+    },
+    faq_page_url: {
+      type: Sequelize.STRING
+    },
+  },
   {
     freezeTableName: true
   });
