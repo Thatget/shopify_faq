@@ -10,6 +10,9 @@ const app = express();
 
 const db = require("./app/models");
 const User = db.user;
+const Setting = db.setting;
+const Faq = db.faq;
+const FaqCategory = db.faq_category;
 
 const port = process.env.PORT;
 const apiKey = process.env.SHOPIFY_API_KEY;
@@ -217,18 +220,23 @@ app.get('/shopify/callback', async (req, res) => {
 app.post('/uninstall', async (req, res) => {
     const hmacHeader = req.get("X-Shopify-Hmac-Sha256");
     const body = await getRawBody(req);
-
     const hash = crypto
         .createHmac("sha256", apiSecret)
         .update(body, "utf8", "hex")
         .digest("base64");
+
     if (hash === hmacHeader) {
-        debug('x1');
-        console.log("Notification Requested from Shopify received");
-        res.sendStatus(200);
+        const shop = req.query.shop;
+        if (shop) {
+            try {
+                await removeShop(shop);
+            } catch (e) {
+                res.status(e.statusCode).send(e.error);
+            }
+            res.sendStatus(200);
+        }
     } else {
-        debug('x2');
-        console.log("There is something wrong with this webhook");
+        debug("There is something wrong with this webhook");
         res.sendStatus(403);
     }
     res.end();
@@ -244,8 +252,6 @@ app.listen(port, () => {
 
 async function login(user) {
     try {
-        let db = require('./app/models');
-        let User = db.user;
         let shopify_access_token = '';
         let jwtHelper = require("./app/helpers/jwt.helper");
 
@@ -267,6 +273,46 @@ async function login(user) {
         const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
 
         return '?accessToken=' + accessToken + '&refreshToken' + refreshToken;
+    } catch (error) {
+        debug(error.message);
+    }
+}
+
+async function removeShop(shop) {
+    try {
+        let userId = '';
+
+        await User.findOne({where: { shopify_domain: shop }})
+            .then(data => {
+                userId = data.dataValues.id;
+            })
+            .catch(err => {
+                debug(err);
+            });
+
+        await User.destroy({
+            where: { id: userId }
+        })
+            .then(num => {})
+            .catch(err => {});
+
+        await Setting.destroy({
+            where: { user_id: userId }
+        })
+            .then(num => {})
+            .catch(err => {});
+
+        await Faq.destroy({
+            where: { user_id: userId }
+        })
+            .then(num => {})
+            .catch(err => {});
+
+        await FaqCategory.destroy({
+            where: { user_id: userId }
+        })
+            .then(num => {})
+            .catch(err => {});
     } catch (error) {
         debug(error.message);
     }
