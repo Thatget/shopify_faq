@@ -5,6 +5,7 @@ const nonce = require('nonce')();
 const querystring = require('querystring');
 const request = require('request-promise');
 const cookie = require('cookie');
+const getRawBody = require("raw-body");
 const app = express();
 
 const db = require("./app/models");
@@ -213,21 +214,23 @@ app.get('/shopify/callback', async (req, res) => {
     res.end();
 });
 
-app.post('/uninstall', (req, res) => {
-    const { shop } =req.query;
-    const hmac = req.headers['x-shopify-hmac-sha256'];
+app.post('/uninstall', async (req, res) => {
+    const hmacHeader = req.get("X-Shopify-Hmac-Sha256");
+    const body = await getRawBody(req);
 
-    const map = Object.assign({}, req.query);
-    delete map['signature'];
-    delete map['hmac'];
-    const message = querystring.stringify(map);
-    const generateHash = crypto.createHmac('sha256', apiSecret)
-        .update(message)
-        .digest('hex');
-
-    debug(shop);
-    debug(hmac);
-    debug(generateHash);
+    const hash = crypto
+        .createHmac("sha256", apiSecret)
+        .update(body, "utf8", "hex")
+        .digest("base64");
+    if (hash === hmacHeader) {
+        debug('x1');
+        console.log("Notification Requested from Shopify received");
+        res.sendStatus(200);
+    } else {
+        debug('x2');
+        console.log("There is something wrong with this webhook");
+        res.sendStatus(403);
+    }
     res.end();
 });
 
