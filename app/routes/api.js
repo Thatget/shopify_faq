@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const AuthMiddleWare = require("../middleware/AuthMiddleware");
 const AuthController = require("../controllers/AuthController");
-const faq = require("../controllers/faq.controller");
-const user = require("../controllers/user.controller");
 /**
  * Init all APIs
  * @param {*} app from express

@@ -246,6 +246,9 @@ app.post('/uninstall', async (req, res) => {
 const initAPIs = require("./app/routes/api");
 initAPIs(app);
 
+db.sequelize.sync({ force: false }).then(() => {
+    console.log("Drop and re-sync db.");
+});
 app.listen(port, () => {
     console.log(`Server runing on port ${port} !`);
 });
