@@ -6,7 +6,10 @@ const querystring = require('querystring');
 const request = require('request-promise');
 const cookie = require('cookie');
 const getRawBody = require("raw-body");
+var cors = require('cors');
+
 const app = express();
+app.use(cors());
 
 const db = require("./app/models");
 const User = db.user;
@@ -249,6 +252,7 @@ initAPIs(app);
 db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.");
 });
+
 app.listen(port, () => {
     console.log(`Server runing on port ${port} !`);
 });
@@ -275,7 +279,7 @@ async function login(user) {
 
         const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
 
-        return '?accessToken=' + accessToken + '&refreshToken' + refreshToken;
+        return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
     } catch (error) {
         debug(error.message);
     }

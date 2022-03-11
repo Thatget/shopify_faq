@@ -15,6 +15,7 @@ const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
  * @param {*} res
  */
 let login = async (req, res) => {
+    debug(req.query);
     try {
         let shopify_access_token = '';
         User.findAll({where: {email: req.query.email, shopify_domain: req.query.shopify_domain }})
@@ -29,7 +30,7 @@ let login = async (req, res) => {
             shopify_domain:req.query.shopify_domain,
             shopify_access_token:shopify_access_token
         };
-
+debug(shopify_access_token);
         const accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife);
 
         const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
