@@ -33,11 +33,12 @@ const debug = console.log.bind(console);
 
 app.get('/', async (req, res) => {
 
+    process.env.MY_VARIABLE = 'ahoy';
     if (!req.query.shop ) {
         return res.status(400).send('Required parameters missing');
         res.end();
     }
-
+debug(process.env.MY_VARIABLE);
     var isInstalled;
     await User.findAll({where: {shopify_domain: req.query.shop}})
         .then(data => {

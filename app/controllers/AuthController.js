@@ -15,31 +15,43 @@ const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
  * @param {*} res
  */
 let login = async (req, res) => {
-    debug(req.query);
-    try {
-        let shopify_access_token = '';
-        User.findAll({where: {email: req.query.email, shopify_domain: req.query.shopify_domain }})
-            .then(data => {
-                shopify_access_token = data[0].dataValues.shopify_access_token;
-            })
-            .catch(err => {
-                debug(err);
-            });
-        const userData = {
-            email: req.query.email,
-            shopify_domain:req.query.shopify_domain,
-            shopify_access_token:shopify_access_token
-        };
-debug(shopify_access_token);
-        const accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife);
+    if (req.query.shopify_domain) {
+        try {
+            let shopify_access_token = '';
+            let email = '';
+            let hasUser = true;
+            await User.findOne({where: {shopify_domain: req.query.shopify_domain}})
+                .then(data => {
+                    if (data) {
+                        shopify_access_token = data.dataValues.shopify_access_token;
+                        email = data.dataValues.email
+                    }else {
+                        hasUser = false;
+                    }
+                })
+                .catch(err => {
+                    debug(err);
+                });
+            if (!hasUser) {
+                return res.status(400).json(`The store ${req.query.shopify_domain} doesn't exist or not yet created`);
+            }
+            const userData = {
+                email: email,
+                shopify_domain: req.query.shopify_domain,
+                shopify_access_token: shopify_access_token
+            };
+            const accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife);
 
-        const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
+            const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
 
-        tokenList[refreshToken] = {accessToken, refreshToken};
+            tokenList[refreshToken] = {accessToken, refreshToken};
 
-        return res.status(200).json({accessToken, refreshToken});
-    } catch (error) {
-        return res.status(500).json(error);
+            return res.status(200).json({accessToken, refreshToken});
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    } else {
+        return res.status(400).json('Missing shopify domain !');
     }
 };
 

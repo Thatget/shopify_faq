@@ -45,7 +45,6 @@ let initAPIs = (app) => {
 
    //User
    //  require("../routes/user.routes");
-
     router.post("/api/user", user.create);
     router.get("/api/user/:id", user.findOne);
     router.put("/api/user/:id", user.update);
