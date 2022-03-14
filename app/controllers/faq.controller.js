@@ -1,6 +1,9 @@
 const db = require("../models");
+const faqPage = require('../controllers/faq/Page.controller');
 const Faq = db.faq;
+const User = db.user;
 const Op = db.Sequelize.Op;
+
 
 exports.create = (req, res) => {
     // Validate request
@@ -26,8 +29,12 @@ exports.create = (req, res) => {
     };
 
     Faq.create(faq)
-        .then(data => {
+        .then(async data => {
             res.send(data);
+            shop = await getShop(faq.user_id);
+            if (shop) {
+                await faqPage.generateContent(shop);
+            }
         })
         .catch(err => {
             res.status(500).send({
@@ -141,3 +148,15 @@ exports.deleteAll = (req, res) => {
             });
         });
 };
+
+async function getShop(userId) {
+    let shop = null;
+    await User.findOne({where: { id: userId }})
+        .then(data => {
+            shop = data.dataValues.id;
+        })
+        .catch(err => {
+            debug(err);
+        });
+    return shop;
+}

@@ -31,6 +31,10 @@ const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
 
 const debug = console.log.bind(console);
 
+db.sequelize.sync({ force: false }).then(() => {
+    console.log("Drop and re-sync db.");
+});
+
 app.get('/', async (req, res) => {
 
     if (!req.query.shop ) {
@@ -249,10 +253,6 @@ app.post('/uninstall', async (req, res) => {
 //Api
 const initAPIs = require("./app/routes/api");
 initAPIs(app);
-
-db.sequelize.sync({ force: false }).then(() => {
-    console.log("Drop and re-sync db.");
-});
 
 app.listen(port, () => {
     console.log(`Server runing on port ${port} !`);
