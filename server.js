@@ -41,7 +41,6 @@ app.get('/', async (req, res) => {
         return res.status(400).send('Required parameters missing');
         res.end();
     }
-
     var isInstalled;
     await User.findAll({where: {shopify_domain: req.query.shop}})
         .then(data => {
@@ -100,7 +99,7 @@ app.get('/shopify/vue-page', async (req, res) => {
         await request.post(accessTokendRequestUrl, { json: accessTokenPayload })
             .then(async (accessTokenResponse) => {
                 const accessToken = accessTokenResponse.access_token;
-                process.env.TEST = accessToken;
+                global.accessToken = accessToken;
                 const shopRequestUrl = 'https://' + shop + '/admin/shop.json';
                 const shopRequestHeaders = {
                     'X-Shopify-Access-Token': accessToken
@@ -128,6 +127,7 @@ app.get('/shopify/vue-page', async (req, res) => {
                     })
 
             }).catch((error) => {
+                debug(error);
                 res.status(error.statusCode).send(error.error);
             });
 
@@ -172,6 +172,7 @@ app.get('/shopify/callback', async (req, res) => {
         await request.post(accessTokendRequestUrl, { json: accessTokenPayload })
             .then( async (accessTokenResponse) => {
                 const accessToken = accessTokenResponse.access_token;
+                global.accessToken = accessToken;
                 const shopRequestUrl = 'https://' + shop + '/admin/shop.json';
                 const shopRequestHeaders = {
                     'X-Shopify-Access-Token': accessToken
@@ -260,14 +261,14 @@ app.listen(port, () => {
 
 async function login(user) {
     try {
-        let db = require('./app/models');
-        let User = db.user;
         let shopify_access_token = '';
         let jwtHelper = require("./app/helpers/jwt.helper");
+        let userId = null;
 
         await User.findOne({where: {email: user.email, shopify_domain: user.shopify_domain }})
             .then(data => {
                 shopify_access_token = data.dataValues.shopify_access_token;
+                userId = data.dataValues.id;
             })
             .catch(err => {
                 debug(err);
@@ -282,7 +283,7 @@ async function login(user) {
 
         const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
 
-        return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
+        return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken + '&user_id=' + userId;
     } catch (error) {
         debug(error.message);
     }

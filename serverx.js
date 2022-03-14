@@ -294,11 +294,23 @@ async function removeShop(shop) {
         let userId = '';
 
         await User.findOne({where: { shopify_domain: shop }})
-            .then(data => {
+            .then( async data => {
                 userId = data.dataValues.id;
+                page_id = data.dataValues.page_id;
+                if (data.dataValues.page_id) {
+                    const shopRequestUrl = 'https://' + shop + `/admin/api/2022-01/pages/${page_id}.json`;
+                    const shopRequestHeaders = {
+                        'X-Shopify-Access-Token': global.accessToken
+                    };
+                    await request.del(shopRequestUrl, {headers: shopRequestHeaders})
+                        .catch(err => {
+                            debug('Error when delete page');
+                        });
+                }
             })
             .catch(err => {
                 debug(err);
+                return ;
             });
 
         await User.destroy({

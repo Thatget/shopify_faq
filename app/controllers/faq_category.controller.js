@@ -1,5 +1,6 @@
 const db = require("../models");
 const FaqCategory = db.faq_category;
+const faqPage = require('../controllers/faq/Page.controller');
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -14,11 +15,16 @@ exports.create = (req, res) => {
     const faq_category = {
         user_id: req.body.user_id,
         title: req.body.title,
+        description: req.body.description,
         is_visible: req.body.is_visible
     };
 
     FaqCategory.create(faq_category)
-        .then(data => {
+        .then( async data => {
+            shop = await getShop('user_id',faq_category.user_id);
+            if (shop) {
+                await faqPage.generateContent(shop);
+            }
             res.send(data);
         })
         .catch(err => {
@@ -67,11 +73,21 @@ exports.findOne = (req, res) => {
 
 // Update a Category by the id in the request
 exports.update = (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({
+            message: "Not category selected!"
+        });
+        return;
+    }
     const id = req.params.id;
     FaqCategory.update(req.body, {
         where: { id: id }
     })
-        .then(num => {
+        .then( async num => {
+            shop = await getShop('category_id',id);
+            if (shop) {
+                await faqPage.generateContent(shop);
+            }
             if (num == 1) {
                 res.send({
                     message: "Category was updated successfully."
@@ -91,13 +107,22 @@ exports.update = (req, res) => {
 
 // Delete a Category with the specified id in the request
 exports.delete = (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({
+            message: "Not category selected!"
+        });
+        return;
+    }
     const id = req.params.id;
     FaqCategory.destroy({
         where: { id: id }
     })
-        .then(num => {
+        .then( async num => {
             if (num == 1) {
-
+                shop = await getShop('category_id', id);
+                if (shop) {
+                    await faqPage.generateContent(shop);
+                }
                 res.send({
                     message: "Category was deleted successfully!"
                 });
@@ -116,13 +141,23 @@ exports.delete = (req, res) => {
 
 // Delete all Category of a User from the database.
 exports.deleteAll = (req, res) => {
-    const user_id = req.query.user_id;
+    if (!req.params.user_id) {
+        res.status(400).send({
+            message: "Not user selected!?"
+        });
+        return;
+    }
+    const user_id = req.params.user_id;
     var condition = user_id ? { user_id: { [Op.eq]: `${user_id}` } } : null;
     FaqCategory.destroy({
         where: {condition},
         truncate: false
     })
-        .then(nums => {
+        .then( async nums => {
+            shop = await getShop('user_id', user_id);
+            if (shop) {
+                await faqPage.generateContent(shop);
+            }
             res.send({ message: `${nums} categories were deleted successfully!` });
         })
         .catch(err => {
@@ -132,3 +167,25 @@ exports.deleteAll = (req, res) => {
             });
         });
 };
+
+async function getShop( type = 'user_id', value) {
+    let shop = null;
+    let userId = null;
+    if (type === 'category_id') {
+        await Category.findOne({where: {id: value}})
+        then(data => {
+            userId = data.dataValues.user_id;
+        })
+            .catch(err => {
+                debug(err);
+            });
+    } else userId = value;
+    await User.findOne({where: { id: userId }})
+        .then(data => {
+            shop = data.dataValues.id;
+        })
+        .catch(err => {
+            debug(err);
+        });
+    return shop;
+}

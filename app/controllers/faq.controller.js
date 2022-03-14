@@ -2,8 +2,9 @@ const db = require("../models");
 const faqPage = require('../controllers/faq/Page.controller');
 const Faq = db.faq;
 const User = db.user;
-const Op = db.Sequelize.Op;
+const Category = db.faq_category;
 
+const debug = console.log.bind(console);
 
 exports.create = (req, res) => {
     // Validate request
@@ -18,6 +19,11 @@ exports.create = (req, res) => {
             message: "Content can not be empty!"
         });
         return;
+    }if (!req.body.user_id) {
+        res.status(400).send({
+            message: "no user selected ?"
+        });
+        return;
     }
     // Create a faq
     const faq = {
@@ -30,11 +36,11 @@ exports.create = (req, res) => {
 
     Faq.create(faq)
         .then(async data => {
-            res.send(data);
-            shop = await getShop(faq.user_id);
+            shop = await getShop('user_id',faq.user_id);
             if (shop) {
                 await faqPage.generateContent(shop);
             }
+            res.send(data);
         })
         .catch(err => {
             res.status(500).send({
@@ -46,7 +52,6 @@ exports.create = (req, res) => {
 
 // Retrieve all Faq of a category from the database.
 exports.findAll = (req, res) => {
-    console.log(req.params);
     const user_id = req.params.user_id;
 
     Faq.findAll({ where: {
@@ -88,8 +93,12 @@ exports.update = (req, res) => {
     Faq.update(req.body, {
         where: { id: id }
     })
-        .then(num => {
+        .then( async num => {
             if (num == 1) {
+                shop = await getShop('faq_id', id);
+                if (shop) {
+                    await faqPage.generateContent(shop);
+                }
                 res.send({
                     message: "Faq was updated successfully."
                 });
@@ -108,12 +117,22 @@ exports.update = (req, res) => {
 
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({
+            message: "Missing faq id!"
+        });
+        return;
+    }
     const id = req.params.id;
     Faq.destroy({
         where: { id: id }
     })
-        .then(num => {
+        .then( async num => {
             if (num == 1) {
+                shop = await getShop('faq_id', id);
+                if (shop) {
+                    await faqPage.generateContent(shop);
+                }
                 res.send({
                     message: "Faq was deleted successfully!"
                 });
@@ -130,15 +149,24 @@ exports.delete = (req, res) => {
         });
 };
 
-// Delete all Faq from the database.
-exports.deleteAll = (req, res) => {
+// Delete Faq by Category from the database.
+exports.deleteByCategory = (req, res) => {
+    if (!req.query.category_id) {
+        res.status(400).send({
+            message: "Missing category param!"
+        });
+        return;
+    }
     const category_id = req.query.category_id;
-    var condition = category_id ? { category_id: { [Op.eq]: `${category_id}` } } : null;
     Faq.destroy({
-        where: {condition},
+        where: {category_id: category_id},
         truncate: false
     })
-        .then(nums => {
+        .then( async nums => {
+            shop = await getShop('faq_id', id);
+            if (shop) {
+                await faqPage.generateContent(shop);
+            }
             res.send({ message: `${nums} faqs were deleted successfully!` });
         })
         .catch(err => {
@@ -149,8 +177,54 @@ exports.deleteAll = (req, res) => {
         });
 };
 
-async function getShop(userId) {
+// Delete all Faq from the database.
+exports.deleteAll = (req, res) => {
+    if (!creq.params.user_id) {
+        res.status(400).send({
+            message: "Missing user_id param!"
+        });
+        return;
+    }
+    const user_id = req.params.user_id;
+    Faq.destroy({
+        where: {user_id: user_id},
+        truncate: false
+    })
+        .then( async nums => {
+            shop = await getShop('user_id', user_id);
+            if (shop) {
+                await faqPage.generateContent(shop);
+            }
+            res.send({ message: `${nums} faqs were deleted successfully!` });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while removing all faqs."
+            });
+        });
+};
+
+async function getShop( type = 'user_id', value) {
     let shop = null;
+    let userId = null;
+    if (type === 'faq_id') {
+        await Faq.findOne({where: { id: value }})
+            .then(data => {
+                userId = data.dataValues.user_id;
+            })
+            .catch(err => {
+                debug(err);
+            });
+    } else if (type === 'category_id') {
+        await Category.findOne({where: {id: value}})
+            then(data => {
+                userId = data.dataValues.user_id;
+            })
+                .catch(err => {
+                    debug(err);
+                });
+    } else userId = value;
     await User.findOne({where: { id: userId }})
         .then(data => {
             shop = data.dataValues.id;
