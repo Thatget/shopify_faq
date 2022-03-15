@@ -217,7 +217,7 @@ async function getShop( type = 'user_id', value) {
                 debug(err);
             });
     } else if (type === 'category_id') {
-        await Category.findOne({where: {id: value}})
+        await Category.findOne({where: {id: value}});
             then(data => {
                 userId = data.dataValues.user_id;
             })
@@ -227,7 +227,7 @@ async function getShop( type = 'user_id', value) {
     } else userId = value;
     await User.findOne({where: { id: userId }})
         .then(data => {
-            shop = data.dataValues.id;
+            shop = data.dataValues.shopify_domain;
         })
         .catch(err => {
             debug(err);
