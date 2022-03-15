@@ -1,4 +1,5 @@
 const db = require("../models");
+const User = db.user;
 const FaqCategory = db.faq_category;
 const faqPage = require('../controllers/faq/Page.controller');
 const Op = db.Sequelize.Op;
