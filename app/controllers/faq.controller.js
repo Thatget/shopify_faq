@@ -19,7 +19,7 @@ exports.create = (req, res) => {
             message: "Content can not be empty!"
         });
         return;
-    }if (!req.body.user_id) {
+    }if (!req.jwtDecoded.data.user_id) {
         res.status(400).send({
             message: "no user selected ?"
         });
@@ -179,13 +179,13 @@ exports.deleteByCategory = (req, res) => {
 
 // Delete all Faq from the database.
 exports.deleteAll = (req, res) => {
-    if (!creq.params.user_id) {
+    if (!req.jwtDecoded.data.user_id) {
         res.status(400).send({
             message: "Missing user_id param!"
         });
         return;
     }
-    const user_id = req.params.user_id;
+    const user_id = req.jwtDecoded.data.user_id;
     Faq.destroy({
         where: {user_id: user_id},
         truncate: false

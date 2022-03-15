@@ -6,9 +6,12 @@ const querystring = require('querystring');
 const request = require('request-promise');
 const cookie = require('cookie');
 const getRawBody = require("raw-body");
+const bodyParser = require('body-parser')
 var cors = require('cors');
 
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors());
 
 const db = require("./app/models");

@@ -135,22 +135,3 @@ exports.delete = (req, res) => {
       });
     });
   };
-
-// Delete all Setting from the database.
-exports.deleteAll = (req, res) => {
-    const user_id = req.query.user_id;
-    var condition = user_id ? { user_id: { [Op.eq]: `${user_id}` } } : null;
-    Setting.destroy({
-        where: {condition},
-        truncate: false
-    })
-        .then(nums => {
-            res.send({ message: `${nums} user were deleted successfully!` });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while removing all users."
-            });
-        });
-};

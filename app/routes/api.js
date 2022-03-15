@@ -26,7 +26,8 @@ let initAPIs = (app) => {
     router.get("/api/faq/:id", faq.findOne);
     router.put("/api/faq/:id", faq.update);
     router.delete("/api/faq/:id", faq.delete);
-    router.delete("/api/faq/:category_id", faq.deleteAll);
+    router.delete("/api/faq/:category_id", faq.deleteByCategory);
+    router.delete("/api/faq", faq.deleteAll);
 
     //Setting router
     router.post("/api/setting/", setting.create);
