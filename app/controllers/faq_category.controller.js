@@ -13,7 +13,7 @@ exports.create = (req, res) => {
     }
     // Create a faq_category
     const faq_category = {
-        user_id: req.body.user_id,
+        user_id: req.jwtDecoded.data.user_id,
         title: req.body.title,
         description: req.body.description,
         is_visible: req.body.is_visible
@@ -37,7 +37,7 @@ exports.create = (req, res) => {
 
 // Retrieve all faq_category from the database of a user.
 exports.findAll = (req, res) => {
-    const user_id = req.query.user_id;
+    const user_id = req.jwtDecoded.data.user_id;
     var condition = user_id ? { user_id: { [Op.eq]: `${user_id}` } } : null;
     FaqCategory.findAll({ where: condition })
         .then(data => {
@@ -141,16 +141,9 @@ exports.delete = (req, res) => {
 
 // Delete all Category of a User from the database.
 exports.deleteAll = (req, res) => {
-    if (!req.params.user_id) {
-        res.status(400).send({
-            message: "Not user selected!?"
-        });
-        return;
-    }
-    const user_id = req.params.user_id;
-    var condition = user_id ? { user_id: { [Op.eq]: `${user_id}` } } : null;
+    const  user_id = req.jwtDecoded.data.user_id;
     FaqCategory.destroy({
-        where: {condition},
+        where: {user_id: user_id},
         truncate: false
     })
         .then( async nums => {

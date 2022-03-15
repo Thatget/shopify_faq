@@ -3,13 +3,7 @@ const Setting = db.setting;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.user_id) {
-    res.status(400).send({
-      message: "Content can not be empty!"
-    });
-    return;
-  }
+
   // Create a setting
   const setting = {
     main_page_url: req.body.main_page_url,
@@ -39,7 +33,7 @@ exports.create = (req, res) => {
     answer_font_family: req.body.answer_font_family,
     show_page_title : req.body.show_page_title,
     status: req.body.status,
-    user_id: req.body.user_id,
+    user_id: req.jwtDecoded.data.user_id,
     faq_sort_name: req.body.faq_sort_name,
     faq_uncategory_hidden: req.body.faq_uncategory_hidden,
     category_sort_name: req.body.category_sort_name,
@@ -60,7 +54,7 @@ exports.create = (req, res) => {
 
 // Retrieve all Setting from the database.
 exports.findAll = (req, res) => {
-  const user_id = req.params.user_id;
+  const user_id = req.jwtDecoded.data.user_id;
   // var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
   Setting.findAll({ where: { user_id : user_id} })
     .then(data => {
@@ -76,8 +70,8 @@ exports.findAll = (req, res) => {
 
 // Find a single Setting with an id
 exports.findOne = (req, res) => {
-  const user_id = req.params.user_id;
-  Setting.findOne({ where: { user_id : user_id} })
+  const user_id = req.jwtDecoded.data.user_id;
+  Setting.findOne({ where: { user_id : user_id}})
     .then(data => {
       if (data) {
         res.send(data);
@@ -96,7 +90,7 @@ exports.findOne = (req, res) => {
 
 // Update a Setting by the id in the request
 exports.update = (req, res) => {
-  const user_id = req.params.user_id;
+  const user_id = req.jwtDecoded.data.user_id;
   Setting.update(req.body, {
     where: { user_id: user_id }
   })
@@ -120,7 +114,7 @@ exports.update = (req, res) => {
 
 // Delete a Setting with the specified id in the request
 exports.delete = (req, res) => {
-  const user_id = req.params.user_id;
+  const user_id = req.jwtDecoded.data.user_id;
   Setting.destroy({
     where: { user_id: user_id }
   })

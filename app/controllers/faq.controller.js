@@ -28,7 +28,7 @@ exports.create = (req, res) => {
     // Create a faq
     const faq = {
         category_id: req.body.category_id,
-        user_id: req.body.user_id,
+        user_id: req.jwtDecoded.data.user_id,
         title: req.body.title,
         content: req.body.content,
         is_visible: req.body.is_visible
@@ -52,7 +52,7 @@ exports.create = (req, res) => {
 
 // Retrieve all Faq of a category from the database.
 exports.findAll = (req, res) => {
-    const user_id = req.params.user_id;
+    const user_id = req.jwtDecoded.data.user_id;
 
     Faq.findAll({ where: {
         user_id:user_id

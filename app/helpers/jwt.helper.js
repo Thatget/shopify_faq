@@ -4,7 +4,7 @@ const {decode} = require("jsonwebtoken");
 let generateToken = (user, secretSignature, tokenLife) => {
     return new Promise((resolve, reject) => {
         const userData = {
-            shopify_access_token: user.shopify_access_token,
+            user_id: user.user_id,
             shopify_domain: user.shopify_domain,
             email: user.email
         }

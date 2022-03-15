@@ -22,7 +22,7 @@ let initAPIs = (app) => {
 
     //Faq router
     router.post("/api/faq", faq.create);
-    router.get("/api/faq/:user_id", faq.findAll);
+    router.get("/api/faq", faq.findAll);
     router.get("/api/faq/:id", faq.findOne);
     router.put("/api/faq/:id", faq.update);
     router.delete("/api/faq/:id", faq.delete);
@@ -30,25 +30,25 @@ let initAPIs = (app) => {
 
     //Setting router
     router.post("/api/setting/", setting.create);
-    router.get("/api/setting/user/user_id", setting.findAll);
-    router.get("/api/setting/:user_id", setting.findOne);
-    router.put("/api/setting/:userid", setting.update);
-    router.delete("/api/setting/:user_id", setting.delete);
+    router.get("/api/setting/user", setting.findAll);
+    router.get("/api/setting", setting.findOne);
+    router.put("/api/setting", setting.update);
+    router.delete("/api/setting", setting.delete);
 
     //Category
     router.post("/api/faq-category", category.create);
-    router.get("/api/faq-category/user/:user_id", category.findAll);
+    router.get("/api/faq-category", category.findAll);
     router.get("/api/faq-category/:id", category.findOne);
     router.put("/api/faq-category/:id", category.update);
     router.delete("/api/faq-category/:id", category.delete);
-    router.delete("/api/faq-category/user/:user_id", category.deleteAll);
+    router.delete("/api/faq-category", category.deleteAll);
 
    //User
    //  require("../routes/user.routes");
     router.post("/api/user", user.create);
-    router.get("/api/user/:id", user.findOne);
-    router.put("/api/user/:id", user.update);
-    router.delete("/api/user/:id", user.delete);
+    router.get("/api/user", user.findOne);
+    router.put("/api/user", user.update);
+    router.delete("/api/user", user.delete);
     router.delete("/api/user", user.deleteAll);
 
 
