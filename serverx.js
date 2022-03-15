@@ -7,9 +7,12 @@ const request = require('request-promise');
 const cookie = require('cookie');
 const getRawBody = require("raw-body");
 var cors = require('cors');
+const bodyParser = require('body-parser');
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 const db = require("./app/models");
 const User = db.user;
