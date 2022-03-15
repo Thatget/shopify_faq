@@ -276,14 +276,14 @@ async function login(user) {
         const userData = {
             email: user.email,
             shopify_domain:user.shopify_domain,
-            shopify_access_token:shopify_access_token
+            user_id: userId
         };
 
         const accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife);
 
         const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
 
-        return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken + '&user_id=' + userId;
+        return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
     } catch (error) {
         debug(error.message);
     }
