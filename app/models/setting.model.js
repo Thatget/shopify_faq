@@ -97,6 +97,9 @@ module.exports = (sequelize, Sequelize) => {
     faq_page_url: {
       type: Sequelize.STRING
     },
+    faq_template_number: {
+      type: Sequelize.INTEGER
+    },
   },
   {
     freezeTableName: true
