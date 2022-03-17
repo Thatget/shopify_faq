@@ -4,42 +4,8 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-  // Create a setting
-  const setting = {
-    faq_template_number: req.body.faq_template_number,
-    main_page_url: req.body.main_page_url,
-    faq_page_url: req.body.faq_page_url,
-    intro_text_content: req.body.intro_text_content,
-    footer_text_content: req.body.footer_text_content,
-    page_title_content: req.body.page_title_content,
-    show_intro_text: req.body.show_intro_text,
-    show_footer_text: req.body.show_footer_text,
-    width_faq_accordian : req.body.width_faq_accordian,
-    faq_font_color: req.body.faq_font_color,
-    faq_font_size: req.body.faq_font_size,
-    faq_bg_color: req.body.faq_bg_color,
-    faq_font_weight: req.body.faq_font_weight,
-    faq_font_family: req.body.faq_font_family,
-    faq_hover_color: req.body.faq_hover_color,
-    category_font_color: req.body.category_font_color,
-    category_font_size: req.body.category_font_size,
-    category_font_weight: req.body.category_font_weight,
-    category_font_family: req.body.category_font_family,
-    category_text_style: req.body.category_text_style,
-    category_text_align: req.body.category_text_align,
-    answer_font_size: req.body.answer_font_size,
-    answer_font_weight: req.body.answer_font_weight,
-    answer_font_color: req.body.answer_font_color,
-    answer_bg_color: req.body.answer_bg_color,
-    answer_font_family: req.body.answer_font_family,
-    show_page_title : req.body.show_page_title,
-    status: req.body.status,
-    user_id: req.jwtDecoded.data.user_id,
-    faq_sort_name: req.body.faq_sort_name,
-    faq_uncategory_hidden: req.body.faq_uncategory_hidden,
-    category_sort_name: req.body.category_sort_name,
-    dont_category_faq: req.body.dont_category_faq,
-  };
+    let setting = req.body;
+    setting.user_id = req.jwtDecoded.data.user_id;
 
   Setting.create(setting)
   .then(data => {

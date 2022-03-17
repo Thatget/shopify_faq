@@ -1,7 +1,5 @@
 const db = require("../models");
-const User = db.user;
 const FaqCategory = db.faq_category;
-const faqPage = require('../controllers/faq/Page.controller');
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -21,11 +19,7 @@ exports.create = (req, res) => {
     };
 
     FaqCategory.create(faq_category)
-        .then( async data => {
-            shop = await getShop('user_id',faq_category.user_id);
-            if (shop) {
-                await faqPage.generateContent(shop);
-            }
+        .then( data => {
             res.send(data);
         })
         .catch(err => {
@@ -84,11 +78,7 @@ exports.update = (req, res) => {
     FaqCategory.update(req.body, {
         where: { id: id }
     })
-        .then( async num => {
-            shop = await getShop('category_id',id);
-            if (shop) {
-                await faqPage.generateContent(shop);
-            }
+        .then( num => {
             if (num == 1) {
                 res.send({
                     message: "Category was updated successfully."
@@ -118,12 +108,8 @@ exports.delete = (req, res) => {
     FaqCategory.destroy({
         where: { id: id }
     })
-        .then( async num => {
+        .then( num => {
             if (num == 1) {
-                shop = await getShop('category_id', id);
-                if (shop) {
-                    await faqPage.generateContent(shop);
-                }
                 res.send({
                     message: "Category was deleted successfully!"
                 });
@@ -147,11 +133,7 @@ exports.deleteAll = (req, res) => {
         where: {user_id: user_id},
         truncate: false
     })
-        .then( async nums => {
-            shop = await getShop('user_id', user_id);
-            if (shop) {
-                await faqPage.generateContent(shop);
-            }
+        .then( nums => {
             res.send({ message: `${nums} categories were deleted successfully!` });
         })
         .catch(err => {
@@ -161,25 +143,3 @@ exports.deleteAll = (req, res) => {
             });
         });
 };
-
-async function getShop( type = 'user_id', value) {
-    let shop = null;
-    let userId = null;
-    if (type === 'category_id') {
-        await Category.findOne({where: {id: value}});
-        then(data => {
-            userId = data.dataValues.user_id;
-        })
-            .catch(err => {
-                debug(err);
-            });
-    } else userId = value;
-    await User.findOne({where: { id: userId }})
-        .then(data => {
-            shop = data.dataValues.shopify_domain;
-        })
-        .catch(err => {
-            debug(err);
-        });
-    return shop;
-}

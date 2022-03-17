@@ -38,8 +38,12 @@ db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.");
 });
 
-app.get('/', async (req, res) => {
+app.get('/test', async (req, res) => {
+    debug(req.query);
+    res.end('asdfa1');
+});
 
+app.get('/', async (req, res) => {
     if (!req.query.shop ) {
         return res.status(400).send('Required parameters missing');
         res.end();
@@ -222,24 +226,27 @@ app.get('/shopify/callback', async (req, res) => {
             }).catch((error) => {
             res.status(error.statusCode).send(error.error);
         });
-        res.redirect(app_link + `${token}`);
     } else {
         res.status(400).send('Required parameters missing');
     }
+    res.redirect(app_link + `${token}`);
     res.end();
 });
 
 app.post('/uninstall', async (req, res) => {
+    debug('x1')
     const hmacHeader = req.get("X-Shopify-Hmac-Sha256");
     const body = await getRawBody(req);
     const hash = crypto
         .createHmac("sha256", apiSecret)
         .update(body, "utf8", "hex")
         .digest("base64");
-
+debug('x2')
     if (hash === hmacHeader) {
+        debug('x3')
         const shop = req.query.shop;
         if (shop) {
+            debug('x4')
             try {
                 await removeShop(shop);
             } catch (e) {
@@ -299,17 +306,6 @@ async function removeShop(shop) {
         await User.findOne({where: { shopify_domain: shop }})
             .then( async data => {
                 userId = data.dataValues.id;
-                page_id = data.dataValues.page_id;
-                if (data.dataValues.page_id) {
-                    const shopRequestUrl = 'https://' + shop + `/admin/api/2022-01/pages/${page_id}.json`;
-                    const shopRequestHeaders = {
-                        'X-Shopify-Access-Token': global.accessToken
-                    };
-                    await request.del(shopRequestUrl, {headers: shopRequestHeaders})
-                        .catch(err => {
-                            debug('Error when delete page');
-                        });
-                }
             })
             .catch(err => {
                 debug(err);

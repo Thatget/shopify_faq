@@ -15,12 +15,6 @@ module.exports = (sequelize, Sequelize) => {
         phone: {
             type: Sequelize.STRING
         },
-        page_id: {
-            type: Sequelize.STRING
-        },
-        page_path: {
-            type: Sequelize.STRING
-        }
     }, {
         freezeTableName: true
     });

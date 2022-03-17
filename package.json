@@ -24,7 +24,6 @@
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
-    "ngrok": "^4.3.0",
     "nonce": "^1.0.4",
     "request-promise": "^4.2.6",
     "sequelize": "^6.16.3",

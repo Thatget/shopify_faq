@@ -1,5 +1,4 @@
 const db = require("../models");
-const faqPage = require('../controllers/faq/Page.controller');
 const Faq = db.faq;
 const User = db.user;
 const Category = db.faq_category;
@@ -35,11 +34,7 @@ exports.create = (req, res) => {
     };
 
     Faq.create(faq)
-        .then(async data => {
-            shop = await getShop('user_id',faq.user_id);
-            if (shop) {
-                await faqPage.generateContent(shop);
-            }
+        .then( data => {
             res.send(data);
         })
         .catch(err => {
@@ -53,7 +48,7 @@ exports.create = (req, res) => {
 // Retrieve all Faq of a category from the database.
 exports.findAll = (req, res) => {
     const user_id = req.jwtDecoded.data.user_id;
-
+debug(user_id);
     Faq.findAll({ where: {
         user_id:user_id
      } })
@@ -93,12 +88,8 @@ exports.update = (req, res) => {
     Faq.update(req.body, {
         where: { id: id }
     })
-        .then( async num => {
+        .then( num => {
             if (num == 1) {
-                shop = await getShop('faq_id', id);
-                if (shop) {
-                    await faqPage.generateContent(shop);
-                }
                 res.send({
                     message: "Faq was updated successfully."
                 });
@@ -127,12 +118,8 @@ exports.delete = (req, res) => {
     Faq.destroy({
         where: { id: id }
     })
-        .then( async num => {
+        .then( num => {
             if (num == 1) {
-                shop = await getShop('faq_id', id);
-                if (shop) {
-                    await faqPage.generateContent(shop);
-                }
                 res.send({
                     message: "Faq was deleted successfully!"
                 });
@@ -162,11 +149,7 @@ exports.deleteByCategory = (req, res) => {
         where: {category_id: category_id},
         truncate: false
     })
-        .then( async nums => {
-            shop = await getShop('faq_id', id);
-            if (shop) {
-                await faqPage.generateContent(shop);
-            }
+        .then( nums => {
             res.send({ message: `${nums} faqs were deleted successfully!` });
         })
         .catch(err => {
@@ -190,11 +173,7 @@ exports.deleteAll = (req, res) => {
         where: {user_id: user_id},
         truncate: false
     })
-        .then( async nums => {
-            shop = await getShop('user_id', user_id);
-            if (shop) {
-                await faqPage.generateContent(shop);
-            }
+        .then( nums => {
             res.send({ message: `${nums} faqs were deleted successfully!` });
         })
         .catch(err => {
@@ -205,32 +184,3 @@ exports.deleteAll = (req, res) => {
         });
 };
 
-async function getShop( type = 'user_id', value) {
-    let shop = null;
-    let userId = null;
-    if (type === 'faq_id') {
-        await Faq.findOne({where: { id: value }})
-            .then(data => {
-                userId = data.dataValues.user_id;
-            })
-            .catch(err => {
-                debug(err);
-            });
-    } else if (type === 'category_id') {
-        await Category.findOne({where: {id: value}});
-            then(data => {
-                userId = data.dataValues.user_id;
-            })
-                .catch(err => {
-                    debug(err);
-                });
-    } else userId = value;
-    await User.findOne({where: { id: userId }})
-        .then(data => {
-            shop = data.dataValues.shopify_domain;
-        })
-        .catch(err => {
-            debug(err);
-        });
-    return shop;
-}

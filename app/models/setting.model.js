@@ -100,6 +100,18 @@ module.exports = (sequelize, Sequelize) => {
     faq_template_number: {
       type: Sequelize.INTEGER
     },
+    page_under_contruction: {
+      type: Sequelize.STRING
+    },
+    search_placehoder: {
+      type: Sequelize.STRING
+    },
+    search_not_found: {
+      type: Sequelize.STRING
+    },
+    show_page_construction: {
+        type: Sequelize.BOOLEAN
+      },
   },
   {
     freezeTableName: true
