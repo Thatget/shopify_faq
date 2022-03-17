@@ -6,7 +6,8 @@ const querystring = require('querystring');
 const request = require('request-promise');
 const cookie = require('cookie');
 const getRawBody = require("raw-body");
-var cors = require('cors');
+const cors = require('cors');
+const proxy = require('express-http-proxy');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -16,9 +17,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 const db = require("./app/models");
 const User = db.user;
-const Setting = db.setting;
-const Faq = db.faq;
-const FaqCategory = db.faq_category;
 
 const port = process.env.PORT;
 const apiKey = process.env.SHOPIFY_API_KEY;
@@ -38,10 +36,7 @@ db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.");
 });
 
-app.get('/test', async (req, res) => {
-    debug(req.query);
-    res.end('asdfa1');
-});
+app.use('/test', proxy('http://localhost'));
 
 app.get('/', async (req, res) => {
     if (!req.query.shop ) {
@@ -206,47 +201,44 @@ app.get('/shopify/callback', async (req, res) => {
                         };
                         await User.create(user).then(data => {
                             debug('User created !');
-                        }).catch(err => {
-                            res.status(err.code).send(err.error);
+                        }).catch(async err => {
+                            await res.status(err.code).send(err.error);
                         });
                         token = await login(user);
                     })
-                    .catch((error) => {
-                        res.status(error.statusCode).send(error.error);
+                    .catch( async (error) => {
+                        await res.status(error.statusCode).send(error.error);
                     });
 
                 await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
                     .then((data) => {
                         debug('create webhook succeeded');
                     })
-                    .catch((error) => {
-                        res.status(error.statusCode).send(error.error);
+                    .catch( async (error) => {
+                        await res.status(error.statusCode).send(error.error);
                     });
 
-            }).catch((error) => {
-            res.status(error.statusCode).send(error.error);
+            }).catch(async (error) => {
+                await res.status(error.statusCode).send(error.error);
         });
     } else {
-        res.status(400).send('Required parameters missing');
+        await res.status(400).send('Required parameters missing');
     }
     res.redirect(app_link + `${token}`);
     res.end();
 });
 
 app.post('/uninstall', async (req, res) => {
-    debug('x1')
+    debug('ffff')
     const hmacHeader = req.get("X-Shopify-Hmac-Sha256");
     const body = await getRawBody(req);
     const hash = crypto
         .createHmac("sha256", apiSecret)
         .update(body, "utf8", "hex")
         .digest("base64");
-debug('x2')
     if (hash === hmacHeader) {
-        debug('x3')
         const shop = req.query.shop;
         if (shop) {
-            debug('x4')
             try {
                 await removeShop(shop);
             } catch (e) {
@@ -301,40 +293,15 @@ async function login(user) {
 
 async function removeShop(shop) {
     try {
-        let userId = '';
-
-        await User.findOne({where: { shopify_domain: shop }})
-            .then( async data => {
-                userId = data.dataValues.id;
+        await User.destroy({
+            where: { shopify_domain: shop }
+        })
+            .then(num => {
             })
             .catch(err => {
-                debug(err);
-                return ;
+                debug(err)
             });
 
-        await User.destroy({
-            where: { id: userId }
-        })
-            .then(num => {})
-            .catch(err => {});
-
-        await Setting.destroy({
-            where: { user_id: userId }
-        })
-            .then(num => {})
-            .catch(err => {});
-
-        await Faq.destroy({
-            where: { user_id: userId }
-        })
-            .then(num => {})
-            .catch(err => {});
-
-        await FaqCategory.destroy({
-            where: { user_id: userId }
-        })
-            .then(num => {})
-            .catch(err => {});
     } catch (error) {
         debug(error.message);
     }

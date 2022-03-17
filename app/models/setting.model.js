@@ -1,4 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
+  const User = require("./user.model.js")(sequelize, Sequelize);
   const Setting = sequelize.define("setting",
   {
     user_id: {
@@ -116,5 +117,6 @@ module.exports = (sequelize, Sequelize) => {
   {
     freezeTableName: true
   });
+  Setting.belongsTo(User, {foreignKey: 'user_id', targetKey: 'id', onDelete: 'CASCADE',});
   return Setting;
 };

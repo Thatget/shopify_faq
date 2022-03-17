@@ -16,9 +16,6 @@ app.use(cors());
 
 const db = require("./app/models");
 const User = db.user;
-const Setting = db.setting;
-const Faq = db.faq;
-const FaqCategory = db.faq_category;
 
 const port = process.env.PORT;
 const apiKey = process.env.SHOPIFY_API_KEY;
@@ -53,10 +50,7 @@ app.get('/', async (req, res) => {
             debug(err);
         });
     const state = nonce();
-    var redirectUri = forwardingAddress + '/shopify/vue-page';
-    if (!isInstalled) {
-        redirectUri = forwardingAddress + '/shopify/callback';
-    }
+    const redirectUri = forwardingAddress + '/shopify/callback';
     const pageUri = 'https://' + req.query.shop +
         '/admin/oauth/authorize?client_id=' + apiKey +
         '&scope=' + scopes +
@@ -66,81 +60,6 @@ app.get('/', async (req, res) => {
     res.redirect(pageUri);
 });
 
-app.get('/shopify/vue-page', async (req, res) => {
-    const { shop, hmac, code, state } = req.query;
-    let headerCookie = req.headers.cookie;
-    if (typeof headerCookie !== 'string') {
-        headerCookie = '';
-    }
-    const stateCookie = cookie.parse(headerCookie).state;
-
-    if (state !== stateCookie) {
-        return res.status(403).send('Request origin cannot be verified');
-    }
-
-    if (shop && hmac && code) {
-        const map = Object.assign({}, req.query);
-        var user;
-        delete map['signature'];
-        delete map['hmac'];
-        const message = querystring.stringify(map);
-        const generateHash = crypto.createHmac('sha256', apiSecret)
-            .update(message)
-            .digest('hex');
-
-        if (generateHash !== hmac) {
-            return res.status(400).send('HMAC validation failed');
-        }
-
-        const accessTokendRequestUrl = 'https://' + shop +
-            '/admin/oauth/access_token';
-        const accessTokenPayload = {
-            client_id: apiKey,
-            client_secret: apiSecret,
-            code
-        };
-        await request.post(accessTokendRequestUrl, { json: accessTokenPayload })
-            .then(async (accessTokenResponse) => {
-                const accessToken = accessTokenResponse.access_token;
-                global.accessToken = accessToken;
-                const shopRequestUrl = 'https://' + shop + '/admin/shop.json';
-                const shopRequestHeaders = {
-                    'X-Shopify-Access-Token': accessToken
-                };
-                await request.get(shopRequestUrl, {headers: shopRequestHeaders})
-                    .then(async (shopResonse) => {
-                        shopResonse = JSON.parse(shopResonse);
-                        user = {
-                            store_name: shopResonse.shop.name,
-                            shopify_domain: shopResonse.shop.domain,
-                            shopify_access_token: accessToken,
-                            email: shopResonse.shop.email,
-                            phone: shopResonse.shop.phone
-                        };
-                        await User.update(user, {
-                            where: { shopify_domain: shopResonse.shop.domain, }
-                        }).then(data => {
-                            debug('User updated !');
-                        }).catch(err => {
-                            res.status(err.statusCode).send(err.error);
-                        });
-                    })
-                    .catch((error) => {
-                        res.status(error.statusCode).send(error.error);
-                    })
-
-            }).catch((error) => {
-                debug(error);
-                res.status(error.statusCode).send(error.error);
-            });
-
-        let token = await login(user);
-        res.redirect(app_link + `${token}`);
-    } else {
-        res.status(400).send('Required parameters missing');
-    }
-    res.end();
-});
 
 app.get('/shopify/callback', async (req, res) => {
     const { shop, hmac, code, state } = req.query;
@@ -180,14 +99,7 @@ app.get('/shopify/callback', async (req, res) => {
                 const shopRequestHeaders = {
                     'X-Shopify-Access-Token': accessToken
                 };
-                const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
-                const webhook = {
-                    webhook : {
-                        topic: "app/uninstalled",
-                        address: `${forwardingAddress}/uninstall?shop=${shop}`,
-                        format: "json",
-                    }
-                };
+
 
                 await request.get(shopRequestUrl, {headers: shopRequestHeaders})
                     .then( async (shopResonse) => {
@@ -200,20 +112,41 @@ app.get('/shopify/callback', async (req, res) => {
                             email: shopResonse.shop.email,
                             phone: shopResonse.shop.phone
                         };
-                        await User.create(user).then(data => {
-                            debug('User created !');
-                        }).catch(err => {
-                            res.status(err.code).send(err.error);
-                        });
-                        token = await login(user);
-                    })
-                    .catch((error) => {
-                        res.status(error.statusCode).send(error.error);
-                    });
 
-                await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
-                    .then((data) => {
-                        debug('create webhook succeeded');
+                        await User.findOne({where: {shopify_domain: user.shopify_domain }}).
+                            then( async data =>{
+                            if (data) {
+                                await User.update(user, {
+                                    where: { shopify_domain: user.shopify_domain, }
+                                }).then(data => {
+                                    debug('User updated !');
+                                }).catch(err => {
+                                    res.status(err.code).send(err.error);
+                                });
+                            } else {
+                                await User.create(user).then(data => {
+                                    debug('User created !');
+                                }).catch(err => {
+                                    res.status(err.code).send(err.error);
+                                });
+                                const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
+                                const webhook = {
+                                    webhook : {
+                                        topic: "app/uninstalled",
+                                        address: `${forwardingAddress}/uninstall?shop=${shop}`,
+                                        format: "json",
+                                    }
+                                };
+                                await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
+                                    .then((data) => {
+                                        debug('create webhook succeeded');
+                                    })
+                                    .catch((error) => {
+                                    });
+                            }
+                        })
+
+                        token = await login(user);
                     })
                     .catch((error) => {
                         res.status(error.statusCode).send(error.error);
@@ -222,7 +155,6 @@ app.get('/shopify/callback', async (req, res) => {
             }).catch((error) => {
             res.status(error.statusCode).send(error.error);
         });
-        res.redirect(app_link + `${token}`);
     } else {
         res.status(400).send('Required parameters missing');
     }
@@ -269,7 +201,7 @@ async function login(user) {
         let jwtHelper = require("./app/helpers/jwt.helper");
         let userId = null;
 
-        await User.findOne({where: {email: user.email, shopify_domain: user.shopify_domain }})
+        await User.findOne({where: { shopify_domain: user.shopify_domain }})
             .then(data => {
                 shopify_access_token = data.dataValues.shopify_access_token;
                 userId = data.dataValues.id;
@@ -295,40 +227,12 @@ async function login(user) {
 
 async function removeShop(shop) {
     try {
-        let userId = '';
-
-        await User.findOne({where: { shopify_domain: shop }})
-            .then( async data => {
-                userId = data.dataValues.id;
-            })
-            .catch(err => {
-                debug(err);
-                return ;
-            });
-
         await User.destroy({
-            where: { id: userId }
+            where: { shopify_domain: shop }
         })
             .then(num => {})
             .catch(err => {});
 
-        await Setting.destroy({
-            where: { user_id: userId }
-        })
-            .then(num => {})
-            .catch(err => {});
-
-        await Faq.destroy({
-            where: { user_id: userId }
-        })
-            .then(num => {})
-            .catch(err => {});
-
-        await FaqCategory.destroy({
-            where: { user_id: userId }
-        })
-            .then(num => {})
-            .catch(err => {});
     } catch (error) {
         debug(error.message);
     }
