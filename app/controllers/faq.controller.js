@@ -48,7 +48,6 @@ exports.create = (req, res) => {
 // Retrieve all Faq of a category from the database.
 exports.findAll = (req, res) => {
     const user_id = req.jwtDecoded.data.user_id;
-debug(user_id);
     Faq.findAll({ where: {
         user_id:user_id
      } })

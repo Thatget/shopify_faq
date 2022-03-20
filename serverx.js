@@ -215,7 +215,7 @@ app.get('/shopify/callback', async (req, res) => {
                         debug('create webhook succeeded');
                     })
                     .catch( async (error) => {
-                        await res.status(error.statusCode).send(error.error);
+                        debug(error)
                     });
 
             }).catch(async (error) => {

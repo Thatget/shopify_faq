@@ -7,7 +7,7 @@ const request = require('request-promise');
 const cookie = require('cookie');
 const getRawBody = require("raw-body");
 const bodyParser = require('body-parser');
-var cors = require('cors');
+const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.json());
@@ -41,14 +41,6 @@ app.get('/', async (req, res) => {
         return res.status(400).send('Required parameters missing');
         res.end();
     }
-    var isInstalled;
-    await User.findAll({where: {shopify_domain: req.query.shop}})
-        .then(data => {
-            isInstalled = data.length;
-        })
-        .catch(err => {
-            debug(err);
-        });
     const state = nonce();
     const redirectUri = forwardingAddress + '/shopify/callback';
     const pageUri = 'https://' + req.query.shop +
@@ -143,6 +135,47 @@ app.get('/shopify/callback', async (req, res) => {
                                     })
                                     .catch((error) => {
                                     });
+
+                                const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
+                                const script_tag = {
+                                    script_tag: {
+                                        event: "onload",
+                                        src: "http:\/\/localhost\/css\/app.css"
+                                    }
+                                };
+                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag})
+                                    .then((data) => {
+                                        debug('create scrip_tag succeeded');
+                                    })
+                                    .catch( async (error) => {
+                                        debug(error)
+                                    });
+                                const script_tag1 = {
+                                    script_tag: {
+                                        event: "onload",
+                                        src: "https:\/\/localhost\/js\/chunk-vendors.js"
+                                    }
+                                };
+                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag1})
+                                    .then((data) => {
+                                        debug('create scrip_tag 1 succeeded');
+                                    })
+                                    .catch( async (error) => {
+                                        debug(error)
+                                    });
+                                const script_tag2 = {
+                                    script_tag: {
+                                        event: "onload",
+                                        src: "https:\/\/localhost\/js\/app.js"
+                                    }
+                                };
+                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag2})
+                                    .then((data) => {
+                                        debug('create scrip_tag 2 succeeded');
+                                    })
+                                    .catch( async (error) => {
+                                        debug(error)
+                                    });
                             }
                         })
 
@@ -216,7 +249,6 @@ async function login(user) {
         };
 
         const accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife);
-
         const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
 
         return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
@@ -232,7 +264,6 @@ async function removeShop(shop) {
         })
             .then(num => {})
             .catch(err => {});
-
     } catch (error) {
         debug(error.message);
     }
