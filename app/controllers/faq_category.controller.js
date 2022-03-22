@@ -3,6 +3,8 @@ const FaqCategory = db.faq_category;
 const User = db.user;
 const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
+    console.log(req.params)
+    console.log(req.body)
     // Validate request
     if (!req.body.title) {
         res.status(400).send({
@@ -146,20 +148,30 @@ exports.deleteAll = (req, res) => {
 
 //Faq Page
 // Retrieve all faq_category from the database of a user.
-exports.findAllInFaqPage = (req, res) => {
+exports.findAllInFaqPage = async (req, res) => {
     // Validate request
     if (!req.params.shop) {
         res.status(400).send({
             message: "Shop can not be empty!"
         });
-        return;
+        return false;
     }
     const shop = req.params.shop;
     var userID = null;
-    User.findOne({ where: { shopify_domain: shop}})
-        .then(userData => {
+    await User.findOne({ where: { shopify_domain: shop}})
+        .then(async userData => {
             if (userData) {
                 userID = userData.dataValues.id;
+                await FaqCategory.findAll({ where: {user_id: userID} })
+                    .then(data => {
+                        res.send(data);
+                    })
+                    .catch(err => {
+                        res.status(500).send({
+                            message:
+                                err.message || "Some error occurred while retrieving category."
+                        });
+                    });
             } else {
                 res.status(400).send({
                     message: "Shop name is not found!"
@@ -170,15 +182,4 @@ exports.findAllInFaqPage = (req, res) => {
             console.log(error)
             return;
     });
-
-    FaqCategory.findAll({ where: {user_id: userID} })
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving category."
-            });
-        });
 };

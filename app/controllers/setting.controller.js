@@ -126,14 +126,27 @@ exports.findOneInFaqPage = async (req, res) => {
         res.status(400).send({
             message: "Shop can not be empty!"
         });
-        return;
+        return false;
     }
     const shop = req.params.shop;
     var userID = null;
     await User.findOne({ where: { shopify_domain: shop}})
-        .then(userData => {
+        .then( async userData => {
             if (userData) {
                 userID = userData.dataValues.id;
+                await Setting.findOne({ where: { user_id : userID}})
+                    .then(data => {
+                        if (data) {
+                            res.send(data);
+                        } else {
+                            res.status(404).send({
+                                message: `Cannot find Setting with user_id=${userID}.`
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    });
             } else {
                 res.status(400).send({
                     message: "Shop name is not found!"
@@ -144,17 +157,4 @@ exports.findOneInFaqPage = async (req, res) => {
         console.log(error)
         return;
     })
-    await Setting.findOne({ where: { user_id : userID}})
-        .then(data => {
-            if (data) {
-                res.send(data);
-            } else {
-                res.status(404).send({
-                    message: `Cannot find Setting with user_id=${userID}.`
-                });
-            }
-        })
-        .catch(err => {
-            console.log(err)
-        });
 };

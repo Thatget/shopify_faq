@@ -184,41 +184,42 @@ exports.deleteAll = (req, res) => {
 
 // Faq page
 // Retrieve all Faq of a category from the database.
-exports.findAllInFaqPage = (req, res) => {
+exports.findAllInFaqPage = async (req, res) => {
     // Validate request
     if (!req.params.shop) {
-        res.status(400).send({
+        return  res.status(400).send({
             message: "Shop can not be empty!"
         });
-        return;
+        return false;
     }
     const shop = req.params.shop;
     var userID = null;
-    User.findOne({ where: { shopify_domain: shop}})
-        .then(userData => {
+    await User.findOne({ where: { shopify_domain: shop}})
+        .then( async userData => {
             if (userData) {
                 userID = userData.dataValues.id;
+                await Faq.findAll({
+                    where: {
+                        user_id: userID
+                    }
+                })
+                    .then(data => {
+                        return  res.send(data);
+                    })
+                    .catch(err => {
+                        return res.status(500).send({
+                            message:
+                                err.message || "Some error occurred while retrieving faq."
+                        })
+                    });
             } else {
-                res.status(400).send({
-                    message: "Shop name is not found!"
+                return res.status(400).send({
+                    message: "Shop name is not found !"
                 });
-                return;
+                return false;
             }
         }).catch(error => {
         console.log(error)
-        return;
+        return res.status(500).send("some error");
     })
-    Faq.findAll({ where: {
-            user_id:userID
-        } })
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving faq."
-            })
-        });
-    return;
 };
