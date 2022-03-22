@@ -10,8 +10,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors());
 
 const db = require("./app/models");
@@ -146,32 +146,6 @@ app.get('/shopify/callback', async (req, res) => {
                                 await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag})
                                     .then((data) => {
                                         debug('create scrip_tag succeeded');
-                                    })
-                                    .catch( async (error) => {
-                                        debug(error)
-                                    });
-                                const script_tag1 = {
-                                    script_tag: {
-                                        event: "onload",
-                                        src: "https:\/\/localhost\/js\/chunk-vendors.js"
-                                    }
-                                };
-                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag1})
-                                    .then((data) => {
-                                        debug('create scrip_tag 1 succeeded');
-                                    })
-                                    .catch( async (error) => {
-                                        debug(error)
-                                    });
-                                const script_tag2 = {
-                                    script_tag: {
-                                        event: "onload",
-                                        src: "https:\/\/localhost\/js\/app.js"
-                                    }
-                                };
-                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag2})
-                                    .then((data) => {
-                                        debug('create scrip_tag 2 succeeded');
                                     })
                                     .catch( async (error) => {
                                         debug(error)

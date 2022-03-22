@@ -1,6 +1,6 @@
 const db = require("../models");
 const Setting = db.setting;
-const Op = db.Sequelize.Op;
+const User = db.user;
 
 exports.create = (req, res) => {
 
@@ -18,22 +18,6 @@ exports.create = (req, res) => {
       });
   });
 };
-
-// Retrieve all Setting from the database.
-exports.findAll = (req, res) => {
-  const user_id = req.jwtDecoded.data.user_id;
-  // var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
-  Setting.findAll({ where: { user_id : user_id} })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving setting."
-      });
-    });
-  };
 
 // Find a single Setting with an id
 exports.findOne = (req, res) => {
@@ -102,3 +86,46 @@ exports.delete = (req, res) => {
       });
     });
   };
+
+// Faq page
+// Find a single Setting with an id
+exports.findOneInFaqPage = (req, res) => {
+    // Validate request
+    if (!req.params.shop) {
+        res.status(400).send({
+            message: "Shop can not be empty!"
+        });
+        return;
+    }
+    const shop = req.params.shop;
+    var userID = null;
+    User.findOne({ where: { shopify_domain: shop}})
+        .then(userData => {
+            if (userData) {
+                userID = userData.dataValues.id;
+            } else {
+                res.status(400).send({
+                    message: "Shop name is not found!"
+                });
+                return;
+            }
+        }).catch(error => {
+        console.log(error)
+        return;
+    })
+    Setting.findOne({ where: { user_id : userID}})
+        .then(data => {
+            if (data) {
+                res.send(data);
+            } else {
+                res.status(404).send({
+                    message: `Cannot find Setting with user_id=${user_id}.`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error retrieving setting with user_id=" + user_id
+            });
+        });
+};

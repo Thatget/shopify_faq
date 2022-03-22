@@ -1,7 +1,7 @@
 const db = require("../models");
 const FaqCategory = db.faq_category;
+const User = db.user;
 const Op = db.Sequelize.Op;
-
 exports.create = (req, res) => {
     // Validate request
     if (!req.body.title) {
@@ -140,6 +140,45 @@ exports.deleteAll = (req, res) => {
             res.status(500).send({
                 message:
                     err.message || "Some error occurred while removing all users."
+            });
+        });
+};
+
+//Faq Page
+// Retrieve all faq_category from the database of a user.
+exports.findAllInFaqPage = (req, res) => {
+    // Validate request
+    if (!req.params.shop) {
+        res.status(400).send({
+            message: "Shop can not be empty!"
+        });
+        return;
+    }
+    const shop = req.params.shop;
+    var userID = null;
+    User.findOne({ where: { shopify_domain: shop}})
+        .then(userData => {
+            if (userData) {
+                userID = userData.dataValues.id;
+            } else {
+                res.status(400).send({
+                    message: "Shop name is not found!"
+                });
+                return;
+            }
+        }).catch(error => {
+            console.log(error)
+            return;
+    });
+
+    FaqCategory.findAll({ where: {user_id: userID} })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving category."
             });
         });
 };

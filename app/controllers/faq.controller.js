@@ -1,7 +1,6 @@
 const db = require("../models");
 const Faq = db.faq;
 const User = db.user;
-const Category = db.faq_category;
 
 const debug = console.log.bind(console);
 
@@ -183,3 +182,41 @@ exports.deleteAll = (req, res) => {
         });
 };
 
+// Faq page
+// Retrieve all Faq of a category from the database.
+exports.findAllInFaqPage = (req, res) => {
+    // Validate request
+    if (!req.params.shop) {
+        res.status(400).send({
+            message: "Shop can not be empty!"
+        });
+        return;
+    }
+    const shop = req.params.shop;
+    var userID = null;
+    User.findOne({ where: { shopify_domain: shop}})
+        .then(userData => {
+            if (userData) {
+                userID = userData.dataValues.id;
+            } else {
+                res.status(400).send({
+                    message: "Shop name is not found!"
+                });
+                return;
+            }
+        }).catch(error => {
+        console.log(error)
+        return;
+    })
+    Faq.findAll({ where: {
+            user_id:userID
+        } })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving faq."
+            })});
+};

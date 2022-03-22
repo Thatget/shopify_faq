@@ -16,7 +16,9 @@ let initAPIs = (app) => {
 
     router.post("/refresh-token", AuthController.refreshToken);
 
-    // require("../routes/faq_category.routes");
+    router.get("/api/shop/faq/:shop", faq.findAllInFaqPage);
+    router.get("/api/shop/setting/:shop", faq.findOneInFaqPage);
+    router.get("/api/shop/faq-category/:shop", faq.findAllInFaqPage);
     // Sử dụng authMiddleware.isAuth trước những api cần xác thực
     router.use(AuthMiddleWare.isAuth);
 
