@@ -6,7 +6,7 @@ const querystring = require('querystring');
 const request = require('request-promise');
 const cookie = require('cookie');
 const getRawBody = require("raw-body");
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
@@ -140,10 +140,36 @@ app.get('/shopify/callback', async (req, res) => {
                                 const script_tag = {
                                     script_tag: {
                                         event: "onload",
-                                        src: "http:\/\/localhost\/css\/app.css"
+                                        src: "https://localhost/js/faq_page_root.js"
                                     }
                                 };
                                 await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag})
+                                    .then((data) => {
+                                        debug('create scrip_tag succeeded');
+                                    })
+                                    .catch( async (error) => {
+                                        debug(error)
+                                    });
+                                const script_tag1 = {
+                                    script_tag: {
+                                        event: "onload",
+                                        src: "https://localhost/js/app.js"
+                                    }
+                                };
+                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag1})
+                                    .then((data) => {
+                                        debug('create scrip_tag succeeded');
+                                    })
+                                    .catch( async (error) => {
+                                        debug(error)
+                                    });
+                                const script_tag2 = {
+                                    script_tag: {
+                                        event: "onload",
+                                        src: "https://localhost/js/chunk-vendors.js"
+                                    }
+                                };
+                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag2})
                                     .then((data) => {
                                         debug('create scrip_tag succeeded');
                                     })

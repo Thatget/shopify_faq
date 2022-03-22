@@ -17,8 +17,8 @@ let initAPIs = (app) => {
     router.post("/refresh-token", AuthController.refreshToken);
 
     router.get("/api/shop/faq/:shop", faq.findAllInFaqPage);
-    router.get("/api/shop/setting/:shop", faq.findOneInFaqPage);
-    router.get("/api/shop/faq-category/:shop", faq.findAllInFaqPage);
+    router.get("/api/shop/setting/:shop", setting.findOneInFaqPage);
+    router.get("/api/shop/faq-category/:shop", category.findAllInFaqPage);
     // Sử dụng authMiddleware.isAuth trước những api cần xác thực
     router.use(AuthMiddleWare.isAuth);
 
@@ -33,7 +33,6 @@ let initAPIs = (app) => {
 
     //Setting router
     router.post("/api/setting/", setting.create);
-    router.get("/api/setting/user", setting.findAll);
     router.get("/api/setting", setting.findOne);
     router.put("/api/setting", setting.update);
     router.delete("/api/setting", setting.delete);

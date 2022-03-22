@@ -218,5 +218,7 @@ exports.findAllInFaqPage = (req, res) => {
             res.status(500).send({
                 message:
                     err.message || "Some error occurred while retrieving faq."
-            })});
+            })
+        });
+    return;
 };
