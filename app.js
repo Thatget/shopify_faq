@@ -54,7 +54,6 @@ app.get('/', async (req, res) => {
     res.redirect(pageUri);
 });
 
-
 app.get('/shopify/callback', async (req, res) => {
     const { shop, hmac, code, state } = req.query;
     const stateCookie = cookie.parse(req.headers.cookie).state;
@@ -108,7 +107,7 @@ app.get('/shopify/callback', async (req, res) => {
                         };
 
                         await User.findOne({where: {shopify_domain: user.shopify_domain }}).
-                            then( async data =>{
+                        then( async data =>{
                             if (data) {
                                 await User.update(user, {
                                     where: { shopify_domain: user.shopify_domain, }
@@ -142,12 +141,12 @@ app.get('/shopify/callback', async (req, res) => {
                                 const script_tag = {
                                     script_tag: {
                                         event: "onload",
-                                        src: "https://localhost/js/faq_page_root.js"
+                                        src: `${app_link}/js/faq_page_root.js`
                                     }
                                 };
                                 await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag})
                                     .then((data) => {
-                                        debug('create scrip_tag succeeded');
+                                        debug('create scrip_tag root succeeded');
                                     })
                                     .catch( async (error) => {
                                         debug(error)
@@ -155,12 +154,12 @@ app.get('/shopify/callback', async (req, res) => {
                                 const script_tag1 = {
                                     script_tag: {
                                         event: "onload",
-                                        src: "https://localhost/js/app.js"
+                                        src: `${app_link}/js/app.js`
                                     }
                                 };
                                 await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag1})
                                     .then((data) => {
-                                        debug('create scrip_tag succeeded');
+                                        debug('create scrip_tag app succeeded');
                                     })
                                     .catch( async (error) => {
                                         debug(error)
@@ -168,12 +167,12 @@ app.get('/shopify/callback', async (req, res) => {
                                 const script_tag2 = {
                                     script_tag: {
                                         event: "onload",
-                                        src: "https://localhost/js/chunk-vendors.js"
+                                        src: `${app_link}/js/chunk-vendors.js`
                                     }
                                 };
                                 await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag2})
                                     .then((data) => {
-                                        debug('create scrip_tag succeeded');
+                                        debug('create scrip_tag chunk succeeded');
                                     })
                                     .catch( async (error) => {
                                         debug(error)
@@ -189,8 +188,8 @@ app.get('/shopify/callback', async (req, res) => {
                     });
             }).catch((error) => {
                 debug(error);
-            res.status(error.statusCode).send(error.error);
-        });
+                res.status(error.statusCode).send(error.error);
+            });
     } else {
         res.status(400).send('Required parameters missing');
     }
@@ -205,8 +204,7 @@ app.post('/uninstall', async (req, res) => {
         .createHmac("sha256", apiSecret)
         .update(body, "utf8", "hex")
         .digest("base64");
-    debug(hash)
-    debug(hmacHeader)
+    if (hmacHeader === hash) {
         const shop = req.query.shop;
         if (shop) {
             try {
@@ -215,7 +213,12 @@ app.post('/uninstall', async (req, res) => {
                 res.status(e.statusCode).send(e.error);
             }
             res.sendStatus(200);
+        } else {
+            return res.status(400).send('Required parameters missing');
         }
+    } else {
+        res.sendStatus(403);
+    }
     res.end();
 });
 
@@ -229,12 +232,6 @@ app.listen(port, () => {
 
 function verifyRequest(req, res, buf, encoding) {
     req.rawBody=buf
-    // const hmacHeader = req.get("X-Shopify-Hmac-Sha256");
-    // const body = buf.toString( encoding )
-    // const hash = crypto
-    //     .createHmac("sha256", apiSecret)
-    //     .update(body, "utf8", "hex")
-    //     .digest("base64");
 };
 
 async function login(user) {
@@ -244,25 +241,27 @@ async function login(user) {
         let userId = null;
 
         await User.findOne({where: { shopify_domain: user.shopify_domain }})
-            .then(data => {
+            .then(async data => {
                 shopify_access_token = data.dataValues.shopify_access_token;
                 userId = data.dataValues.id;
+                const userData = {
+                    email: user.email,
+                    shopify_domain:user.shopify_domain,
+                    user_id: userId
+                };
+
+                const accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife);
+                const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
+
+                return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
             })
             .catch(err => {
                 debug(err);
+                return null;
             });
-        const userData = {
-            email: user.email,
-            shopify_domain:user.shopify_domain,
-            user_id: userId
-        };
-
-        const accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife);
-        const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
-
-        return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
     } catch (error) {
         debug(error.message);
+        return null;
     }
 }
 

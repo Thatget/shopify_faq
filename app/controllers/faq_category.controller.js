@@ -3,8 +3,6 @@ const FaqCategory = db.faq_category;
 const User = db.user;
 const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
-    console.log(req.params)
-    console.log(req.body)
     // Validate request
     if (!req.body.title) {
         res.status(400).send({
