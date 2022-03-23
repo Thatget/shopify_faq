@@ -63,7 +63,6 @@ app.get('/shopify/callback', async (req, res) => {
     }
 
     if (shop && hmac && code) {
-        var token = '';
         const map = Object.assign({}, req.query);
         delete map['signature'];
         delete map['hmac'];
@@ -97,7 +96,6 @@ app.get('/shopify/callback', async (req, res) => {
                 await request.get(shopRequestUrl, {headers: shopRequestHeaders})
                     .then( async (shopResonse) => {
                         shopResonse = JSON.parse(shopResonse);
-
                         const user = {
                             store_name: shopResonse.shop.name,
                             shopify_domain: shopResonse.shop.domain,
@@ -179,8 +177,8 @@ app.get('/shopify/callback', async (req, res) => {
                                     });
                             }
                         })
-
-                        token = await login(user);
+                        let token = await login(user);
+                        res.redirect(app_link + '/' + `${token}`);
                     })
                     .catch((error) => {
                         debug(error)
@@ -193,7 +191,6 @@ app.get('/shopify/callback', async (req, res) => {
     } else {
         res.status(400).send('Required parameters missing');
     }
-    res.redirect(app_link + `${token}`);
     res.end();
 });
 
@@ -250,10 +247,9 @@ async function login(user) {
                     user_id: userId
                 };
 
-                const accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife);
-                const refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife);
+                accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife) || '';
+                refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife) || '';
 
-                return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
             })
             .catch(err => {
                 debug(err);
@@ -263,6 +259,7 @@ async function login(user) {
         debug(error.message);
         return null;
     }
+    return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
 }
 
 async function removeShop(shop) {
