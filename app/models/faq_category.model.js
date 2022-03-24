@@ -10,6 +10,9 @@ module.exports = (sequelize, Sequelize) => {
         description: {
             type: Sequelize.STRING
         },
+        position: {
+                type: Sequelize.INTEGER
+        },
         is_visible: {
             type: Sequelize.BOOLEAN
         }

@@ -15,7 +15,10 @@ module.exports = (sequelize, Sequelize) => {
         },
         is_visible: {
             type: Sequelize.BOOLEAN
-        }
+        },
+        position: {
+            type: Sequelize.INTEGER
+        },
     }, {
         freezeTableName: true
     });
