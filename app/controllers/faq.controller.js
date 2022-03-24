@@ -182,6 +182,53 @@ exports.deleteAll = (req, res) => {
         });
 };
 
+// Full text search
+// Faq.findAll({
+//     attributes: { include:[[Sequelize.literal(`MATCH (name, altName) AGAINST('shakespeare' IN NATURAL LANGUAGE MODE)`), 'score']] },
+//     where: Sequelize.literal(`MATCH (name, altName) AGAINST('shakespeare' IN NATURAL LANGUAGE MODE)`),
+//     order:[[Sequelize.literal('score'), 'DESC']],
+// });
+
+exports.searchFaqTitle = async (req, res) =>{
+    if (!req.params.shop || !req.query.title) {
+        return res.status(400).send({
+            message: "Shop can not be empty!"
+        });
+        return false;
+    }
+        const shop = req.params.shop;
+        const title = req.query.title;
+        var userID = null;
+        await User.findOne({ where: { shopify_domain: shop}})
+            .then( async userData => {
+                if (userData) {
+                    userID = userData.dataValues.id;
+                    await Faq.findAll({
+                        where: db.sequelize.literal(`MATCH (title) AGAINST ('${title}') and user_id = ${userID}`),
+                        // order:[[db.sequelize.literal('score'), 'DESC']],
+                    })
+                        .then(data => {
+                            return  res.send(data);
+                        })
+                        .catch(err => {
+                            return res.status(500).send({
+                                message:
+                                    err.message || "Some error occurred while retrieving faq."
+                            })
+                        });
+                } else {
+                    return res.status(400).send({
+                        message: "Shop name is not found !"
+                    });
+                    return false;
+                }
+            }).catch(error => {
+                console.log(error)
+                return res.status(500).send("some error");
+            })
+
+}
+
 // Faq page
 // Retrieve all Faq of a category from the database.
 exports.findAllInFaqPage = async (req, res) => {
