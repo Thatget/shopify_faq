@@ -248,7 +248,8 @@ exports.findAllInFaqPage = async (req, res) => {
                 await Faq.findAll({
                     where: {
                         user_id: userID
-                    }
+                    },
+                    order:[[db.sequelize.literal('position'), 'DESC']],
                 })
                     .then(data => {
                         return  res.send(data);

@@ -160,7 +160,10 @@ exports.findAllInFaqPage = async (req, res) => {
         .then(async userData => {
             if (userData) {
                 userID = userData.dataValues.id;
-                await FaqCategory.findAll({ where: {user_id: userID} })
+                await FaqCategory.findAll({
+                    where: {user_id: userID},
+                    order:[[db.sequelize.literal('position'), 'DESC']],
+                })
                     .then(data => {
                         res.send(data);
                     })
