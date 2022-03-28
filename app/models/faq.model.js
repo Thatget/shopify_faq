@@ -19,7 +19,12 @@ module.exports = (sequelize, Sequelize) => {
         position: {
             type: Sequelize.INTEGER
         },
-    }, {
+    },{
+        indexes: [
+            // add a FULLTEXT index
+            { type: 'FULLTEXT', name: 'text_idx', fields: ['title'] }
+        ]
+    },{
         freezeTableName: true
     });
     Faq.belongsTo(User, {foreignKey: 'user_id', targetKey: 'id', onDelete: 'CASCADE',});
