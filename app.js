@@ -40,8 +40,9 @@ db.sequelize.sync({ force: false }).then(() => {
 app.get('/', async (req, res) => {
 
     if (!req.query.shop ) {
-        return res.status(400).send('Required parameters missing');
-        res.end();
+        // return res.status(400).send('Required parameters missing');
+        // res.end()
+        return res.redirect(app_link);
     }
     const state = nonce();
     const redirectUri = forwardingAddress + '/shopify/callback';
