@@ -113,13 +113,13 @@ app.get('/shopify/callback', async (req, res) => {
                                     where: { shopify_domain: user.shopify_domain, }
                                 }).then(data => {
                                 }).catch(err => {
-                                    errorLog.error('user update error')
+                                    errorLog.error(`user update error ${err.message}`)
                                     res.status(err.code).send(err.error);
                                 });
                             } else {
                                 await User.create(user).then(data => {
                                 }).catch(err => {
-                                    errorLog.error('user created error: ')
+                                    errorLog.error(`user created error: ${err.message}`)
                                     res.status(err.code).send(err.error);
                                 });
                                 const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
@@ -134,7 +134,7 @@ app.get('/shopify/callback', async (req, res) => {
                                     .then((data) => {
                                     })
                                     .catch((error) => {
-                                        errorLog.error('webhook create: ')
+                                        errorLog.error(`webhook create: ${error.message}`)
                                     });
 
                                 const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
@@ -148,7 +148,7 @@ app.get('/shopify/callback', async (req, res) => {
                                     .then((data) => {
                                     })
                                     .catch( async (error) => {
-                                        errorLog.error('create script tag root: ')
+                                        errorLog.error(`create script tag root: ${error.message}`)
                                     });
                                 const script_tag1 = {
                                     script_tag: {
@@ -160,7 +160,7 @@ app.get('/shopify/callback', async (req, res) => {
                                     .then((data) => {
                                     })
                                     .catch( async (error) => {
-                                        errorLog.error('create script tag app error: ')
+                                        errorLog.error(`create script tag app error: ${error.message}`)
                                     });
                                 const script_tag2 = {
                                     script_tag: {
@@ -172,7 +172,7 @@ app.get('/shopify/callback', async (req, res) => {
                                     .then((data) => {
                                     })
                                     .catch( async (error) => {
-                                        errorLog.error('create script tag chunk error: ')
+                                        errorLog.error(`create script tag chunk error: ${error.message}`)
                                     });
                             }
                         })
@@ -180,11 +180,11 @@ app.get('/shopify/callback', async (req, res) => {
                         res.redirect(app_link + '/' + `${token}`);
                     })
                     .catch((error) => {
-                        errorLog.error('user get shop data: error')
+                        errorLog.error(`user get shop data: error ${error.message}`)
                         res.status(error.statusCode).send(error.error);
                     });
             }).catch((error) => {
-                errorLog.error('get data api error: ')
+                errorLog.error(`get data api error: ${error.message}`)
                 res.status(error.statusCode).send(error.error);
             });
     } else {
@@ -206,7 +206,7 @@ app.post('/uninstall', async (req, res) => {
             try {
                 await removeShop(shop);
             } catch (e) {
-                errorLog.error('uninstall error: remove shop ')
+                errorLog.error(`uninstall error: remove shop ${e.message}`)
                 res.status(e.statusCode).send(e.error);
             }
             res.sendStatus(200);
@@ -252,11 +252,11 @@ async function login(user) {
 
             })
             .catch(err => {
-                errorLog.error('error in login function get user from database')
+                errorLog.error(`error in login function get user from database ${err.message}`)
                 return null;
             });
     } catch (error) {
-        errorLog.error('error in login function')
+        errorLog.error(`error in login function ${error.message}`)
         return null;
     }
     return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
@@ -268,7 +268,9 @@ async function removeShop(shop) {
             where: { shopify_domain: shop }
         })
             .then(num => {})
-            .catch(err => {});
+            .catch(err => {
+                errorLog.error(err.message)
+            });
     } catch (error) {
         errorLog.error(error.message)
     }
