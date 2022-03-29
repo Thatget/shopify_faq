@@ -8,6 +8,8 @@ const cookie = require('cookie');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+const errorLog = require('./app/helpers/log.helper')
+
 const app = express();
 // for parsing application/json
 // app.use(bodyParser.json());
@@ -31,14 +33,13 @@ const accessTokenSecret = process.env.JWT_KEY;
 const refreshTokenLife = process.env.REFRESH_JWT_KEY_LIFE;
 const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
 
-const debug = console.log.bind(console);
+// const debug = console.log.bind(console);
 
 db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.");
 });
 
 app.get('/', async (req, res) => {
-
     if (!req.query.shop ) {
         // return res.status(400).send('Required parameters missing');
         // res.end()
@@ -111,14 +112,14 @@ app.get('/shopify/callback', async (req, res) => {
                                 await User.update(user, {
                                     where: { shopify_domain: user.shopify_domain, }
                                 }).then(data => {
-                                    debug('User updated !');
                                 }).catch(err => {
+                                    errorLog.error(`user update error ${err.message}`)
                                     res.status(err.code).send(err.error);
                                 });
                             } else {
                                 await User.create(user).then(data => {
-                                    debug('User created !');
                                 }).catch(err => {
+                                    errorLog.error(`user created error: ${err.message}`)
                                     res.status(err.code).send(err.error);
                                 });
                                 const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
@@ -131,9 +132,9 @@ app.get('/shopify/callback', async (req, res) => {
                                 };
                                 await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
                                     .then((data) => {
-                                        debug('create webhook succeeded');
                                     })
                                     .catch((error) => {
+                                        errorLog.error(`webhook create: ${error.message}`)
                                     });
 
                                 const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
@@ -145,10 +146,9 @@ app.get('/shopify/callback', async (req, res) => {
                                 };
                                 await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag})
                                     .then((data) => {
-                                        debug('create scrip_tag root succeeded');
                                     })
                                     .catch( async (error) => {
-                                        debug(error)
+                                        errorLog.error(`create script tag root: ${error.message}`)
                                     });
                                 const script_tag1 = {
                                     script_tag: {
@@ -158,10 +158,9 @@ app.get('/shopify/callback', async (req, res) => {
                                 };
                                 await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag1})
                                     .then((data) => {
-                                        debug('create scrip_tag app succeeded');
                                     })
                                     .catch( async (error) => {
-                                        debug(error)
+                                        errorLog.error(`create script tag app error: ${error.message}`)
                                     });
                                 const script_tag2 = {
                                     script_tag: {
@@ -171,10 +170,9 @@ app.get('/shopify/callback', async (req, res) => {
                                 };
                                 await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag2})
                                     .then((data) => {
-                                        debug('create scrip_tag chunk succeeded');
                                     })
                                     .catch( async (error) => {
-                                        debug(error)
+                                        errorLog.error(`create script tag chunk error: ${error.message}`)
                                     });
                             }
                         })
@@ -182,11 +180,11 @@ app.get('/shopify/callback', async (req, res) => {
                         res.redirect(app_link + '/' + `${token}`);
                     })
                     .catch((error) => {
-                        debug(error)
+                        errorLog.error(`user get shop data: error ${error.message}`)
                         res.status(error.statusCode).send(error.error);
                     });
             }).catch((error) => {
-                debug(error);
+                errorLog.error(`get data api error: ${error.message}`)
                 res.status(error.statusCode).send(error.error);
             });
     } else {
@@ -208,6 +206,7 @@ app.post('/uninstall', async (req, res) => {
             try {
                 await removeShop(shop);
             } catch (e) {
+                errorLog.error(`uninstall error: remove shop ${e.message}`)
                 res.status(e.statusCode).send(e.error);
             }
             res.sendStatus(200);
@@ -253,11 +252,11 @@ async function login(user) {
 
             })
             .catch(err => {
-                debug(err);
+                errorLog.error(`error in login function get user from database ${err.message}`)
                 return null;
             });
     } catch (error) {
-        debug(error.message);
+        errorLog.error(`error in login function ${error.message}`)
         return null;
     }
     return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
@@ -269,8 +268,10 @@ async function removeShop(shop) {
             where: { shopify_domain: shop }
         })
             .then(num => {})
-            .catch(err => {});
+            .catch(err => {
+                errorLog.error(err.message)
+            });
     } catch (error) {
-        debug(error.message);
+        errorLog.error(error.message)
     }
 }
