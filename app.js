@@ -219,6 +219,24 @@ app.post('/uninstall', async (req, res) => {
     res.end();
 });
 
+const multer = require('multer');
+const upload = multer({
+    limits: {
+        fileSize: 4 * 1024 * 1024,
+    }
+});
+const path = require('path');
+const Resize = require('./app/helpers/resizeImage.helper');
+app.post('/post', upload.single('image'), async (req, res) => {
+    const imagePath = path.join(__dirname, '/var/images/banner');
+    const fileUpload = new Resize(imagePath);
+    if (!req.file) {
+        res.status(401).json({error: 'Please provide an image'});
+    }
+    const filename = await fileUpload.save(req.file.buffer);
+    return res.status(200).json({ name: filename });
+});
+
 //Api
 const initAPIs = require("./app/routes/api");
 initAPIs(app);
