@@ -93,17 +93,34 @@ app.get('/shopify/callback', async (req, res) => {
                 const shopRequestHeaders = {
                     'X-Shopify-Access-Token': accessToken
                 };
-
-
                 await request.get(shopRequestUrl, {headers: shopRequestHeaders})
                     .then( async (shopResonse) => {
+                        let shopLocales = '';
+                        const body = {
+                            query: `
+                            query {
+                              shopLocales {
+                                locale
+                                primary
+                                published
+                              }
+                            }`
+                        };
+                        const shopRequestUrl1 = 'https://' + shop + '/admin/api/2022-01/graphql.json';
+                        await request.post(shopRequestUrl1, {headers: shopRequestHeaders, json: body})
+                            .then(data => {
+                                shopLocales = JSON.stringify(data.data);
+                            }).catch(e => {
+                                console.log(e.message)
+                            })
                         shopResonse = JSON.parse(shopResonse);
                         const user = {
                             store_name: shopResonse.shop.name,
                             shopify_domain: shopResonse.shop.domain,
                             shopify_access_token: accessToken,
                             email: shopResonse.shop.email,
-                            phone: shopResonse.shop.phone
+                            phone: shopResonse.shop.phone,
+                            shopLocales: shopLocales
                         };
 
                         await User.findOne({where: {shopify_domain: user.shopify_domain }}).
@@ -181,11 +198,11 @@ app.get('/shopify/callback', async (req, res) => {
                     })
                     .catch((error) => {
                         errorLog.error(`user get shop data: error ${error.message}`)
-                        res.status(error.statusCode).send(error.error);
+                        res.status(error.status).send(error.error);
                     });
             }).catch((error) => {
                 errorLog.error(`get data api error: ${error.message}`)
-                res.status(error.statusCode).send(error.error);
+                res.status(error.status).send(error.error);
             });
     } else {
         res.status(400).send('Required parameters missing');

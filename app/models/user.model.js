@@ -4,7 +4,9 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         shopify_domain: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull: false,
+            unique: true
         },
         shopify_access_token: {
             type: Sequelize.STRING
@@ -13,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         phone: {
+            type: Sequelize.STRING
+        },
+        shopLocales: {
             type: Sequelize.STRING
         },
     }, {

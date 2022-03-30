@@ -2,8 +2,6 @@ const db = require("../models");
 const Faq = db.faq;
 const User = db.user;
 
-const debug = console.log.bind(console);
-
 exports.create = (req, res) => {
     // Validate request
     if (!req.body.title) {
@@ -23,14 +21,17 @@ exports.create = (req, res) => {
         });
         return;
     }
+    if (!req.body.locale) {
+        res.status(400).send({
+            message: "Locale can not be empty!"
+        });
+        return;
+    }
+    const identify = '';
+
     // Create a faq
-    const faq = {
-        category_id: req.body.category_id,
-        user_id: req.jwtDecoded.data.user_id,
-        title: req.body.title,
-        content: req.body.content,
-        is_visible: req.body.is_visible
-    };
+    const faq = req.body;
+    faq.user_id = req.jwtDecoded.data.user_id;
 
     Faq.create(faq)
         .then( data => {
@@ -48,7 +49,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const user_id = req.jwtDecoded.data.user_id;
     Faq.findAll({ where: {
-        user_id:user_id
+        user_id:user_id, locale: req.query.locale
      } })
         .then(data => {
             res.send(data);
@@ -62,7 +63,7 @@ exports.findAll = (req, res) => {
 
 // Find a single Faq with an id
 exports.findOne = (req, res) => {
-    const id = req.params.id;
+    const id = req.params.id || 0;
     Faq.findByPk(id)
         .then(data => {
             if (data) {
@@ -106,15 +107,19 @@ exports.update = (req, res) => {
 
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
-    if (!req.params.id) {
+    if (!req.params.identify) {
         res.status(400).send({
             message: "Missing faq id!"
         });
         return;
     }
-    const id = req.params.id;
+    const id = req.params.identify;
+    let condition = { identify: id }
+    if (req.query.locale) {
+        condition = { locale: req.query.locale, identify: req.params.identify }
+    }
     Faq.destroy({
-        where: { id: id }
+        where: condition
     })
         .then( num => {
             if (num == 1) {
@@ -123,37 +128,13 @@ exports.delete = (req, res) => {
                 });
             } else {
                 res.send({
-                    message: `Cannot delete faq with id=${id}. Maybe faq was not found!`
+                    message: `Cannot delete faq with identify=${id}. Maybe faq was not found!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
                 message: "Could not delete faq with id=" + id
-            });
-        });
-};
-
-// Delete Faq by Category from the database.
-exports.deleteByCategory = (req, res) => {
-    if (!req.query.category_id) {
-        res.status(400).send({
-            message: "Missing category param!"
-        });
-        return;
-    }
-    const category_id = req.query.category_id;
-    Faq.destroy({
-        where: {category_id: category_id},
-        truncate: false
-    })
-        .then( nums => {
-            res.send({ message: `${nums} faqs were deleted successfully!` });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while removing all faqs."
             });
         });
 };
@@ -190,7 +171,7 @@ exports.deleteAll = (req, res) => {
 // });
 
 exports.searchFaqTitle = async (req, res) =>{
-    if (!req.params.shop || !req.query.title) {
+    if (!req.params.shop || !req.query.title || req.query.locale) {
         return res.status(400).send({
             message: "Shop can not be empty!"
         });
@@ -198,13 +179,14 @@ exports.searchFaqTitle = async (req, res) =>{
     }
         const shop = req.params.shop;
         const title = req.query.title;
+        const locale = req.query.locale;
         var userID = null;
         await User.findOne({ where: { shopify_domain: shop}})
             .then( async userData => {
                 if (userData) {
                     userID = userData.dataValues.id;
                     await Faq.findAll({
-                        where: db.sequelize.literal(`MATCH (title) AGAINST ('${title}') and user_id = ${userID}`),
+                        where: db.sequelize.literal(`MATCH (title) AGAINST ('${title}') and user_id = ${userID} and locale = ${locale}`),
                         // order:[[db.sequelize.literal('score'), 'DESC']],
                     })
                         .then(data => {
@@ -233,9 +215,9 @@ exports.searchFaqTitle = async (req, res) =>{
 // Retrieve all Faq of a category from the database.
 exports.findAllInFaqPage = async (req, res) => {
     // Validate request
-    if (!req.params.shop) {
+    if (!req.params.shop ||!req.query.locale) {
         return  res.status(400).send({
-            message: "Shop can not be empty!"
+            message: "Shop and locale can not be empty!"
         });
         return false;
     }

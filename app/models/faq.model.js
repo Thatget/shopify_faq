@@ -1,17 +1,25 @@
 module.exports = (sequelize, Sequelize) => {
     const User = require("./user.model.js")(sequelize, Sequelize);
     const Faq = sequelize.define("faq", {
-        category_id: {
-            type: Sequelize.INTEGER
-        },
         user_id: {
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        category_identify: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        identify: {
+            type: Sequelize.STRING,
+            allowNull: false
         },
         title: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull: false
         },
         content: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull: false
         },
         is_visible: {
             type: Sequelize.BOOLEAN
@@ -19,11 +27,20 @@ module.exports = (sequelize, Sequelize) => {
         position: {
             type: Sequelize.INTEGER
         },
+        locale: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
     },{
         indexes: [
             // add a FULLTEXT index
             { type: 'FULLTEXT', name: 'text_idx', fields: ['title'] }
         ],
+        uniqueKeys: {
+            Items_unique: {
+                fields: ['user_id', 'identify',]
+            }
+        },
         freezeTableName: true
     });
     Faq.belongsTo(User, {foreignKey: 'user_id', targetKey: 'id', onDelete: 'CASCADE',});
