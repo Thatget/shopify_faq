@@ -29,7 +29,7 @@ module.exports = (sequelize, Sequelize) => {
     }, {
         uniqueKeys: {
             Items_unique: {
-                fields: ['user_id', 'identify', 'category_identify']
+                fields: ['user_id', 'identify']
             }
         },
         freezeTableName: true

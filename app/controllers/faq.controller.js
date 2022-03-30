@@ -2,7 +2,7 @@ const db = require("../models");
 const Faq = db.faq;
 const User = db.user;
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     // Validate request
     if (!req.body.title) {
         res.status(400).send({
@@ -23,30 +23,97 @@ exports.create = (req, res) => {
     }
     if (!req.body.locale) {
         res.status(400).send({
-            message: "Locale can not be empty!"
+            message: "Locale must be selected!"
         });
         return;
     }
-    const identify = '';
-
-    // Create a faq
-    const faq = req.body;
-    faq.user_id = req.jwtDecoded.data.user_id;
-
-    Faq.create(faq)
-        .then( data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the faq."
-            });
+    if (!req.body.category_identify) {
+        res.status(400).send({
+            message: "Category must be selected!"
         });
+        return;
+    }
+    const title = req.body.title;
+    const locale = req.body.locale;
+    const user_id = req.jwtDecoded.data.user_id;
+    const category_identify = req.body.category_identify;
+    const faq = req.body;
+    faq.user_id = user_id;
+    let identify = '';
+
+    // Create faq when identify is not set
+    if (!req.body.identify) {
+        identify = title.trim().replace(' ', '_') + user_id + category_identify;
+        identify = await checkFaqIdentify(user_id, identify, locale, category_identify);
+        if (!identify) {
+            res.status(500).send({
+                message: "Some error occurred while creating the Category."
+            });
+            return;
+        } else {
+            faq.identify = identify;
+            // Create a faq
+            Faq.create(faq)
+                .then(data => {
+                    res.send(data);
+                })
+                .catch(err => {
+                    res.status(500).send({
+                        message:
+                            err.message || "Some error occurred while creating the faq."
+                    });
+                    return;
+                });
+        }
+    }else {
+        // Create faq for locale
+        Faq.update(faq, {
+            where: { user_id: user_id, identify: identify, locale: locale, category_identify: category_identify}
+        })
+            .then( async num => {
+                if (num == 1) {
+                    res.send({
+                        message: "Faq was updated successfully."
+                    });
+                    return;
+                } else {
+                    identify = await checkFaqIdentify(user_id, identify, locale, category_identify);
+                    if (!identify) {
+                        res.status(500).send({
+                            message: "Some error occurred while creating the Category."
+                        });
+                        return
+                    } else {
+                        faq.identify = identify;
+                        await Faq.create(faq)
+                            .then(data => {
+                                res.send(data);
+                            })
+                            .catch(err => {
+                                res.status(500).send({
+                                    message:
+                                        err.message || "Some error occurred while creating the faq."
+                                });
+                            });
+                    }
+                }
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: "Error updating faq with identify=" + identify
+                });
+            });
+    }
 };
 
 // Retrieve all Faq of a category from the database.
 exports.findAll = (req, res) => {
+    if (!req.query.locale) {
+        res.status(400).send({
+            message: "Locale must be selected!"
+        });
+        return;
+    }
     const user_id = req.jwtDecoded.data.user_id;
     Faq.findAll({ where: {
         user_id:user_id, locale: req.query.locale
@@ -107,17 +174,17 @@ exports.update = (req, res) => {
 
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
-    if (!req.params.identify) {
+    if (!req.params.id) {
         res.status(400).send({
-            message: "Missing faq id!"
+            message: "Missing faq data!"
         });
         return;
     }
-    const id = req.params.identify;
-    let condition = { identify: id }
-    if (req.query.locale) {
-        condition = { locale: req.query.locale, identify: req.params.identify }
+    let condition = { id: req.params.id };
+    if (req.query.identify && req.query.category_identify && req.jwtDecoded.data.user_id) {
+        condition = { identify:  req.query.identify, category_identify: req.query.category_identify, user_id:  req.jwtDecoded.data.user_id}
     }
+
     Faq.destroy({
         where: condition
     })
@@ -128,13 +195,13 @@ exports.delete = (req, res) => {
                 });
             } else {
                 res.send({
-                    message: `Cannot delete faq with identify=${id}. Maybe faq was not found!`
+                    message: `Cannot delete this faq Maybe faq was not found!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete faq with id=" + id
+                message: "Could not delete faq"
             });
         });
 };
@@ -171,9 +238,9 @@ exports.deleteAll = (req, res) => {
 // });
 
 exports.searchFaqTitle = async (req, res) =>{
-    if (!req.params.shop || !req.query.title || req.query.locale) {
+    if (!req.params.shop || !req.query.title || !req.query.locale) {
         return res.status(400).send({
-            message: "Shop can not be empty!"
+            message: "Data is missing!"
         });
         return false;
     }
@@ -215,21 +282,22 @@ exports.searchFaqTitle = async (req, res) =>{
 // Retrieve all Faq of a category from the database.
 exports.findAllInFaqPage = async (req, res) => {
     // Validate request
-    if (!req.params.shop ||!req.query.locale) {
+    if (!req.params.shop || !req.query.locale) {
         return  res.status(400).send({
             message: "Shop and locale can not be empty!"
         });
         return false;
     }
     const shop = req.params.shop;
-    var userID = null;
+    const locale = req.query.locale;
+    let userID = null;
     await User.findOne({ where: { shopify_domain: shop}})
         .then( async userData => {
             if (userData) {
                 userID = userData.dataValues.id;
                 await Faq.findAll({
                     where: {
-                        user_id: userID
+                        user_id: userID, locale: locale
                     },
                     order:[[db.sequelize.literal('position'), 'DESC']],
                 })
@@ -253,3 +321,17 @@ exports.findAllInFaqPage = async (req, res) => {
         return res.status(500).send("some error");
     })
 };
+
+async function checkFaqIdentify(user_id, identify, locale, category_identify) {
+    Faq.findOne({ where: { user_id: user_id, identify: identify, locale: locale, category_identify: category_identify}})
+        .then( async data => {
+            if (data) {
+                identify = identify + '_1';
+                return await checkFaqIdentify(user_id, identify, locale, category_identify);
+            } else {
+                return identify
+            }
+        }).catch(e => {
+            return null
+    })
+}
