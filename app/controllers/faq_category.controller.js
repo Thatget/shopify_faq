@@ -30,6 +30,7 @@ exports.create = async (req, res) => {
             await FaqCategory.create(faq_category)
                 .then(data => {
                     res.send(data);
+                    return;
                 })
                 .catch(err => {
                     res.status(500).send({

@@ -15,7 +15,8 @@ exports.create = async (req, res) => {
             message: "Content can not be empty!"
         });
         return;
-    }if (!req.jwtDecoded.data.user_id) {
+    }
+    if (!req.jwtDecoded.data.user_id) {
         res.status(400).send({
             message: "no user selected ?"
         });
@@ -56,6 +57,7 @@ exports.create = async (req, res) => {
             await Faq.create(faq)
                 .then(data => {
                     res.send(data);
+                    return;
                 })
                 .catch(err => {
                     res.status(500).send({
@@ -65,22 +67,45 @@ exports.create = async (req, res) => {
                     return;
                 });
         }
-    }else {
-        // Create faq for locale
-        Faq.update(faq, {
-            where: { user_id: user_id, identify: identify, locale: locale, category_identify: category_identify}
+    } else {
+        identify = req.body.identify;
+        // Check if this faq is exit
+        await Faq.findOne({
+            where: {user_id: user_id, identify: identify, locale: locale, category_identify: category_identify}
         })
-            .then( async num => {
-                if (num == 1) {
-                    res.send({
-                        message: "Faq was updated successfully."
-                    });
-                    return;
+            .then(async data => {
+                if (data) {
+                    await Faq.update(faq, {
+                        where: {
+                            user_id: user_id,
+                            identify: identify,
+                            locale: locale,
+                            category_identify: category_identify
+                        }
+                    }).then(num => {
+                        if (num == 1) {
+                            res.send({
+                                message: "Faq was updated successfully."
+                            });
+                            return;
+                        } else {
+                            res.send({
+                                message: `Cannot update category. Maybe category was not found or req.body is empty!`
+                            });
+                            return;
+                        }
+                    })
+                        .catch(err => {
+                            res.status(500).send({
+                                message: "Error updating faq with id"
+                            });
+                            return
+                        });
                 } else {
                     identify = await checkFaqIdentify(user_id, identify, locale, category_identify);
                     if (!identify) {
                         res.status(500).send({
-                            message: "Some error occurred while creating the Category."
+                            message: "Some error occurred while creating the Faq. Identify is not defined in update in create"
                         });
                         return
                     } else {
@@ -97,10 +122,9 @@ exports.create = async (req, res) => {
                             });
                     }
                 }
-            })
-            .catch(err => {
+            }).catch(err => {
                 res.status(500).send({
-                    message: "Error updating faq with identify=" + identify
+                    message: "Error retrieving faq with identify=" + identify + ` in locale ${locale}`
                 });
             });
     }
