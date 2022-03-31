@@ -53,7 +53,7 @@ exports.create = async (req, res) => {
         } else {
             faq.identify = identify;
             // Create a faq
-            Faq.create(faq)
+            await Faq.create(faq)
                 .then(data => {
                     res.send(data);
                 })
@@ -323,7 +323,7 @@ exports.findAllInFaqPage = async (req, res) => {
 };
 
 async function checkFaqIdentify(user_id, identify, locale, category_identify) {
-    Faq.findOne({ where: { user_id: user_id, identify: identify, locale: locale, category_identify: category_identify}})
+    await Faq.findOne({ where: { user_id: user_id, identify: identify, locale: locale, category_identify: category_identify}})
         .then( async data => {
             if (data) {
                 identify = identify + '_1';

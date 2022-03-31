@@ -29,7 +29,6 @@ let initAPIs = (app) => {
     router.get("/api/faq/:id", faq.findOne);
     router.put("/api/faq/:id", faq.update);
     router.delete("/api/faq/:id", faq.delete);
-    router.delete("/api/faq/:category_id", faq.deleteByCategory);
     router.delete("/api/faq", faq.deleteAll);
 
     //Setting router
@@ -46,8 +45,8 @@ let initAPIs = (app) => {
     router.delete("/api/faq-category/:id", category.delete);
     router.delete("/api/faq-category", category.deleteAll);
 
-   //User
-   //  require("../routes/user.routes");
+    //User
+    //  require("../routes/user.routes");
     router.post("/api/user", user.create);
     router.get("/api/user", user.findOne);
     router.put("/api/user", user.update);

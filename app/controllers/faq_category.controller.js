@@ -6,56 +6,77 @@ exports.create = async (req, res) => {
     // Validate request
     if (!req.body.title || !req.body.locale || !req.jwtDecoded.data.user_id) {
         res.status(400).send({
-            message: "Content and Locale can not be empty!"
+            message: "Title and Locale can not be empty!"
         });
         return;
     }
     // Create a faq_category
     const user_id = req.jwtDecoded.data.user_id;
     const locale = req.body.locale;
-    const faq_category = {
-        title: req.body.title,
-        description: req.body.description,
-        is_visible: req.body.is_visible,
-    };
+    const title = req.body.title;
+    // const faq_category = {
+    //     title: title,
+    //     description: req.body.description,
+    //     is_visible: req.body.is_visible,
+    // };
+    const faq_category = req.body;
     faq_category.user_id = user_id;
-    faq_category.locale = locale;
     let identify = '';
     if (!req.body.identify) {
         identify = title.trim().replace(' ', '_') + user_id;
-        identify = await checkCategoryIdentify(user_id, identify, locale);
+        identify = await checkCategoryIdentify(user_id, identify, locale)
         if (identify) {
             faq_category.identify = identify;
-            FaqCategory.create(faq_category)
+            await FaqCategory.create(faq_category)
                 .then(data => {
                     res.send(data);
                 })
                 .catch(err => {
                     res.status(500).send({
                         message:
-                            err.message || "Some error occurred while creating the Category."
+                            err.message || "Some error occurred while creating the Category. ??"
                     });
                 });
         }else {
             res.status(500).send({
-                message: "Some error occurred while creating the Category."
+                message: "Some error occurred while creating the Category. Identify is not defined in create"
             });
             return
         }
     } else {
-        await FaqCategory.update(req.body, {
+        identify = req.body.identify;
+        await FaqCategory.findOne({
             where: { user_id: user_id, identify: identify, locale: locale }
         })
-            .then( async num => {
-                if (num == 1) {
-                    res.send({
-                        message: "Category was updated successfully."
-                    });
+            .then( async data =>{
+                if (data) {
+                    await FaqCategory.update(req.body, {
+                        where: { user_id: user_id, identify: identify, locale: locale }
+                    })
+                        .then( num => {
+                            if (num == 1) {
+                                res.send({
+                                    message: "Category was updated successfully."
+                                });
+                                return;
+                            } else {
+                                res.send({
+                                    message: `Cannot update category. Maybe category was not found or req.body is empty!`
+                                });
+                                return;
+                            }
+                        })
+                        .catch(err => {
+                            res.status(500).send({
+                                message: "Error updating category with id=" + id
+                            });
+                            return
+                        });
                 } else {
                     identify = await checkCategoryIdentify(user_id, identify, locale);
                     if (!identify) {
                         res.status(500).send({
-                            message: "Some error occurred while creating the Category."
+                            message: "Some error occurred while creating the Category. Identify is not defined in update in create"
                         });
                         return
                     } else {
@@ -72,10 +93,9 @@ exports.create = async (req, res) => {
                             });
                     }
                 }
-            })
-            .catch(err => {
+            }).catch(err => {
                 res.status(500).send({
-                    message: "Error updating category with id=" + id
+                    message: "Error retrieving category with identify=" + identify + ` in locale ${locale}`
                 });
             });
     }
@@ -104,27 +124,44 @@ exports.findAll = (req, res) => {
 };
 
 // Find a single Category with an id
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
     const id = req.params.id;
-    FaqCategory.findByPk(id)
-        .then(data => {
-            if (data) {
-                res.send(data);
-            } else {
-                res.status(404).send({
-                    message: `Cannot find category with id=${id}.`
-                });
-            }
-        })
-        .catch(err => {
+    if (req.query.identify && req.query.locale) {
+        await FaqCategory.findOne({where: {identify: req.query.identify, locale: req.query.locale }})
+            .then(data =>{
+                if (data) {
+                    res.send(data);
+                } else {
+                    res.status(404).send({
+                        message: `Cannot find category with identify=${req.query.identify} in locale ${req.query.locale}.`
+                    });
+                }
+            }).catch(err => {
             res.status(500).send({
-                message: "Error retrieving category with id=" + id
+                message: "Error retrieving category with identify=" + req.query.identify + ` in locale ${req.query.locale}`
             });
         });
+    } else {
+        await FaqCategory.findByPk(id)
+            .then(data => {
+                if (data) {
+                    res.send(data);
+                } else {
+                    res.status(404).send({
+                        message: `Cannot find category with id=${id}.`
+                    });
+                }
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: "Error retrieving category with id=" + id
+                });
+            });
+    }
 };
 
 // Update a Category by the id in the request
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
     if (!req.params.id) {
         res.status(400).send({
             message: "Not category selected!"
@@ -132,7 +169,7 @@ exports.update = (req, res) => {
         return;
     }
     const id = req.params.id;
-    FaqCategory.update(req.body, {
+    await FaqCategory.update(req.body, {
         where: { id: id }
     })
         .then( num => {
@@ -154,7 +191,7 @@ exports.update = (req, res) => {
 };
 
 // Delete a Category with the specified id in the request
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
     if (!req.params.id) {
         res.status(400).send({
             message: "Not category selected!"
@@ -166,7 +203,7 @@ exports.delete = (req, res) => {
         condition = { identify:  req.query.identify, user_id:  req.jwtDecoded.data.user_id}
     }
 
-    FaqCategory.destroy({
+    await FaqCategory.destroy({
         where: condition
     })
         .then( num => {
@@ -188,9 +225,9 @@ exports.delete = (req, res) => {
 };
 
 // Delete all Category of a User from the database.
-exports.deleteAll = (req, res) => {
+exports.deleteAll = async (req, res) => {
     const  user_id = req.jwtDecoded.data.user_id;
-    FaqCategory.destroy({
+    await FaqCategory.destroy({
         where: {user_id: user_id},
         truncate: false
     })
@@ -248,15 +285,17 @@ exports.findAllInFaqPage = async (req, res) => {
 };
 
 async function checkCategoryIdentify(user_id, identify, locale) {
-    Faq.findOne({ where: { user_id: user_id, identify: identify, locale: locale, category_identify: category_identify}})
+    let checkedIdentify = null;
+    await FaqCategory.findOne({ where: { user_id: user_id, identify: identify, locale: locale}})
         .then( async data => {
             if (data) {
                 identify = identify + '_1';
-                return await checkCategoryIdentify(user_id, identify, locale);
+                checkedIdentify = await checkCategoryIdentify(user_id, identify, locale);
             } else {
-                return identify
+                checkedIdentify = identify
             }
         }).catch(e => {
-        return null
-    })
+        checkedIdentify = null
+    });
+    return checkedIdentify;
 }
