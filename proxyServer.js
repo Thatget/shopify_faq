@@ -7,7 +7,7 @@ const request = require('request-promise');
 const cookie = require('cookie');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const proxy = require('express-http-proxy');
+// const proxy = require('express-http-proxy');
 
 const errorLog = require('./app/helpers/log.helper')
 
@@ -265,7 +265,6 @@ app.post('/post', upload.single('image'), async (req, res) => {
 //     res.send('fa')
 // });
 app.use('/test', (req, res) => {
-    console.log(req)
 
     return res.set('Content-Type', 'application/liquid').sendFile(path.join(__dirname, './index.html'));
     return res.status(400).send('Required parameters missing');

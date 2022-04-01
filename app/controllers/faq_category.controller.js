@@ -170,6 +170,30 @@ exports.update = async (req, res) => {
         return;
     }
     const id = req.params.id;
+    await FaqCategory.findByPk(id)
+        .then(async data => {
+            if (data) {
+                let identify = data.dataValues.identify;
+                if (identify) {
+                    await FaqCategory.findOne({where: {identify: req.query.identify, locale: req.query.locale }})
+                        .then(data => {
+                            if (data) {
+
+                            }
+                        })
+                } else {
+                    res.send({
+                        message: `Some error occurred while updating with id=${id}.`
+                    });
+                    return;
+                }
+            } else {
+                res.send({
+                    message: `Cannot find category with id=${id}.`
+                });
+                return;
+            }
+        })
     await FaqCategory.update(req.body, {
         where: { id: id }
     })

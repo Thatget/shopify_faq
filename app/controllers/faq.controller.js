@@ -1,6 +1,7 @@
 const db = require("../models");
 const Faq = db.faq;
 const User = db.user;
+const errorLog = require('../helpers/log.helper')
 
 exports.create = async (req, res) => {
     // Validate request
@@ -45,10 +46,12 @@ exports.create = async (req, res) => {
     // Create faq when identify is not set
     if (!req.body.identify) {
         identify = title.trim().replace(' ', '_') + user_id + category_identify;
+        console.log(identify)
         identify = await checkFaqIdentify(user_id, identify, locale, category_identify);
+        console.log(identify)
         if (!identify) {
             res.status(500).send({
-                message: "Some error occurred while creating the Category."
+                message: "Some error occurred while creating the Faq."
             });
             return;
         } else {
@@ -347,15 +350,17 @@ exports.findAllInFaqPage = async (req, res) => {
 };
 
 async function checkFaqIdentify(user_id, identify, locale, category_identify) {
+    let checkedIdentify = null;
     await Faq.findOne({ where: { user_id: user_id, identify: identify, locale: locale, category_identify: category_identify}})
         .then( async data => {
             if (data) {
                 identify = identify + '_1';
-                return await checkFaqIdentify(user_id, identify, locale, category_identify);
+                checkedIdentify = await checkFaqIdentify(user_id, identify, locale, category_identify);
             } else {
-                return identify
+                checkedIdentify = identify
             }
-        }).catch(e => {
-            return null
+        }).catch(err => {
+            errorLog.error(`faq generate identify error ${err.message}`)
     })
+    return checkedIdentify;
 }
