@@ -46,9 +46,7 @@ exports.create = async (req, res) => {
     // Create faq when identify is not set
     if (!req.body.identify) {
         identify = title.trim().replace(' ', '_') + user_id + category_identify;
-        console.log(identify)
         identify = await checkFaqIdentify(user_id, identify, locale, category_identify);
-        console.log(identify)
         if (!identify) {
             res.status(500).send({
                 message: "Some error occurred while creating the Faq."
@@ -200,7 +198,28 @@ exports.update = async (req, res) => {
     await Faq.findByPk(id)
         .then(async data => {
             if (data) {
-                Faq.update(req.body, {
+                identify = data.dataValues.identify;
+                locale = data.dataValues.locale;
+                category_identify = data.dataValues.category_identify;
+                let faq = {
+                    title: req.body.title,
+                    description: req.body.content,
+                    is_visible: req.body.is_visible,
+                };
+                if (req.body.position) {
+                    faq.position = req.body.position;
+                }
+                if (req.body.locale) {
+                    if (!(locale !== req.body.locale)) {
+                        faq.locale = req.body.locale;
+                    }
+                }
+                if (req.body.category_identify) {
+                    if (!(category_identify === req.body.category_identify)) {
+                        faq.category_identify = req.body.category_identify;
+                    }
+                }
+                Faq.update(faq, {
                     where: { id: id }
                 })
                     .then( num => {
