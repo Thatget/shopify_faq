@@ -126,6 +126,14 @@ app.get('/shopify/callback', async (req, res) => {
 
                         await User.findOne({where: {shopify_domain: user.shopify_domain }}).
                         then( async data =>{
+                            const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
+                            await request.get(shopRequestUrlScripTag, {headers: shopRequestHeaders})
+                                .then((data) => {
+                                    console.log(data)
+                                })
+                                .catch( async (error) => {
+                                    errorLog.error(`create script tag root: ${error.message}`)
+                                });
                             if (data) {
                                 await User.update(user, {
                                     where: { shopify_domain: user.shopify_domain, }
@@ -155,43 +163,31 @@ app.get('/shopify/callback', async (req, res) => {
                                         errorLog.error(`webhook create: ${error.message}`)
                                     });
 
-                                const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
-                                const script_tag = {
-                                    script_tag: {
-                                        event: "onload",
-                                        src: `${app_link}/js/faq_page_root.js`
-                                    }
-                                };
-                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag})
-                                    .then((data) => {
-                                    })
-                                    .catch( async (error) => {
-                                        errorLog.error(`create script tag root: ${error.message}`)
-                                    });
-                                const script_tag1 = {
-                                    script_tag: {
-                                        event: "onload",
-                                        src: `${app_link}/js/app.js`
-                                    }
-                                };
-                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag1})
-                                    .then((data) => {
-                                    })
-                                    .catch( async (error) => {
-                                        errorLog.error(`create script tag app error: ${error.message}`)
-                                    });
-                                const script_tag2 = {
-                                    script_tag: {
-                                        event: "onload",
-                                        src: `${app_link}/js/chunk-vendors.js`
-                                    }
-                                };
-                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag2})
-                                    .then((data) => {
-                                    })
-                                    .catch( async (error) => {
-                                        errorLog.error(`create script tag chunk error: ${error.message}`)
-                                    });
+
+                                // const script_tag1 = {
+                                //     script_tag: {
+                                //         event: "onload",
+                                //         src: `${app_link}/js/app.js`
+                                //     }
+                                // };
+                                // await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag1})
+                                //     .then((data) => {
+                                //     })
+                                //     .catch( async (error) => {
+                                //         errorLog.error(`create script tag app error: ${error.message}`)
+                                //     });
+                                // const script_tag2 = {
+                                //     script_tag: {
+                                //         event: "onload",
+                                //         src: `${app_link}/js/chunk-vendors.js`
+                                //     }
+                                // };
+                                // await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag2})
+                                //     .then((data) => {
+                                //     })
+                                //     .catch( async (error) => {
+                                //         errorLog.error(`create script tag chunk error: ${error.message}`)
+                                //     });
                             }
                         })
                         let token = await login(user);
@@ -255,33 +251,21 @@ app.post('/post', upload.single('image'), async (req, res) => {
     return res.status(200).json({ name: filename });
 });
 
-// app.post('/test', (req, res) => {
-//     // res.set('Content-Type', 'application/liquid').sendFile(path.join(__dirname, '../client/build/index.html'));
-//     res.send('chekc')
-// });
-
-// app.use('/test', (req, res) => {
-//     console.log(req);
-//     res.send('fa')
-// });
 app.use('/test', (req, res) => {
 
-    return res.set('Content-Type', 'application/liquid').sendFile(path.join(__dirname, './index.html'));
-    return res.status(400).send('Required parameters missing');
+    const query_signature = req.query.signature;
 
-    const query_signature = req.query.signature
+    const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;
 
-    const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp
-    const generateHash = crypto.createHmac('sha256', apiKey)
+    const generateHash = crypto.createHmac('sha256', apiSecret)
         .update(sorted_params)
         .digest('hex');
-
 
     if (query_signature === generateHash) {
         const shop = req.query.shop;
         if (shop) {
             try {
-                res.set('Content-Type', 'application/liquid').sendFile(path.join(__dirname, './index.html'));
+                return res.set('Content-Type', 'application/liquid').sendFile(path.join(__dirname, './dist/index.html'));
             } catch (e) {
                 errorLog.error(e.message)
                 res.status(e.statusCode).send(e.error);

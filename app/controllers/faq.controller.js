@@ -141,6 +141,12 @@ exports.findAll = (req, res) => {
         });
         return;
     }
+    if (!req.jwtDecoded.data.user_id) {
+        res.status(400).send({
+            message: "Error not user selected ?"
+        });
+        return;
+    }
     const user_id = req.jwtDecoded.data.user_id;
     Faq.findAll({ where: {
         user_id:user_id, locale: req.query.locale
@@ -157,7 +163,13 @@ exports.findAll = (req, res) => {
 
 // Find a single Faq with an id
 exports.findOne = (req, res) => {
-    const id = req.params.id || 0;
+    if (!req.params.id) {
+        res.status(400).send({
+            message: "Faq id not selected"
+        });
+        return;
+    }
+    const id = req.params.id;
     Faq.findByPk(id)
         .then(data => {
             if (data) {
@@ -176,27 +188,39 @@ exports.findOne = (req, res) => {
 };
 
 // Update a Faq by the id in the request
-exports.update = (req, res) => {
-    const id = req.params.id;
-    Faq.update(req.body, {
-        where: { id: id }
-    })
-        .then( num => {
-            if (num == 1) {
-                res.send({
-                    message: "Faq was updated successfully."
-                });
-            } else {
-                res.send({
-                    message: `Cannot update faq with id=${id}. Maybe faq was not found or req.body is empty!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating faq with id=" + id
-            });
+exports.update = async (req, res) => {
+    if (!req.params.id || !req.body.title || req.body.content || req.body.is_visible) {
+        res.status(400).send({
+            message: "Category update missing params!"
         });
+        return;
+    }
+    const id = req.params.id;
+    // Check this faq is exits or not
+    await Faq.findByPk(id)
+        .then(async data => {
+            if (data) {
+                Faq.update(req.body, {
+                    where: { id: id }
+                })
+                    .then( num => {
+                        if (num == 1) {
+                            res.send({
+                                message: "Faq was updated successfully."
+                            });
+                        } else {
+                            res.send({
+                                message: `Cannot update faq with id=${id}. Maybe faq was not found or req.body is empty!`
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        res.status(500).send({
+                            message: "Error updating faq with id=" + id
+                        });
+                    });
+            }
+        }).catch()
 };
 
 // Delete a Tutorial with the specified id in the request

@@ -163,56 +163,56 @@ exports.findOne = async (req, res) => {
 
 // Update a Category by the id in the request
 exports.update = async (req, res) => {
-    if (!req.params.id) {
+    if (!req.params.id || !req.body.title || req.body.description || req.body.is_visible) {
         res.status(400).send({
-            message: "Not category selected!"
+            message: "Category update missing params!"
         });
         return;
     }
     const id = req.params.id;
+
+    // Check this faq_category is exits or not
     await FaqCategory.findByPk(id)
         .then(async data => {
             if (data) {
-                let identify = data.dataValues.identify;
-                if (identify) {
-                    await FaqCategory.findOne({where: {identify: req.query.identify, locale: req.query.locale }})
-                        .then(data => {
-                            if (data) {
-
+                    let faq_category = {
+                        title: req.body.title,
+                        description: req.body.description,
+                        is_visible: req.body.is_visible,
+                    };
+                    if (req.body.position) {
+                        faq_category.position = req.body.position;
+                    }
+                    await FaqCategory.update(faq_category, {
+                        where: { id: id }
+                    })
+                        .then( num => {
+                            if (num == 1) {
+                                res.send({
+                                    message: "Category was updated successfully."
+                                });
+                            } else {
+                                res.send({
+                                    message: `Cannot update category with id=${id}. Maybe category was not found or req.body is empty!`
+                                });
                             }
                         })
-                } else {
-                    res.send({
-                        message: `Some error occurred while updating with id=${id}.`
-                    });
-                    return;
-                }
+                        .catch(err => {
+                            res.status(500).send({
+                                message: "Error updating category with id=" + id
+                            });
+                        });
             } else {
                 res.send({
                     message: `Cannot find category with id=${id}.`
                 });
                 return;
             }
-        })
-    await FaqCategory.update(req.body, {
-        where: { id: id }
-    })
-        .then( num => {
-            if (num == 1) {
-                res.send({
-                    message: "Category was updated successfully."
-                });
-            } else {
-                res.send({
-                    message: `Cannot update category with id=${id}. Maybe category was not found or req.body is empty!`
-                });
-            }
-        })
-        .catch(err => {
+        }).catch(error => {
             res.status(500).send({
-                message: "Error updating category with id=" + id
+                message: "Can't find category with id=" + id
             });
-        });
+        })
 };
 
 // Delete a Category with the specified id in the request
