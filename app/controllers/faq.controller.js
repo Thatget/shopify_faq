@@ -187,7 +187,8 @@ exports.findOne = (req, res) => {
 
 // Update a Faq by the id in the request
 exports.update = async (req, res) => {
-    if (!req.params.id || !req.body.title || req.body.content || req.body.is_visible) {
+    // Check requirement params
+    if (!req.params.id || !req.body.title || !req.body.content || !req.body.is_visible) {
         res.status(400).send({
             message: "Category update missing params!"
         });
@@ -198,9 +199,10 @@ exports.update = async (req, res) => {
     await Faq.findByPk(id)
         .then(async data => {
             if (data) {
-                identify = data.dataValues.identify;
-                locale = data.dataValues.locale;
-                category_identify = data.dataValues.category_identify;
+                const user_id = data.dataValues.user_id;
+                let identify = data.dataValues.identify;
+                let locale = data.dataValues.locale;
+                let category_identify = data.dataValues.category_identify;
                 let faq = {
                     title: req.body.title,
                     description: req.body.content,
@@ -212,13 +214,37 @@ exports.update = async (req, res) => {
                 if (req.body.locale) {
                     if (!(locale !== req.body.locale)) {
                         faq.locale = req.body.locale;
+                        await Faq.findOne({where: {identify: identify, locale: locale, category_identify: category_identify, user_id: user_id }})
+                            .then(subData =>{
+                                if (!(subData.dataByValue.id === id)) {
+                                    res.status(400).send({
+                                        message: "Faq for this locale already exist!"
+                                    });
+                                    return;
+                                }
+                            }).catch(error => {
+                                res.status(400).send({
+                                    message: "Error when checking faq !"
+                                });
+                                return;
+                            })
                     }
                 }
                 if (req.body.category_identify) {
                     if (!(category_identify === req.body.category_identify)) {
-                        faq.category_identify = req.body.category_identify;
+                        // faq.category_identify = req.body.category_identify;
+                        identify = await checkFaqIdentifyUpdate(user_id, identify, req.body.category_identify);
+                        if (!identify) {
+                            res.status(400).send({
+                                message: "Error generate faq identify !"
+                            });
+                            return;
+                        }
+
                     }
                 }
+                faq.identify = identify;
+                faq.category_identify = category_identify;
                 Faq.update(faq, {
                     where: { id: id }
                 })
@@ -399,6 +425,21 @@ async function checkFaqIdentify(user_id, identify, locale, category_identify) {
             if (data) {
                 identify = identify + '_1';
                 checkedIdentify = await checkFaqIdentify(user_id, identify, locale, category_identify);
+            } else {
+                checkedIdentify = identify
+            }
+        }).catch(err => {
+            errorLog.error(`faq generate identify error ${err.message}`)
+    })
+    return checkedIdentify;
+}
+async function checkFaqIdentifyUpdate(user_id, identify, category_identify) {
+    let checkedIdentify = null;
+    await Faq.findOne({ where: { user_id: user_id, identify: identify, category_identify: category_identify}})
+        .then( async data => {
+            if (data) {
+                identify = identify + '_1';
+                checkedIdentify = await checkFaqIdentify(user_id, identify, category_identify);
             } else {
                 checkedIdentify = identify
             }

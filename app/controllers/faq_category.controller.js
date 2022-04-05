@@ -163,7 +163,7 @@ exports.findOne = async (req, res) => {
 
 // Update a Category by the id in the request
 exports.update = async (req, res) => {
-    if (!req.params.id || !req.body.title || req.body.description || req.body.is_visible) {
+    if (!req.params.id || !req.body.title || !req.body.description || !req.body.is_visible) {
         res.status(400).send({
             message: "Category update missing params!"
         });
@@ -175,14 +175,37 @@ exports.update = async (req, res) => {
     await FaqCategory.findByPk(id)
         .then(async data => {
             if (data) {
-                    let faq_category = {
-                        title: req.body.title,
-                        description: req.body.description,
-                        is_visible: req.body.is_visible,
-                    };
-                    if (req.body.position) {
-                        faq_category.position = req.body.position;
+                const user_id = data.dataValues.user_id;
+                let identify = data.dataValues.identify;
+                let locale = data.dataValues.locale;
+                let faq_category = {
+                    title: req.body.title,
+                    description: req.body.description,
+                    is_visible: req.body.is_visible,
+                };
+                if (req.body.position) {
+                    faq_category.position = req.body.position;
+                }
+                if (req.body.locale) {
+                    if (!(locale !== req.body.locale)) {
+                        faq_category.locale = req.body.locale;
+                        // Check to update with locale data
+                        await FaqCategory.findOne({where: {identify: identify, locale: locale, user_id: user_id }})
+                            .then(subData =>{
+                                if (!(subData.dataByValue.id === id)) {
+                                    res.status(400).send({
+                                        message: "Category for this locale already exist!"
+                                    });
+                                    return;
+                                }
+                            }).catch(error => {
+                                res.status(400).send({
+                                    message: "Error when checking category !"
+                                });
+                                return;
+                            })
                     }
+                }
                     await FaqCategory.update(faq_category, {
                         where: { id: id }
                     })
