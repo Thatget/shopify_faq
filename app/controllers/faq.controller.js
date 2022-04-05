@@ -253,19 +253,27 @@ exports.update = async (req, res) => {
                             res.send({
                                 message: "Faq was updated successfully."
                             });
+                            return;
                         } else {
                             res.send({
                                 message: `Cannot update faq with id=${id}. Maybe faq was not found or req.body is empty!`
                             });
+                            return;
                         }
                     })
                     .catch(err => {
                         res.status(500).send({
                             message: "Error updating faq with id=" + id
                         });
+                        return;
                     });
             }
-        }).catch()
+        }).catch(error => {
+            res.status(500).send({
+                message: "Error updating faq with id"
+            });
+            return;
+        });
 };
 
 // Delete a Tutorial with the specified id in the request
