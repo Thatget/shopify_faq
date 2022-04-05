@@ -205,18 +205,18 @@ exports.update = async (req, res) => {
                 let category_identify = data.dataValues.category_identify;
                 let faq = {
                     title: req.body.title,
-                    description: req.body.content,
+                    content: req.body.content,
                     is_visible: req.body.is_visible,
                 };
                 if (req.body.position) {
                     faq.position = req.body.position;
                 }
                 if (req.body.locale) {
-                    if (!(locale !== req.body.locale)) {
+                    if (locale !== req.body.locale) {
                         faq.locale = req.body.locale;
                         await Faq.findOne({where: {identify: identify, locale: locale, category_identify: category_identify, user_id: user_id }})
                             .then(subData =>{
-                                if (!(subData.dataByValue.id === id)) {
+                                if (subData.dataValues.id !== id) {
                                     res.status(400).send({
                                         message: "Faq for this locale already exist!"
                                     });
@@ -231,21 +231,19 @@ exports.update = async (req, res) => {
                     }
                 }
                 if (req.body.category_identify) {
-                    if (!(category_identify === req.body.category_identify)) {
-                        // faq.category_identify = req.body.category_identify;
+                    if (category_identify !== req.body.category_identify) {
                         identify = await checkFaqIdentifyUpdate(user_id, identify, req.body.category_identify);
                         if (!identify) {
                             res.status(400).send({
                                 message: "Error generate faq identify !"
                             });
                             return;
-                        }
-
+                        } else category_identify = req.body.category_identify;
                     }
                 }
                 faq.identify = identify;
                 faq.category_identify = category_identify;
-                Faq.update(faq, {
+                await Faq.update(faq, {
                     where: { id: id }
                 })
                     .then( num => {
@@ -262,6 +260,7 @@ exports.update = async (req, res) => {
                         }
                     })
                     .catch(err => {
+                        console.log(err.message)
                         res.status(500).send({
                             message: "Error updating faq with id=" + id
                         });
@@ -447,12 +446,12 @@ async function checkFaqIdentifyUpdate(user_id, identify, category_identify) {
         .then( async data => {
             if (data) {
                 identify = identify + '_1';
-                checkedIdentify = await checkFaqIdentify(user_id, identify, category_identify);
+                checkedIdentify = await checkFaqIdentifyUpdate(user_id, identify, category_identify);
             } else {
                 checkedIdentify = identify
             }
         }).catch(err => {
-            errorLog.error(`faq generate identify error ${err.message}`)
+            errorLog.error(`faq generate identify error not locale ${err.message}`)
     })
     return checkedIdentify;
 }
