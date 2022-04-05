@@ -256,10 +256,9 @@ app.set("views","./views");
 
 const defaultPage = require('./controller/defaultPage')
 
-app.use('/test', (req, res) => {
+app.use('/test', async (req, res) => {
 
     const query_signature = req.query.signature;
-
     const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;
 
     const generateHash = crypto.createHmac('sha256', apiSecret)
@@ -271,7 +270,7 @@ app.use('/test', (req, res) => {
         if (shop) {
             try {
                 const locale = req.headers['accept-language'].split(',')[0];
-                const faqs = defaultPage.findAllInFaqPageNodejs(shop, locale)
+                const faqs = await defaultPage.findAllInFaqPageNodejs(shop, locale)
                 return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs});
             } catch (e) {
                 errorLog.error(e.message);

@@ -186,6 +186,9 @@ exports.update = async (req, res) => {
                 if (req.body.position) {
                     faq_category.position = req.body.position;
                 }
+                let continueCondition;
+                continueCondition.check = false;
+
                 if (req.body.locale) {
                     if (locale !== req.body.locale) {
                         faq_category.locale = req.body.locale;
@@ -193,10 +196,8 @@ exports.update = async (req, res) => {
                         await FaqCategory.findOne({where: {identify: identify, locale: locale, user_id: user_id }})
                             .then(subData => {
                                 if (subData.dataByValue.id !== id) {
-                                     res.status(400).send({
-                                        message: "Category for this locale already exist!"
-                                    });
-                                    return;
+                                    continueCondition.check = true;
+                                    continueCondition.message = "Category for this locale already exist!";
                                 }
                             }).catch(error => {
                                 res.status(400).send({
@@ -206,25 +207,28 @@ exports.update = async (req, res) => {
                             })
                     }
                 }
-                    await FaqCategory.update(faq_category, {
-                        where: { id: id }
-                    })
-                        .then( num => {
-                            if (num == 1) {
-                                res.send({
-                                    message: "Category was updated successfully."
-                                });
-                            } else {
-                                res.send({
-                                    message: `Cannot update category with id=${id}. Maybe category was not found or req.body is empty!`
-                                });
-                            }
-                        })
-                        .catch(err => {
-                            res.status(500).send({
-                                message: "Error updating category with id=" + id
+                if (continueCondition.check) {
+                    throw new Error(continueCondition.message);
+                }
+                await FaqCategory.update(faq_category, {
+                    where: { id: id }
+                })
+                    .then( num => {
+                        if (num == 1) {
+                            res.send({
+                                message: "Category was updated successfully."
                             });
+                        } else {
+                            res.send({
+                                message: `Cannot update category with id=${id}. Maybe category was not found or req.body is empty!`
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        res.status(500).send({
+                            message: "Error updating category with id=" + id
                         });
+                    });
             } else {
                 res.send({
                     message: `Cannot find category with id=${id}.`

@@ -211,22 +211,20 @@ exports.update = async (req, res) => {
                 if (req.body.position) {
                     faq.position = req.body.position;
                 }
+                let continueCondition;
+                continueCondition.check = false;
                 if (req.body.locale) {
                     if (locale !== req.body.locale) {
                         faq.locale = req.body.locale;
                         await Faq.findOne({where: {identify: identify, locale: locale, category_identify: category_identify, user_id: user_id }})
                             .then(subData =>{
                                 if (subData.dataValues.id !== id) {
-                                    res.status(400).send({
-                                        message: "Faq for this locale already exist!"
-                                    });
-                                    return;
+                                    continueCondition.check = true;
+                                    continueCondition.message = "Faq for this locale already exist!";
                                 }
                             }).catch(error => {
-                                res.status(400).send({
-                                    message: "Error when checking faq !"
-                                });
-                                return;
+                                continueCondition.check = true;
+                                continueCondition.message = `Error when checking faq ${error.message}`;
                             })
                     }
                 }
@@ -234,12 +232,13 @@ exports.update = async (req, res) => {
                     if (category_identify !== req.body.category_identify) {
                         identify = await checkFaqIdentifyUpdate(user_id, identify, req.body.category_identify);
                         if (!identify) {
-                            res.status(400).send({
-                                message: "Error generate faq identify !"
-                            });
-                            return;
+                            continueCondition.check = true;
+                            continueCondition.message = "Error generate faq identify !";
                         } else category_identify = req.body.category_identify;
                     }
+                }
+                if (continueCondition.check) {
+                    throw new Error(continueCondition.message);
                 }
                 faq.identify = identify;
                 faq.category_identify = category_identify;
@@ -269,7 +268,7 @@ exports.update = async (req, res) => {
             }
         }).catch(error => {
             res.status(500).send({
-                message: "Error updating faq with id"
+                message: error.message
             });
             return;
         });
