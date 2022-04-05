@@ -251,6 +251,11 @@ app.post('/post', upload.single('image'), async (req, res) => {
     return res.status(200).json({ name: filename });
 });
 
+app.set("view engine","ejs");
+app.set("views","./views");
+
+const defaultPage = require('./controller/defaultPage')
+
 app.use('/test', (req, res) => {
 
     const query_signature = req.query.signature;
@@ -265,10 +270,12 @@ app.use('/test', (req, res) => {
         const shop = req.query.shop;
         if (shop) {
             try {
-                return res.set('Content-Type', 'application/liquid').sendFile(path.join(__dirname, './dist/index.html'));
+                const locale = req.headers['accept-language'].split(',')[0];
+                const faqs = defaultPage.findAllInFaqPageNodejs(shop, locale)
+                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs});
             } catch (e) {
-                errorLog.error(e.message)
-                res.status(e.statusCode).send(e.error);
+                errorLog.error(e.message);
+                res.status(400).send('unexpected error occurred');
             }
             res.sendStatus(200);
         } else {
@@ -284,9 +291,6 @@ app.use('/test', (req, res) => {
 //Api
 const initAPIs = require("./app/routes/api");
 initAPIs(app);
-
-
-// app.use('/test', proxy('http://localhost'));
 
 app.listen(port, () => {
     console.log(`Server runing on port ${port} !`);

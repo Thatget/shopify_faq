@@ -1,0 +1,12 @@
+<% if(faqs.length){ %>
+   <table>
+   <% for(var i=0; i < faqs.length; i++) { %>
+      <tr>
+        <td><%= faqs[i].id %></td>
+        <td><%= faqs[i].name %></td>
+      </tr>
+   <% } %>
+   </table>
+<% } else { %>
+   <h1>have no faq</h1>
+ <% } %>
