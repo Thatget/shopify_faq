@@ -59,7 +59,7 @@ exports.update = (req, res) => {
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error updating setting with user_id=" + user_id
+        message: err.message
       });
     });
 };

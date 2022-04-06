@@ -270,7 +270,8 @@ app.use('/test', async (req, res) => {
         if (shop) {
             try {
                 const locale = req.headers['accept-language'].split(',')[0];
-                const faqs = await defaultPage.findAllInFaqPageNodejs(shop, locale)
+                const faqs = await defaultPage.findAllInFaqPageNodejs(shop, locale);
+                // console.log(faqs)
                 return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs});
             } catch (e) {
                 errorLog.error(e.message);

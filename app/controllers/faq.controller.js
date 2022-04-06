@@ -211,7 +211,7 @@ exports.update = async (req, res) => {
                 if (req.body.position) {
                     faq.position = req.body.position;
                 }
-                let continueCondition;
+                let continueCondition = {};
                 continueCondition.check = false;
                 if (req.body.locale) {
                     if (locale !== req.body.locale) {
