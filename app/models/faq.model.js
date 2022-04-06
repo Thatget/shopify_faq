@@ -18,18 +18,21 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
         content: {
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT,
             allowNull: false
         },
         is_visible: {
-            type: Sequelize.BOOLEAN
+            type: Sequelize.BOOLEAN,
+            defaultValue: true,
         },
         position: {
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            defaultValue: 0,
         },
         locale: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            defaultValue: 'en',
         },
     },{
         indexes: [

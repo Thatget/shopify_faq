@@ -112,7 +112,7 @@ app.get('/shopify/callback', async (req, res) => {
                             .then(data => {
                                 shopLocales = JSON.stringify(data.data);
                             }).catch(e => {
-                                console.log(e.message)
+                                errorLog.error(`create script tag root: ${error.message}`)
                             })
                         shopResonse = JSON.parse(shopResonse);
                         const user = {
@@ -126,14 +126,6 @@ app.get('/shopify/callback', async (req, res) => {
 
                         await User.findOne({where: {shopify_domain: user.shopify_domain }}).
                         then( async data =>{
-                            const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
-                            await request.get(shopRequestUrlScripTag, {headers: shopRequestHeaders})
-                                .then((data) => {
-                                    console.log(data)
-                                })
-                                .catch( async (error) => {
-                                    errorLog.error(`create script tag root: ${error.message}`)
-                                });
                             if (data) {
                                 await User.update(user, {
                                     where: { shopify_domain: user.shopify_domain, }
@@ -146,8 +138,17 @@ app.get('/shopify/callback', async (req, res) => {
                                 await User.create(user).then(data => {
                                 }).catch(err => {
                                     errorLog.error(`user created error: ${err.message}`)
-                                    res.status(err.code).send(err.error);
+                                    res.status(err.status).send(err.error);
                                 });
+
+                                const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
+                                await request.get(shopRequestUrlScripTag, {headers: shopRequestHeaders})
+                                    .then((data) => {
+                                    })
+                                    .catch( async (error) => {
+                                        errorLog.error(`create script tag root: ${error.message}`)
+                                    });
+
                                 const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
                                 const webhook = {
                                     webhook : {
@@ -162,32 +163,6 @@ app.get('/shopify/callback', async (req, res) => {
                                     .catch((error) => {
                                         errorLog.error(`webhook create: ${error.message}`)
                                     });
-
-
-                                // const script_tag1 = {
-                                //     script_tag: {
-                                //         event: "onload",
-                                //         src: `${app_link}/js/app.js`
-                                //     }
-                                // };
-                                // await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag1})
-                                //     .then((data) => {
-                                //     })
-                                //     .catch( async (error) => {
-                                //         errorLog.error(`create script tag app error: ${error.message}`)
-                                //     });
-                                // const script_tag2 = {
-                                //     script_tag: {
-                                //         event: "onload",
-                                //         src: `${app_link}/js/chunk-vendors.js`
-                                //     }
-                                // };
-                                // await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag2})
-                                //     .then((data) => {
-                                //     })
-                                //     .catch( async (error) => {
-                                //         errorLog.error(`create script tag chunk error: ${error.message}`)
-                                //     });
                             }
                         })
                         let token = await login(user);
@@ -199,7 +174,7 @@ app.get('/shopify/callback', async (req, res) => {
                     });
             }).catch((error) => {
                 errorLog.error(`get data api error: ${error.message}`)
-                res.status(error.status).send(error.error);
+                res.status(error.statusCode).send(error.message);
             });
     } else {
         res.status(400).send('Required parameters missing');

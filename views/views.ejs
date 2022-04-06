@@ -1,18 +1,30 @@
 <div style="margin:1.8em auto;max-width:900px;">
     <div style="text-align: center">
     Setting content !
-        <%= faqs['settingData'].search_placehoder %>
+        <% if(faqs['settingData']) { %>
+            <%= faqs['settingData'].search_placehoder %>
+        <% } %>
     </div>
 
     <div>
-        <input type="text" placeholder="Search.." name="search">
+        <% if(faqs['settingData']) { %>
+            <input type="text" placeholder="<%= faqs['settingData'].search_placehoder %>" name="search">
+        <% } %>
         <button type="submit"></button>
     </div>
     <% if(faqs['faqData'].length){ %>
        <div>
        <% for(var i=0; i < faqs['faqData'].length; i++) { %>
-            <div  ><%= faqs['faqData'][i].title %></div>
-            <div style="display: none"><%= faqs['faqData'][i].content %></div>
+           <%if (faqs['faqData'][i].is_visible) { %>
+               <% for(var j=0; j < faqs['cateData'].length; j++) { %>
+                    <% if (faqs['faqData'][i].category_identify === faqs['cateData'][j].identify) {%>
+                        <% if (faqs['cateData'][j].is_visible) { %>
+                            <div><span><%= faqs['faqData'][i].title %></span><%= faqs['cateData'][j].identify %></div>
+                            <div style="display: none"><%= faqs['faqData'][i].content %></div>
+                        <% } %>
+                    <% } %>
+               <% } %>
+           <% } %>
        <% } %>
        </div>
     <% } else { %>
@@ -20,17 +32,7 @@
      <% } %>
 </div>
 <script>
-    var x=`<%= faqs['settingData'].search_placehoder%>`;
-    function decodeHTMLEntities (str) {
-        if(str && typeof str === 'string') {
-            // strip script/html tags
-            str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-            str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-        }
 
-        return str;
-    }
-    alert(decodeHTMLEntities(x))
 </script>
 <style>
 

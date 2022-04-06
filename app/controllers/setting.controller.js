@@ -43,7 +43,11 @@ exports.findOne = (req, res) => {
 // Update a Setting by the id in the request
 exports.update = (req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
-  Setting.update(req.body, {
+  const setting = req.body;
+  if (setting.user_id) {
+      delete setting.user_id;
+  }
+  Setting.update(setting, {
     where: { user_id: user_id }
   })
     .then(num => {
