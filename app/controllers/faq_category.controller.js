@@ -163,7 +163,7 @@ exports.findOne = async (req, res) => {
 
 // Update a Category by the id in the request
 exports.update = async (req, res) => {
-    if (!req.params.id || !req.body.title || !req.body.description || !req.body.is_visible) {
+    if (!req.params.id || !req.body.title || !req.body.description) {
         res.status(400).send({
             message: "Category update missing params!"
         });
@@ -195,7 +195,7 @@ exports.update = async (req, res) => {
                         // Check to update with locale data
                         await FaqCategory.findOne({where: {identify: identify, locale: locale, user_id: user_id }})
                             .then(subData => {
-                                if (subData.dataByValue.id !== id) {
+                                if (subData.dataValues.id !== id) {
                                     continueCondition.check = true;
                                     continueCondition.message = "Category for this locale already exist!";
                                 }

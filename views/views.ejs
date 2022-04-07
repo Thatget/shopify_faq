@@ -1,15 +1,12 @@
 <div style="margin:1.8em auto;max-width:900px;">
     <div style="text-align: center">
-    Setting content !
-        <% if(faqs['settingData']) { %>
-            <%= faqs['settingData'].search_placehoder %>
+        <% if(faqs['settingData'].page_title_content) { %>
+            <%= faqs['settingData'].page_title_content %>
         <% } %>
     </div>
 
     <div>
-        <% if(faqs['settingData']) { %>
-            <input type="text" placeholder="<%= faqs['settingData'].search_placehoder %>" name="search">
-        <% } %>
+        <input type="text" <% if(faqs['settingData'].search_placehoder) {%> placeholder="<%= faqs['settingData'].search_placehoder %>" <%}%> name="search">
         <button type="submit"></button>
     </div>
     <% if(faqs['faqData'].length){ %>
@@ -19,7 +16,7 @@
                <% for(var j=0; j < faqs['cateData'].length; j++) { %>
                     <% if (faqs['faqData'][i].category_identify === faqs['cateData'][j].identify) {%>
                         <% if (faqs['cateData'][j].is_visible) { %>
-                            <div><span><%= faqs['faqData'][i].title %></span><%= faqs['cateData'][j].identify %></div>
+                            <div onclick="showHideContent(this)"><span><%= faqs['faqData'][i].title %></span><%= faqs['cateData'][j].identify %></div>
                             <div style="display: none"><%= faqs['faqData'][i].content %></div>
                         <% } %>
                     <% } %>
@@ -32,7 +29,16 @@
      <% } %>
 </div>
 <script>
-
+    var str = `<%=faqs['settingData'].search_placehoder%>`;
+    function showHideContent(el) {
+        var content = el.nextElementSibling;
+        console.log(content)
+        if (content.stype.display === "block") {
+            content.stype.display = "none";
+        } else {
+            content.stype.display = "block";
+        }
+    }
 </script>
 <style>
 

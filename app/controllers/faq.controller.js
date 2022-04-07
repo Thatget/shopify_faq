@@ -188,9 +188,9 @@ exports.findOne = (req, res) => {
 // Update a Faq by the id in the request
 exports.update = async (req, res) => {
     // Check requirement params
-    if (!req.params.id || !req.body.title || !req.body.content || !req.body.is_visible) {
+    if (!req.params.id || !req.body.title || !req.body.content ) {
         res.status(400).send({
-            message: "Category update missing params!"
+            message: "Faq update missing params!"
         });
         return;
     }
