@@ -107,13 +107,13 @@ app.get('/shopify/callback', async (req, res) => {
                               }
                             }`
                         };
-                        const shopRequestUrl1 = 'https://' + shop + '/admin/api/2022-01/graphql.json';
-                        await request.post(shopRequestUrl1, {headers: shopRequestHeaders, json: body})
+                        const shopRequestUrlLocale = 'https://' + shop + '/admin/api/2022-01/graphql.json';
+                        await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
                             .then(data => {
                                 shopLocales = JSON.stringify(data.data);
                             }).catch(e => {
-                                errorLog.error(`create script tag root: ${error.message}`)
-                            })
+                                errorLog.error(`get shop locale: ${error.message}`)
+                            });
                         shopResonse = JSON.parse(shopResonse);
                         const user = {
                             store_name: shopResonse.shop.name,
@@ -141,13 +141,13 @@ app.get('/shopify/callback', async (req, res) => {
                                     res.status(err.status).send(err.error);
                                 });
 
-                                const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
-                                await request.get(shopRequestUrlScripTag, {headers: shopRequestHeaders})
-                                    .then((data) => {
-                                    })
-                                    .catch( async (error) => {
-                                        errorLog.error(`create script tag root: ${error.message}`)
-                                    });
+                                // const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
+                                // await request.get(shopRequestUrlScripTag, {headers: shopRequestHeaders})
+                                //     .then((data) => {
+                                //     })
+                                //     .catch( async (error) => {
+                                //         errorLog.error(`create script tag root: ${error.message}`)
+                                //     });
 
                                 const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
                                 const webhook = {

@@ -3,7 +3,6 @@ const Faq = db.faq;
 const User = db.user;
 const Setting = db.setting;
 const FaqCategory = db.faq_category;
-// const he = require('he');
 const errorLog = require('../app/helpers/log.helper');
 
 
@@ -57,6 +56,8 @@ async function getSetting(userID, locale) {
                         if (v.locale === locale) {
                             data.search_not_found = v.content;
                             return false;
+                        } else {
+                            data.search_not_found = null;
                         }
                         return true;
                     });
@@ -64,12 +65,14 @@ async function getSetting(userID, locale) {
                     errorLog.error(`setting json parse error ${e.message}`)
                 }
             };
-            if (settingData.show_intro_text) {
+            if (settingData.intro_text_content) {
                 try {
-                    JSON.parse(settingData.show_intro_text).every(v => {
+                    JSON.parse(settingData.intro_text_content).every(v => {
                         if (v.locale === locale) {
-                            data.show_intro_text = v.content;
+                            data.intro_text_content = v.content;
                             return false;
+                        } else {
+                            data.intro_text_content = null;
                         }
                         return true;
                     });
@@ -82,8 +85,9 @@ async function getSetting(userID, locale) {
                     JSON.parse(settingData.search_placehoder).every(v => {
                         if (v.locale === locale) {
                             data.search_placehoder = v.content;
-                            console.log(v.content)
                             return false;
+                        } else {
+                            data.search_placehoder = null;
                         }
                         return true;
                     });
@@ -97,6 +101,8 @@ async function getSetting(userID, locale) {
                         if (v.locale === locale) {
                             data.page_title_content = v.content;
                             return false;
+                        } else {
+                            data.page_title_content = null;
                         }
                         return true;
                     });
@@ -110,6 +116,8 @@ async function getSetting(userID, locale) {
                         if (v.locale === locale) {
                             data.footer_text_content = v.content;
                             return false;
+                        } else {
+                            data.footer_text_content = null;
                         }
                         return true;
                     });
@@ -120,6 +128,5 @@ async function getSetting(userID, locale) {
     }).catch(error => {
         errorLog.error(`get setting frontend proxy ${error.message}`)
     });
-    console.log(data.search_placehoder)
     return data;
 }

@@ -1,5 +1,6 @@
 const db = require("../models");
 const Setting = db.setting;
+const TemplateSetting = db.template_setting;
 const User = db.user;
 
 exports.create = (req, res) => {
