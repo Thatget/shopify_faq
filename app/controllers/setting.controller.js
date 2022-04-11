@@ -3,15 +3,26 @@ const Setting = db.setting;
 const TemplateSetting = db.template_setting;
 const User = db.user;
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
 
     // Create a setting
     const setting = req.body;
     setting.user_id = req.jwtDecoded.data.user_id;
 
+    let template_setting = {};
+    let setting_data = {};
   Setting.create(setting)
-  .then(data => {
-      res.send(data);
+  .then(async data => {
+      let return_data = {};
+      setting_data = data.dataValues;
+      setting.setting_id = setting_data.id;
+      try {
+          template_setting = await createFaqTemplate(setting);
+          delete template_setting.id;
+      } catch (e) {
+      }
+      return_data = {setting_data,template_setting};
+      res.send(return_data);
   })
   .catch(err => {
       res.status(500).send({
@@ -22,12 +33,25 @@ exports.create = (req, res) => {
 };
 
 // Find a single Setting with an id
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
-  Setting.findOne({ where: { user_id : user_id}})
+  let return_setting_data = {};
+  let template_setting = {};
+  let setting_data = {};
+  await Setting.findOne({ where: { user_id : user_id}})
     .then(data => {
       if (data) {
-        res.send(data);
+          setting_data = data.dataValues;
+          if (setting_data.template_number) {
+              TemplateSetting.findOne({ where: { setting_id : setting_data.id, template_number: setting_data.template_number}})
+                  .then(template_setting_data => {
+                      if (template_setting_data) {
+                          template_setting = template_setting_data.dataValues;
+                      }
+                  }).catch()
+          }
+          return_setting_data = {setting_data, template_setting}
+        res.send(return_setting_data);
       } else {
         res.status(404).send({
           message: `Cannot find Setting with user_id=${user_id}.`
@@ -42,31 +66,69 @@ exports.findOne = (req, res) => {
   };
 
 // Update a Setting by the id in the request
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
   const setting = req.body;
   if (setting.user_id) {
       delete setting.user_id;
   }
-  Setting.update(setting, {
-    where: { user_id: user_id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "Setting was updated successfully."
+  if (setting.id) {
+      delete setting.id;
+  }
+    await Setting.findOne({ where: { user_id : user_id}})
+        .then(async data => {
+            if (data) {
+                let setting_data_id = data.dataValues.id;
+                // Update Setting
+                await Setting.update(setting, {
+                    where: { id: setting_data_id }
+                })
+                    .then(num => {
+                        if (num == 1) {
+                        } else {
+                        }
+                    })
+                    .catch(err => {
+                        res.status(500).send({
+                            message: err.message
+                        });
+                    });
+                if (req.body.faq_template_number) {
+                    await TemplateSetting.findOne({where: {template_number: req.body.faq_template_number, setting_id: setting_data_id}})
+                        .then(async data => {
+                            if (data) {
+                                // Update template setting
+                                await TemplateSetting.update(setting, {where: {template_number: req.body.faq_template_number, setting_id: setting_data_id}})
+                                    .then(num => {
+                                        if (num == 1) {
+                                        } else {
+                                        }
+                                    })
+                                    .catch(err => {});
+                            } else {
+                                // Create template setting
+                                setting.id = setting_data_id;
+                                this.createTemplate(setting)
+                            }
+                        })
+                        .catch(err => {
+                            res.status(500).send({
+                                message: "Error retrieving category with id=" + id
+                            });
+                        });
+                }
+            } else {
+                res.status(404).send({
+                    message: `Cannot find Setting with user_id=${user_id}.`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                // message: "Error retrieving setting in updating with user_id=" + user_id
+                message: err.message
+            });
         });
-      } else {
-        res.send({
-          message: `Cannot update Setting with user_id=${user_id}. Maybe Setting was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message
-      });
-    });
 };
 
 // Delete a Setting with the specified id in the request
@@ -104,7 +166,7 @@ exports.findOneInFaqPage = async (req, res) => {
         return false;
     }
     const shop = req.params.shop;
-    var userID = null;
+    let userID = null;
     await User.findOne({ where: { shopify_domain: shop}})
         .then( async userData => {
             if (userData) {
@@ -133,3 +195,14 @@ exports.findOneInFaqPage = async (req, res) => {
         return;
     })
 };
+
+async function createFaqTemplate(templateSetting) {
+    let template_setting = null;
+    TemplateSetting.create(templateSetting)
+        .then(data => {
+            template_setting = data.dataValues
+        })
+        .catch(err => {}
+        );
+    return template_setting;
+}

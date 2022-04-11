@@ -1,58 +1,11 @@
-<div style="margin:1.8em auto;max-width:900px;">
-    <div style="text-align: center">
-        <% if(faqs['settingData'].page_title_content) { %>
-            <%= faqs['settingData'].page_title_content %>
-        <% } %>
-    </div>
-
-    <div>
-        <input type="text" <% if(faqs['settingData'].search_placehoder) {%> placeholder="<%= faqs['settingData'].search_placehoder %>" <%}%> name="search">
-    </div>
-    <div>
-        <% if(faqs['settingData'].show_intro_text) {%>
-            <% if(faqs['settingData'].intro_text_content) {%>
-                <%- faqs['settingData'].intro_text_content %>
-            <% } %>
-        <% } %>
-    </div>
-    <% if(faqs['faqData'].length){ %>
-       <div style="margin-bottom: 12px;">
-       <% for(var i=0; i < faqs['faqData'].length; i++) { %>
-           <%if (faqs['faqData'][i].is_visible) { %>
-               <% for(var j=0; j < faqs['cateData'].length; j++) { %>
-                    <% if (faqs['faqData'][i].category_identify === faqs['cateData'][j].identify) {%>
-                        <% if (faqs['cateData'][j].is_visible) { %>
-                           <div style="width: 100%;font-weight: bold;cursor: pointer; padding: 1em;" onclick="showHideContent(this)">
-                               <span><%= faqs['faqData'][i].title %></span>
-                               <span style="float:right;"><%- faqs['cateData'][j].identify %></span>
-                               <hr style="margin: 0;">
-                           </div>
-                            <div style="display: none"><%- faqs['faqData'][i].content %></div>
-                        <% } %>
-                    <% } %>
-               <% } %>
-           <% } %>
-       <% } %>
-       </div>
-    <% } else { %>
-       <h1>have no faq</h1>
-     <% } %>
-    <div>
-        <% if(faqs['settingData'].show_footer_text) {%>
-            <% if(faqs['settingData'].footer_text_content) {%>
-                <%- faqs['settingData'].footer_text_content %>
-            <% } %>
-        <% } %>
-    </div>
-</div>
-<script>
-    var str = `<%=faqs['settingData'].search_placehoder%>`;
-    function showHideContent(el) {
-        var content = el.nextElementSibling;
-        if (content.style.display === "block") {
-            content.style.display = "none";
-        } else {
-            content.style.display = "block";
-        }
-    }
-</script>
+<% if (faqs['settingData'].faq_template_number) {
+    switch(faqs['settingData'].faq_template_number) {
+    case 1 : %>
+    <%- include('./templates/one.ejs') %>
+    <% break;
+    default: %>
+    <%- include('./templates/one.ejs') %>
+    <% break; }
+}else { %>
+<%- include('./templates/one.ejs') %>
+<% } %>

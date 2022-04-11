@@ -259,7 +259,6 @@ exports.update = async (req, res) => {
                         }
                     })
                     .catch(err => {
-                        console.log(err.message)
                         res.status(500).send({
                             message: "Error updating faq with id=" + id
                         });
@@ -374,7 +373,6 @@ exports.searchFaqTitle = async (req, res) =>{
                     return false;
                 }
             }).catch(error => {
-                console.log(error)
                 return res.status(500).send("some error");
             })
 
@@ -419,7 +417,6 @@ exports.findAllInFaqPage = async (req, res) => {
                 return false;
             }
         }).catch(error => {
-        console.log(error)
         return res.status(500).send("some error");
     })
 };

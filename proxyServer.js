@@ -229,7 +229,7 @@ app.post('/post', upload.single('image'), async (req, res) => {
 app.set("view engine","ejs");
 app.set("views","./views");
 
-const defaultPage = require('./controller/defaultPage')
+const defaultPage = require('./controller/defaultPage');
 
 app.use('/test', async (req, res) => {
 

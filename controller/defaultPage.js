@@ -2,6 +2,7 @@ const db = require("../app/models");
 const Faq = db.faq;
 const User = db.user;
 const Setting = db.setting;
+const TemplateSetting = db.template_setting;
 const FaqCategory = db.faq_category;
 const errorLog = require('../app/helpers/log.helper');
 
@@ -45,11 +46,13 @@ exports.findAllInFaqPageNodejs = async (shop, locale = 'en') => {
     return data;
 };
 async function getSetting(userID, locale) {
+    let returnData = {};
     let data = {};
+    let templateSetting = {};
     await Setting.findOne({where: {
             user_id: userID
-        }}).then(settingData => {
-        data = settingData;
+        }}).then(async settingData => {
+            data = settingData.dataValues;
             if (settingData.search_not_found) {
                 try {
                     JSON.parse(settingData.search_not_found).every(v => {
@@ -125,8 +128,24 @@ async function getSetting(userID, locale) {
                     errorLog.error(`setting json parse error ${e.message}`)
                 }
             };
+            templateSetting = await getTemplateSetting(settingData.id, settingData.faq_template_number);
+        returnData = {data, templateSetting}
     }).catch(error => {
         errorLog.error(`get setting frontend proxy ${error.message}`)
     });
-    return data;
+    return returnData;
+}
+
+async function getTemplateSetting(setting_id, template_number) {
+    let templateSetting = {};
+    await TemplateSetting.findOne({ where: { setting_id: setting_id, template_number: template_number}})
+        .then(data => {
+            if (data){
+                templateSetting = data.dataValues;
+                delete templateSetting.id;
+            }
+        }).catch(e => {
+            errorLog.error(`template Setting ${e.message}`)
+    });
+    return templateSetting;
 }
