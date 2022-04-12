@@ -1,0 +1,104 @@
+<div style="margin:1.8em auto;max-width:900px;">
+    <div style="text-align: center">
+        <% if(faqs['settingData'].data.page_title_content) { %>
+            <%- faqs['settingData'].data.page_title_content %>
+        <% } %>
+    </div>
+    <div>
+        <input type="text" <% if(faqs['settingData'].data.search_placehoder) {%> placeholder="<%= faqs['settingData'].data.search_placehoder %>" <%}%> name="search">
+    </div>
+    <div>
+        <% if(faqs['settingData'].data.show_intro_text) {%>
+            <% if(faqs['settingData'].data.intro_text_content) {%>
+                <%- faqs['settingData'].data.intro_text_content %>
+            <% } %>
+        <% } %>
+    </div>
+    <% if(faqs['faqData'].length){ %>
+        <div style="margin-bottom: 12px;">
+            <% for(var i=0; i < faqs['faqData'].length; i++) { %>
+            <%if (faqs['faqData'][i].is_visible) { %>
+                <% for(var j=0; j < faqs['cateData'].length; j++) { %>
+                    <% if (faqs['faqData'][i].category_identify === faqs['cateData'][j].identify) {%>
+                        <% if (faqs['cateData'][j].is_visible) { %>
+                            <div class="faq-question-title" style="width: 100%;font-weight: bold;cursor: pointer; padding: 1em;" onclick="showHideContent(this)">
+                                <span><%= faqs['faqData'][i].title %></span>
+                                <span class="faq-category-title" style="float:right;"><%- faqs['cateData'][j].title %></span>
+                                <hr style="margin: 0;">
+                            </div>
+                            <div class="faq-answer-content" style="display: none"><%- faqs['faqData'][i].content %></div>
+                        <% } %>
+                    <% } %>
+                <% } %>
+            <% } %>
+            <% } %>
+        </div>
+    <% } %>
+    <div>
+        <% if(faqs['settingData'].data.show_footer_text) {%>
+            <% if(faqs['settingData'].data.footer_text_content) {%>
+                <%- faqs['settingData'].data.footer_text_content %>
+            <% } %>
+        <% } %>
+    </div>
+</div>
+<script>
+    var str = `<%=faqs['settingData'].data.search_placehoder%>`;
+    function showHideContent(el) {
+        var content = el.nextElementSibling;
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+    }
+</script>
+<style>
+    <% if (faqs['settingData'].templateSetting) { %>
+    .faq-category-title {
+    <% if (faqs['settingData'].templateSetting.category_font_weight) { %>
+        font-weight: <%=  faqs['settingData'].templateSetting.category_font_weight %>;
+    <% } if (faqs['settingData'].templateSetting.category_font_color) { %>
+        color: <%=  faqs['settingData'].templateSetting.category_font_color %>;
+    <% } if (faqs['settingData'].templateSetting.category_font_size) { %>
+        font-size: <%=  faqs['settingData'].templateSetting.category_font_size %>;
+    <% } if (faqs['settingData'].templateSetting.category_font_family) { %>
+        font-family: <%=  faqs['settingData'].templateSetting.category_font_family %>;
+    <% } if (faqs['settingData'].templateSetting.category_text_style) { %>
+        font-style: <%=  faqs['settingData'].templateSetting.category_text_style %>;
+    <% } if (faqs['settingData'].templateSetting.category_text_style) { %>
+        text-align: <%=  faqs['settingData'].templateSetting.category_text_style %>;
+    <% } else { %>
+        text-align: right;
+    <% } %>
+    }
+    .faq-question-title {
+    <% if (faqs['settingData'].templateSetting.faq_font_weight) { %>
+        font-weight: <%=  faqs['settingData'].templateSetting.faq_font_weight %>;
+    <% } if (faqs['settingData'].templateSetting.faq_font_color) { %>
+        color: <%=  faqs['settingData'].templateSetting.faq_font_color %>;
+    <% } if (faqs['settingData'].templateSetting.faq_bg_color) { %>
+        background-color: <%=  faqs['settingData'].templateSetting.faq_bg_color %>;
+    <% } if (faqs['settingData'].templateSetting.faq_font_size) { %>
+        font-size: <%=  faqs['settingData'].templateSetting.faq_font_size %>;
+    <% } if (faqs['settingData'].templateSetting.faq_font_family) { %>
+        font-family: <%=  faqs['settingData'].templateSetting.faq_font_family %>;
+    <% } if (faqs['settingData'].templateSetting.category_text_style) { %>
+        font-style: <%=  faqs['settingData'].templateSetting.category_text_style %>;
+    <% } %>
+    }
+    .faq-answer-content {
+    <% if (faqs['settingData'].templateSetting.answer_font_weight) { %>
+        font-weight: <%=  faqs['settingData'].templateSetting.answer_font_weight %>;
+    <% } if (faqs['settingData'].templateSetting.answer_font_color) { %>
+        color: <%=  faqs['settingData'].templateSetting.answer_font_color %>;
+    <% } if (faqs['settingData'].templateSetting.answer_bg_color) { %>
+        background-color: <%=  faqs['settingData'].templateSetting.answer_bg_color %>;
+    <% } if (faqs['settingData'].templateSetting.answer_font_size) { %>
+        font-size: <%=  faqs['settingData'].templateSetting.answer_font_size %>;
+    <% } if (faqs['settingData'].templateSetting.answer_font_family) { %>
+        font-family: <%=  faqs['settingData'].templateSetting.answer_font_family %>;
+    <% } %>
+    }
+    <% } %>
+</style>

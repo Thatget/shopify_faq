@@ -6,6 +6,10 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            template_number: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
             image_banner: {
                 type: Sequelize.STRING
             },
@@ -62,10 +66,6 @@ module.exports = (sequelize, Sequelize) => {
             },
             answer_bg_color: {
                 type: Sequelize.STRING
-            },
-            template_number: {
-                type: Sequelize.INTEGER,
-                allowNull: false
             },
         },
         {

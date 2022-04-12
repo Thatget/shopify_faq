@@ -59,7 +59,7 @@ app.get('/', async (req, res) => {
 
 app.get('/shopify/callback', async (req, res) => {
     const { shop, hmac, code, state } = req.query;
-    const stateCookie = cookie.parse(req.headers.cookie ?? "").state;
+    const stateCookie = cookie.parse(req.headers.cookie).state;
 
     if (state !== stateCookie) {
         return res.status(403).send('Request origin cannot be verified');
@@ -214,7 +214,7 @@ app.set("views","./views");
 
 const defaultPage = require('./controller/defaultPage');
 
-app.use('/test', async (req, res) => {
+app.get('/test', async (req, res) => {
 
     const query_signature = req.query.signature;
     const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;
