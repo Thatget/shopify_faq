@@ -59,7 +59,7 @@ app.get('/', async (req, res) => {
 
 app.get('/shopify/callback', async (req, res) => {
     const { shop, hmac, code, state } = req.query;
-    const stateCookie = cookie.parse(req.headers.cookie).state;
+    const stateCookie = cookie.parse(req.headers.cookie ?? "").state;
 
     if (state !== stateCookie) {
         return res.status(403).send('Request origin cannot be verified');
@@ -208,23 +208,6 @@ app.post('/uninstall', async (req, res) => {
     res.end();
 });
 
-const multer = require('multer');
-const upload = multer({
-    limits: {
-        fileSize: 4 * 1024 * 1024,
-    }
-});
-const path = require('path');
-const Resize = require('./app/helpers/resizeImage.helper');
-app.post('/post', upload.single('image'), async (req, res) => {
-    const imagePath = path.join(__dirname, '/var/images/banner');
-    const fileUpload = new Resize(imagePath);
-    if (!req.file) {
-        res.status(401).json({error: 'Please provide an image'});
-    }
-    const filename = await fileUpload.save(req.file.buffer);
-    return res.status(200).json({ name: filename });
-});
 
 app.set("view engine","ejs");
 app.set("views","./views");
@@ -262,7 +245,6 @@ app.use('/test', async (req, res) => {
     res.end();
 });
 
-
 //Api
 const initAPIs = require("./app/routes/api");
 initAPIs(app);
@@ -296,11 +278,11 @@ async function login(user) {
 
             })
             .catch(err => {
-                errorLog.error(`error in login function get user from database ${err.message}`)
+                errorLog.error(`error in login function get user from database ${err.message}`);
                 return null;
             });
     } catch (error) {
-        errorLog.error(`error in login function ${error.message}`)
+        errorLog.error(`error in login function ${error.message}`);
         return null;
     }
     return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;

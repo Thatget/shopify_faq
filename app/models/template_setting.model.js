@@ -6,6 +6,9 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            image_banner: {
+                type: Sequelize.STRING
+            },
             faq_font_color: {
                 type: Sequelize.STRING
             },

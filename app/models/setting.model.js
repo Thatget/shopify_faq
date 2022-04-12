@@ -10,9 +10,6 @@ module.exports = (sequelize, Sequelize) => {
     show_page_title: {
       type: Sequelize.BOOLEAN
     },
-    image_banner: {
-      type: Sequelize.STRING
-    },
     show_intro_text: {
       type: Sequelize.BOOLEAN
     },

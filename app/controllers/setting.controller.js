@@ -47,10 +47,11 @@ exports.findOne = async (req, res) => {
                   .then(template_setting_data => {
                       if (template_setting_data) {
                           template_setting = template_setting_data.dataValues;
+                          delete template_setting.id;
                       }
                   }).catch()
           }
-          return_setting_data = {setting_data, template_setting}
+          return_setting_data = Object.assign(setting_data, template_setting);
         res.send(return_setting_data);
       } else {
         res.status(404).send({
@@ -107,8 +108,8 @@ exports.update = async (req, res) => {
                                     .catch(err => {});
                             } else {
                                 // Create template setting
-                                setting.id = setting_data_id;
-                                this.createTemplate(setting)
+                                setting.setting_id = setting_data_id;
+                                template_setting = await createFaqTemplate(setting);
                             }
                         })
                         .catch(err => {
@@ -116,6 +117,7 @@ exports.update = async (req, res) => {
                                 message: "Error retrieving category with id=" + id
                             });
                         });
+                    res.send(setting);
                 }
             } else {
                 res.status(404).send({
@@ -126,7 +128,7 @@ exports.update = async (req, res) => {
         .catch(err => {
             res.status(500).send({
                 // message: "Error retrieving setting in updating with user_id=" + user_id
-                message: err.message
+                message: 'setting update 130 '+ err.message
             });
         });
 };
@@ -198,9 +200,16 @@ exports.findOneInFaqPage = async (req, res) => {
 
 async function createFaqTemplate(templateSetting) {
     let template_setting = null;
-    TemplateSetting.create(templateSetting)
+    if (templateSetting.createdAt) {
+        delete templateSetting.createdAt;
+    }
+    if (templateSetting.updatedAt) {
+        delete templateSetting.updatedAt;
+    }
+    templateSetting.template_number = templateSetting.faq_template_number;
+    await TemplateSetting.create(templateSetting)
         .then(data => {
-            template_setting = data.dataValues
+            template_setting = data.dataValues;
         })
         .catch(err => {}
         );

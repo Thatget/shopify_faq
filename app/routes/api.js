@@ -6,6 +6,7 @@ const faq = require("../controllers/faq.controller");
 const user = require("../controllers/user.controller");
 const setting = require("../controllers/setting.controller");
 const category = require("../controllers/faq_category.controller.js");
+const uploadBanner = require("../controllers/uploadTemplateBanner")
 /**
  * Init all APIs
  * @param {*} app from express
@@ -53,6 +54,14 @@ let initAPIs = (app) => {
     router.delete("/api/user", user.delete);
     router.delete("/api/user", user.deleteAll);
 
+    // Upload image
+    const multer = require('multer');
+    const upload = multer({
+        limits: {
+            fileSize: 4 * 1024 * 1024,
+        }
+    });
+    router.post("/api/upload-profile-pic", upload.single('profile_pic'), uploadBanner.upload);
 
     //Router using
     return app.use("/", router);

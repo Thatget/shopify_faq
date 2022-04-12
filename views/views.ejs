@@ -1,7 +1,10 @@
-<% if (faqs['settingData'].faq_template_number) {
-    switch(faqs['settingData'].faq_template_number) {
+<% if (faqs['settingData'].data.faq_template_number) {
+    switch(faqs['settingData'].data.faq_template_number) {
     case 1 : %>
     <%- include('./templates/one.ejs') %>
+    <% break;
+    case 2 : %>
+    <%- include('./templates/two.ejs') %>
     <% break;
     default: %>
     <%- include('./templates/one.ejs') %>

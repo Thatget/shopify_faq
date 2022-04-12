@@ -1,5 +1,4 @@
 const jwtHelper = require("../helpers/jwt.helper");
-const debug = console.log.bind(console);
 
 const accessTokenSecret = process.env.JWT_KEY;
 
