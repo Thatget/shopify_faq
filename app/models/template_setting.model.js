@@ -67,6 +67,9 @@ module.exports = (sequelize, Sequelize) => {
             answer_bg_color: {
                 type: Sequelize.STRING
             },
+            custom_css: {
+                type: Sequelize.TEXT
+            }
         },
         {
             uniqueKeys: {

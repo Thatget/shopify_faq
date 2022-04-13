@@ -1,11 +1,11 @@
-<div style="margin:1.8em auto;max-width:900px;">
-    <div style="text-align: center">
+<div class="root-faq-template" style="margin:1.8em auto;max-width:1400px;">
+    <div style="text-align: center;">
         <% if(setting.data.page_title_content) { %>
-            <%- setting.data.page_title_content %>
+            <h2><%- setting.data.page_title_content %></h2>
         <% } %>
     </div>
-    <div>
-        <input type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+    <div style="text-align: center;margin: 9px;">
+        <input style="width: 80%;" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
     </div>
     <div>
         <% if(setting.data.show_intro_text) {%>
@@ -17,13 +17,20 @@
     <% if(faqs.length){ %>
         <div style="margin-bottom: 12px;">
             <% for(var i=0; i < faqs.length; i++) { %>
+            <div>
                 <div class="faq-question-title" style="width: 100%;font-weight: bold;cursor: pointer; padding: 1em;" onclick="showHideContent(this)">
-                    <span><%= faqs[i].title %></span>
+                    <span class="listed-faq"><%= faqs[i].title %></span>
                     <span class="faq-category-title" style="float:right;"><%- faqs[i].category_title %></span>
                     <hr style="margin: 0;">
                 </div>
-                <div class="faq-answer-content" style="display: none"><%- faqs[i].content %></div>
+                <div class="faq-answer-content" style="display: none;margin:0;padding:1em 1em 1em 1em;line-height:1.5;"><%- faqs[i].content %></div>
+            </div>
             <% } %>
+            <div id="not-found-text" style="display: none" >
+                <% if(setting.data.search_not_found) {%>
+                    <%- setting.data.search_not_found %>
+                <% } %>
+            </div>
         </div>
     <% } %>
     <div>
@@ -43,4 +50,35 @@
             content.style.display = "block";
         }
     }
+
+    function simpleSearch() {
+        var input = document.getElementById("search-text");
+        var filter = input.value.toLowerCase();
+        var nodes = document.getElementsByClassName('listed-faq');
+
+        var checkexist = true;
+        for (i = 0; i < nodes.length; i++) {
+            if (nodes[i].innerText.toLowerCase().includes(filter)) {
+                nodes[i].parentNode.parentNode.style.display = "block";
+                checkexist = false;
+            } else {
+                nodes[i].parentNode.parentNode.style.display = "none";
+            }
+        }
+        if (checkexist) {
+            document.getElementById("not-found-text").style.display = "block";
+        } else {
+            document.getElementById("not-found-text").style.display = "none";
+        }
+    }
+
 </script>
+<style>
+    <% if(setting.templateSetting.width_faqs_accordian) { %>
+        .root-faq-template {
+            width: <%- setting.templateSetting.width_faqs_accordian%>px;
+        }
+    <%} if(setting.templateSetting.custom_css) { %>
+        <%- setting.templateSetting.custom_css%>
+    <%}%>
+</style>

@@ -8,6 +8,7 @@ const { QueryTypes } = require('sequelize');
 // Using in nodeJs
 exports.findFaqs = async (shop, locale = 'en') => {
     let data = [];
+    let selectCondition = {}
     await User.findOne({
         attributes: ['id'],
         where: { shopify_domain: shop}
@@ -16,27 +17,41 @@ exports.findFaqs = async (shop, locale = 'en') => {
             if (userData) {
                 let userID = userData.dataValues.id;
                 await Setting.findOne({
+                    attributes: ['category_sort_name','faq_sort_name'],
                     where: {
                         user_id: userID
                     }
-                }).then(async settingData => {})
+                }).then(settingData => {
+                    selectCondition = settingData.dataValues
+                })
                 try {
-                    data = await db.sequelize.query(
-                        "SELECT `faq_category`.`title` as `category_title`, `faq`.`title`,`faq`.`content`" +
+                    let selectQuery = "SELECT `faq_category`.`title` as `category_title`, `faq`.`title`,`faq`.`content`" +
                         " "+
                         " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify`" +
                         " where `faq`.`locale` = '" + locale + "' and `faq_category`.`locale` = '" + locale +
                         "' and `faq`.`user_id` = " + userID + " and `faq_category`.`user_id` = " + userID +
-                        " and `faq`.`is_visible` = true and `faq_category`.`is_visible` = true",
+                        " and `faq`.`is_visible` = true and `faq_category`.`is_visible` = true";
+                    if (selectCondition.category_sort_name) {
+                        selectQuery += " ORDER BY `category_title`"
+                        if (selectCondition.faq_sort_name) {
+                            selectQuery += ", `faq`.`title`"
+                        }
+                    }else {
+                        if (selectCondition.faq_sort_name) {
+                            selectQuery += " ORDER BY `faq_category`.`title`"
+                        }
+                    }
+
+                    data = await db.sequelize.query(
+                        selectQuery+";",
                         {type: QueryTypes.SELECT});
                 }catch (e) {
-                    console.log(e.message)
+                    errorLog.error(e.message)
                 }
             }
         }).catch(error => {
             errorLog.error(`get faqs nodejs proxy error ${error.message}`)
         });
-    console.log(data)
     return data;
 };
 exports.findSetting = async (shop, locale = 'en') => {
