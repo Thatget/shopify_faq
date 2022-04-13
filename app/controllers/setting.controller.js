@@ -39,11 +39,11 @@ exports.findOne = async (req, res) => {
   let template_setting = {};
   let setting_data = {};
   await Setting.findOne({ where: { user_id : user_id}})
-    .then(data => {
+    .then(async data => {
       if (data) {
           setting_data = data.dataValues;
-          if (setting_data.template_number) {
-              TemplateSetting.findOne({ where: { setting_id : setting_data.id, template_number: setting_data.template_number}})
+          if (setting_data.faq_template_number) {
+              await TemplateSetting.findOne({ where: { setting_id : setting_data.id, template_number: setting_data.faq_template_number}})
                   .then(template_setting_data => {
                       if (template_setting_data) {
                           template_setting = template_setting_data.dataValues;
@@ -76,6 +76,9 @@ exports.update = async (req, res) => {
   if (setting.id) {
       delete setting.id;
   }
+
+  let returnData = {}
+    returnData.data = 'done'
     await Setting.findOne({ where: { user_id : user_id}})
         .then(async data => {
             if (data) {
@@ -109,20 +112,23 @@ exports.update = async (req, res) => {
                             } else {
                                 // Create template setting
                                 setting.setting_id = setting_data_id;
-                                template_setting = await createFaqTemplate(setting);
+                                try {
+                                    template_setting = await createFaqTemplate(setting);
+                                }catch (e) {
+                                }
                             }
                         })
                         .catch(err => {
-                            res.status(500).send({
-                                message: "Error retrieving category with id=" + id
-                            });
+                            returnData.error = true
+                            returnData.status = 500
+                            returnData.message = err.message
                         });
-                    res.send(setting);
+                    returnData.data = setting;
                 }
             } else {
-                res.status(404).send({
-                    message: `Cannot find Setting with user_id=${user_id}.`
-                });
+                returnData.error = true
+                returnData.status = 400
+                returnData.message = `Cannot find Setting with user_id=${user_id}.`
             }
         })
         .catch(err => {
@@ -131,6 +137,12 @@ exports.update = async (req, res) => {
                 message: 'setting update 130 '+ err.message
             });
         });
+  if (returnData.error) {
+      res.status(returnData.status).send({
+          message: returnData.message
+      });
+  }
+  res.send(returnData.data)
 };
 
 // Delete a Setting with the specified id in the request

@@ -13,6 +13,14 @@ const uploadBanner = require("../controllers/uploadTemplateBanner")
  */
 let initAPIs = (app) => {
 // Api
+
+    // Get image
+    router.get('/var/images/*', (req,res)=>{
+        const path = require('path');
+        const imagePath = path.join(__dirname, '../../var/images/');
+        res.sendFile(imagePath+req.params[0]);
+    });
+
     router.post("/login", AuthController.login);
 
     router.post("/refresh-token", AuthController.refreshToken);

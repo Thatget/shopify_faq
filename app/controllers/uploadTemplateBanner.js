@@ -19,8 +19,7 @@ exports.upload = async (req, res) => {
 
     // Save file
     const filename = await fileUpload.save(req.file.buffer);
-
-    const user_id = req.jwtDecoded.data.user_id;w
+    const user_id = req.jwtDecoded.data.user_id;
 
     let template_data = {};
 

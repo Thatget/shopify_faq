@@ -228,9 +228,9 @@ app.get('/test', async (req, res) => {
         if (shop) {
             try {
                 const locale = req.headers['accept-language'].split(',')[0];
-                const faqs = await defaultPage.findAllInFaqPageNodejs(shop, locale);
-                // console.log(faqs)
-                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs});
+                const faqs = await defaultPage.findFaqs(shop, locale);
+                const setting = await defaultPage.findSetting(shop, locale);
+                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting});
             } catch (e) {
                 errorLog.error(e.message);
                 res.status(400).send('unexpected error occurred');
