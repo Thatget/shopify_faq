@@ -214,7 +214,7 @@ app.set("views","./views");
 
 const defaultPage = require('./controller/defaultPage');
 
-app.get('/test', async (req, res) => {
+app.get('/faq-page', async (req, res) => {
 
     const query_signature = req.query.signature;
     const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;

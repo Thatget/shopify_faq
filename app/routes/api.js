@@ -45,6 +45,7 @@ let initAPIs = (app) => {
     router.get("/api/setting", setting.findOne);
     router.put("/api/setting", setting.update);
     router.delete("/api/setting", setting.delete);
+    router.get("/api/template/:faq_template_number", setting.findTemplateSetting);
 
     //Category
     router.post("/api/faq-category", category.create);

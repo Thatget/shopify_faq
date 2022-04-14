@@ -2,6 +2,7 @@ const db = require("../models");
 const Setting = db.setting;
 const TemplateSetting = db.template_setting;
 const User = db.user;
+const errorLog = require('../helpers/log.helper')
 
 exports.create = async (req, res) => {
 
@@ -196,7 +197,7 @@ exports.findOneInFaqPage = async (req, res) => {
                         }
                     })
                     .catch(err => {
-                        console.log(err)
+                        errorLog.error(err.message)
                     });
             } else {
                 res.status(400).send({
@@ -205,7 +206,10 @@ exports.findOneInFaqPage = async (req, res) => {
                 return;
             }
         }).catch(error => {
-        console.log(error)
+            errorLog.error(error.message)
+            res.status(400).send({
+                message: "Shop name is not found!"
+            });
         return;
     })
 };
@@ -227,3 +231,44 @@ async function createFaqTemplate(templateSetting) {
         );
     return template_setting;
 }
+
+exports.findTemplateSetting = async (req, res) => {
+    // Validate request
+    if (!req.params.faq_template_number) {
+        res.status(400).send({
+            message: "Please select template number!"
+        });
+        return false;
+    }
+    const template_number = req.params.faq_template_number
+    const user_id = req.jwtDecoded.data.user_id;
+    var templateSetting = {}
+    let continueCondition = {}
+    continueCondition.condition = true
+    await Setting.findOne({
+        attributes: ['id'],
+        where: {user_id: user_id}
+    }).then(async settingData => {
+        if (settingData) {
+            let setting_id = settingData.dataValues.id;
+            await TemplateSetting.findOne({where: {template_number: template_number, setting_id: setting_id}})
+                .then(templateSettingData => {
+                    if (templateSettingData) {
+                        templateSetting = templateSettingData.dataValues
+                    }
+                }).catch(e=> errorLog.error(e.message))
+        }
+    }).catch(error => {
+        errorLog.error(error.message)
+        continueCondition.condition = false
+        continueCondition.errmessage = error.message
+    })
+    if (!continueCondition.condition) {
+        res.status(404).send({
+            message:
+                continueCondition.errmessage || "Some error occurred !"
+        });
+        return;
+    }
+    res.send(templateSetting);
+};

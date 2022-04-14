@@ -2,6 +2,7 @@ const db = require("../app/models");
 const User = db.user;
 const Setting = db.setting;
 const TemplateSetting = db.template_setting;
+const forwardingAddress = process.env.HOST;
 const errorLog = require('../app/helpers/log.helper');
 const { QueryTypes } = require('sequelize');
 
@@ -165,6 +166,9 @@ async function getTemplateSetting(setting_id, template_number) {
             if (data){
                 templateSetting = data.dataValues;
                 delete templateSetting.id;
+                if (templateSetting.image_banner) {
+                    templateSetting.image_banner = forwardingAddress +"/var/images/banner/"+templateSetting.image_banner
+                }
             }
         }).catch(e => {
             errorLog.error(`template Setting ${e.message}`)

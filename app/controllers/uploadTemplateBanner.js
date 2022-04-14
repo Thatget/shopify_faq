@@ -13,7 +13,7 @@ exports.upload = async (req, res) => {
 // Upload image <have header and template_number>
     const imagePath = path.join(__dirname, '../../var/images/banner');
     const fileUpload = new Resize(imagePath);
-    if (!req.file && !req.body.template_number) {
+    if (!req.file || !req.body.template_number || !req.file.buffer) {
         res.status(401).json({error: 'Please provide an image'});
     }
 
