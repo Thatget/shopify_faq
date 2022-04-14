@@ -15,10 +15,20 @@ exports.upload = async (req, res) => {
     const fileUpload = new Resize(imagePath);
     if (!req.file || !req.body.template_number || !req.file.buffer) {
         res.status(401).json({error: 'Please provide an image'});
+        return ;
     }
 
     // Save file
-    const filename = await fileUpload.save(req.file.buffer);
+    let continueCheck = true
+    const filename = await fileUpload.save(req.file.buffer)
+        .catch(error => {
+            continueCheck = false
+            errorLog.error(error.message)
+        })
+    if (!continueCheck) {
+        res.status(500).json({error: 'can\'t upload image !'});
+        return;
+    }
     const user_id = req.jwtDecoded.data.user_id;
 
     let template_data = {};

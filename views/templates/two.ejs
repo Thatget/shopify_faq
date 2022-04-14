@@ -20,7 +20,7 @@
                 <% let faq_category_content = {} %>
                 <% if(!faq_category.length){%>
                     <% faq_category_content.title = faqs[i].category_title %>
-                    <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].title}] %>
+                    <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
                     <% faq_category[faq_category_count] = faq_category_content %>
                 <% } else { %>
                     <% let checkExites = false %>
@@ -33,17 +33,17 @@
                     <% if(!checkExites){%>
                         <% faq_category_count++ %>
                         <% faq_category_content.title = faqs[i].category_title %>
-                        <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].title}] %>
+                        <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
                         <% faq_category[faq_category_count] = faq_category_content %>
                     <% } %>
                 <% } %>
             <% } %>
             <% if(faq_category.length){%>
                 <% for(var i=0; i < faq_category.length; i++) { %>
-                    <div style="margin-bottom: 12px;">
+                    <div class="category-faq-container" style="margin-bottom: 12px;">
                         <h2 class="faq-category-title"><%- faq_category[i].title %></h2>
                         <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
-                            <div style="margin-bottom: 12px;">
+                            <div class="faq-main-content" style="margin-bottom: 12px;">
                                 <div class="faq-question-title" style="width: 100%;font-weight: bold;cursor: pointer; padding: 1em;" onclick="showHideContent(this)">
                                     <span class="listed-faq"><%= faq_category[i].faqs[j].title %></span>
                                 </div>
@@ -84,6 +84,7 @@
         var input = document.getElementById("search-text");
         var filter = input.value.toLowerCase();
         var nodes = document.getElementsByClassName('listed-faq');
+        var nodeCategory = document.getElementsByClassName('category-faq-container');
 
         var checkexist = true;
         for (i = 0; i < nodes.length; i++) {
@@ -93,6 +94,19 @@
             } else {
                 nodes[i].parentNode.parentNode.style.display = "none";
             }
+        }
+        for (j = 0; j < nodeCategory.length; j++) {
+            let subFaq = nodeCategory[j].getElementsByClassName('faq-main-content');
+            let checkDisplay = false;
+            for (k = 0; k < subFaq.length; k++) {
+                if(subFaq[k].style.display == "block") {
+                    checkDisplay = true;
+                    break;
+                }
+            }
+            if (checkDisplay) {
+                nodeCategory[j].style.display = "block";
+            } else nodeCategory[j].style.display = "none";
         }
         if (checkexist) {
             document.getElementById("not-found-text").style.display = "block";
