@@ -87,18 +87,16 @@ exports.update = async (req, res) => {
                 // Update Setting
                 await Setting.update(setting, {
                     where: { id: setting_data_id }
-                })
-                    .then(num => {
+                }).then(num => {
                         if (num == 1) {
                         } else {
+                            errorLog.error('error update setting')
                         }
-                    })
-                    .catch(err => {
-                        res.status(500).send({
-                            message: err.message
-                        });
-                    });
+                }).catch(err => {
+                    errorLog.error('error update setting 500 status'+err.message)
+                });
                 if (req.body.faq_template_number) {
+                    setting.template_number = req.body.faq_template_number
                     await TemplateSetting.findOne({where: {template_number: req.body.faq_template_number, setting_id: setting_data_id}})
                         .then(async data => {
                             if (data) {
@@ -109,17 +107,27 @@ exports.update = async (req, res) => {
                                         } else {
                                         }
                                     })
-                                    .catch(err => {});
+                                    .catch(err => {
+                                        errorLog.error('error update template setting '+ err.message)
+                                        returnData.error = true
+                                        returnData.status = 500
+                                        returnData.message = err.message
+                                    });
                             } else {
                                 // Create template setting
                                 setting.setting_id = setting_data_id;
                                 try {
                                     template_setting = await createFaqTemplate(setting);
                                 }catch (e) {
+                                    errorLog.error('error create template setting' + e.message)
+                                    returnData.error = true
+                                    returnData.status = 500
+                                    returnData.message = e.message
                                 }
                             }
                         })
                         .catch(err => {
+                            errorLog.error('error find template setting' + err.message)
                             returnData.error = true
                             returnData.status = 500
                             returnData.message = err.message

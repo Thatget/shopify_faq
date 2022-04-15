@@ -35,7 +35,6 @@ const refreshTokenLife = process.env.REFRESH_JWT_KEY_LIFE;
 const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
 
 // const debug = console.log.bind(console);
-
 db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.");
 });
@@ -48,19 +47,18 @@ app.get('/', async (req, res) => {
     }
     const state = nonce();
     const redirectUri = forwardingAddress + '/shopify/callback';
-    const pageUri = 'https://' + req.query.shop +
-        '/admin/oauth/authorize?client_id=' + apiKey +
-        '&scope=' + scopes +
-        '&state=' + state +
-        '&redirect_uri=' + redirectUri;
+    const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+        '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
     res.cookie('state',state);
     res.redirect(pageUri);
 });
 
 app.get('/shopify/callback', async (req, res) => {
-    const { shop, hmac, code, state } = req.query;
+    const {shop, hmac, code, state} = req.query;
+    if (!cookie.parse(req.headers.cookie)){
+        return res.status(403).send('Cookie error !');
+    }
     const stateCookie = cookie.parse(req.headers.cookie).state;
-
     if (state !== stateCookie) {
         return res.status(403).send('Request origin cannot be verified');
     }
@@ -140,15 +138,6 @@ app.get('/shopify/callback', async (req, res) => {
                                     errorLog.error(`user created error: ${err.message}`)
                                     res.status(err.status).send(err.error);
                                 });
-
-                                // const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
-                                // await request.get(shopRequestUrlScripTag, {headers: shopRequestHeaders})
-                                //     .then((data) => {
-                                //     })
-                                //     .catch( async (error) => {
-                                //         errorLog.error(`create script tag root: ${error.message}`)
-                                //     });
-
                                 const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
                                 const webhook = {
                                     webhook : {
@@ -208,17 +197,14 @@ app.post('/uninstall', async (req, res) => {
     res.end();
 });
 
-
 app.set("view engine","ejs");
 app.set("views","./views");
 
 const defaultPage = require('./controller/defaultPage');
 
 app.get('/faq-page', async (req, res) => {
-
     const query_signature = req.query.signature;
     const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;
-
     const generateHash = crypto.createHmac('sha256', apiSecret)
         .update(sorted_params)
         .digest('hex');
@@ -272,10 +258,8 @@ async function login(user) {
                     shopify_domain:user.shopify_domain,
                     user_id: userId
                 };
-
                 accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife) || '';
                 refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife) || '';
-
             })
             .catch(err => {
                 errorLog.error(`error in login function get user from database ${err.message}`);

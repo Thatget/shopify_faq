@@ -1,19 +1,21 @@
-<div class="root-faq-template" style="margin:1.8em auto;max-width:1400px;">
-    <div class="faq-header" style="text-align: center;">
+<div class="root-faq-template">
+    <div class="faq-header" style="text-align: center;max-width: 100vw">
         <% if(setting.data.page_title_content) { %>
-            <h2><%- setting.data.page_title_content %></h2>
+            <h1 style="color: #fff;margin:0; padding: 20px 0; font-weight: 600;"><%- setting.data.page_title_content %></h1>
         <% } %>
-        <div style="text-align: center;margin: 9px; padding: 2rem;">
-            <input style="width: 80%;padding: 1rem 0.75rem;" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+        <div style="text-align: center; padding: 2rem;">
+            <input style="width: 60%; padding: 1rem; border-radius: 4px; outline: none; border: none; font-size: 1.6rem;" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
         </div>
-    <% if(setting.data.show_intro_text) {%>
-        <% if(setting.data.intro_text_content) {%>
-            <p><%- setting.data.intro_text_content %></p>
+    </div>
+    <div style="text-align: center;">
+        <% if(setting.data.show_intro_text) {%>
+            <% if(setting.data.intro_text_content) {%>
+                <p style=" font-size: 18px;"><%- setting.data.intro_text_content %></p>
+            <% } %>
         <% } %>
-    <% } %>
     </div>
     <% if(faqs.length){ %>
-        <div style="margin-bottom: 12px;">
+        <div class="faq-main" style="margin-bottom: 12px">
             <% var faq_category = [] %>
             <% var faq_category_count = 0 %>
             <% for(var i=0; i < faqs.length; i++) { %>
@@ -44,8 +46,9 @@
                         <h2 class="faq-category-title"><%- faq_category[i].title %></h2>
                         <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
                             <div class="faq-main-content" style="margin-bottom: 12px;">
-                                <div class="faq-question-title" style="width: 100%;font-weight: bold;cursor: pointer; padding: 1em;" onclick="showHideContent(this)">
-                                    <span class="listed-faq"><%= faq_category[i].faqs[j].title %></span>
+                                <div class="faq-question-title" style="display: flex; align-items: center; width: 100%;font-weight: bold;cursor: pointer; padding: 12px;font-size: 16px; border-radius: 6px;" onclick="showHideContent(this)">
+                                    <span class="listed-faq" style="width: 100%;"><%= faq_category[i].faqs[j].title %></span>
+                                    <svg class="arrow-right" style="width: 20px; height: 20px" fill="<%=  setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                                 </div>
                                 <div class="faq-answer-content" style="display: none;margin:0;padding:1em 1em 1em 1em;line-height:1.5;">
                                     <%- faq_category[i].faqs[j].content %>
@@ -62,7 +65,7 @@
             </div>
         </div>
     <% } %>
-    <div>
+    <div style="text-align: center; font-size: 18px;">
         <% if(setting.data.show_footer_text) {%>
             <% if(setting.data.footer_text_content) {%>
                 <%- setting.data.footer_text_content %>
@@ -118,16 +121,24 @@
 </script>
 <style>
     <% if(setting.templateSetting.width_faqs_accordian) { %>
-    .root-faq-template {
-        width: <%- setting.templateSetting.width_faqs_accordian%>px;
+    .faq-main {
+        padding: 0 20px;
+        max-width: <%- setting.templateSetting.width_faqs_accordian%>px;
+        margin: auto;
     }
     <% } if(setting.templateSetting.image_banner) { %>
     .faq-header {
+        min-height: 360px;
+        max-width: 100vw;
         background-image: url('<%- setting.templateSetting.image_banner%>');
         background-repeat: no-repeat;
         background-size: cover;
+        background-position-y: center;
+        transition
     }
     <%} if(setting.templateSetting.custom_css) { %>
     <%- setting.templateSetting.custom_css%>
-    <%}%>
+    <%= setting.templateSetting.custom_css%>
+    <%}
+    %>
 </style>

@@ -7,13 +7,13 @@
     <div style="text-align: center;margin: 9px;">
         <input style="width: 80%;padding: 1rem 0.75rem;" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
     </div>
-    <div>
-        <% if(setting.data.show_intro_text) {%>
-            <% if(setting.data.intro_text_content) {%>
+    <% if(setting.data.show_intro_text) {%>
+        <% if(setting.data.intro_text_content) {%>
+            <p style="text-indent: 30px;margin-top: 1em;margin-bottom: 1em;">
                 <%- setting.data.intro_text_content %>
-            <% } %>
+            </p>
         <% } %>
-    </div>
+    <% } %>
     <% if(faqs.length){ %>
         <div style="margin-bottom: 12px;">
             <% for(var i=0; i < faqs.length; i++) { %>
@@ -33,13 +33,13 @@
             </div>
         </div>
     <% } %>
-    <div>
-        <% if(setting.data.show_footer_text) {%>
-            <% if(setting.data.footer_text_content) {%>
+    <% if(setting.data.show_footer_text) {%>
+        <% if(setting.data.footer_text_content) {%>
+            <p style="text-indent: 30px;margin-top: 1em;margin-bottom: 1em;">
                 <%- setting.data.footer_text_content %>
-            <% } %>
+            </p>
         <% } %>
-    </div>
+    <% } %>
 </div>
 <script>
     function showHideContent(el) {
