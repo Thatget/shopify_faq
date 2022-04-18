@@ -7,6 +7,7 @@ const request = require('request-promise');
 const cookie = require('cookie');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+// const proxy = require('express-http-proxy');
 
 const errorLog = require('./app/helpers/log.helper')
 
@@ -34,7 +35,6 @@ const refreshTokenLife = process.env.REFRESH_JWT_KEY_LIFE;
 const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
 
 // const debug = console.log.bind(console);
-
 db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.");
 });
@@ -47,19 +47,18 @@ app.get('/', async (req, res) => {
     }
     const state = nonce();
     const redirectUri = forwardingAddress + '/shopify/callback';
-    const pageUri = 'https://' + req.query.shop +
-        '/admin/oauth/authorize?client_id=' + apiKey +
-        '&scope=' + scopes +
-        '&state=' + state +
-        '&redirect_uri=' + redirectUri;
+    const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+        '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
     res.cookie('state',state);
     res.redirect(pageUri);
 });
 
 app.get('/shopify/callback', async (req, res) => {
-    const { shop, hmac, code, state } = req.query;
+    const {shop, hmac, code, state} = req.query;
+    if (!req.headers.cookie) {
+        return res.status(403).send('Your cookie error !');
+    }
     const stateCookie = cookie.parse(req.headers.cookie).state;
-
     if (state !== stateCookie) {
         return res.status(403).send('Request origin cannot be verified');
     }
@@ -106,13 +105,13 @@ app.get('/shopify/callback', async (req, res) => {
                               }
                             }`
                         };
-                        const shopRequestUrl1 = 'https://' + shop + '/admin/api/2022-01/graphql.json';
-                        await request.post(shopRequestUrl1, {headers: shopRequestHeaders, json: body})
+                        const shopRequestUrlLocale = 'https://' + shop + '/admin/api/2022-01/graphql.json';
+                        await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
                             .then(data => {
                                 shopLocales = JSON.stringify(data.data);
                             }).catch(e => {
-                                console.log(e.message)
-                            })
+                                errorLog.error(`get shop locale: ${error.message}`)
+                            });
                         shopResonse = JSON.parse(shopResonse);
                         const user = {
                             store_name: shopResonse.shop.name,
@@ -137,7 +136,7 @@ app.get('/shopify/callback', async (req, res) => {
                                 await User.create(user).then(data => {
                                 }).catch(err => {
                                     errorLog.error(`user created error: ${err.message}`)
-                                    res.status(err.code).send(err.error);
+                                    res.status(err.status).send(err.error);
                                 });
                                 const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
                                 const webhook = {
@@ -153,44 +152,6 @@ app.get('/shopify/callback', async (req, res) => {
                                     .catch((error) => {
                                         errorLog.error(`webhook create: ${error.message}`)
                                     });
-
-                                const shopRequestUrlScripTag = 'https://' + shop + '/admin/api/2022-01/script_tags.json';
-                                const script_tag = {
-                                    script_tag: {
-                                        event: "onload",
-                                        src: `${app_link}/js/faq_page_root.js`
-                                    }
-                                };
-                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag})
-                                    .then((data) => {
-                                    })
-                                    .catch( async (error) => {
-                                        errorLog.error(`create script tag root: ${error.message}`)
-                                    });
-                                const script_tag1 = {
-                                    script_tag: {
-                                        event: "onload",
-                                        src: `${app_link}/js/app.js`
-                                    }
-                                };
-                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag1})
-                                    .then((data) => {
-                                    })
-                                    .catch( async (error) => {
-                                        errorLog.error(`create script tag app error: ${error.message}`)
-                                    });
-                                const script_tag2 = {
-                                    script_tag: {
-                                        event: "onload",
-                                        src: `${app_link}/js/chunk-vendors.js`
-                                    }
-                                };
-                                await request.post(shopRequestUrlScripTag, {headers: shopRequestHeaders, json: script_tag2})
-                                    .then((data) => {
-                                    })
-                                    .catch( async (error) => {
-                                        errorLog.error(`create script tag chunk error: ${error.message}`)
-                                    });
                             }
                         })
                         let token = await login(user);
@@ -202,7 +163,7 @@ app.get('/shopify/callback', async (req, res) => {
                     });
             }).catch((error) => {
                 errorLog.error(`get data api error: ${error.message}`)
-                res.status(error.status).send(error.error);
+                res.status(error.statusCode).send(error.message);
             });
     } else {
         res.status(400).send('Required parameters missing');
@@ -236,22 +197,38 @@ app.post('/uninstall', async (req, res) => {
     res.end();
 });
 
-const multer = require('multer');
-const upload = multer({
-    limits: {
-        fileSize: 4 * 1024 * 1024,
+app.set("view engine","ejs");
+app.set("views","./views");
+
+const defaultPage = require('./controller/defaultPage');
+
+app.get('/faq-page', async (req, res) => {
+    const query_signature = req.query.signature;
+    const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;
+    const generateHash = crypto.createHmac('sha256', apiSecret)
+        .update(sorted_params)
+        .digest('hex');
+
+    if (query_signature === generateHash) {
+        const shop = req.query.shop;
+        if (shop) {
+            try {
+                const locale = req.headers['accept-language'].split(',')[0];
+                const faqs = await defaultPage.findFaqs(shop, locale);
+                const setting = await defaultPage.findSetting(shop, locale);
+                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting});
+            } catch (e) {
+                errorLog.error(e.message);
+                res.status(400).send('unexpected error occurred');
+            }
+            res.sendStatus(200);
+        } else {
+            return res.status(400).send('Required parameters missing');
+        }
+    } else {
+        res.sendStatus(403);
     }
-});
-const path = require('path');
-const Resize = require('./app/helpers/resizeImage.helper');
-app.post('/post', upload.single('image'), async (req, res) => {
-    const imagePath = path.join(__dirname, '/var/images/banner');
-    const fileUpload = new Resize(imagePath);
-    if (!req.file) {
-        res.status(401).json({error: 'Please provide an image'});
-    }
-    const filename = await fileUpload.save(req.file.buffer);
-    return res.status(200).json({ name: filename });
+    res.end();
 });
 
 //Api
@@ -281,17 +258,15 @@ async function login(user) {
                     shopify_domain:user.shopify_domain,
                     user_id: userId
                 };
-
                 accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife) || '';
                 refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife) || '';
-
             })
             .catch(err => {
-                errorLog.error(`error in login function get user from database ${err.message}`)
+                errorLog.error(`error in login function get user from database ${err.message}`);
                 return null;
             });
     } catch (error) {
-        errorLog.error(`error in login function ${error.message}`)
+        errorLog.error(`error in login function ${error.message}`);
         return null;
     }
     return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;

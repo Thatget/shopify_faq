@@ -34,7 +34,10 @@ exports.create = (req, res) => {
 // Find a single User with an id
 exports.findOne = (req, res) => {
     const id = req.jwtDecoded.data.user_id;
-    User.findByPk(id)
+    User.findByPk(id,
+        {
+            attributes:['shopify_domain','store_name','shopLocales','phone','email']
+        })
       .then(data => {
         if (data) {
           res.send(data);

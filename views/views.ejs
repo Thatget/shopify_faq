@@ -44,6 +44,11 @@
         font-style: <%=  setting.templateSetting.category_text_style %>;
     <% } %>
     }
+    <% if (setting.templateSetting.faq_hover_color) { %>
+        .faq-question-title:hover {
+            background-color: <%=  setting.templateSetting.faq_hover_color %>;
+        }
+    <% } %>
     .faq-answer-content {
     <% if (setting.templateSetting.answer_font_weight) { %>
         font-weight: <%=  setting.templateSetting.answer_font_weight %>;

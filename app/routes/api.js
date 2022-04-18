@@ -57,11 +57,11 @@ let initAPIs = (app) => {
 
     //User
     //  require("../routes/user.routes");
-    router.post("/api/user", user.create);
+    // router.post("/api/user", user.create);
     router.get("/api/user", user.findOne);
-    router.put("/api/user", user.update);
-    router.delete("/api/user", user.delete);
-    router.delete("/api/user", user.deleteAll);
+    // router.put("/api/user", user.update);
+    // router.delete("/api/user", user.delete);
+    // router.delete("/api/user", user.deleteAll);
 
     // Upload image
     const multer = require('multer');
