@@ -39,7 +39,7 @@ exports.findFaqs = async (shop, locale = 'en') => {
                         }
                     }else {
                         if (selectCondition.faq_sort_name) {
-                            selectQuery += " ORDER BY `faq_category`.`title`"
+                            selectQuery += " ORDER BY `faq`.`title`"
                         }
                     }
 
