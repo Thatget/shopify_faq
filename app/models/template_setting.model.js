@@ -69,6 +69,9 @@ module.exports = (sequelize, Sequelize) => {
             },
             custom_css: {
                 type: Sequelize.TEXT
+            },
+            banner_height: {
+                type: Sequelize.INTEGER
             }
         },
         {

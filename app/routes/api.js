@@ -67,7 +67,7 @@ let initAPIs = (app) => {
     const multer = require('multer');
     const upload = multer({
         limits: {
-            fileSize: 4 * 1024 * 1024,
+            fileSize: 8 * 1024 * 1024,
         }
     });
     router.post("/api/upload-profile-pic", upload.single('profile_pic'), uploadBanner.upload);
