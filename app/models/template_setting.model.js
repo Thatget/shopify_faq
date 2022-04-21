@@ -72,6 +72,9 @@ module.exports = (sequelize, Sequelize) => {
             },
             banner_height: {
                 type: Sequelize.INTEGER
+            },
+            banner_default: {
+                type: Sequelize.STRING
             }
         },
         {

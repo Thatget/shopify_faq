@@ -43,21 +43,43 @@ exports.upload = async (req, res) => {
                 template_data.image_banner = filename;
                 if (data) {
                     const templateId = data.dataValues.id;
+                    const aaa = data.dataValues.image_banner
                     if (data.dataValues.image_banner) {
                         fs.unlink(imagePath + '/' + data.dataValues.image_banner, (err => {
                             if (err) errorLog.error('error unlink image' + err.message);
                         }));
                     }
-                    templateSetting.update(template_data, {
-                        where: {id: templateId}
-                    }).then(num => {
+                    console.log(aaa)
+                    if(aaa !== null) {
+                        console.log('update')
+                        templateSetting.update(template_data, {
+                            where: {id: templateId}
+                        }).then(num => {
                         if (num == 1) {
-                        } else {
+                            console.log('update1')
+                        }
+                        else{
                             errorLog.error('update template setting error <update image>')
                         }
-                    }).catch(e => {
-                        errorLog.error(e.message)
-                    })
+                        }).catch(e => {
+                            errorLog.error(e.message)
+                        })
+                    }
+                    else{
+                        console.log('create')
+                        templateSetting.update(template_data, {
+                            where: {id: templateId}
+                        }).then(num => {
+                        if (num == 1) {
+                            console.log('create1')
+                            } else {
+                                errorLog.error('update template setting error <update image>')
+                            }
+                        }).catch(e => {
+                            errorLog.error(e.message)
+                        })
+                    }
+                    
                 }
             }).catch(error => {
                 errorLog.error(error.message)
