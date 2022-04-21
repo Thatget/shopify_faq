@@ -169,6 +169,9 @@ async function getTemplateSetting(setting_id, template_number) {
                 if (templateSetting.image_banner) {
                     templateSetting.image_banner = forwardingAddress +"/var/images/banner/"+templateSetting.image_banner
                 }
+                if (templateSetting.banner_default) {
+                    templateSetting.banner_default = forwardingAddress +"/var/images/banner/"+templateSetting.banner_default
+                }
             }
         }).catch(e => {
             errorLog.error(`template Setting ${e.message}`)

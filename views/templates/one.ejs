@@ -1,6 +1,6 @@
 <div class="root-faq-template">
     <div class="faq-header" style="text-align: center;max-width: 100vw">
-        <% if(setting.data.page_title_content.) { %>
+        <% if(setting.data.page_title_content) { %>
             <h1 style="color: #000;margin:0; padding: 20px 0; font-weight: 600;"><%- setting.data.page_title_content %></h1>
         <% } %>
         <div style="text-align: center; padding: 20px 0;">
@@ -22,7 +22,7 @@
                     <% var faq_category_count = 0 %>
                     <% for(var i=0; i < faqs.length; i++) { %>
                         <% let faq_category_content = {} %>
-                        <%
+                        <%z
                         if(!faq_category.length){%>
                             <% faq_category_content.title = faqs[i].category_title %>
                             <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>

@@ -1,61 +1,202 @@
-<div class="root-faq-template" style="margin:1.8em auto;max-width:1400px;">
-    <div style="text-align: center;">
-        <% if(setting.data.page_title_content) { %>
-            <h2><%- setting.data.page_title_content %></h2>
-        <% } %>
-    </div>
-    <div style="text-align: center;margin: 9px;">
-        <input style="width: 80%;padding: 1rem 0.75rem;" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
-    </div>
-    <% if(setting.data.show_intro_text) {%>
-        <% if(setting.data.intro_text_content) {%>
-            <p style="text-indent: 30px;margin-top: 1em;margin-bottom: 1em;">
-                <%- setting.data.intro_text_content %>
-            </p>
-        <% } %>
-    <% } %>
-    <% if(faqs.length){ %>
-        <div style="margin-bottom: 12px;">
-            <% for(var i=0; i < faqs.length; i++) { %>
+<div class="root-faq-template">
+    <% if(setting.templateSetting.image_banner) {%>
+        <div class="faq-header" style="text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-                <div class="faq-question-title" style="width: 100%;font-weight: bold;cursor: pointer; padding: 1em;" onclick="showHideContent(this)">
-                    <span class="listed-faq"><%= faqs[i].title %></span>
-                    <span class="faq-category-title" style="float:right;"><%- faqs[i].category_title %></span>
-                    <hr style="margin: 0;">
-                </div>
-                <div class="faq-answer-content" style="display: none;margin:0;padding:1em 1em 1em 1em;line-height:1.5;"><%- faqs[i].content %></div>
-            </div>
-            <% } %>
-            <div id="not-found-text" style="display: none" >
-                <% if(setting.data.search_not_found) {%>
-                    <%- setting.data.search_not_found %>
+                <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
+                    <h1 style="color: #fff;margin:0; padding: 20px 0; font-weight: 600;"><%- setting.data.page_title_content %></h1>
                 <% } %>
+                <% if(setting.data.show_page_title && setting.data.page_title_content){%>
+                    <div style="text-align: center; padding: 2rem;">
+                        <input class="search-input" style="" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                    </div>
+                <%}
+                else{%>
+                    <div style="text-align: center; padding: 2rem; margin-top: 70px;">
+                        <input style="width: 60%; padding: 1rem; border-radius: 4px; outline: none; border: none; font-size: 1.6rem;" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                    </div>
+                <%} %>
+            </div>
+            <div>
+                <% if(setting.data.show_intro_text && setting.data.intro_text_content) {%>
+                    <div style="text-align: center; padding: 10px 0; color: #fff;">
+                        <span style="font-size: 18px;"><%- setting.data.intro_text_content %></span>
+                    </div>
+                <% } %>    
             </div>
         </div>
-    <% } %>
-    <% if(setting.data.show_footer_text) {%>
-        <% if(setting.data.footer_text_content) {%>
-            <p style="text-indent: 30px;margin-top: 1em;margin-bottom: 1em;">
-                <%- setting.data.footer_text_content %>
-            </p>
+    <% }
+    else{%>
+        <div class="faq-header-3" style="text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
+                    <h1 style="color: #fff;margin:0; padding: 20px 0; font-weight: 600;"><%- setting.data.page_title_content %></h1>
+                <% } %>
+                <% if(setting.data.show_page_title && setting.data.page_title_content){%>
+                    <div style="text-align: center; padding: 2rem;">
+                        <input class="search-input" style="" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                    </div>
+                <%}
+                else{%>
+                    <div style="text-align: center; padding: 2rem; margin-top: 70px;">
+                        <input style="width: 60%; padding: 1rem; border-radius: 4px; outline: none; border: none; font-size: 1.6rem;" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                    </div>
+                <%} %>
+            </div>
+            <div>
+                <% if(setting.data.show_intro_text && setting.data.intro_text_content) {%>
+                    <div style="text-align: center; padding: 10px 0; color: #fff;">
+                        <span style="font-size: 18px;"><%- setting.data.intro_text_content %></span>
+                    </div>
+                <% } %>    
+            </div>
+        </div>
+    <%} %>
+    
+    <div class="faq-main">
+        <% if(faqs.length && !setting.data.dont_category_faq){ %>
+            <div>
+                <div class="container" style="display: flex">
+                    <% var faq_category = [] %>
+                    <% var faq_category_count = 0 %>
+                    <% for(var i=0; i < faqs.length; i++) { %>
+                        <% let faq_category_content = {} %>
+                        <% 
+                        if(!faq_category.length){%>
+                            <% faq_category_content.title = faqs[i].category_title %>
+                            <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
+                            <% faq_category[faq_category_count] = faq_category_content %>
+                        <% } 
+                        else { %>
+                            <% let checkExites = false %>
+                            <% for(var j=0; j < faq_category.length; j++) { %>
+                                <% if(faq_category[j].title === faqs[i].category_title){%>
+                                    <% faq_category[j].faqs.push({title:faqs[i].title,content:faqs[i].title})%>
+                                    <% checkExites = true %>
+                                <% } %>
+                            <% } %>
+                            <% if(!checkExites){%>
+                                <% faq_category_count++ %>
+                                <% faq_category_content.title = faqs[i].category_title %>
+                                <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
+                                <% faq_category[faq_category_count] = faq_category_content %>
+                            <% } %>
+                        <% } %>
+                    <% } %>
+                    <% if(faq_category.length){%>
+                        <div class="category-bar" style="display: flex; flex-direction: column; flex-wrap: wrap; margin: calc(<%=  setting.templateSetting.category_font_size %>px*1.8 + 40px) 30px 30px 0; width: 30%">
+                            <% for(var i=0; i < faq_category.length; i++) { %>
+								<a href="#<%- faq_category[i].title %>" class="faq-category-title bbb" style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important;"><%- faq_category[i].title %></a>
+                            <% } %>
+                        </div>
+                        <div style="width: 70%;" class="faq-container">
+                            <% for(var i=0; i < faq_category.length; i++) { %>
+                                <div class="category-faq-container" style="margin-bottom: 20px;">
+                                    <div id="<%- faq_category[i].title %>" class="faq-category-title" style="width: 100%; margin: 30px 0 10px 0;"><%- faq_category[i].title %></div>
+                                    <div style="border-top: 1px solid #ccc;">
+                                        <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
+                                            <div class="faq-main-content" style="border-bottom: 1px solid #ccc">
+                                                <div class="faq-question-title-3" style="padding: 10px; display: flex; align-items: center; ; width: 100%; cursor: pointer;font-size: <%=  setting.templateSetting.faq_font_size %>px;" onclick="showHideContent(this)">
+                                                    <span class="listed-faq" style="width: 100%; user-select: none;"><%= faq_category[i].faqs[j].title %></span>
+                                                    <svg class="svg-right" style="width: 14px; height: 14px" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                    <svg class="svg-down" style=" width: 14px; height: 14px;" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                    <!-- <svg class="svg-right" style="width: 20px; height: 20px" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
+                                                    <svg class="svg-down" style="display:none; width: 20px; height: 20px" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 320 512"><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg> -->
+                                                </div>
+                                                <div class="faq-answer-content answer-transition" style="display: none; margin:0; margin-bottom: 6px; padding: 10px">
+                                                    <%- faq_category[i].faqs[j].content %>
+                                                </div>
+                                            </div>
+                                        <%}%>
+                                    </div>
+                                </div>
+                            <% } %>
+                            <div id="not-found-text" style="display: none; text-align: center; font-size: 3rem; margin-top: 100px;" >
+                                <% if(setting.data.search_not_found) {%>
+                                    <%- setting.data.search_not_found %>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        <% }
+        else{ %>
+            <div style="margin: 30px 0;">
+                <% for(var j=0; j < faqs.length; j++) { %>
+                    <div class="faq-main-content bbb" style="border-bottom: 1px solid #ccc">
+                        <div class="faq-question-title-3" style="padding: 10px; display: flex; align-items: center; ; width: 100%; cursor: pointer;font-size: <%=  setting.templateSetting.faq_font_size %>px;" onclick="showHideContent(this)">
+                            <span class="listed-faq" style="width: 100%; user-select: none;"><%= faqs[j].title %></span>
+                            <svg class="svg-right" style="width: 14px; height: 14px" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                            <svg class="svg-down" style=" width: 14px; height: 14px;" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                            <!-- <svg class="svg-right" style="width: 20px; height: 20px" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
+                            <svg class="svg-down" style="display:none; width: 20px; height: 20px" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 320 512"><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg> -->
+                        </div>
+                        <div class="faq-answer-content answer-transition" style="display: none; margin:0; margin-bottom: 6px; padding: 10px">
+                            <%- faqs[j].content %>
+                        </div>
+                    </div>
+                <%}%>
+            </div>
         <% } %>
-    <% } %>
+        <% if(setting.data.show_footer_text) {%>
+            <div style="text-align: center;margin-top: 30px; padding: 10px 0; font-size: 18px">
+                <% if(setting.data.footer_text_content) {%>
+                    <%- setting.data.footer_text_content %>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
 </div>
 <script>
     function showHideContent(el) {
         var content = el.nextElementSibling;
+        var svgRight = el.getElementsByClassName('svg-right')
+        var svgDown = el.getElementsByClassName('svg-down')
         if (content.style.display === "block") {
             content.style.display = "none";
         } else {
             content.style.display = "block";
         }
+        if (svgRight[0].style.opacity === "0") {
+            svgRight[0].style.opacity = "1";
+            svgRight[0].style.display = "block";
+            svgRight[0].style.transform = "rotate(0deg)";
+            svgRight[0].style.transition  = "all .7s";
+        } else {
+            svgRight[0].style.transform = "rotate(180deg)";
+            svgRight[0].style.transition  = "all 0s";
+            svgRight[0].style.opacity = "0";
+        }
+        if (svgDown[0].style.opacity === "1") {
+            svgDown[0].style.opacity = "0";
+            svgDown[0].style.display = "block";
+            svgDown[0].style.transform = "rotate(0deg)";
+            svgDown[0].style.transition  = "all 0s";
+        } else {
+            svgDown[0].style.transform = "rotate(180deg)";
+            svgDown[0].style.transition  = "ease-in .3s";
+            svgDown[0].style.opacity = "1";
+        }
+        // if (svgDown[0].style.display === "block") {
+        //     svgDown[0].style.display = "none";
+        // } else {
+        //     svgRight[0].style.transition  = "all 2s";
+        //     svgDown[0].style.display = "block";
+        // }
     }
-
     function simpleSearch() {
         var input = document.getElementById("search-text");
         var filter = input.value.toLowerCase();
         var nodes = document.getElementsByClassName('listed-faq');
-
+        var nodeCategory = document.getElementsByClassName('category-faq-container');
+        if(document.getElementById('search-text').value === ''){
+            document.getElementsByClassName('category-bar')[0].style.display = "flex"
+            document.getElementsByClassName('faq-container')[0].style.width = "70%"
+        }
+        else{
+            document.getElementsByClassName('category-bar')[0].style.display = "none"
+            document.getElementsByClassName('faq-container')[0].style.width = "100%"
+        }
         var checkexist = true;
         for (i = 0; i < nodes.length; i++) {
             if (nodes[i].innerText.toLowerCase().includes(filter)) {
@@ -64,6 +205,19 @@
             } else {
                 nodes[i].parentNode.parentNode.style.display = "none";
             }
+        }
+        for (j = 0; j < nodeCategory.length; j++) {
+            let subFaq = nodeCategory[j].getElementsByClassName('faq-main-content');
+            let checkDisplay = false;
+            for (k = 0; k < subFaq.length; k++) {
+                if(subFaq[k].style.display == "block") {
+                    checkDisplay = true;
+                    break;
+                }
+            }
+            if (checkDisplay) {
+                nodeCategory[j].style.display = "block";
+            } else nodeCategory[j].style.display = "none";
         }
         if (checkexist) {
             document.getElementById("not-found-text").style.display = "block";
@@ -75,10 +229,84 @@
 </script>
 <style>
     <% if(setting.templateSetting.width_faqs_accordian) { %>
-        .root-faq-template {
-            width: <%- setting.templateSetting.width_faqs_accordian%>px;
+    .faq-main {
+        padding: 0 20px;
+        max-width: <%- setting.templateSetting.width_faqs_accordian%>px;
+        margin: auto;
+    }
+    <% } if(setting.templateSetting.image_banner) { %>
+    .faq-header {
+        min-height: <%- setting.templateSetting.banner_height%>px;
+        max-width: 100vw;
+        background-image: url('<%- setting.templateSetting.image_banner%>');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position-y: center;
+    }
+    <%} 
+        if(setting.templateSetting.custom_css) { %>
+            <%- setting.templateSetting.custom_css%>
+            <%= setting.templateSetting.custom_css%>
+        <%}
+    %>
+
+    .faq-header-3 {
+        min-height: <%- setting.templateSetting.banner_height%>px;
+        max-width: 100vw;
+        background-image: url('<%- setting.templateSetting.banner_default%>');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position-y: center;
+    }
+
+    .search-input{
+        width: 60%; 
+        padding: 1rem; 
+        border-radius: 4px; 
+        outline: none; 
+        border: none; 
+        font-size: 1.6rem;
+    }
+    @media only screen and (max-width: 700px) {
+        .search-input {
+            width: 95%;
         }
-    <%} if(setting.templateSetting.custom_css) { %>
-        <%- setting.templateSetting.custom_css%>
-    <%}%>
+    }
+    .faq-question-title-3 {
+        <% if (setting.templateSetting.faq_font_weight) { %>
+            font-weight: <%=  setting.templateSetting.faq_font_weight %>;
+        <% } if (setting.templateSetting.faq_font_color) { %>
+            color: <%=  setting.templateSetting.faq_font_color %>;
+        <% } if (setting.templateSetting.faq_font_size) { %>
+            font-size: <%=  setting.templateSetting.faq_font_size %>px;
+        <% } if (setting.templateSetting.faq_font_family) { %>
+            font-family: <%=  setting.templateSetting.faq_font_family %>;
+        <% } %>
+    }
+    .svg-right{
+        position: relative;
+        left: 11.2px;
+        opacity: 1;
+    }
+    .svg-down{
+        opacity: 0;
+    }
+    .answer-transition{
+        position: relative;
+    }
+    .bbb:first-child{
+        border-top: 1px solid #ccc;
+    }
+    @media only screen and (max-width: 768px) {
+        .container{
+            flex-direction: column;
+        }
+        .faq-container{
+            width: 100% !important;
+        }
+        .category-bar{
+            width: 100% !important;
+            margin-top: 40px !important;
+        }
+    }
 </style>
