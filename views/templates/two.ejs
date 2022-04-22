@@ -97,7 +97,6 @@
                                             <div class="faq-question-title" style="display: flex; align-items: center; width: 100%;cursor: pointer; padding: 12px;font-size: <%=  setting.templateSetting.faq_font_size %>px; border-radius: 4px 4px 0 0;" onclick="showHideContent(this)">
                                                 <span class="listed-faq" style="width: 100%; user-select: none;"><%= faq_category[i].faqs[j].title %></span>
                                                 <svg class="svg-right" style="width: 20px; height: 20px" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
-                                                <svg class="svg-down" style="display:none; width: 20px; height: 20px" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 320 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg>
                                             </div>
                                             <div class="faq-answer-content" style="display: none; margin:0; padding: 12px; border-radius: 0 0 4px 4px; border:1px solid #ccc;">
                                                 <%- faq_category[i].faqs[j].content %>
@@ -148,18 +147,12 @@
         var svgDown = el.getElementsByClassName('svg-down')
         if (content.style.display === "block") {
             content.style.display = "none";
+            svgRight[0].style.transform = "rotate(0deg)";
+            svgRight[0].style.transition  = "all .2s";
         } else {
             content.style.display = "block";
-        }
-        if (svgRight[0].style.display === "none") {
-            svgRight[0].style.display = "block";
-        } else {
-            svgRight[0].style.display = "none";
-        }
-        if (svgDown[0].style.display === "block") {
-            svgDown[0].style.display = "none";
-        } else {
-            svgDown[0].style.display = "block";
+            svgRight[0].style.transform = "rotate(90deg)";
+            svgRight[0].style.transition  = "all .2s";
         }
     }
     function simpleSearch() {

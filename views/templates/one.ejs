@@ -9,7 +9,7 @@
     </div>
     <div class="faq-main">
         <% if(setting.data.show_intro_text) {%>
-            <div style="text-align: center; padding: 10px 0; border-bottom: 1px solid #ccc;">
+            <div style="text-align: center; padding: 10px 0">
                 <% if(setting.data.intro_text_content) {%>
                     <span style="font-size: 18px;"><%- setting.data.intro_text_content %></span>
                 <% } %>
@@ -22,7 +22,7 @@
                     <% var faq_category_count = 0 %>
                     <% for(var i=0; i < faqs.length; i++) { %>
                         <% let faq_category_content = {} %>
-                        <%z
+                        <%
                         if(!faq_category.length){%>
                             <% faq_category_content.title = faqs[i].category_title %>
                             <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
@@ -95,7 +95,7 @@
             </div>
         <% } %>
         <% if(setting.data.show_footer_text) {%>
-            <div style="text-align: center; padding: 10px 0; font-size: 18px; border-top: 1px solid #ccc;">
+            <div style="text-align: center; padding: 10px 0; font-size: 18px;">
                 <% if(setting.data.footer_text_content) {%>
                     <%- setting.data.footer_text_content %>
                 <% } %>

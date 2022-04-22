@@ -27,7 +27,7 @@ exports.findFaqs = async (shop, locale = 'en') => {
                 })
                 try {
                     let selectQuery = "SELECT `faq_category`.`title` as `category_title`, `faq`.`title`,`faq`.`content`" +
-                        " "+
+                        ", `faq_category`.`identify` as `category_identify`"+
                         " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify`" +
                         " where `faq`.`locale` = '" + locale + "' and `faq_category`.`locale` = '" + locale +
                         "' and `faq`.`user_id` = " + userID + " and `faq_category`.`user_id` = " + userID +
