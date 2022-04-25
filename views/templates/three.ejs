@@ -33,7 +33,7 @@
                 <% } %>
                 <% if(setting.data.show_page_title && setting.data.page_title_content){%>
                     <div style="text-align: center; padding: 2rem;">
-                        <input class="search-input" style="" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                        <input class="search-input" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
                     </div>
                 <%}
                 else{%>
@@ -70,7 +70,7 @@
                             <% let checkExites = false %>
                             <% for(var j=0; j < faq_category.length; j++) { %>
                                 <% if(faq_category[j].title === faqs[i].category_title){%>
-                                    <% faq_category[j].faqs.push({title:faqs[i].title,content:faqs[i].title})%>
+                                    <% faq_category[j].faqs.push({title:faqs[i].title,content:faqs[i].content})%>
                                     <% checkExites = true %>
                                 <% } %>
                             <% } %>
@@ -90,14 +90,52 @@
                             <% } %>
                         </div>
                         <div style="width: 70%;" class="faq-container">
-                            <% for(var i=0; i < faq_category.length; i++) { %>
-                                <div class="category-faq-container" style="margin-bottom: 20px;">
-                                    <% if(i === 0) {%>
-                                        <div id="dung">
-                                            <div id="<%- faq_category[i].title %>" class="faq-category-title" style=" width: 100%; margin: 30px 0 10px 0;"><%- faq_category[i].title %></div>
+                            <div class="category-faq-container">
+                                <% for(var i=0; i < faq_category.length; i++) { %>
+                                    <div style="margin-bottom: 20px;">
+                                        <% if(i === 0) {%>
+                                            <div id="dung">
+                                                <div id="<%- faq_category[i].title %>" class="faq-category-title" style="border-bottom: 1px solid #ccc; width: 100%; margin-top: 30px; padding-bottom: 10px;"><%- faq_category[i].title %></div>
+                                                <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
+                                                    <div class="faq-main-content" style="border-bottom: 1px solid #ccc">
+                                                        <div class="faq-question-title-3" style="padding: 10px; display: flex; align-items: center; ; width: 100%; cursor: pointer;font-size: <%=  setting.templateSetting.faq_font_size %>px;" onclick="showHideContent(this)">
+                                                            <span class="listed-faq" value style="width: 100%; user-select: none;"><%= faq_category[i].faqs[j].title %></span>
+                                                            <svg class="svg-right" style="width: 14px; height: 14px" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                            <svg class="svg-down" style=" width: 14px; height: 14px;" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                        </div>
+                                                        <div class="faq-answer-content answer-transition" style="display: none; margin:0; margin-bottom: 6px; padding: 10px">
+                                                            <%- faq_category[i].faqs[j].content %>
+                                                        </div>
+                                                    </div>
+                                                <%}%>
+                                            </div>
+                                        <% } %>
+                                        <div style="display: none;" id="aaa<%- faq_category[i].title %>">
+                                            <div id="<%- faq_category[i].title %>" class="faq-category-title" style="border-bottom: 1px solid #ccc; width: 100%; margin-top: 30px; padding-bottom: 10px"><%- faq_category[i].title %></div>
                                             <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
                                                 <div class="faq-main-content" style="border-bottom: 1px solid #ccc">
-                                                    <div class="faq-question-title-3" style="border-top: 1px solid #ccc; padding: 10px; display: flex; align-items: center; ; width: 100%; cursor: pointer;font-size: <%=  setting.templateSetting.faq_font_size %>px;" onclick="showHideContent(this)">
+                                                    <div class="faq-question-title-3 faq-question-title-border" style="padding: 10px; display: flex; align-items: center; ; width: 100%; cursor: pointer;font-size: <%=  setting.templateSetting.faq_font_size %>px;" onclick="showHideContent(this)">
+                                                        <span class="listed-faq" value style="width: 100%; user-select: none;"><%= faq_category[i].faqs[j].title %></span>
+                                                        <svg class="svg-right" style="width: 14px; height: 14px" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                        <svg class="svg-down" style=" width: 14px; height: 14px;" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                    </div>
+                                                    <div id="faq-answer-content" class="faq-answer-content answer-transition" style="display: none; margin:0; margin-bottom: 6px; padding: 10px">
+                                                        <%- faq_category[i].faqs[j].content %>
+                                                    </div>
+                                                </div>
+                                            <%}%>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="category-faq-search" style="display: none; border-top: 1px solid #ccc; margin-top: 40px;">
+                                <% for(var i=0; i < faq_category.length; i++) { %>
+                                    <div>
+                                        <div>
+                                            <div class="faq-category-search" style="border-bottom: 1px solid #ccc; width: 100%; margin-top: 30px; padding-bottom: 10px"><%- faq_category[i].title %></div>
+                                            <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
+                                                <div class="faq-main-content" style="border-bottom: 1px solid #ccc">
+                                                    <div class="faq-question-title-3 faq-question-title-border" style="padding: 10px; display: flex; align-items: center; ; width: 100%; cursor: pointer;font-size: <%=  setting.templateSetting.faq_font_size %>px;" onclick="showHideContent(this)">
                                                         <span class="listed-faq" value style="width: 100%; user-select: none;"><%= faq_category[i].faqs[j].title %></span>
                                                         <svg class="svg-right" style="width: 14px; height: 14px" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                         <svg class="svg-down" style=" width: 14px; height: 14px;" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -108,24 +146,9 @@
                                                 </div>
                                             <%}%>
                                         </div>
-                                    <% } %>
-                                    <div style="display: none;" id="aaa<%- faq_category[i].title %>">
-                                        <div id="<%- faq_category[i].title %>" class="faq-category-title" style=" width: 100%; margin: 30px 0 10px 0;"><%- faq_category[i].title %></div>
-                                        <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
-                                            <div class="faq-main-content" style="border-bottom: 1px solid #ccc">
-                                                <div class="faq-question-title-3" style="border-top: 1px solid #ccc; padding: 10px; display: flex; align-items: center; ; width: 100%; cursor: pointer;font-size: <%=  setting.templateSetting.faq_font_size %>px;" onclick="showHideContent(this)">
-                                                    <span class="listed-faq" value style="width: 100%; user-select: none;"><%= faq_category[i].faqs[j].title %></span>
-                                                    <svg class="svg-right" style="width: 14px; height: 14px" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
-                                                    <svg class="svg-down" style=" width: 14px; height: 14px;" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
-                                                </div>
-                                                <div class="faq-answer-content answer-transition" style="display: none; margin:0; margin-bottom: 6px; padding: 10px">
-                                                    <%- faq_category[i].faqs[j].content %>
-                                                </div>
-                                            </div>
-                                        <%}%>
                                     </div>
-                                </div>
-                            <% } %>
+                                <% } %>
+                            </div>
                             <div id="not-found-text" style="display: none; text-align: center; font-size: 3rem; margin-top: 100px;" >
                                 <% if(setting.data.search_not_found) {%>
                                     <%- setting.data.search_not_found %>
@@ -139,7 +162,7 @@
         else{ %>
             <div style="margin: 60px 0 30px 0;">
                 <% for(var j=0; j < faqs.length; j++) { %>
-                    <div class="faq-main-content bbb" style="border-bottom: 1px solid #ccc">
+                    <div class="faq-main-content bbb" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;">
                         <div class="faq-question-title-3" style="padding: 10px; display: flex; align-items: center; ; width: 100%; cursor: pointer;font-size: <%=  setting.templateSetting.faq_font_size %>px;" onclick="showHideContent(this)">
                             <span class="listed-faq" style="width: 100%; user-select: none;"><%= faqs[j].title %></span>
                             <svg class="svg-right" style="width: 14px; height: 14px" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -167,7 +190,18 @@
     var categoryName = []
     function abc(s){
         categoryName.push(s)
-        console.log(categoryName.length)
+        console.log(document.getElementsByClassName('faq-answer-content').length)
+
+        for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
+            document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
+            document.getElementsByClassName('svg-right')[i].style.opacity = '1'
+            document.getElementsByClassName('svg-right')[i].style.transform = "rotate(0deg)";
+            document.getElementsByClassName('svg-right')[i].style.transition  = "all .7s";
+            document.getElementsByClassName('svg-down')[i].style.transform = "rotate(0deg)";
+            document.getElementsByClassName('svg-down')[i].style.transition  = "ease-in .3s";
+            document.getElementsByClassName('svg-down')[i].style.opacity = '0'
+
+        }
         for(let i = 0; i < categoryName.length; i++){
             if(categoryName[i] === document.getElementById(s).innerHTML){
                 document.getElementById(`aaa${categoryName[i]}`).style.display = 'block'
@@ -192,25 +226,29 @@
         var svgDown = el.getElementsByClassName('svg-down')
         if (content.style.display === "block") {
             content.style.display = "none";
-        } else {
+        } 
+        else {
             content.style.display = "block";
         }
+
         if (svgRight[0].style.opacity === "0") {
             svgRight[0].style.opacity = "1";
-            svgRight[0].style.display = "block";
             svgRight[0].style.transform = "rotate(0deg)";
             svgRight[0].style.transition  = "all .7s";
-        } else {
+        } 
+        else {
+            console.log('open')
             svgRight[0].style.transform = "rotate(180deg)";
             svgRight[0].style.transition  = "all 0s";
             svgRight[0].style.opacity = "0";
         }
+
         if (svgDown[0].style.opacity === "1") {
             svgDown[0].style.opacity = "0";
-            svgDown[0].style.display = "block";
             svgDown[0].style.transform = "rotate(0deg)";
             svgDown[0].style.transition  = "all 0s";
         } else {
+            console.log('down')
             svgDown[0].style.transform = "rotate(180deg)";
             svgDown[0].style.transition  = "ease-in .3s";
             svgDown[0].style.opacity = "1";
@@ -220,14 +258,26 @@
         var input = document.getElementById("search-text");
         var filter = input.value.toLowerCase();
         var nodes = document.getElementsByClassName('listed-faq');
-        var nodeCategory = document.getElementsByClassName('category-faq-container');
+        var nodeCategory = document.getElementsByClassName('category-faq-search');
+        // console.log(nodeCategory)
+        console.log(document.getElementById('search-text').value === '')
         if(document.getElementById('search-text').value === ''){
+            document.getElementsByClassName("category-faq-container")[0].style.display = "block"
             document.getElementsByClassName('category-bar')[0].style.display = "flex"
             document.getElementsByClassName('faq-container')[0].style.width = "70%"
+            document.getElementsByClassName('category-faq-search')[0].style.display = "none"
+            for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
+                document.getElementsByClassName("faq-category-search")[i].style.display = "block"
+            }
         }
         else{
+            document.getElementsByClassName("category-faq-container")[0].style.display = "none"
             document.getElementsByClassName('category-bar')[0].style.display = "none"
             document.getElementsByClassName('faq-container')[0].style.width = "100%"
+            document.getElementsByClassName('category-faq-search')[0].style.display = "block"
+            for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
+                document.getElementsByClassName("faq-category-search")[i].style.display = "none"
+            }
         }
         var checkexist = true;
         for (i = 0; i < nodes.length; i++) {
@@ -238,26 +288,12 @@
                 nodes[i].parentNode.parentNode.style.display = "none";
             }
         }
-        for (j = 0; j < nodeCategory.length; j++) {
-            let subFaq = nodeCategory[j].getElementsByClassName('faq-main-content');
-            let checkDisplay = false;
-            for (k = 0; k < subFaq.length; k++) {
-                if(subFaq[k].style.display == "block") {
-                    checkDisplay = true;
-                    break;
-                }
-            }
-            if (checkDisplay) {
-                nodeCategory[j].style.display = "block";
-            } else nodeCategory[j].style.display = "none";
-        }
         if (checkexist) {
             document.getElementById("not-found-text").style.display = "block";
         } else {
             document.getElementById("not-found-text").style.display = "none";
         }
     }
-
 </script>
 <style>
     <% if(setting.templateSetting.width_faqs_accordian) { %>
@@ -325,9 +361,6 @@
     }
     .answer-transition{
         position: relative;
-    }
-    .bbb:first-child{
-        border-top: 1px solid #ccc;
     }
     @media only screen and (max-width: 768px) {
         .container{

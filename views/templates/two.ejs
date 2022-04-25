@@ -70,7 +70,7 @@
                             <% let checkExites = false %>
                             <% for(var j=0; j < faq_category.length; j++) { %>
                                 <% if(faq_category[j].title === faqs[i].category_title){%>
-                                    <% faq_category[j].faqs.push({title:faqs[i].title,content:faqs[i].title})%>
+                                    <% faq_category[j].faqs.push({title:faqs[i].title,content:faqs[i].content})%>
                                     <% checkExites = true %>
                                 <% } %>
                             <% } %>
