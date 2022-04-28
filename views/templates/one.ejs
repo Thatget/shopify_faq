@@ -1,20 +1,57 @@
 <div class="root-faq-template">
-    <div class="faq-header" style="text-align: center;max-width: 100vw">
-        <% if(setting.data.page_title_content) { %>
-            <h1 style="color: #000;margin:0; padding: 20px 0; font-weight: 600;"><%- setting.data.page_title_content %></h1>
-        <% } %>
-        <div style="text-align: center; padding: 20px 0;">
-            <input class="search-input" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
-        </div>
-    </div>
-    <div class="faq-main">
-        <% if(setting.data.show_intro_text) {%>
-            <div style="text-align: center; padding: 10px 0">
-                <% if(setting.data.intro_text_content) {%>
-                    <span style="font-size: 18px;"><%- setting.data.intro_text_content %></span>
+    <% if(setting.templateSetting.image_banner) {%>
+        <div class="faq-header" style="text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
+                    <h1 style="color: #fff;margin:0; outline: none; border: none; padding: 20px 0; font-weight: 600;"><%- setting.data.page_title_content %></h1>
                 <% } %>
+                <% if(setting.data.show_page_title && setting.data.page_title_content){%>
+                    <div style="text-align: center; padding: 2rem;">
+                        <input style="width: 60%; padding: 1rem; border-radius: 4px; outline: none; border: none; font-size: 1.6rem;" class="search-input" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                    </div>
+                <%}
+                else{%>
+                    <div style="text-align: center; padding: 2rem; margin-top: 70px;">
+                        <input style="width: 60%; padding: 1rem; border-radius: 4px; outline: none; border: none; font-size: 1.6rem;" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                    </div>
+                <%} %>
             </div>
-        <% } %>
+            <div>
+                <% if(setting.data.show_intro_text && setting.data.intro_text_content) {%>
+                    <div style="text-align: center; padding: 10px 0; color: #fff;">
+                        <span style="font-size: 18px;"><%- setting.data.intro_text_content %></span>
+                    </div>
+                <% } %>    
+            </div>
+        </div>
+    <% }
+    else{%>
+        <div class="faq-header-1" style="text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
+                    <h1 style="color: #fff;margin:0; padding: 20px 0; font-weight: 600;"><%- setting.data.page_title_content %></h1>
+                <% } %>
+                <% if(setting.data.show_page_title && setting.data.page_title_content){%>
+                    <div style="text-align: center; padding: 2rem;">
+                        <input class="search-input" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                    </div>
+                <%}
+                else{%>
+                    <div style="text-align: center; padding: 2rem; margin-top: 70px;">
+                        <input style="width: 60%; padding: 1rem; border-radius: 4px; outline: none; border: none; font-size: 1.6rem;" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                    </div>
+                <%} %>
+            </div>
+            <div>
+                <% if(setting.data.show_intro_text && setting.data.intro_text_content) {%>
+                    <div style="text-align: center; padding: 10px 0; color: #fff;">
+                        <span style="font-size: 18px;"><%- setting.data.intro_text_content %></span>
+                    </div>
+                <% } %>    
+            </div>
+        </div>
+    <%}%>
+    <div class="faq-main">
         <% if(faqs.length && !setting.data.dont_category_faq){ %>
             <div style="margin: 20px 0 30px 0">
                 <div class="">
@@ -53,7 +90,7 @@
                         <div style="margin-top: 20px">
                             <% for(var i=0; i < faq_category.length; i++) { %>
                                 <div class="category-faq-container" style="margin-bottom: 20px;">
-                                    <div id="<%- faq_category[i].title %>" class="faq-category-title" style="width: 100%;">
+                                    <div id="<%- faq_category[i].title %>" class="faq-category-title" style="width: 100%; margin-bottom: 10px;">
                                         <span style="border-bottom: 1px solid #ccc;"><%- faq_category[i].title %></span>
                                     </div>
                                     <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
@@ -165,9 +202,21 @@
         max-width: <%- setting.templateSetting.width_faqs_accordian%>px;
         margin: auto;
     }
-    <% } if(setting.templateSetting.custom_css) { %>
-        <%- setting.templateSetting.custom_css%>
-    <%}%>
+    <% } if(setting.templateSetting.image_banner) { %>
+    .faq-header {
+        min-height: <%- setting.templateSetting.banner_height%>px;
+        max-width: 100vw;
+        background-image: url('<%- setting.templateSetting.image_banner%>');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position-y: center;
+    }
+    <%} 
+        if(setting.templateSetting.custom_css) { %>
+            <%- setting.templateSetting.custom_css%>
+            <%= setting.templateSetting.custom_css%>
+        <%}
+    %>
     <% if (setting.data) { %>
         .faq-question-title-1 {
             <% if (setting.templateSetting.faq_font_weight) { %>
