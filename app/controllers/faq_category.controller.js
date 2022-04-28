@@ -134,23 +134,21 @@ exports.update = async (req, res) => {
                 let continueCondition = {};
                 continueCondition.check = false;
 
-                if (req.body.locale) {
-                    if (locale !== req.body.locale) {
-                        faq_category.locale = req.body.locale;
-                        // Check to update with locale data
-                        await FaqCategory.findOne({where: {identify: identify, locale: locale, user_id: user_id }})
-                            .then(subData => {
-                                if (subData.dataValues.id !== id) {
-                                    continueCondition.check = true;
-                                    continueCondition.message = "Category for this locale already exist!";
-                                }
-                            }).catch(error => {
-                                res.status(400).send({
-                                    message: "Error when checking category !"
-                                });
-                                return;
-                            })
-                    }
+                if (req.body.locale && (locale !== req.body.locale)) {
+                    faq_category.locale = req.body.locale;
+                    // Check to update with locale data
+                    await FaqCategory.findOne({where: {identify: identify, locale: locale, user_id: user_id }})
+                        .then(subData => {
+                            if (subData.dataValues.id !== id) {
+                                continueCondition.check = true;
+                                continueCondition.message = "Category for this locale already exist!";
+                            }
+                        }).catch(error => {
+                            res.status(400).send({
+                                message: "Error when checking category !"
+                            });
+                            return;
+                        })
                 }
                 if (continueCondition.check) {
                     throw new Error(continueCondition.message);
