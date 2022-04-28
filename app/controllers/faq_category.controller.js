@@ -21,10 +21,11 @@ exports.create = async (req, res) => {
     // };
     const faq_category = req.body;
     faq_category.user_id = user_id;
-    let identify = '';
-    if (!req.body.identify) {
-        identify = title.trim().replace(' ', '_') + user_id;
-        identify = await checkCategoryIdentify(user_id, identify, locale)
+    if (faq_category.identify) {
+        delete faq_category.identify;
+    }
+    let identify = locale + user_id;
+        identify = await generateIdentify(user_id, identify, locale);
         if (identify) {
             faq_category.identify = identify;
             await FaqCategory.create(faq_category)
@@ -44,62 +45,6 @@ exports.create = async (req, res) => {
             });
             return
         }
-    } else {
-        identify = req.body.identify;
-        await FaqCategory.findOne({
-            where: { user_id: user_id, identify: identify, locale: locale }
-        })
-            .then( async data =>{
-                if (data) {
-                    await FaqCategory.update(req.body, {
-                        where: { user_id: user_id, identify: identify, locale: locale }
-                    })
-                        .then( num => {
-                            if (num == 1) {
-                                res.send({
-                                    message: "Category was updated successfully."
-                                });
-                                return;
-                            } else {
-                                res.send({
-                                    message: `Cannot update category. Maybe category was not found or req.body is empty!`
-                                });
-                                return;
-                            }
-                        })
-                        .catch(err => {
-                            res.status(500).send({
-                                message: "Error updating category with id=" + id
-                            });
-                            return
-                        });
-                } else {
-                    identify = await checkCategoryIdentify(user_id, identify, locale);
-                    if (!identify) {
-                        res.status(500).send({
-                            message: "Some error occurred while creating the Category. Identify is not defined in update in create"
-                        });
-                        return
-                    } else {
-                        faq_category.identify = identify;
-                        await FaqCategory.create(faq_category)
-                            .then(data => {
-                                res.send(data);
-                            })
-                            .catch(err => {
-                                res.status(500).send({
-                                    message:
-                                        err.message || "Some error occurred while creating the Category."
-                                });
-                            });
-                    }
-                }
-            }).catch(err => {
-                res.status(500).send({
-                    message: "Error retrieving category with identify=" + identify + ` in locale ${locale}`
-                });
-            });
-    }
 };
 
 // Retrieve all faq_category from the database of a user.
@@ -336,18 +281,29 @@ exports.findAllInFaqPage = async (req, res) => {
     });
 };
 
+async function generateIdentify(user_id, identify, locale) {
+    let count = 0;
+    let checked = false;
+    let newIdentify = identify;
+    {
+        if (count) {
+            newIdentify = identify + count;
+        }
+        checked = await checkCategoryIdentify(user_id, newIdentify, locale);
+        count++;
+    } while (checked);
+    return newIdentify;
+}
+
 async function checkCategoryIdentify(user_id, identify, locale) {
-    let checkedIdentify = null;
+    let checkedIdentify = false;
     await FaqCategory.findOne({ where: { user_id: user_id, identify: identify, locale: locale}})
         .then( async data => {
             if (data) {
-                identify = identify + '_1';
-                checkedIdentify = await checkCategoryIdentify(user_id, identify, locale);
-            } else {
-                checkedIdentify = identify
+                checkedIdentify = true;
             }
-        }).catch(e => {
-        checkedIdentify = null
-    });
+        }).catch(err => {
+            errorLog.error(`category generate identify error ${err.message}`)
+        });
     return checkedIdentify;
 }

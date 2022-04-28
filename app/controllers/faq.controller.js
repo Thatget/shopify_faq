@@ -213,42 +213,38 @@ exports.update = async (req, res) => {
                 }
                 let continueCondition = {};
                 continueCondition.check = false;
-                if (req.body.locale) {
-                    if (locale !== req.body.locale) {
-                        if (req.body.category_identify) {
-                            if (category_identify !== req.body.category_identify) {
-
-                            }
-                        } else {
-                            faq.locale = req.body.locale;
-                            await Faq.findOne({
-                                where: {
-                                    identify: identify,
-                                    locale: locale,
-                                    category_identify: category_identify,
-                                    user_id: user_id
-                                }
-                            })
-                                .then(subData => {
-                                    if (subData.dataValues.id !== id) {
-                                        continueCondition.check = true;
-                                        continueCondition.message = "Faq for this locale already exist!";
-                                    }
-                                }).catch(error => {
-                                    continueCondition.check = true;
-                                    continueCondition.message = `Error when checking faq ${error.message}`;
-                                })
-                        }
-                    }
+                if ((req.body.locale && (locale !== req.body.locale)) && (req.body.category_identify && (category_identify !== req.body.category_identify)))  {
+                    identify = await generateIdentify(user_id, identify, req.body.locale, req.body.category_identify);
+                    if (!identify) {
+                        continueCondition.check = true;
+                        continueCondition.message = "Error generate faq identify !";
+                    } else category_identify = req.body.category_identify;
+                    faq.locale = req.body.locale;
+                    category_identify = req.body.category_identify;
                 }
-                if (req.body.category_identify) {
-                    if (category_identify !== req.body.category_identify) {
-                        identify = await generateIdentify(user_id, identify, req.body.category_identify);
-                        if (!identify) {
+                else if ((req.body.locale && (locale !== req.body.locale)) && !(req.body.category_identify && (category_identify !== req.body.category_identify))) {
+                    faq.locale = req.body.locale;
+                    await Faq.findOne({
+                        where: {identify: identify, locale: locale, category_identify: category_identify, user_id: user_id}
+                    })
+                        .then(subData => {
+                            if (subData.dataValues.id !== id) {
+                                continueCondition.check = true;
+                                continueCondition.message = "Faq for this locale already exist!";
+                            }
+                        }).catch(error => {
                             continueCondition.check = true;
-                            continueCondition.message = "Error generate faq identify !";
-                        } else category_identify = req.body.category_identify;
-                    }
+                            continueCondition.message = `Error when checking faq ${error.message}`;
+                        });
+                }
+
+
+                else if (!(req.body.locale && (locale !== req.body.locale)) && (req.body.category_identify && (category_identify !== req.body.category_identify))) {
+                    identify = await generateIdentify(user_id, identify, locale, req.body.category_identify);
+                    if (!identify) {
+                        continueCondition.check = true;
+                        continueCondition.message = "Error generate faq identify !";
+                    } else category_identify = req.body.category_identify;
                 }
                 if (continueCondition.check) {
                     throw new Error(continueCondition.message);
@@ -437,9 +433,11 @@ exports.findAllInFaqPage = async (req, res) => {
 async function generateIdentify(user_id, identify, locale, category_identify) {
     let count = 0;
     let checked = false;
-    let newIdentify = null;
+    let newIdentify = identify;
     {
-        newIdentify = identify + count;
+        if (count) {
+            newIdentify = identify + count;
+        }
         checked = await checkFaqIdentify(user_id, newIdentify, locale, category_identify);
         count++;
     } while (checked);
@@ -455,21 +453,21 @@ async function checkFaqIdentify(user_id, identify, locale, category_identify) {
             }
         }).catch(err => {
             errorLog.error(`faq generate identify error ${err.message}`)
-    })
+    });
     return checkedIdentify;
 }
-async function checkFaqIdentifyUpdate(user_id, identify, category_identify) {
-    let checkedIdentify = null;
-    await Faq.findOne({ where: { user_id: user_id, identify: identify, category_identify: category_identify}})
-        .then( async data => {
-            if (data) {
-                identify = identify + '_1';
-                checkedIdentify = await checkFaqIdentifyUpdate(user_id, identify, category_identify);
-            } else {
-                checkedIdentify = identify
-            }
-        }).catch(err => {
-            errorLog.error(`faq generate identify error not locale ${err.message}`)
-    })
-    return checkedIdentify;
-}
+// async function checkFaqIdentifyUpdate(user_id, identify, category_identify) {
+//     let checkedIdentify = null;
+//     await Faq.findOne({ where: { user_id: user_id, identify: identify, category_identify: category_identify}})
+//         .then( async data => {
+//             if (data) {
+//                 identify = identify + '_1';
+//                 checkedIdentify = await checkFaqIdentifyUpdate(user_id, identify, category_identify);
+//             } else {
+//                 checkedIdentify = identify
+//             }
+//         }).catch(err => {
+//             errorLog.error(`faq generate identify error not locale ${err.message}`)
+//     })
+//     return checkedIdentify;
+// }
