@@ -1,7 +1,7 @@
 const db = require("../models");
 const Faq = db.faq;
 const User = db.user;
-const errorLog = require('../helpers/log.helper')
+const errorLog = require('../helpers/log.helper');
 
 exports.create = async (req, res) => {
     // Validate request
@@ -35,7 +35,7 @@ exports.create = async (req, res) => {
         });
         return;
     }
-    const title = req.body.title;
+    // const title = req.body.title;
     const locale = req.body.locale;
     const user_id = req.jwtDecoded.data.user_id;
     const category_identify = req.body.category_identify;
@@ -45,8 +45,8 @@ exports.create = async (req, res) => {
 
     // Create faq when identify is not set
     if (!req.body.identify) {
-        identify = title.trim().replace(' ', '_') + user_id + category_identify;
-        identify = await checkFaqIdentify(user_id, identify, locale, category_identify);
+        identify = locale + user_id + category_identify;
+        identify = await generateIdentify(user_id, identify, locale, category_identify);
         if (!identify) {
             res.status(500).send({
                 message: "Some error occurred while creating the Faq."
@@ -103,7 +103,7 @@ exports.create = async (req, res) => {
                             return
                         });
                 } else {
-                    identify = await checkFaqIdentify(user_id, identify, locale, category_identify);
+                    identify = await generateIdentify(user_id, identify, locale, category_identify);
                     if (!identify) {
                         res.status(500).send({
                             message: "Some error occurred while creating the Faq. Identify is not defined in update in create"
@@ -215,22 +215,35 @@ exports.update = async (req, res) => {
                 continueCondition.check = false;
                 if (req.body.locale) {
                     if (locale !== req.body.locale) {
-                        faq.locale = req.body.locale;
-                        await Faq.findOne({where: {identify: identify, locale: locale, category_identify: category_identify, user_id: user_id }})
-                            .then(subData =>{
-                                if (subData.dataValues.id !== id) {
-                                    continueCondition.check = true;
-                                    continueCondition.message = "Faq for this locale already exist!";
+                        if (req.body.category_identify) {
+                            if (category_identify !== req.body.category_identify) {
+
+                            }
+                        } else {
+                            faq.locale = req.body.locale;
+                            await Faq.findOne({
+                                where: {
+                                    identify: identify,
+                                    locale: locale,
+                                    category_identify: category_identify,
+                                    user_id: user_id
                                 }
-                            }).catch(error => {
-                                continueCondition.check = true;
-                                continueCondition.message = `Error when checking faq ${error.message}`;
                             })
+                                .then(subData => {
+                                    if (subData.dataValues.id !== id) {
+                                        continueCondition.check = true;
+                                        continueCondition.message = "Faq for this locale already exist!";
+                                    }
+                                }).catch(error => {
+                                    continueCondition.check = true;
+                                    continueCondition.message = `Error when checking faq ${error.message}`;
+                                })
+                        }
                     }
                 }
                 if (req.body.category_identify) {
                     if (category_identify !== req.body.category_identify) {
-                        identify = await checkFaqIdentifyUpdate(user_id, identify, req.body.category_identify);
+                        identify = await generateIdentify(user_id, identify, req.body.category_identify);
                         if (!identify) {
                             continueCondition.check = true;
                             continueCondition.message = "Error generate faq identify !";
@@ -421,15 +434,24 @@ exports.findAllInFaqPage = async (req, res) => {
     })
 };
 
+async function generateIdentify(user_id, identify, locale, category_identify) {
+    let count = 0;
+    let checked = false;
+    let newIdentify = null;
+    {
+        newIdentify = identify + count;
+        checked = await checkFaqIdentify(user_id, newIdentify, locale, category_identify);
+        count++;
+    } while (checked);
+    return newIdentify;
+}
+
 async function checkFaqIdentify(user_id, identify, locale, category_identify) {
-    let checkedIdentify = null;
+    let checkedIdentify = false;
     await Faq.findOne({ where: { user_id: user_id, identify: identify, locale: locale, category_identify: category_identify}})
         .then( async data => {
             if (data) {
-                identify = identify + '_1';
-                checkedIdentify = await checkFaqIdentify(user_id, identify, locale, category_identify);
-            } else {
-                checkedIdentify = identify
+                checkedIdentify = true;
             }
         }).catch(err => {
             errorLog.error(`faq generate identify error ${err.message}`)
