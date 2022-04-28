@@ -36,7 +36,7 @@ step3: sudo a2enmod proxy
 </VirtualHost>
 /** ??????
 
-  nano /dist/.htaccess
+  nano ./dist/.htaccess
   <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
