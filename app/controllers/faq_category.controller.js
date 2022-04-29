@@ -21,11 +21,13 @@ exports.create = async (req, res) => {
     // };
     const faq_category = req.body;
     faq_category.user_id = user_id;
-    if (faq_category.identify) {
-        delete faq_category.identify;
-    }
+
     let identify = locale + user_id;
+    if (!req.body.identify) {
         identify = await generateIdentify(user_id, identify, locale);
+    }else {
+        identify = await generateIdentify(user_id,  req.body.identify, locale);
+    }
         if (identify) {
             faq_category.identify = identify;
             await FaqCategory.create(faq_category)
