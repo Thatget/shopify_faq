@@ -434,7 +434,7 @@ async function generateIdentify(user_id, identify, locale, category_identify) {
     let count = 0;
     let checked = false;
     let newIdentify = identify;
-    {
+    do {
         if (count) {
             newIdentify = identify + count;
         }
