@@ -43,7 +43,7 @@ exports.create = async (req, res) => {
             res.status(500).send({
                 message: "Some error occurred while creating the Category. Identify is not defined in create"
             });
-            return
+            return;
         }
 };
 
