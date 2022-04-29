@@ -211,6 +211,7 @@
         background-size: cover;
         background-position-y: center;
     }
+    
     <%} 
         if(setting.templateSetting.custom_css) { %>
             <%- setting.templateSetting.custom_css%>
@@ -241,4 +242,12 @@
             <% } %>
         }
     <% } %>
+    .faq-header-1 {
+        min-height: <%- setting.templateSetting.banner_height%>px;
+        max-width: 100vw;
+        background-image: url('<%- setting.templateSetting.banner_default%>');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position-y: center;
+    }
 </style>
