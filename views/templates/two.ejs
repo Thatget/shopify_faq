@@ -161,9 +161,15 @@
         var nodeCategory = document.getElementsByClassName('category-faq-container');
         if(document.getElementById('search-text').value === ''){
             document.getElementsByClassName('category-bar')[0].style.display = "flex"
+            for(i = 0; i < nodeCategory.length; i++){
+                document.getElementsByClassName("faq-category-width")[i].style.display = "block"
+            }
         }
         else{
             document.getElementsByClassName('category-bar')[0].style.display = "none"
+            for(i = 0; i < nodeCategory.length; i++){
+                document.getElementsByClassName("faq-category-width")[i].style.display = "none"
+            }
         }
         var checkexist = true;
         for (i = 0; i < nodes.length; i++) {

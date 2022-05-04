@@ -146,12 +146,19 @@
         var input = document.getElementById("search-text");
         var filter = input.value.toLowerCase();
         var nodes = document.getElementsByClassName('listed-faq');
+        var categoryList = document.getElementsByClassName('faq-category-width')
         var nodeCategory = document.getElementsByClassName('category-faq-container');
         if(document.getElementById('search-text').value === ''){
             document.getElementsByClassName('category-bar')[0].style.display = "flex"
+            for(i = 0; i < categoryList.length; i++){
+                categoryList[i].style.display = "flex"
+            }
         }
         else{
             document.getElementsByClassName('category-bar')[0].style.display = "none"
+            for(i = 0; i < categoryList.length; i++){
+                categoryList[i].style.display = "none"
+            }
         }
         var checkexist = true;
         for (i = 0; i < nodes.length; i++) {
