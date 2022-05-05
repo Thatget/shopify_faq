@@ -34,6 +34,7 @@
     "shopify-api-node": "^3.8.2",
     "shopify-node-api": "^1.11.1",
     "shopify-token": "^4.0.4",
-    "winston": "^3.6.0"
+    "winston": "^3.6.0",
+    "xlsx": "^0.18.5"
   }
 }
