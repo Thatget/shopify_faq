@@ -55,28 +55,37 @@ exports.import = async (req, res) => {
 }
 
 exports.export = async (req, res) => {
-    // const user_id = req.jwtDecoded.data.user_id;
-    // let condition = { user_id:user_id, locale: req.query.locale };
+    var faqData = [];
+    const user_id = req.jwtDecoded.data.user_id;
+    let condition = { user_id:user_id, locale: req.query.locale };
     const faqs = await Faq.findAll({
         attributes: ['id', 'title', 'content', 'locale'],
-        // where: condition,
-        raw: true
+        where: condition,
+        // raw: true
     });
-
-    const headings = [
-        ['id', 'title', 'content', 'locale']
-    ];
-
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(faqs, {
-        origin: 'A2',
-        skipHeader: true
+    const objectArray = Object.entries(faqs);
+    objectArray.forEach(([key, value]) => {
+        let i = 0;
+        objectArray1 = Object.entries(value.dataValues);
+        console.log(value.dataValues)
+        objectArray1.forEach(([keyx, valuex]) => {
+            faqData.push(valuex)
+        })
     });
-    XLSX.utils.sheet_add_aoa(ws, headings);
-    XLSX.utils.book_append_sheet(wb, ws, 'Movies');
+    // const headings = [
+    //     ['id', 'title', 'content', 'locale']
+    // ];
 
-    const buffer = XLSX.write(wb, { bookType: 'csv', type: 'buffer' });
-    res.attachment('movies.csv');
+    // const wb = XLSX.utils.book_new();
+    // const ws = XLSX.utils.json_to_sheet(faqs, {
+    //     origin: 'A2',
+    //     skipHeader: true
+    // });
+    // XLSX.utils.sheet_add_aoa(ws, headings);
+    // XLSX.utils.book_append_sheet(wb, ws, 'Faqs');
+    //
+    // const buffer = XLSX.write(wb, { bookType: 'csv', type: 'buffer' });
+    // res.attachment('movies.csv');
 
-    return res.send(buffer);
+    return res.send(faqData);
 }
