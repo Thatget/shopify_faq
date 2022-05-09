@@ -28,10 +28,10 @@ exports.findFaqs = async (shop, locale = 'en') => {
                 try {
                     let selectQuery = "SELECT `faq_category`.`title` as `category_title`, `faq`.`title`,`faq`.`content`" +
                         ", `faq_category`.`identify` as `category_identify`"+
-                        " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify`" +
-                        " where `faq`.`locale` = '" + locale + "' and `faq_category`.`locale` = '" + locale +
-                        "' and `faq`.`user_id` = " + userID + " and `faq_category`.`user_id` = " + userID +
-                        " and `faq`.`is_visible` = true and `faq_category`.`is_visible` = true";
+                        " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify` and `faq`.`locale` = `faq_category`.`locale` " +
+                        " and `faq`.`user_id` = `faq_category`.`user_id` " +
+                        " where `faq`.`is_visible` = true and `faq_category`.`is_visible` = true" +
+                        " and `faq`.`locale` = ? and `faq`.`user_id` = ?";
                     if (selectCondition.category_sort_name) {
                         selectQuery += " ORDER BY `category_title`"
                         if (selectCondition.faq_sort_name) {
@@ -45,7 +45,10 @@ exports.findFaqs = async (shop, locale = 'en') => {
 
                     data = await db.sequelize.query(
                         selectQuery+";",
-                        {type: QueryTypes.SELECT});
+                        {
+                            replacements: [locale, userID],
+                            type: QueryTypes.SELECT
+                        });
                 }catch (e) {
                     errorLog.error(e.message)
                 }
