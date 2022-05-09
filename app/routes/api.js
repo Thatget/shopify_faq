@@ -73,7 +73,7 @@ let initAPIs = (app) => {
     });
     router.post("/api/upload-profile-pic", upload.single('profile_pic'), uploadBanner.upload);
     // Import Faqs
-    router.post("/api/import-faq", upload.single('faq-list'), importExport.import);
+    // router.post("/api/import-faq", upload.single('faq-list'), importExport.import);
     // Export Faqs
     router.get("/api/export-faq",importExport.export);
 
