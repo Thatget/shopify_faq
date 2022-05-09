@@ -1,5 +1,6 @@
 const db = require("../models");
 const Faq = db.faq;
+const FaqCategory = db.faq_category;
 const User = db.user;
 const errorLog = require('../helpers/log.helper');
 
@@ -34,6 +35,14 @@ exports.create = async (req, res) => {
             message: "Category must be selected!"
         });
         return;
+    } else {
+        let checkCategory = await checkFaqCategory(req.body.category_identify, req.body.locale, req.jwtDecoded.data.user_id)
+        if (!checkCategory.status) {
+            res.status(400).send({
+                message: checkCategory.message
+            });
+            return;
+        }
     }
     // const title = req.body.title;
     const locale = req.body.locale;
@@ -471,3 +480,23 @@ async function checkFaqIdentify(user_id, identify, locale, category_identify) {
 //     })
 //     return checkedIdentify;
 // }
+
+async function checkFaqCategory(identify, locale, user_id) {
+    let responseData = {};
+    await FaqCategory.findOne({
+        attributes: ['id'],
+        where: {identify: identify, locale: locale, user_id: user_id }
+    })
+        .then(data =>{
+            if (data) {
+                responseData.status = true
+            } else {
+                responseData.status = false
+                responseData.message = "not found category in this locale"
+            }
+        }).catch(err => {
+            responseData.status = false
+            responseData.message =  err.message || "not found category in this locale"
+        });
+    return responseData
+}

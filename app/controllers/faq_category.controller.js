@@ -73,9 +73,10 @@ exports.findAll = (req, res) => {
 
 // Find a single Category with an id
 exports.findOne = async (req, res) => {
+    const user_id = req.jwtDecoded.data.user_id;
     const id = req.params.id;
     if (req.query.identify && req.query.locale) {
-        await FaqCategory.findOne({where: {identify: req.query.identify, locale: req.query.locale }})
+        await FaqCategory.findOne({where: {identify: req.query.identify, locale: req.query.locale, user_id: user_id }})
             .then(data =>{
                 if (data) {
                     res.send(data);
