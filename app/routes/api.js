@@ -6,7 +6,8 @@ const faq = require("../controllers/faq.controller");
 const user = require("../controllers/user.controller");
 const setting = require("../controllers/setting.controller");
 const category = require("../controllers/faq_category.controller.js");
-const uploadBanner = require("../controllers/uploadTemplateBanner")
+const uploadBanner = require("../controllers/uploadTemplateBanner");
+const importExport = require("../helpers/importExport")
 /**
  * Init all APIs
  * @param {*} app from express
@@ -71,6 +72,10 @@ let initAPIs = (app) => {
         }
     });
     router.post("/api/upload-profile-pic", upload.single('profile_pic'), uploadBanner.upload);
+    // Import Faqs
+    // router.post("/api/import-faq", upload.single('faq-list'), importExport.import);
+    // Export Faqs
+    router.get("/api/export-faq",importExport.export);
 
     //Router using
     return app.use("/", router);
