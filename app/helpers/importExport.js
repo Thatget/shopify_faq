@@ -60,7 +60,7 @@ exports.export = async (req, res) => {
     const user_id = req.jwtDecoded.data.user_id;
 
     let selectQuery = "SELECT `faq`.`title`, `faq`.`content`, `faq_category`.`title` as `category_title`," +
-        " `faq_category`.`identify` as `category_identify`, `faq`.`locale`, `faq`.`is_visible`, `faq_category`.`is_visible` as `category_visible`"+
+        " `faq`.`locale`, `faq`.`is_visible`, `faq_category`.`is_visible` as `category_visible`"+
         " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify`" +
         " and  `faq`.`locale` = `faq_category`.`locale` and `faq`.`user_id` = `faq_category`.`user_id`" +
         " where `faq`.`user_id` = ? " ;
@@ -77,7 +77,7 @@ exports.export = async (req, res) => {
             type: QueryTypes.SELECT
         });
     const headings = [
-        [ 'title', 'content', 'category name', 'category_identify', 'locale', 'is Visible', 'Category Visible']
+        [ 'title', 'content', 'category name', 'locale', 'is Visible', 'Category Visible']
     ];
 
     const wb = XLSX.utils.book_new();
