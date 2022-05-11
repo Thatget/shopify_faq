@@ -7,7 +7,8 @@ const user = require("../controllers/user.controller");
 const setting = require("../controllers/setting.controller");
 const category = require("../controllers/faq_category.controller.js");
 const uploadBanner = require("../controllers/uploadTemplateBanner");
-const importExport = require("../helpers/importExport")
+const importExport = require("../helpers/importExport");
+const shopifyApi = require("../helpers/shopifyApi.helper");
 /**
  * Init all APIs
  * @param {*} app from express
@@ -63,6 +64,9 @@ let initAPIs = (app) => {
     // router.put("/api/user", user.update);
     // router.delete("/api/user", user.delete);
     // router.delete("/api/user", user.deleteAll);
+
+    // get Product list
+    router.get("/api/shop/product-list", shopifyApi.getProductList);
 
     // Upload image
     const multer = require('multer');
