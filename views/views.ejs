@@ -1,0 +1,69 @@
+<% if (setting.data) {
+    if (setting.data.faq_template_number) {
+        switch(setting.data.faq_template_number) {
+        case 1 : %>
+        <%- include('./templates/one.ejs') %>
+        <% break;
+        case 2 : %>
+            <%- include('./templates/two.ejs') %>
+        <% break;
+        case 3 : %>
+            <%- include('./templates/three.ejs') %>
+        <% break;
+        default: %>
+        <%- include('./templates/one.ejs') %>
+        <% break; }
+    }else { %>
+    <%- include('./templates/one.ejs') %>
+    <% } %>
+    <style>
+        <% if (setting.templateSetting) { %>
+        .faq-category-title {
+        <% if (setting.templateSetting.category_font_weight) { %>
+            font-weight: <%=  setting.templateSetting.category_font_weight %>;
+        <% } if (setting.templateSetting.category_font_color) { %>
+            color: <%=  setting.templateSetting.category_font_color %>;
+        <% } if (setting.templateSetting.category_font_size) { %>
+            font-size: <%=  setting.templateSetting.category_font_size %>px;
+        <% } if (setting.templateSetting.category_font_family) { %>
+            font-family: <%=  setting.templateSetting.category_font_family %>;
+        <% } if (setting.templateSetting.category_text_style) { %>
+            text-transform: <%=  setting.templateSetting.category_text_style %>;
+        <% } if (setting.templateSetting.category_text_align) { %>
+            text-align: <%=  setting.templateSetting.category_text_align %>;
+        <% } %>
+        }
+        .faq-question-title {
+        <% if (setting.templateSetting.faq_font_weight) { %>
+            font-weight: <%=  setting.templateSetting.faq_font_weight %>;
+        <% } if (setting.templateSetting.faq_font_color) { %>
+            color: <%=  setting.templateSetting.faq_font_color %>;
+        <% } if (setting.templateSetting.faq_bg_color) { %>
+            background-color: <%=  setting.templateSetting.faq_bg_color %>;
+        <% } if (setting.templateSetting.faq_font_size) { %>
+            font-size: <%=  setting.templateSetting.faq_font_size %>px;
+        <% } if (setting.templateSetting.faq_font_family) { %>
+            font-family: <%=  setting.templateSetting.faq_font_family %>;
+        <% } %>
+        }
+        <% if (setting.templateSetting.faq_hover_color) { %>
+            .faq-question-title:hover {
+                background-color: <%=  setting.templateSetting.faq_hover_color %>;
+            }
+        <% } %>
+        .faq-answer-content {
+        <% if (setting.templateSetting.answer_font_weight) { %>
+            font-weight: <%=  setting.templateSetting.answer_font_weight %>;
+        <% } if (setting.templateSetting.answer_font_color) { %>
+            color: <%=  setting.templateSetting.answer_font_color %>;
+        <% } if (setting.templateSetting.answer_bg_color) { %>
+            background-color: <%=  setting.templateSetting.answer_bg_color %>;
+        <% } if (setting.templateSetting.answer_font_size) { %>
+            font-size: <%=  setting.templateSetting.answer_font_size %>px;
+        <% } if (setting.templateSetting.answer_font_family) { %>
+            font-family: <%=  setting.templateSetting.answer_font_family %>;
+        <% } %>
+        }
+        <% } %>
+    </style>
+<% } %>

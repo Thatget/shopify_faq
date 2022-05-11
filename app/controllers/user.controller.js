@@ -4,9 +4,7 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
     // Validate request
-    console.log(req.body)
-    data = JSON.parse(req.body)
-    if (!data.store_name) {
+    if (!req.body.store_name) {
       res.status(400).send({
         message: "Content can not be empty!"
       });
@@ -14,11 +12,11 @@ exports.create = (req, res) => {
     }
     // Create a user
     const user = {
-      store_name: data.store_name,
-      shopify_domain: data.shopify_domain,
-      shopify_access_token: data.shopify_access_token,
-      email: data.email,
-      phone: data.phone
+      store_name: req.body.store_name,
+      shopify_domain: req.body.shopify_domain,
+      shopify_access_token: req.body.shopify_access_token,
+      email: req.body.email,
+      phone: req.body.phone
     };
 
     User.create(user)
@@ -33,26 +31,13 @@ exports.create = (req, res) => {
     });
 };
 
-// Retrieve all User from the database.
-exports.findAll = (req, res) => {
-    const email = req.query.title;
-    var condition = email ? { title: { [Op.like]: `%${email}%` } } : null;
-    User.findAll({ where: condition })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving user."
-        });
-      });
-  };
-
 // Find a single User with an id
 exports.findOne = (req, res) => {
-    const id = req.params.id;
-    User.findByPk(id)
+    const id = req.jwtDecoded.data.user_id;
+    User.findByPk(id,
+        {
+            attributes:['shopify_domain','store_name','shopLocales','phone','email']
+        })
       .then(data => {
         if (data) {
           res.send(data);
@@ -71,9 +56,9 @@ exports.findOne = (req, res) => {
 
 // Update a User by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.id;
+    console.log(req);
   User.update(req.body, {
-    where: { id: id }
+    where: { shopify_domain: req.body.shopify_domain, }
   })
     .then(num => {
       if (num == 1) {
