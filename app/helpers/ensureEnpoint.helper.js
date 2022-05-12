@@ -6,14 +6,34 @@ const errorLog = require('../helpers/log.helper');
 
 
 exports.customerRedact = async (req, res) => {
-    return res.send({
-        message: "we do not store any data of the customer"
-    });
+    const hmacHeader = req.get("X-Shopify-Hmac-Sha256");
+    const body = req.rawBody;
+    const hash = crypto
+        .createHmac("sha256", apiSecret)
+        .update(body, "utf8", "hex")
+        .digest("base64");
+    if (hmacHeader === hash) {
+        return res.send({
+            message: "we do not store any data of the customer"
+        });
+    } else {
+        return res.status(401).send('Unauthorized');
+    }
 }
 exports.customerData = async (req, res) => {
-    return res.send({
-        message: "we do not store any data of the customer"
-    });
+    const hmacHeader = req.get("X-Shopify-Hmac-Sha256");
+    const body = req.rawBody;
+    const hash = crypto
+        .createHmac("sha256", apiSecret)
+        .update(body, "utf8", "hex")
+        .digest("base64");
+    if (hmacHeader === hash) {
+        return res.send({
+            message: "we do not store any data of the customer"
+        });
+    } else {
+        return res.status(401).send('Unauthorized');
+    }
 }
 // exports.shopRedact = async (req, res) => {
 //     return res.status(200).json({});
@@ -40,9 +60,9 @@ exports.shopRedact = async (req, res) => {
             return res.status(400).send('Required parameters missing');
         }
     } else {
-        res.sendStatus(403);
+        return res.status(401).send('Unauthorized');
     }
-    res.end({message: "The data of the shop deleted successfully "});
+    return  res.end({message: "The data of the shop deleted successfully "});
 }
 async function removeShop(shop) {
     try {
