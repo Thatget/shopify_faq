@@ -6,10 +6,14 @@ const errorLog = require('../helpers/log.helper');
 
 
 exports.customerRedact = async (req, res) => {
-    return res.send();
+    return res.send({
+        message: "we do not store any data of the customer"
+    });
 }
 exports.customerData = async (req, res) => {
-    return res.send();
+    return res.send({
+        message: "we do not store any data of the customer"
+    });
 }
 // exports.shopRedact = async (req, res) => {
 //     return res.status(200).json({});
@@ -38,7 +42,7 @@ exports.shopRedact = async (req, res) => {
     } else {
         res.sendStatus(403);
     }
-    res.end();
+    res.end({message: "The data of the shop deleted successfully "});
 }
 async function removeShop(shop) {
     try {
