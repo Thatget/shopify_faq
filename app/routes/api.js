@@ -32,9 +32,9 @@ let initAPIs = (app) => {
     router.get("/api/shop/setting/:shop", setting.findOneInFaqPage);
     router.get("/api/shop/faq-category/:shop", category.findAllInFaqPage);
 
-    router.get("/api/gdpr/customer-redact", ensureEnpoint.customerRedact);
-    router.get("/api/gdpr/customer-data", ensureEnpoint.customerData);
-    router.get("/api/gdpr/shop-redact", ensureEnpoint.shopRedact);
+    router.post("/api/gdpr/customer-redact", ensureEnpoint.customerRedact);
+    router.post("/api/gdpr/customer-data", ensureEnpoint.customerData);
+    router.post("/api/gdpr/shop-redact", ensureEnpoint.shopRedact);
 
     // Sử dụng authMiddleware.isAuth trước những api cần xác thực
     router.use(AuthMiddleWare.isAuth);

@@ -138,20 +138,6 @@ app.get('/shopify/callback', async (req, res) => {
                                     errorLog.error(`user created error: ${err.message}`)
                                     res.status(err.status).send(err.error);
                                 });
-                                const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
-                                const webhook = {
-                                    webhook : {
-                                        topic: "app/uninstalled",
-                                        address: `${forwardingAddress}/uninstall?shop=${shop}`,
-                                        format: "json",
-                                    }
-                                };
-                                await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
-                                    .then((data) => {
-                                    })
-                                    .catch((error) => {
-                                        errorLog.error(`webhook create: ${error.message}`)
-                                    });
                             }
                         })
                         let token = await login(user);
@@ -167,32 +153,6 @@ app.get('/shopify/callback', async (req, res) => {
             });
     } else {
         res.status(400).send('Required parameters missing');
-    }
-    res.end();
-});
-
-app.post('/uninstall', async (req, res) => {
-    const hmacHeader = req.get("X-Shopify-Hmac-Sha256");
-    const body = req.rawBody;
-    const hash = crypto
-        .createHmac("sha256", apiSecret)
-        .update(body, "utf8", "hex")
-        .digest("base64");
-    if (hmacHeader === hash) {
-        const shop = req.query.shop;
-        if (shop) {
-            try {
-                await removeShop(shop);
-            } catch (e) {
-                errorLog.error(`uninstall error: remove shop ${e.message}`)
-                res.status(e.statusCode).send(e.error);
-            }
-            res.sendStatus(200);
-        } else {
-            return res.status(400).send('Required parameters missing');
-        }
-    } else {
-        res.sendStatus(403);
     }
     res.end();
 });
@@ -270,18 +230,4 @@ async function login(user) {
         return null;
     }
     return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
-}
-
-async function removeShop(shop) {
-    try {
-        await User.destroy({
-            where: { shopify_domain: shop }
-        })
-            .then(num => {})
-            .catch(err => {
-                errorLog.error(err.message)
-            });
-    } catch (error) {
-        errorLog.error(error.message)
-    }
 }
