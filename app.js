@@ -56,6 +56,7 @@ app.get('/', async (req, res) => {
 
 app.get('/shopify/callback', async (req, res) => {
     const {shop, hmac, code, state} = req.query;
+    console.log
     if (!req.headers.cookie) {
         return res.status(403).send('Your cookie error !');
     }
