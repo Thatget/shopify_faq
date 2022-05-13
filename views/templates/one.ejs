@@ -86,7 +86,7 @@
                     <% if(faq_category.length){%>
                         <div class="category-bar">
                             <% for(var i=0; i < faq_category.length; i++) { %>
-                                <a href="#<%- faq_category[i].title %>" class="faq-category-link"><%- faq_category[i].title %></a>
+                                <a href="#<%- faq_category[i].title %>" class="faq-category-title faq-category-link"><%- faq_category[i].title %></a>
                             <% } %>
                         </div>
                         <div style="margin-top: 20px">
@@ -229,6 +229,7 @@
             display: flex; 
             align-items: center; 
             width: 100%; 
+            word-wrap: break-word;
             border-radius: 4px 4px 0 0;
             <% if (setting.templateSetting.answer_font_weight) { %>
                 font-weight: <%=  setting.templateSetting.answer_font_weight %>;
@@ -308,10 +309,12 @@
         border-radius: 4px; 
         text-decoration: none; 
         font-size: 16px !important;
+        font-weight: normal;
     }
     .listed-faq{
         width: 100%;
         user-select: none;
+        word-wrap: break-word;
     }
     .faq-category-border{
         border-bottom: 1px solid #ccc;

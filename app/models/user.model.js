@@ -20,6 +20,9 @@ module.exports = (sequelize, Sequelize) => {
         shopLocales: {
             type: Sequelize.TEXT
         },
+        shopProducts: {
+            type: Sequelize.TEXT
+        },
     }, {
         freezeTableName: true
     });

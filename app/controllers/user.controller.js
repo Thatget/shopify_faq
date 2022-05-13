@@ -16,7 +16,8 @@ exports.create = (req, res) => {
       shopify_domain: req.body.shopify_domain,
       shopify_access_token: req.body.shopify_access_token,
       email: req.body.email,
-      phone: req.body.phone
+      phone: req.body.phone,
+      shopProducts: req.body.shopProducts,
     };
 
     User.create(user)
@@ -36,7 +37,7 @@ exports.findOne = (req, res) => {
     const id = req.jwtDecoded.data.user_id;
     User.findByPk(id,
         {
-            attributes:['shopify_domain','store_name','shopLocales','phone','email']
+            attributes:['shopify_domain','store_name','shopLocales','phone','email', 'shopProducts']
         })
       .then(data => {
         if (data) {

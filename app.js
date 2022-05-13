@@ -95,6 +95,8 @@ app.get('/shopify/callback', async (req, res) => {
                 await request.get(shopRequestUrl, {headers: shopRequestHeaders})
                     .then( async (shopResonse) => {
                         let shopLocales = '';
+                        let countProduct = '';
+                        let shopProducts = [];
                         const body = {
                             query: `
                             query {
@@ -112,6 +114,28 @@ app.get('/shopify/callback', async (req, res) => {
                             }).catch(e => {
                                 errorLog.error(`get shop locale: ${error.message}`)
                             });
+                            const shopUrlCountProduct = 'https://' + shop + '/admin/api/2022-04/products/count.json';
+                        await request.get(shopUrlCountProduct, {headers: shopRequestHeaders})
+                            .then(data => {
+                                countProduct = JSON.parse(data)
+                            })
+                            .catch(e => {
+                                console.log(e)
+                            })
+                        try {
+                            const shopRequestUrlProduct = 'https://' + shop + '/admin/api/2022-04/products.json';
+                            await request.get(shopRequestUrlProduct, {headers: shopRequestHeaders})
+                                .then(data => {
+                                    for(i = 0; i < countProduct.count; i++){
+                                        JSON.parse(data).products[i]
+                                        shopProducts.push({id : JSON.parse(data).products[i].id, name:  JSON.parse(data).products[i].title , image:  JSON.parse(data).products[i].images[0].src})
+                                    }
+                                }).catch(e => {
+                                    errorLog.error(`get shop locale: ${e.message}`)
+                                });
+                            } catch(rrrr) {
+                                console.log(rrrr.message)
+                        }
                         shopResonse = JSON.parse(shopResonse);
                         const user = {
                             store_name: shopResonse.shop.name,
@@ -119,9 +143,9 @@ app.get('/shopify/callback', async (req, res) => {
                             shopify_access_token: accessToken,
                             email: shopResonse.shop.email,
                             phone: shopResonse.shop.phone,
-                            shopLocales: shopLocales
+                            shopLocales: shopLocales,
+                            shopProducts: JSON.stringify(shopProducts)
                         };
-
                         await User.findOne({where: {shopify_domain: user.shopify_domain }}).
                         then( async data =>{
                             if (data) {
@@ -139,19 +163,19 @@ app.get('/shopify/callback', async (req, res) => {
                                     res.status(err.status).send(err.error);
                                 });
                                 const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
-                                const webhook = {
-                                    webhook : {
-                                        topic: "app/uninstalled",
-                                        address: `${forwardingAddress}/uninstall?shop=${shop}`,
-                                        format: "json",
-                                    }
-                                };
-                                await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
-                                    .then((data) => {
-                                    })
-                                    .catch((error) => {
-                                        errorLog.error(`webhook create: ${error.message}`)
-                                    });
+                                // const webhook = {
+                                //     webhook : {
+                                //         topic: "app/uninstalled",
+                                //         address: `${forwardingAddress}/uninstall?shop=${shop}`,
+                                //         format: "json",
+                                //     }
+                                // };
+                                // await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
+                                //     .then((data) => {
+                                //     })
+                                //     .catch((error) => {
+                                //         errorLog.error(`webhook create: ${error.message}`)
+                                //     });
                             }
                         })
                         let token = await login(user);

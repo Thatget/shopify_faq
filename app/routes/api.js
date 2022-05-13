@@ -3,6 +3,7 @@ const router = express.Router();
 const AuthMiddleWare = require("../middleware/AuthMiddleware");
 const AuthController = require("../controllers/AuthController");
 const faq = require("../controllers/faq.controller");
+const product = require("../controllers/product.controller");
 const user = require("../controllers/user.controller");
 const setting = require("../controllers/setting.controller");
 const category = require("../controllers/faq_category.controller.js");
@@ -63,6 +64,15 @@ let initAPIs = (app) => {
     // router.put("/api/user", user.update);
     // router.delete("/api/user", user.delete);
     // router.delete("/api/user", user.deleteAll);
+
+    //Product router
+    router.post("/api/product", product.create);
+    router.get("/api/product", product.findAll);
+    router.get("/api/product/:id", product.findOne);
+    router.put("/api/product/:id", product.update);
+    router.delete("/api/product/:id", product.delete);
+    // router.delete("/api/product", product.deleteAll);
+
 
     // Upload image
     const multer = require('multer');
