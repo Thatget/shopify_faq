@@ -8,7 +8,7 @@ const user = require("../controllers/user.controller");
 const setting = require("../controllers/setting.controller");
 const category = require("../controllers/faq_category.controller.js");
 const uploadBanner = require("../controllers/uploadTemplateBanner");
-const importExport = require("../helpers/importExport")
+const importExport = require("../helpers/importExport");
 /**
  * Init all APIs
  * @param {*} app from express
