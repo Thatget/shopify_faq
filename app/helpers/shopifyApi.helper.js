@@ -4,14 +4,17 @@ const User = db.user;
 
 const productList = async (req, res) => {
     const id = req.jwtDecoded.data.user_id;
-    let limit = Number(req.query.limit);
-    if (!Number.isInteger(limit)) {
-        res.status(500).send({
-            message: "Limit need interger type"
-        });
-        return;
+    let limit = 30;
+    if (req.query.limit) {
+        limit = Number(req.query.limit);
+        if (!Number.isInteger(limit)) {
+            res.status(500).send({
+                message: "Limit need interger type"
+            });
+            return;
+        }
+        limit = Math.abs(limit)
     }
-    limit = Math.abs(limit)
     try {
         const userInfo = await User.findByPk(id, {attributes: ['shopify_domain', 'shopify_access_token']});
 
@@ -20,6 +23,7 @@ const productList = async (req, res) => {
         var options = {
             uri: shopRequestUrl,
             qs: {
+                fields: 'id,images,title',
                 limit: limit // -> uri + '?access_token=xxxxx%20xxxxx'
             },
             headers: {
