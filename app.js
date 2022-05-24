@@ -129,8 +129,12 @@ app.get('/shopify/callback', async (req, res) => {
                             await request.get(shopRequestUrlProduct, {headers: shopRequestHeaders})
                                 .then(data => {
                                     for(i = 0; i < countProduct.count; i++){
-                                        JSON.parse(data).products[i]
-                                        shopProducts.push({id : JSON.parse(data).products[i].id, name:  JSON.parse(data).products[i].title , image:  JSON.parse(data).products[i].images[0].src})
+                                        if(JSON.parse(data).products[i].images[0]){
+                                            shopProducts.push({id : JSON.parse(data).products[i].id, name:  JSON.parse(data).products[i].title , image:  JSON.parse(data).products[i].images[0].src})
+                                        }
+                                        else{
+                                            shopProducts.push({id : JSON.parse(data).products[i].id, name:  JSON.parse(data).products[i].title})
+                                        }
                                     }
                                 }).catch(e => {
                                     errorLog.error(`get shop locale: ${e.message}`)
@@ -165,19 +169,19 @@ app.get('/shopify/callback', async (req, res) => {
                                     res.status(err.status).send(err.error);
                                 });
                                 const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
-                                // const webhook = {
-                                //     webhook : {
-                                //         topic: "app/uninstalled",
-                                //         address: `${forwardingAddress}/uninstall?shop=${shop}`,
-                                //         format: "json",
-                                //     }
-                                // };
-                                // await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
-                                //     .then((data) => {
-                                //     })
-                                //     .catch((error) => {
-                                //         errorLog.error(`webhook create: ${error.message}`)
-                                //     });
+                                const webhook = {
+                                    webhook : {
+                                        topic: "app/uninstalled",
+                                        address: `${forwardingAddress}/uninstall?shop=${shop}`,
+                                        format: "json",
+                                    }
+                                };
+                                await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
+                                    .then((data) => {
+                                    })
+                                    .catch((error) => {
+                                        errorLog.error(`webhook create: ${error.message}`)
+                                    });
                             }
                         })
                         let token = await login(user);
@@ -234,13 +238,13 @@ app.get('/faq-page', async (req, res) => {
     const generateHash = crypto.createHmac('sha256', apiSecret)
         .update(sorted_params)
         .digest('hex');
-
     if (query_signature === generateHash) {
         const shop = req.query.shop;
         if (shop) {
             try {
                 const locale = req.headers['accept-language'].split(',')[0];
                 const faqs = await defaultPage.findFaqs(shop, locale);
+                console.log(faqs,'111')
                 const setting = await defaultPage.findSetting(shop, locale);
                 return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting});
             } catch (e) {

@@ -3,7 +3,9 @@ const router = express.Router();
 const AuthMiddleWare = require("../middleware/AuthMiddleware");
 const AuthController = require("../controllers/AuthController");
 const faq = require("../controllers/faq.controller");
+const block = require("../controllers/block_product.controller");
 const product = require("../controllers/product.controller");
+const faq_product = require("../controllers/faq_product.controller");
 const user = require("../controllers/user.controller");
 const setting = require("../controllers/setting.controller");
 const category = require("../controllers/faq_category.controller.js");
@@ -32,6 +34,8 @@ let initAPIs = (app) => {
     router.get("/api/shop/faq/search/:shop", faq.searchFaqTitle);
     router.get("/api/shop/setting/:shop", setting.findOneInFaqPage);
     router.get("/api/shop/faq-category/:shop", category.findAllInFaqPage);
+    router.get("/api/no-token/block/:shop/:product_id/:locale", block.findAllProduct)
+
     // Sử dụng authMiddleware.isAuth trước những api cần xác thực
     router.use(AuthMiddleWare.isAuth);
 
@@ -76,6 +80,14 @@ let initAPIs = (app) => {
     router.put("/api/product/:id", product.update);
     router.delete("/api/product/:id", product.delete);
     // router.delete("/api/product", product.deleteAll);
+
+    //Faq Product router
+    router.post("/api/faq-product", faq_product.create);
+    router.get("/api/faq-product/product/:product_id", faq_product.findAll);
+    router.get("/api/faq-product/:id", faq_product.findOne);
+    router.put("/api/faq-product/:id", faq_product.update);
+    router.delete("/api/faq-product/:id", faq_product.delete);
+    router.delete("/api/faq-product/product/:product_id", faq_product.deleteAll);
 
 
     // Upload image

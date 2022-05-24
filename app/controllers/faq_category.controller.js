@@ -49,6 +49,19 @@ exports.create = async (req, res) => {
         }
 };
 
+exports.findAllCategory = async (req, res) => {
+    FaqCategory.findAll()
+        .then(data => {
+            console.log(data)
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving product."
+            })});
+};
+
 // Retrieve all faq_category from the database of a user.
 exports.findAll = (req, res) => {
     if (!req.query.locale) {

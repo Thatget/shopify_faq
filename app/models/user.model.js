@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         shopify_access_token: {
             type: Sequelize.STRING
-        },
+        },  
         email: {
             type: Sequelize.STRING
         },

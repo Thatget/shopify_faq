@@ -140,6 +140,45 @@ exports.create = async (req, res) => {
     }
 };
 
+exports.findAllFaq = async (req, res) => {
+    // Validate request
+    // if (!req.params.shop) {
+    //     return  res.status(400).send({
+    //         message: "Shop can not be empty!"
+    //     });
+    //     return false;
+    // }
+    let userID = null;
+    const shop = req.params.shop;
+    await User.findOne({ where: { shopify_domain: shop}})
+        .then( async userData => {
+            if (userData) {
+                userID = userData.dataValues.id;
+                await Faq.findAll({
+                    where: {
+                        user_id: userID
+                    },
+                })
+                    .then(data => {
+                        return  res.send(data);
+                    })
+                    .catch(err => {
+                        return res.status(500).send({
+                            message:
+                                err.message || "Some error occurred while retrieving faq."
+                        })
+                    });
+            } else {
+                return res.status(400).send({
+                    message: "Shop name is not found !"
+                });
+                return false;
+            }
+        }).catch(error => {
+        return res.status(500).send("some error");
+    })
+};
+
 // Retrieve all Faq of a category from the database.
 exports.findAll = (req, res) => {
     if (!req.query.locale) {

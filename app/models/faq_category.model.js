@@ -3,7 +3,7 @@ module.exports = (sequelize, Sequelize) => {
     const Faq_Category = sequelize.define("faq_category", {
         user_id: {
             type: Sequelize.INTEGER,
-            allowNull: false
+            allowNull: false,
         },
         identify: {
             type: Sequelize.STRING,

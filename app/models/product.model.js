@@ -5,10 +5,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             // allowNull: false
         },
-        faq_id: {
-            type: Sequelize.TEXT,
-            // allowNull: false
-        },
         product_id:{
             type: Sequelize.STRING,
             // allowNull: false
