@@ -8,7 +8,11 @@ const setting = require("../controllers/setting.controller");
 const category = require("../controllers/faq_category.controller.js");
 const uploadBanner = require("../controllers/uploadTemplateBanner");
 const importExport = require("../helpers/importExport");
+
 const shopifyApi = require("../helpers/shopifyApi.helper");
+
+const ensureEnpoint = require("../helpers/ensureEnpoint.helper");
+
 /**
  * Init all APIs
  * @param {*} app from express
@@ -31,6 +35,11 @@ let initAPIs = (app) => {
     router.get("/api/shop/faq/search/:shop", faq.searchFaqTitle);
     router.get("/api/shop/setting/:shop", setting.findOneInFaqPage);
     router.get("/api/shop/faq-category/:shop", category.findAllInFaqPage);
+
+    router.get("/api/gdpr/customer-redact", ensureEnpoint.customerRedact);
+    router.get("/api/gdpr/customer-data", ensureEnpoint.customerData);
+    router.get("/api/gdpr/shop-redact", ensureEnpoint.shopRedact);
+
     // Sử dụng authMiddleware.isAuth trước những api cần xác thực
     router.use(AuthMiddleWare.isAuth);
 
