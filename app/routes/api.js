@@ -76,6 +76,7 @@ let initAPIs = (app) => {
 
     // get Product list
     router.get("/api/shop/product-list", shopifyApi.getProductList);
+    router.get("/api/shop/search-product", shopifyApi.searchProductByTitle);
 
     // Upload image
     const multer = require('multer');
