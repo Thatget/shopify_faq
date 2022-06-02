@@ -50,7 +50,6 @@ exports.create = async (req, res) => {
     // }
     // const title = req.body.title;
     const faq_product = req.body;
-    console.log(faq_product)
     // Create faq_product when identify is not set
     if (!req.body.faq_id) {
         res.status(500).send({
@@ -77,10 +76,8 @@ exports.create = async (req, res) => {
 // Retrieve all FaqProduct of a category from the database.
 exports.findAll = (req, res) => {
     const product_id = req.params.product_id;
-    console.log(product_id)
     FaqProduct.findAll({ where: { product_id: product_id }})
         .then(data => {
-            console.log(data)
             res.send(data);
         })
         .catch(err => {

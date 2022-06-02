@@ -42,6 +42,7 @@ exports.findOne = async (req, res) => {
   await Setting.findOne({ where: { user_id : user_id}})
     .then(async data => {
       if (data) {
+          console.log('aaaaaaaaaaaaaaa')
           setting_data = data.dataValues;
           if (setting_data.faq_template_number) {
               await TemplateSetting.findOne({ where: { setting_id : setting_data.id, template_number: setting_data.faq_template_number}})

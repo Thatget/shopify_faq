@@ -52,7 +52,6 @@ exports.create = async (req, res) => {
 exports.findAllCategory = async (req, res) => {
     FaqCategory.findAll()
         .then(data => {
-            console.log(data)
             res.send(data);
         })
         .catch(err => {
