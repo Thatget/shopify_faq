@@ -1,0 +1,40 @@
+{
+  "name": "shopify_faq",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "pm2 start app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thatget/shopify_faq.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Thatget/shopify_faq/issues"
+  },
+  "homepage": "https://github.com/Thatget/shopify_faq#readme",
+  "dependencies": {
+    "@shopify/shopify-api": "^2.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "express-http-proxy": "^1.6.3",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.4",
+    "mysql2": "^2.3.3",
+    "nonce": "^1.0.4",
+    "request-promise": "^4.2.6",
+    "sequelize": "^6.16.3",
+    "sharp": "^0.23.2",
+    "shopify-api": "^0.2.3",
+    "shopify-api-node": "^3.8.2",
+    "shopify-node-api": "^1.11.1",
+    "shopify-token": "^4.0.4",
+    "winston": "^3.6.0",
+    "xlsx": "^0.18.5"
+  }
+}
