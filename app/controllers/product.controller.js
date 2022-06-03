@@ -4,46 +4,7 @@ const errorLog = require('../helpers/log.helper');
 const User = db.user;
 
 exports.create = async (req, res) => {
-    // Validate request
-    // if (!req.body.identify) {
-    //     res.status(400).send({
-    //         message: "Product id can not be empty!"
-    //     });
-    //     return;
-    // }
-    // if (!req.jwtDecoded.data.user_id) {
-    //     res.status(400).send({
-    //         message: "no user selected ?"
-    //     });
-    //     return;
-    // }
-    // if (!req.body.locale) {
-    //     res.status(400).send({
-    //         message: "Locale must be selected!"
-    //     });
-    //     return;
-    // }
-    // if (!req.body.product_image) {
-    //     res.status(400).send({
-    //         message: "Product image must be selected!"
-    //     });
-    //     return;
-    // }
-    // if (!req.body.product_name) {
-    //     res.status(400).send({
-    //         message: "Product name must be selected!"
-    //     });
-    //     return;
-    // } else {
-    //     let checkCategory = await checkFaqCategory(req.body.identify, req.body.locale, req.jwtDecoded.data.user_id)
-    //     if (!checkCategory.status) {
-    //         res.status(400).send({
-    //             message: checkCategory.message
-    //         });
-    //         return;
-    //     }
-    // }
-    // const title = req.body.title;
+    
     const product = req.body;
     const user_id = req.jwtDecoded.data.user_id;
     product.user_id = user_id;
@@ -100,14 +61,12 @@ exports.findAllProduct = async (req, res) => {
     .then( async userData => {
         if (userData) {
             userID = userData.dataValues.id;
-            console.log(userID)
             await Product.findAll({
                 where: {
                     user_id: userID
                 },
             })
                 .then(data => {
-                    console.log(data)
                     return  res.send(data);
                 })
                 .catch(err => {
@@ -129,27 +88,32 @@ exports.findAllProduct = async (req, res) => {
 };
 
 // Find a single Product with an id
-exports.findOne = (req, res) => {
-    if (!req.params.id) {
+exports.findOne = async (req, res) => {
+    if (!req.params.product_id) {
         res.status(400).send({
-            message: "Product id not selected"
+            message: "Product product_id not selected"
         });
         return;
     }
-    const id = req.params.id;
-    Product.findByPk(id)
+    const product_id = req.params.product_id
+    console.log(product_id)
+    await Product.findOne({
+        where: {
+            product_id: product_id
+        }
+    })
         .then(data => {
             if (data) {
                 res.send(data);
             } else {
                 res.status(404).send({
-                    message: `Cannot find product with id=${id}.`
+                    message: `Cannot find product with product_id=${product_id}.`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving product with id=" + id
+                message: "Error retrieving product with product_id=" + product_id
             });
         });
 };
@@ -212,10 +176,6 @@ exports.delete = (req, res) => {
         return;
     }
     let condition = { id: req.params.id };
-    // if (req.query.identify && req.query.category_identify && req.jwtDecoded.data.user_id) {
-    //     condition = { identify:  req.query.identify, category_identify: req.query.category_identify, user_id:  req.jwtDecoded.data.user_id}
-    // }
-
     Product.destroy({
         where: condition
     })
@@ -236,29 +196,5 @@ exports.delete = (req, res) => {
             });
         });
 };
-
-// Delete all Product from the database.
-// exports.deleteAll = (req, res) => {
-//     if (!req.jwtDecoded.data.user_id) {
-//         res.status(400).send({
-//             message: "Missing user_id param!"
-//         });
-//         return;
-//     }
-//     const user_id = req.jwtDecoded.data.user_id;
-//     Product.destroy({
-//         where: {user_id: user_id},
-//         truncate: false
-//     })
-//         .then( nums => {
-//             res.send({ message: `${nums} faqs were deleted successfully!` });
-//         })
-//         .catch(err => {
-//             res.status(500).send({
-//                 message:
-//                     err.message || "Some error occurred while removing all faqs."
-//             });
-//         });
-// };
 
 

@@ -8,15 +8,7 @@ module.exports = (sequelize, Sequelize) => {
         product_id:{
             type: Sequelize.STRING,
             // allowNull: false
-        },
-        product_name:{
-            type: Sequelize.STRING,
-            // allowNull: false
-        },
-        product_image:{
-            type: Sequelize.STRING,
-            // allowNull: false
-        },
+        }
     },{
         uniqueKeys: {
             Items_unique: {

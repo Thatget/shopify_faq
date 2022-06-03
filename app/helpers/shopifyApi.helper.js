@@ -109,11 +109,13 @@ const searchProductByTitle = async (req, res) => {
     }
     try {
     if (req.query.title) {
+        req.query.title = req.query.title.replace(/"/g, '\"')
         var title = `,query: "title='${req.query.title}'"`;
     } else {
         var title = "";
     }
-    if (req.query.cursor) {
+    if (req.query.cursor && req.query.cursor !== "undefined") {
+        console.log(req.query.cursor)
         var cursor = `,after: "${req.query.cursor}"`;
     } else {
         var cursor = "";
@@ -125,28 +127,30 @@ const searchProductByTitle = async (req, res) => {
 
         const body = {
             query: `
-            {
-                products(first: ${limit} ${title} ${cursor}) {
-                  edges {
-                  cursor
-                    node {
-                      id
-                      handle
-                      title
+                {
+                    products(first: ${limit} ${title} ${cursor}) {
+                        edges {
+                            cursor
+                                node {
+                                id
+                                handle
+                                title
+                            }
+                        }
+                        pageInfo {
+                            hasNextPage
+                            hasPreviousPage
+                        }
                     }
-                  }
-                  pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                  }
                 }
-              }
             `
         };
         const shopRequestUrlLocale = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-01/graphql.json';
         await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
             .then(data => {
-                products = data.data.products.edges
+                console.log(data.data.products.pageInfo)
+                products = data.data.products.edges;
+                console.log(products)
             }).catch(e => {
                 errorLog.error(e.messages)
             });

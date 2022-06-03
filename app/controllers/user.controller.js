@@ -57,7 +57,6 @@ exports.findOne = (req, res) => {
 
 // Update a User by the id in the request
 exports.update = (req, res) => {
-    console.log(req);
   User.update(req.body, {
     where: { shopify_domain: req.body.shopify_domain, }
   })

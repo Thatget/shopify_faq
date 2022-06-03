@@ -5,23 +5,7 @@
 <script>
   var background_color = ''
   var background_hover = ''
-  console.log(window.Shopify.routes.root)
-  fetch('https://shoptestdungpham.myshopify.com/' + "search/suggest.json?q=T-s&resources[type]=product&resources[options][unavailable_products]=hide&resources[options][fields]=title,product_type,variants.title")
-    .then((response) => response.json())
-    .then((suggestions) => {
-      console.log(suggestions)
-      const productSuggestions = suggestions.resources.results.products;
-
-      if (productSuggestions.length > 0) {
-        const firstProductSuggestion = productSuggestions[0];
-
-        alert(`The title of the first product suggestion is: ${
-          firstProductSuggestion.title}`
-        );
-      }
-    }
-  );  
-  fetch('http://localhost:8080/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
+  fetch('https://dev-backend-faq.yanet.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
     .then(response => response.json())
     .then(data => {
       const faqs = data.faq
