@@ -59,6 +59,7 @@ exports.findAllProduct = async (req, res) => {
 
 async function getProduct(userID, product_id, locale, Faqs){
     let productId = null
+    console.log(product_id)
     await Product.findOne({
         where: {
             user_id: userID,
@@ -66,8 +67,13 @@ async function getProduct(userID, product_id, locale, Faqs){
         },
     })
     .then(async data => {
-        productId = data.dataValues.id
-        await getFaqsId(productId, locale, Faqs, userID)
+        if(data){
+            productId = data.dataValues.id
+            await getFaqsId(productId, locale, Faqs, userID)
+        }
+        else{
+            productId = data
+        }
     })
     // .catch(err => {
     //     return res.status(500).send({
@@ -85,9 +91,11 @@ async function getFaqsId(product_id , locale, Faqs, userID){
         },
     })
     .then( async data => {
-        listFaqId = data
-        for(let i = 0; i < listFaqId.length; i++){
-            await getFaqs(listFaqId[i].dataValues.faq_id, locale, Faqs, userID)
+        if(data){
+            listFaqId = data
+            for(let i = 0; i < listFaqId.length; i++){
+                await getFaqs(listFaqId[i].dataValues.faq_id, locale, Faqs, userID)
+            }
         }
         // getCategoryName(data[0].dataValues.category_identify)
     })

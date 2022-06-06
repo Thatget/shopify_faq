@@ -17,7 +17,6 @@ exports.create = (req, res) => {
       shopify_access_token: req.body.shopify_access_token,
       email: req.body.email,
       phone: req.body.phone,
-      shopProducts: req.body.shopProducts,
     };
 
     User.create(user)

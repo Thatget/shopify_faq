@@ -140,22 +140,26 @@ exports.create = async (req, res) => {
     }
 };
 
-// exports.getByIdentify = async (req, res) => {
-//     Faq.findAll({ where: {
-//         identify:  req.query.identify, category_identify: req.query.category_identify, user_id:  req.jwtDecoded.data.user_id 
-//         } 
-//     })
-//     .then(data => {
-//         res.send(data);
-//     })
-//     .catch(err => {
-//         res.status(500).send({
-//             message:
-//                 err.message || "Some error occurred while retrieving faq."
-//         })
-//     });
+exports.getByIdentify = async (req, res) => {
+    Faq.findAll({ 
+        where: {
+            identify:  req.query.identify, 
+            category_identify: req.query.category_identify, 
+            locale: req.query.locale, user_id:  
+            req.jwtDecoded.data.user_id 
+        } 
+    })
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving faq."
+        })
+    });
+}
 
-// }
 exports.findAllFaq = async (req, res) => {
     // Validate request
     // if (!req.params.shop) {
