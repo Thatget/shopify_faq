@@ -107,7 +107,7 @@ app.get('/shopify/callback', async (req, res) => {
                               }
                             }`
                         };
-                        const shopRequestUrlLocale = 'https://' + shop + '/admin/api/2022-01/graphql.json';
+                        const shopRequestUrlLocale = 'https://' + shop + process.env.API_GRAPHQL;
                         await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
                             .then(data => {
                                 shopLocales = JSON.stringify(data.data);

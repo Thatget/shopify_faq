@@ -109,16 +109,20 @@ const searchProductByTitle = async (req, res) => {
     }
     try {
     if (req.query.title) {
-        req.query.title = req.query.title.replace(/"/g, '\"')
-        var title = `,query: "title='${req.query.title}'"`;
+        req.query.title = req.query.title.replace(/"/g, '\\"')
+        var title = `,query: "${req.query.title}"`;
     } else {
         var title = "";
     }
+    console.log(req.query.cursor)
+
     if (req.query.cursor && req.query.cursor !== "undefined") {
-        console.log(req.query.cursor)
-        var cursor = `,after: "${req.query.cursor}"`;
+        var cursor = req.query.cursor
+        var option = ''
+        cursor.indexOf('after') != -1? option = `first: ${limit}, ${title}, ${cursor}`: option = `last: ${limit}, ${title}, ${cursor}`
     } else {
         var cursor = "";
+        option = `first: ${limit}, ${title}, ${cursor}`
     }
         const userInfo = await User.findByPk(id, {attributes: ['shopify_domain', 'shopify_access_token']});
         const shopRequestHeaders = {
@@ -128,13 +132,20 @@ const searchProductByTitle = async (req, res) => {
         const body = {
             query: `
                 {
-                    products(first: ${limit} ${title} ${cursor}) {
+                    products(${option}) {
                         edges {
                             cursor
-                                node {
+                            node {
                                 id
                                 handle
                                 title
+                                images(first: 20){
+                                    edges{
+                                        node{
+                                            url
+                                        }
+                                    }
+                                }
                             }
                         }
                         pageInfo {
@@ -145,11 +156,10 @@ const searchProductByTitle = async (req, res) => {
                 }
             `
         };
-        const shopRequestUrlLocale = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-01/graphql.json';
+        const shopRequestUrlLocale = 'https://' + userInfo.dataValues.shopify_domain + process.env.API_GRAPHQL;
         await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
             .then(data => {
-                console.log(data.data.products.pageInfo)
-                products = data.data.products.edges;
+                products = data?.data?.products
                 console.log(products)
             }).catch(e => {
                 errorLog.error(e.messages)
