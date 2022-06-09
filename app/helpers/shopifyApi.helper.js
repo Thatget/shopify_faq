@@ -159,7 +159,12 @@ const searchProductByTitle = async (req, res) => {
         const shopRequestUrlLocale = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-01/graphql.json';
         await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
             .then(data => {
-                products = data?.data?.products
+                if(data.data.products){
+                    products = data.data.products
+                }
+                else{
+                    products = []
+                }
             }).catch(e => {
                 errorLog.error(e.messages)
             });
