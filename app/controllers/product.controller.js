@@ -169,13 +169,13 @@ exports.update = async (req, res) => {
 };
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
-    if (!req.params.id) {
+    if (!req.params.product_id) {
         res.status(400).send({
             message: "Missing product data!"
         });
         return;
     }
-    let condition = { id: req.params.id };
+    let condition = { product_id: req.params.product_id };
     Product.destroy({
         where: condition
     })

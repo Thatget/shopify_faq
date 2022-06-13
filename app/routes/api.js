@@ -85,7 +85,7 @@ let initAPIs = (app) => {
     router.get("/api/product", product.findAll);
     router.get("/api/product/:product_id", product.findOne);
     router.put("/api/product/:id", product.update);
-    router.delete("/api/product/:id", product.delete);
+    router.delete("/api/product/:product_id", product.delete);
     // router.delete("/api/product", product.deleteAll);
 
     //Faq Product router
@@ -109,7 +109,7 @@ let initAPIs = (app) => {
     });
     router.post("/api/upload-profile-pic", upload.single('profile_pic'), uploadBanner.upload);
     // Import Faqs
-    // router.post("/api/import-faq", upload.single('faq-list'), importExport.import);
+    router.post("/api/import-faq", upload.single('faq-list'), importExport.import);
     // Export Faqs
     router.get("/api/export-faq",importExport.export);
 

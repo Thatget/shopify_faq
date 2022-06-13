@@ -110,7 +110,7 @@ const searchProductByTitle = async (req, res) => {
     try {
     if (req.query.title) {
         req.query.title = req.query.title.replace(/"/g, '\\"')
-        var title = `,query: "${req.query.title}"`;
+        var title = `,query: "title:*${req.query.title}*"`;
     } else {
         var title = "";
     }
