@@ -3,7 +3,6 @@
   </div>
 </image-gallery>
 <script>
-  console.log('aaa')
   var background_color = ''
   var background_hover = ''
   fetch('http://localhost:8080/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
@@ -16,14 +15,14 @@
       for(let i = 0; i < faqs.length; i++){
         listCategoryIdentify.push(faqs[i].category_identify)
       }
-      var aaa = Array.from(new Set(listCategoryIdentify))
+      var check_category_identify = Array.from(new Set(listCategoryIdentify))
       const template_setting = data.templateSetting
       var content_block = ""
       var item = ''
       var list_category = []
-      for(let i = 0; i < aaa.length; i++){
+      for(let i = 0; i < check_category_identify.length; i++){
         item = categories[0].filter(function(item){
-          return item.identify === aaa[i]
+          return item.identify === check_category_identify[i]
         })
         list_category.push(item)
       }

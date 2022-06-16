@@ -96,7 +96,6 @@ exports.findOne = async (req, res) => {
         return;
     }
     const product_id = req.params.product_id
-    console.log(product_id)
     await Product.findOne({
         where: {
             product_id: product_id

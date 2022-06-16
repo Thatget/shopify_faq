@@ -205,13 +205,15 @@ app.set("views","./views");
 const defaultPage = require('./controller/defaultPage');
 
 app.get('/faq-page', async (req, res) => {
+    
     const query_signature = req.query.signature;
     const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;
     const generateHash = crypto.createHmac('sha256', apiSecret)
         .update(sorted_params)
         .digest('hex');
     if (query_signature === generateHash) {
-        const shop = req.query.shop;
+        // const shop = req.query.shop;
+        const shop = req.headers['x-shop-domain'];
         if (shop) {
             try {
                 const locale = req.headers['accept-language'].split(',')[0];

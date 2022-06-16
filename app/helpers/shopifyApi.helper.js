@@ -114,7 +114,6 @@ const searchProductByTitle = async (req, res) => {
     } else {
         var title = "";
     }
-    console.log(req.query.cursor)
 
     if (req.query.cursor && req.query.cursor !== "undefined") {
         var cursor = req.query.cursor

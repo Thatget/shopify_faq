@@ -59,7 +59,6 @@ exports.findAllProduct = async (req, res) => {
 
 async function getProduct(userID, product_id, locale, Faqs){
     let productId = null
-    console.log(product_id)
     await Product.findOne({
         where: {
             user_id: userID,
