@@ -210,7 +210,8 @@ app.get('/faq-page', async (req, res) => {
         .digest('hex');
 
     if (query_signature === generateHash) {
-        const shop = req.query.shop;
+        // const shop = req.query.shop;
+        const shop = req.headers['x-shop-domain'];
         if (shop) {
             try {
                 const locale = req.headers['accept-language'].split(',')[0];
