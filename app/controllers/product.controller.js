@@ -4,20 +4,21 @@ const errorLog = require('../helpers/log.helper');
 const User = db.user;
 
 exports.create = async (req, res) => {
-    
     const product = req.body;
     const user_id = req.jwtDecoded.data.user_id;
-    product.user_id = user_id;
-
-    // Create product when identify is not set
-    if (!req.body.product_id) {
+    if(product.length < 0){
         res.status(500).send({
             message: "Some error occurred while creating the Product."
         });
         return;
-    } else {
-        // Create a product
-        await Product.create(product)
+    }
+    else{
+        
+        product.forEach( element => {
+            element.user_id = user_id;
+            // Create a product
+        }) 
+        await Product.bulkCreate(product)
             .then(data => {
                 res.send(data);
                 return;
@@ -29,7 +30,29 @@ exports.create = async (req, res) => {
                 });
                 return;
             });
+
     }
+    // Create product when identify is not set
+    // if (!req.body.product_id) {
+    //     res.status(500).send({
+    //         message: "Some error occurred while creating the Product."
+    //     });
+    //     return;
+    // } else {
+    //     // Create a product
+    //     await Product.create(product)
+    //         .then(data => {
+    //             res.send(data);
+    //             return;
+    //         })
+    //         .catch(err => {
+    //             res.status(500).send({
+    //                 message:
+    //                     err.message || "Some error occurred while creating the product."
+    //             });
+    //             return;
+    //         });
+    // }
 };
 
 // Retrieve all Product of a category from the database.
@@ -196,4 +219,32 @@ exports.delete = (req, res) => {
         });
 };
 
-
+exports.deleteAll = (req, res) => {
+    console.log(req.query)
+    // if (!req.params.product_id) {
+    //     res.status(400).send({
+    //         message: "Missing product data!"
+    //     });
+    //     return;
+    // }
+    let condition = { product_id: [113, 114, 115, 116] };
+    Product.destroy({
+        where: condition
+    })
+        .then( num => {
+            if (num == 1) {
+                res.send({
+                    message: "Product was deleted successfully!"
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete this product Maybe product was not found!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Could not delete product"
+            });
+        });
+};
