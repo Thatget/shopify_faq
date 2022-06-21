@@ -4,61 +4,17 @@ const errorLog = require('../helpers/log.helper');
 
 exports.create = async (req, res) => {
     // Validate request
-    if (!req.body.product_id) {
+    const faq_product = req.body;
+    if (!req.body) {
         res.status(400).send({
             message: "Faq id can not be empty!"
         });
         return;
     }
-    // if (!req.body.identify) {
-    //     res.status(400).send({
-    //         message: "FaqProduct id can not be empty!"
-    //     });
-    //     return;
-    // }
-    // if (!req.jwtDecoded.data.user_id) {
-    //     res.status(400).send({
-    //         message: "no user selected ?"
-    //     });
-    //     return;
-    // }
-    // if (!req.body.locale) {
-    //     res.status(400).send({
-    //         message: "Locale must be selected!"
-    //     });
-    //     return;
-    // }
-    // if (!req.body.product_image) {
-    //     res.status(400).send({
-    //         message: "FaqProduct image must be selected!"
-    //     });
-    //     return;
-    // }
-    // if (!req.body.product_name) {
-    //     res.status(400).send({
-    //         message: "FaqProduct name must be selected!"
-    //     });
-    //     return;
-    // } else {
-    //     let checkCategory = await checkFaqCategory(req.body.identify, req.body.locale, req.jwtDecoded.data.user_id)
-    //     if (!checkCategory.status) {
-    //         res.status(400).send({
-    //             message: checkCategory.message
-    //         });
-    //         return;
-    //     }
-    // }
-    // const title = req.body.title;
-    const faq_product = req.body;
     // Create faq_product when identify is not set
-    if (!req.body.faq_id) {
-        res.status(500).send({
-            message: "Some error occurred while creating the FaqProduct."
-        });
-        return;
-    } else {
+    else {
         // Create a faq_product
-        await FaqProduct.create(faq_product)
+        await FaqProduct.bulkCreate(faq_product)
             .then(data => {
                 res.send(data);
                 return;
@@ -234,13 +190,13 @@ exports.delete = (req, res) => {
 
 // Delete all FaqProduct from the database.
 exports.deleteAll = (req, res) => {
-    if (!req.params.product_id) {
+    if (!req.body) {
         res.status(400).send({
             message: "Missing product_id param!"
         });
         return;
     }
-    const product_id = req.params.product_id
+    const product_id = req.body
     FaqProduct.destroy({
         where: {product_id: product_id},
         truncate: false

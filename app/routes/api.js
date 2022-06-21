@@ -86,7 +86,7 @@ let initAPIs = (app) => {
     router.get("/api/product/:product_id", product.findOne);
     router.put("/api/product/:id", product.update);
     router.delete("/api/product/:product_id", product.delete);
-    router.delete("/api/product", product.deleteAll);
+    router.post("/api/product/id", product.deleteAll);
 
     //Faq Product router
     router.post("/api/faq-product", faq_product.create);
@@ -94,7 +94,7 @@ let initAPIs = (app) => {
     router.get("/api/faq-product/:id", faq_product.findOne);
     router.put("/api/faq-product/:id", faq_product.update);
     router.delete("/api/faq-product/:id", faq_product.delete);
-    router.delete("/api/faq-product/product/:product_id", faq_product.deleteAll);
+    router.delete("/api/faq-product/product", faq_product.deleteAll);
 
     // get Product list
     router.get("/api/shop/product-list", shopifyApi.getProductList);

@@ -13,7 +13,6 @@ exports.create = async (req, res) => {
         return;
     }
     else{
-        
         product.forEach( element => {
             element.user_id = user_id;
             // Create a product
@@ -220,14 +219,13 @@ exports.delete = (req, res) => {
 };
 
 exports.deleteAll = (req, res) => {
-    console.log(req.query)
-    // if (!req.params.product_id) {
-    //     res.status(400).send({
-    //         message: "Missing product data!"
-    //     });
-    //     return;
-    // }
-    let condition = { product_id: [113, 114, 115, 116] };
+    if (!req.body) {
+        res.status(400).send({
+            message: "Missing product data!"
+        });
+        return;
+    }
+    let condition = { product_id: req.body };
     Product.destroy({
         where: condition
     })
