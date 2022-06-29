@@ -45,3 +45,6 @@ step3: sudo a2enmod proxy
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
 </IfModule>
+  
+  
+  ngrok http --host-header=rewrite 8081
