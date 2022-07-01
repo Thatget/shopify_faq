@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 // const proxy = require('express-http-proxy');
 
-const errorLog = require('./app/helpers/log.helper')
+const errorLog = require('./app/helpers/log.helper');
 
 const app = express();
 // for parsing application/json
@@ -49,8 +49,24 @@ app.get('/', async (req, res) => {
     const redirectUri = forwardingAddress + '/shopify/callback';
     const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
         '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
-    res.cookie('state',state);
+    res.cookie("state", state, { httpOnly: false, secure: true, sameSite: "none" });
     res.redirect(pageUri);
+});
+
+app.get('/storeFAQs', async (req, res) => {
+    return res.redirect(app_link+'/storeFAQs');
+});
+app.get('/categories', async (req, res) => {
+    return res.redirect(app_link+'/categories');
+});
+app.get('/design', async (req, res) => {
+    return res.redirect(app_link+'/design');
+});
+app.get('/setting', async (req, res) => {
+    return res.redirect(app_link+'/setting');
+});
+app.get('/products-faqs', async (req, res) => {
+    return res.redirect(app_link+'/products-faqs');
 });
 
 app.get('/shopify/callback', async (req, res) => {
@@ -153,9 +169,9 @@ app.get('/shopify/callback', async (req, res) => {
                                         errorLog.error(`webhook create: ${error.message}`)
                                     });
                             }
-                        })
-                        let token = await login(user);
-                        res.redirect(app_link + '/login' + `${token}`);
+                        });
+                        const pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
+                        res.redirect(pageUri);
                     })
                     .catch((error) => {
                         errorLog.error(`user get shop data: error ${error.message}`)
@@ -243,35 +259,6 @@ app.listen(port, () => {
 function verifyRequest(req, res, buf, encoding) {
     req.rawBody=buf
 };
-
-async function login(user) {
-    try {
-        let shopify_access_token = '';
-        let jwtHelper = require("./app/helpers/jwt.helper");
-        let userId = null;
-
-        await User.findOne({where: { shopify_domain: user.shopify_domain }})
-            .then(async data => {
-                shopify_access_token = data.dataValues.shopify_access_token;
-                userId = data.dataValues.id;
-                const userData = {
-                    email: user.email,
-                    shopify_domain:user.shopify_domain,
-                    user_id: userId
-                };
-                accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife) || '';
-                refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife) || '';
-            })
-            .catch(err => {
-                errorLog.error(`error in login function get user from database ${err.message}`);
-                return null;
-            });
-    } catch (error) {
-        errorLog.error(`error in login function ${error.message}`);
-        return null;
-    }
-    return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
-}
 
 async function removeShop(shop) {
     try {
