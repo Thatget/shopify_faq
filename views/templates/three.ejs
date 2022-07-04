@@ -183,7 +183,11 @@
 <script>
     var categoryName = []
     function changeCategory(s){
-        categoryName.push(s)
+        if(!categoryName.some(item => {
+            return item === s
+        })){            
+            categoryName.push(s)
+        }
         for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
             document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
             document.getElementsByClassName('svg-plus')[i].style.opacity = '1'
