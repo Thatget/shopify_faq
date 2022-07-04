@@ -86,7 +86,7 @@
                     <% if(faq_category.length){%>
                         <div class="category-bar">
                             <% for(var i=0; i < faq_category.length; i++) { %>
-								<div onclick="changeCategory('<%- faq_category[i].title %>')" class="category-bar-item" id="faq-category<%- faq_category[i].title %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: #ccc;"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none"<%}%>><%- faq_category[i].title %></div>
+								<div onclick="changeCategory('<%- faq_category[i].title %>')" class="category-bar-item" id="faq-category<%- faq_category[i].title %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: #ccc; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faq_category[i].title %></div>
                             <% } %>
                         </div>
                         <div class="faq-container">
@@ -183,8 +183,11 @@
 <script>
     var categoryName = []
     function changeCategory(s){
-        categoryName.push(s)
-        console.log(document.getElementsByClassName('faq-answer-content').length)
+        if(!categoryName.some(item => {
+            return item === s
+        })){            
+            categoryName.push(s)
+        }
         for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
             document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
             document.getElementsByClassName('svg-plus')[i].style.opacity = '1'
@@ -195,7 +198,7 @@
             document.getElementsByClassName('svg-minus')[i].style.opacity = '0'
         }
         for(let i = 0; i < categoryName.length; i++){
-            if(categoryName[i] === document.getElementById(s).innerHTML){
+            if(categoryName[i] === document.getElementById(s).innerText){
                 document.getElementById(`faq${categoryName[i]}`).style.display = 'block'
                 document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = '#ccc'
             }
@@ -229,7 +232,6 @@
             svgRight[0].style.transition  = "all .7s";
         } 
         else {
-            console.log('open')
             svgRight[0].style.transform = "rotate(180deg)";
             svgRight[0].style.transition  = "all 0s";
             svgRight[0].style.opacity = "0";
@@ -240,7 +242,6 @@
             svgDown[0].style.transform = "rotate(0deg)";
             svgDown[0].style.transition  = "all 0s";
         } else {
-            console.log('down')
             svgDown[0].style.transform = "rotate(180deg)";
             svgDown[0].style.transition  = "ease-in .3s";
             svgDown[0].style.opacity = "1";
@@ -302,7 +303,8 @@
         justify-content: space-between;
         min-height: <%- setting.templateSetting.banner_height%>px;
         max-width: 100vw;
-        background-image: url('<%- setting.templateSetting.image_banner%>');
+        background-image: url('https://backend-faq.yanet.io/var/images/banner/banner-default-3.png');
+        /* background-image: url('<%- setting.templateSetting.image_banner%>'); */
         background-repeat: no-repeat;
         background-size: cover;
         background-position-y: center;
@@ -316,7 +318,8 @@
         justify-content: space-between;
         min-height: <%- setting.templateSetting.banner_height%>px;
         max-width: 100vw;
-        background-image: url('<%- setting.templateSetting.banner_default%>');
+        /* background-image: url('<%- setting.templateSetting.banner_default%>'); */
+        background-image: url('https://backend-faq.yanet.io/var/images/banner/banner-default-3.png');
         background-repeat: no-repeat;
         background-size: cover;
         background-position-y: center;
@@ -344,6 +347,7 @@
         padding: 10px; 
         display: flex; 
         align-items: center;
+        justify-content: space-between;
         width: 100%; 
         cursor: pointer;
         <% if (setting.templateSetting.faq_font_weight) { %>
@@ -414,7 +418,8 @@
         border-bottom: 1px solid #ccc; 
         width: 100%; 
         margin-top: 30px; 
-        padding-bottom: 10px
+        padding-bottom: 10px;
+        word-wrap: break-word;
     }
     #not-found-text{
         display: none; 
@@ -438,6 +443,7 @@
     .listed-faq{
         width: 100%;
         user-select: none;
+        word-wrap: break-word;
     }
     .faq-answer-content{
         display: none; 
@@ -445,6 +451,10 @@
         margin-bottom: 6px; 
         padding: 10px;
         position: relative;
+        word-wrap: break-word;
+    }
+    svg:not(:root) {
+        overflow:unset !important;
     }
     @media only screen and (max-width: 768px) {
         .container{
