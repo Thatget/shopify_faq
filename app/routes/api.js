@@ -48,6 +48,7 @@ let initAPIs = (app) => {
     //Faq router
     router.post("/api/faq", faq.create);
     router.get("/api/faq", faq.findAll);
+    router.get("/api/faq/all", faq.getAll);
     router.get("/api/faq_by_identify", faq.getByIdentify);
     router.get("/api/faq/:id", faq.findOne);
     router.put("/api/faq/:id", faq.update);
@@ -62,6 +63,7 @@ let initAPIs = (app) => {
     router.get("/api/template/:faq_template_number", setting.findTemplateSetting);
 
     //Category
+    router.get("/api/faq-category/all", category.getAll);
     router.post("/api/faq-category", category.create);
     router.get("/api/faq-category", category.findAll);
     router.get("/api/faq-category/:id", category.findOne);
@@ -90,7 +92,7 @@ let initAPIs = (app) => {
 
     //Faq Product router
     router.post("/api/faq-product", faq_product.create);
-    router.get("/api/faq-product/product/:product_id", faq_product.findAll);
+    router.get("/api/faq-product/product", faq_product.findAll);
     router.get("/api/faq-product/:id", faq_product.findOne);
     router.put("/api/faq-product/:id", faq_product.update);
     router.delete("/api/faq-product/:id", faq_product.delete);

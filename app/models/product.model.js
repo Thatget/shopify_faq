@@ -3,12 +3,20 @@ module.exports = (sequelize, Sequelize) => {
     const Product = sequelize.define("product", {
         user_id: {
             type: Sequelize.INTEGER,
-            // allowNull: false
+            allowNull: false
         },
         product_id:{
             type: Sequelize.STRING,
+            allowNull: false,
+        },
+        product_image:{
+            type: Sequelize.STRING,
             // allowNull: false
-        }
+        },
+        product_title:{
+            type: Sequelize.STRING,
+            allowNull: false
+        },
     },{
         uniqueKeys: {
             Items_unique: {
@@ -18,5 +26,6 @@ module.exports = (sequelize, Sequelize) => {
         freezeTableName: true
     });
     Product.belongsTo(User, {foreignKey: 'user_id', targetKey: 'id', onDelete: 'CASCADE',});
+
     return Product;
 };

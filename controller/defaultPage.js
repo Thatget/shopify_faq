@@ -7,15 +7,23 @@ const errorLog = require('../app/helpers/log.helper');
 const { QueryTypes } = require('sequelize');
 
 // Using in nodeJs
-exports.findFaqs = async (shop, locale = 'en') => {
+exports.findFaqs = async (shop, locale) => {
     let data = [];
     let selectCondition = {}
     await User.findOne({
-        attributes: ['id'],
+        attributes: ['id', 'shopLocales'],
         where: { shopify_domain: shop}
     })
         .then( async userData => {
             if (userData) {
+                if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
+                    locale = 'default'
+                    console.log(locale)
+                }
+                else{
+                    locale = locale
+                }
+                console.log(locale)
                 let userID = userData.dataValues.id;
                 await Setting.findOne({
                     attributes: ['category_sort_name','faq_sort_name'],
@@ -58,7 +66,7 @@ exports.findFaqs = async (shop, locale = 'en') => {
         });
     return data;
 };
-exports.findSetting = async (shop, locale = 'en') => {
+exports.findSetting = async (shop, locale) => {
     let returnData = {};
     let data = {};
     let templateSetting = {};
@@ -68,6 +76,13 @@ exports.findSetting = async (shop, locale = 'en') => {
     })
         .then( async userData => {
             if (userData) {
+                if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
+                    locale = 'default'
+                }
+                else{
+                    locale = locale
+                }
+
                 await Setting.findOne({
                     where: {
                         user_id: userData.dataValues.id

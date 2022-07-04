@@ -51,8 +51,29 @@ app.get('/', async (req, res) => {
     const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
         '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
     res.cookie('state',state);
+    // res.cookie("state", state, { httpOnly: false, secure: true, sameSite: "none" });
     res.redirect(pageUri);
 });
+
+// app.get('/', async (req, res) => {
+//     return res.redirect(app_link+'/storeFAQs');
+// });
+
+// app.get('/categories', async (req, res) => {
+//     return res.redirect(app_link+'/categories');
+// });
+
+// app.get('/design', async (req, res) => {
+//     return res.redirect(app_link+'/design');
+// });
+
+// app.get('/setting', async (req, res) => {
+//     return res.redirect(app_link+'/setting');
+// });
+
+// app.get('/products-faqs', async (req, res) => {
+//     return res.redirect(app_link+'/products-faqs');
+// });
 
 app.get('/shopify/callback', async (req, res) => {
     const {shop, hmac, code, state} = req.query;
@@ -217,6 +238,7 @@ app.get('/faq-page', async (req, res) => {
         if (shop) {
             try {
                 const locale = req.headers['accept-language'].split(',')[0];
+                console.log(locale)
                 const faqs = await defaultPage.findFaqs(shop, locale);
                 const setting = await defaultPage.findSetting(shop, locale);
                 return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting});

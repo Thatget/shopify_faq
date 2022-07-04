@@ -229,6 +229,28 @@ exports.findAll = (req, res) => {
     });
 };
 
+exports.getAll = (req, res) => {
+    if (!req.jwtDecoded.data.user_id) {
+        res.status(400).send({
+            message: "Error not user selected ?"
+        });
+        return;
+    }
+    const user_id = req.jwtDecoded.data.user_id;
+    Faq.findAll({ where: {
+        user_id: user_id
+        } 
+    })
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving faq."
+        })
+    });
+};
 // Find a single Faq with an id
 exports.findOne = (req, res) => {
     if (!req.params.id) {
@@ -542,13 +564,19 @@ async function checkFaqIdentify(user_id, identify, locale, category_identify) {
 //     return checkedIdentify;
 // }
 
+
 async function checkFaqCategory(identify, locale, user_id) {
+    console.log(identify)
+    console.log(locale)
+    console.log(user_id)
+
     let responseData = {};
     await FaqCategory.findOne({
         attributes: ['id'],
         where: {identify: identify, locale: locale, user_id: user_id }
     })
         .then(data =>{
+            console.log(data)
             if (data) {
                 responseData.status = true
             } else {

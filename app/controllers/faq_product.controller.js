@@ -5,6 +5,12 @@ const errorLog = require('../helpers/log.helper');
 exports.create = async (req, res) => {
     // Validate request
     const faq_product = req.body;
+    const user_id = req.jwtDecoded.data.user_id;
+    faq_product.forEach(async element => {
+        // await checkProductId(user_id, element.product_id)
+        // console.log(checkProductId(user_id, element.product_id))
+        element.user_id = user_id;
+    }) 
     if (!req.body) {
         res.status(400).send({
             message: "Faq id can not be empty!"
@@ -31,16 +37,21 @@ exports.create = async (req, res) => {
 
 // Retrieve all FaqProduct of a category from the database.
 exports.findAll = (req, res) => {
-    const product_id = req.params.product_id;
-    FaqProduct.findAll({ where: { product_id: product_id }})
-        .then(data => {
-            res.send(data);
+    const user_id = req.jwtDecoded.data.user_id;
+    FaqProduct.findAll({
+        where: {
+            user_id: user_id
+        }
+    })
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving faq_product."
         })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving faq_product."
-            })});
+    });
 };
 
 // exports.findAllProduct = async (req, res) => {

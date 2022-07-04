@@ -3,6 +3,7 @@ const Product = db.product;
 const errorLog = require('../helpers/log.helper');
 const User = db.user;
 
+// Create a product
 exports.create = async (req, res) => {
     const product = req.body;
     const user_id = req.jwtDecoded.data.user_id;
@@ -13,9 +14,10 @@ exports.create = async (req, res) => {
         return;
     }
     else{
-        product.forEach( element => {
+        product.forEach(async element => {
+            // await checkProductId(user_id, element.product_id)
+            // console.log(checkProductId(user_id, element.product_id))
             element.user_id = user_id;
-            // Create a product
         }) 
         await Product.bulkCreate(product)
             .then(data => {
@@ -31,28 +33,27 @@ exports.create = async (req, res) => {
             });
 
     }
-    // Create product when identify is not set
-    // if (!req.body.product_id) {
-    //     res.status(500).send({
-    //         message: "Some error occurred while creating the Product."
-    //     });
-    //     return;
-    // } else {
-    //     // Create a product
-    //     await Product.create(product)
-    //         .then(data => {
-    //             res.send(data);
-    //             return;
-    //         })
-    //         .catch(err => {
-    //             res.status(500).send({
-    //                 message:
-    //                     err.message || "Some error occurred while creating the product."
-    //             });
-    //             return;
-    //         });
-    // }
 };
+
+//Check product
+// async function checkProductId(user_id, product_id){
+//     let checkedProductId = false;
+//     Product.findOne({
+//         where: {
+//             user_id: user_id,
+//             product_id: product_id
+//         }
+//     })
+//     .then(data => {
+//         if(data){
+//             checkedProductId = true
+//         }
+//     })
+//     .catch(err => {
+//         errorLog.error(`faq generate identify error ${err.message}`)
+//     })
+//     return checkedProductId
+// }
 
 // Retrieve all Product of a category from the database.
 exports.findAll = (req, res) => {
@@ -64,7 +65,7 @@ exports.findAll = (req, res) => {
     }
     const user_id = req.jwtDecoded.data.user_id;
     Product.findAll({ where: {
-        user_id:user_id
+        user_id: user_id
      } })
         .then(data => {
             res.send(data);
@@ -196,7 +197,7 @@ exports.delete = (req, res) => {
         });
         return;
     }
-    let condition = { product_id: req.params.product_id };
+    let condition = { id: req.params.product_id };
     Product.destroy({
         where: condition
     })
