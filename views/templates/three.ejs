@@ -252,8 +252,6 @@
         var filter = input.value.toLowerCase();
         var nodes = document.getElementsByClassName('listed-faq');
         var nodeCategory = document.getElementsByClassName('category-faq-search');
-        // console.log(nodeCategory)
-        console.log(document.getElementById('search-text').value === '')
         if(document.getElementById('search-text').value === ''){
             document.getElementsByClassName("category-faq-container")[0].style.display = "block"
             document.getElementsByClassName('category-bar')[0].style.display = "flex"
@@ -303,8 +301,7 @@
         justify-content: space-between;
         min-height: <%- setting.templateSetting.banner_height%>px;
         max-width: 100vw;
-        background-image: url('https://backend-faq.yanet.io/var/images/banner/banner-default-3.png');
-        /* background-image: url('<%- setting.templateSetting.image_banner%>'); */
+        background-image: url('<%- setting.templateSetting.image_banner%>');
         background-repeat: no-repeat;
         background-size: cover;
         background-position-y: center;
@@ -318,8 +315,7 @@
         justify-content: space-between;
         min-height: <%- setting.templateSetting.banner_height%>px;
         max-width: 100vw;
-        /* background-image: url('<%- setting.templateSetting.banner_default%>'); */
-        background-image: url('https://backend-faq.yanet.io/var/images/banner/banner-default-3.png');
+        background-image: url('<%- setting.templateSetting.banner_default%>');
         background-repeat: no-repeat;
         background-size: cover;
         background-position-y: center;
