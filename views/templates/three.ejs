@@ -199,10 +199,12 @@
         }
         for(let i = 0; i < categoryName.length; i++){
             if(categoryName[i] === document.getElementById(s).innerText){
+                console.log(categoryName[i].toLowerCase(), document.getElementById(s).innerText.toLowerCase(), 'a')
                 document.getElementById(`faq${categoryName[i]}`).style.display = 'block'
                 document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = '#ccc'
             }
             else{
+                console.log(categoryName[i].toLowerCase(), document.getElementById(s).innerText.toLowerCase(), 'b')
                 document.getElementById(`faq${categoryName[i]}`).style.display = 'none'
                 document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = '#fff'
             }
@@ -303,8 +305,7 @@
         justify-content: space-between;
         min-height: <%- setting.templateSetting.banner_height%>px;
         max-width: 100vw;
-        background-image: url('https://backend-faq.yanet.io/var/images/banner/banner-default-3.png');
-        /* background-image: url('<%- setting.templateSetting.image_banner%>'); */
+        background-image: url('<%- setting.templateSetting.image_banner%>');
         background-repeat: no-repeat;
         background-size: cover;
         background-position-y: center;
@@ -318,8 +319,7 @@
         justify-content: space-between;
         min-height: <%- setting.templateSetting.banner_height%>px;
         max-width: 100vw;
-        /* background-image: url('<%- setting.templateSetting.banner_default%>'); */
-        background-image: url('https://backend-faq.yanet.io/var/images/banner/banner-default-3.png');
+        background-image: url('<%- setting.templateSetting.banner_default%>');
         background-repeat: no-repeat;
         background-size: cover;
         background-position-y: center;

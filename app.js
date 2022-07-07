@@ -77,7 +77,6 @@ app.get('/', async (req, res) => {
 
 app.get('/shopify/callback', async (req, res) => {
     const {shop, hmac, code, state} = req.query;
-    console.log
     if (!req.headers.cookie) {
         return res.status(403).send('Your cookie error !');
     }
@@ -238,7 +237,6 @@ app.get('/faq-page', async (req, res) => {
         if (shop) {
             try {
                 const locale = req.headers['accept-language'].split(',')[0];
-                console.log(locale)
                 const faqs = await defaultPage.findFaqs(shop, locale);
                 const setting = await defaultPage.findSetting(shop, locale);
                 return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting});

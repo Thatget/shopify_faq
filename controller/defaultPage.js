@@ -18,12 +18,10 @@ exports.findFaqs = async (shop, locale) => {
             if (userData) {
                 if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
                     locale = 'default'
-                    console.log(locale)
                 }
                 else{
                     locale = locale
                 }
-                console.log(locale)
                 let userID = userData.dataValues.id;
                 await Setting.findOne({
                     attributes: ['category_sort_name','faq_sort_name'],
@@ -57,6 +55,7 @@ exports.findFaqs = async (shop, locale) => {
                             replacements: [locale, userID],
                             type: QueryTypes.SELECT
                         });
+
                 }catch (e) {
                     errorLog.error(e.message)
                 }
@@ -71,7 +70,7 @@ exports.findSetting = async (shop, locale) => {
     let data = {};
     let templateSetting = {};
     await User.findOne({
-        attributes: ['id'],
+        attributes: ['id', 'shopLocales'],
         where: { shopify_domain: shop}
     })
         .then( async userData => {
@@ -82,7 +81,7 @@ exports.findSetting = async (shop, locale) => {
                 else{
                     locale = locale
                 }
-
+                
                 await Setting.findOne({
                     where: {
                         user_id: userData.dataValues.id
