@@ -188,6 +188,14 @@
         })){            
             categoryName.push(s)
         }
+        var categoryShow = categoryName.filter(item => {
+            return item === s
+        })
+        var categoryHide = categoryName.filter(item => {
+            return item !== s
+        })
+        console.log(categoryShow)
+        console.log(categoryShow)
         for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
             document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
             document.getElementsByClassName('svg-plus')[i].style.opacity = '1'
@@ -199,12 +207,12 @@
         }
         for(let i = 0; i < categoryName.length; i++){
             if(categoryName[i] === document.getElementById(s).innerText){
-                console.log(categoryName[i].toLowerCase(), document.getElementById(s).innerText.toLowerCase(), 'a')
+                console.log('a')
                 document.getElementById(`faq${categoryName[i]}`).style.display = 'block'
                 document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = '#ccc'
             }
             else{
-                console.log(categoryName[i].toLowerCase(), document.getElementById(s).innerText.toLowerCase(), 'b')
+                console.log('b')
                 document.getElementById(`faq${categoryName[i]}`).style.display = 'none'
                 document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = '#fff'
             }

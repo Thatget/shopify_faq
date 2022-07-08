@@ -8,6 +8,7 @@
     fetch('https://dev-be-faq.yanet.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         const faqs = data.faq
         var block_container = ''
         const categories = data.category

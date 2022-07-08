@@ -33,7 +33,7 @@ let initAPIs = (app) => {
     router.post("/login", AuthController.login);
 
     router.post("/refresh-token", AuthController.refreshToken);
-
+    router.get("/api/product/:product_id", product.findOne);
     router.get("/api/shop/faq/:shop", faq.findAllInFaqPage);
     router.get("/api/shop/faq/search/:shop", faq.searchFaqTitle);
     router.get("/api/shop/setting/:shop", setting.findOneInFaqPage);
@@ -85,7 +85,6 @@ let initAPIs = (app) => {
     //Product router
     router.post("/api/product", product.create);
     router.get("/api/product", product.findAll);
-    router.get("/api/product/:product_id", product.findOne);
     router.put("/api/product/:id", product.update);
     router.delete("/api/product/:product_id", product.delete);
     router.post("/api/product/id", product.deleteAll);

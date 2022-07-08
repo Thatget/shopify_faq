@@ -15,12 +15,21 @@ exports.findAllProduct = async (req, res) => {
     let templateSetting = []
     const shop = req.params.shop;
     const product_id = req.params.product_id
-    const locale = req.params.locale
+    let locale = req.params.locale
     await User.findOne({ where: { shopify_domain: shop}})
     .then( async userData => {
         if (userData) {
             userID = userData.dataValues.id;
+            if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
+                locale = 'default'
+            }
+            else{
+                locale = req.params.locale
+            }
             Setting.findOne({
+                where:{
+                    user_id: userID
+                }
             })
             .then(data => {
                 TemplateSetting.findOne({
@@ -53,7 +62,6 @@ exports.findAllProduct = async (req, res) => {
     // const result = await User.findOne({ where: { shopify_domain: shop}}).catch(error => {
     //     return res.status(500).send("some error");
     // });
-    // console.log(Categories, 'aaa')
     return res.send({faq: Faqs, category: Categories, templateSetting: templateSetting})
 };
 
@@ -74,12 +82,12 @@ async function getProduct(userID, product_id, locale, Faqs){
             productId = data
         }
     })
-    // .catch(err => {
-    //     return res.status(500).send({
-    //         message:
-    //             err.message || "Some error occurred while retrieving Product."
-    //     })
-    // });
+    .catch(err => {
+        return res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving Product."
+        })
+    });
     return Product;
 }
 
