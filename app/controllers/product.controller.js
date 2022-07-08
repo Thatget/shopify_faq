@@ -112,7 +112,6 @@ exports.findAllProduct = async (req, res) => {
 
 // Find a single Product with an id
 exports.findOne = async (req, res) => {
-    console.log(req.params.product_id)
     if (!req.params.product_id) {
         res.status(400).send({
             message: "Product product_id not selected"

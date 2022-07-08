@@ -374,6 +374,31 @@ exports.update = async (req, res) => {
         });
 };
 
+exports.updateBulk = (req, res) => {
+    let listId = req.body
+    Faq.update({category_identify: 'Uncategorized1'},{
+        where: {
+            id: listId
+        }
+    })
+        .then( num => {
+            if (num == 1) {
+                res.send({
+                    message: "Faq was updated successfully!"
+                });
+            } else {
+                res.send({
+                    message: `Cannot update this faq Maybe faq was not found!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Could not update faq"
+            });
+        });
+};
+
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
     if (!req.params.id) {
