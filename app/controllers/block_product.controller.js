@@ -135,11 +135,9 @@ async function getFaqs(faq_identify, category_identify, locale, Faqs){
                 })
             }
             if(aaa.length > 0){
-                // console.log(aaa)
                 Faqs.push(aaa[0])
             }
         }
-        // console.log(listCategoryIdentify, 'list')
     })
     .catch(err => {
         return res.status(500).send({
