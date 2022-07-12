@@ -37,6 +37,7 @@ exports.findFaqs = async (shop, locale) => {
                     let selectQuery = "SELECT `faq_category`.`title` as `category_title`, `faq`.`title`,`faq`.`content`,`faq`.`locale`,`faq`.`identify`" +
                         ", `faq_category`.`identify` as `category_identify`"+
                         " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify`" +
+                        " and `faq`.`locale` = `faq_category`.`locale` " +
                         " and `faq`.`user_id` = `faq_category`.`user_id` " +
                         " where `faq`.`is_visible` = true and `faq_category`.`is_visible` = true" +
                         " and `faq`.`user_id` = ?";
@@ -76,7 +77,7 @@ exports.findFaqs = async (shop, locale) => {
                         add_faq.forEach(item => {
                             send_data.push(item)
                         })
-                        
+                        console.log(send_data)
                 }catch (e) {
                     errorLog.error(e.message)
                 }

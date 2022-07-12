@@ -50,30 +50,30 @@ app.get('/', async (req, res) => {
     const redirectUri = forwardingAddress + '/shopify/callback';
     const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
         '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
-    // res.cookie('state',state);
-    res.cookie("state", state, { httpOnly: false, secure: true, sameSite: "none" });
+    res.cookie('state',state);
+    // res.cookie("state", state, { httpOnly: false, secure: true, sameSite: "none" });
     res.redirect(pageUri);
 });
 
-app.get('/', async (req, res) => {
-    return res.redirect(app_link+'/storeFAQs');
-});
+// app.get('/', async (req, res) => {
+//     return res.redirect(app_link+'/storeFAQs');
+// });
 
-app.get('/categories', async (req, res) => {
-    return res.redirect(app_link+'/categories');
-});
+// app.get('/categories', async (req, res) => {
+//     return res.redirect(app_link+'/categories');
+// });
 
-app.get('/design', async (req, res) => {
-    return res.redirect(app_link+'/design');
-});
+// app.get('/design', async (req, res) => {
+//     return res.redirect(app_link+'/design');
+// });
 
-app.get('/setting', async (req, res) => {
-    return res.redirect(app_link+'/setting');
-});
+// app.get('/setting', async (req, res) => {
+//     return res.redirect(app_link+'/setting');
+// });
 
-app.get('/products-faqs', async (req, res) => {
-    return res.redirect(app_link+'/products-faqs');
-});
+// app.get('/products-faqs', async (req, res) => {
+//     return res.redirect(app_link+'/products-faqs');
+// });
 
 app.get('/shopify/callback', async (req, res) => {
     const {shop, hmac, code, state} = req.query;
