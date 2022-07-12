@@ -47,7 +47,7 @@ exports.findAllProduct = async (req, res) => {
             .catch(e =>{
                 console.log(e)
             })
-            await getProduct(userID, product_id, locale, Faqs)
+            await getProduct(userID, product_id, locale, Faqs, Categories)
             await getCategory(locale, userID, Categories)
         }
         //  else {
@@ -65,7 +65,7 @@ exports.findAllProduct = async (req, res) => {
     return res.send({faq: Faqs, category: Categories, templateSetting: templateSetting})
 };
 
-async function getProduct(userID, product_id, locale, Faqs){
+async function getProduct(userID, product_id, locale, Faqs, Categories){
     let productId = null
     await Product.findOne({
         where: {
@@ -76,7 +76,7 @@ async function getProduct(userID, product_id, locale, Faqs){
     .then(async data => {
         if(data){
             productId = data.dataValues.id
-            await getFaqsId(productId, locale, Faqs, userID)
+            await getFaqsId(productId, locale, Faqs, userID, Categories)
         }
         else{
             productId = data
@@ -101,10 +101,9 @@ async function getFaqsId(product_id , locale, Faqs, userID){
         if(data){
             listFaqId = data
             for(let i = 0; i < listFaqId.length; i++){
-                await getFaqs(listFaqId[i].dataValues.faq_id, locale, Faqs, userID)
+                await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
             }
         }
-        // getCategoryName(data[0].dataValues.category_identify)
     })
     // .catch(err => {
     //     return res.status(500).send({
@@ -114,16 +113,31 @@ async function getFaqsId(product_id , locale, Faqs, userID){
     // });
 }
 
-async function getFaqs(faq_id, locale, Faqs){
+async function getFaqs(faq_identify, category_identify, locale, Faqs){
     await Faq.findAll({
         where: {
-            id : faq_id ,
-            locale : locale
+            identify : faq_identify ,
+            category_identify : category_identify,
         },
     })
     .then(async data => {
         if(data && data.length > 0){
-            Faqs.push(data[0].dataValues)
+            if(data.some(element => {
+                return element.dataValues.locale == locale
+            })){
+                var aaa = data.filter(item => {
+                    return item.dataValues.locale == locale
+                })
+            }
+            else{
+                var aaa = data.filter(item => {
+                    return item.dataValues.locale == 'default'
+                })
+            }
+            if(aaa.length > 0){
+                // console.log(aaa)
+                Faqs.push(aaa[0])
+            }
         }
         // console.log(listCategoryIdentify, 'list')
     })
@@ -138,7 +152,7 @@ async function getFaqs(faq_id, locale, Faqs){
 async function getCategory(locale, userID, Categories){
     await FaqCategory.findAll({
         where: {
-            locale: locale,
+            locale: 'default',
             user_id: userID
         }
     })

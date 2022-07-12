@@ -124,18 +124,13 @@ exports.update = async (req, res) => {
         });
         return;
     }
-    const id = req.params.id;
-
     // Check this faq_product is exits or not
-    await FaqProduct.findByPk(id)
+    await FaqProduct.findByPk(req.body.id)
         .then(async data => {
             if (data) {
                 // const user_id = data.dataValues.user_id;
-                let faq_product = {
-                    faq_id: req.body.faq_id,
-                };
-                await FaqProduct.update(faq_product, {
-                    where: { id: id }
+                await FaqProduct.update(req.body, {
+                    where: { id: req.body.id }
                 })
                     .then( num => {
                         if (num == 1) {

@@ -36,7 +36,7 @@ exports.create = async (req, res) => {
         });
         return;
     } else {
-        let checkCategory = await checkFaqCategory(req.body.category_identify, req.body.locale, req.jwtDecoded.data.user_id)
+        let checkCategory = await checkFaqCategory(req.body.category_identify, req.jwtDecoded.data.user_id)
         if (!checkCategory.status) {
             res.status(400).send({
                 message: checkCategory.message
@@ -346,8 +346,13 @@ exports.update = async (req, res) => {
                 await Faq.update(faq, {
                     where: { id: id }
                 })
-                    .then( num => {
+                    .then(async num => {
                         if (num == 1) {
+                            await Faq.update({category_identify: faq.category_identify}, {
+                                where: {
+                                    identify: faq.identify
+                                }
+                            })
                             res.send({
                                 message: "Faq was updated successfully."
                             });
@@ -590,18 +595,13 @@ async function checkFaqIdentify(user_id, identify, locale, category_identify) {
 // }
 
 
-async function checkFaqCategory(identify, locale, user_id) {
-    console.log(identify)
-    console.log(locale)
-    console.log(user_id)
-
+async function checkFaqCategory(identify, user_id) {
     let responseData = {};
     await FaqCategory.findOne({
         attributes: ['id'],
-        where: {identify: identify, locale: locale, user_id: user_id }
+        where: {identify: identify, locale: 'default', user_id: user_id }
     })
         .then(data =>{
-            console.log(data)
             if (data) {
                 responseData.status = true
             } else {

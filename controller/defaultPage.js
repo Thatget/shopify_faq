@@ -9,6 +9,8 @@ const { QueryTypes } = require('sequelize');
 // Using in nodeJs
 exports.findFaqs = async (shop, locale) => {
     let data = [];
+    let send_data = []
+    let add_faq = []
     let selectCondition = {}
     await User.findOne({
         attributes: ['id', 'shopLocales'],
@@ -32,12 +34,12 @@ exports.findFaqs = async (shop, locale) => {
                     selectCondition = settingData.dataValues
                 })
                 try {
-                    let selectQuery = "SELECT `faq_category`.`title` as `category_title`, `faq`.`title`,`faq`.`content`" +
+                    let selectQuery = "SELECT `faq_category`.`title` as `category_title`, `faq`.`title`,`faq`.`content`,`faq`.`locale`,`faq`.`identify`" +
                         ", `faq_category`.`identify` as `category_identify`"+
-                        " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify` and `faq`.`locale` = `faq_category`.`locale` " +
+                        " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify`" +
                         " and `faq`.`user_id` = `faq_category`.`user_id` " +
                         " where `faq`.`is_visible` = true and `faq_category`.`is_visible` = true" +
-                        " and `faq`.`locale` = ? and `faq`.`user_id` = ?";
+                        " and `faq`.`user_id` = ?";
                     if (selectCondition.category_sort_name) {
                         selectQuery += " ORDER BY `category_title`"
                         if (selectCondition.faq_sort_name) {
@@ -52,10 +54,29 @@ exports.findFaqs = async (shop, locale) => {
                     data = await db.sequelize.query(
                         selectQuery+";",
                         {
-                            replacements: [locale, userID],
+                            replacements: [userID],
                             type: QueryTypes.SELECT
                         });
+                        data.forEach(item => {
+                            if(item.locale === locale){
+                                send_data.push(item)
+                            }
+                            if(item.locale === 'default'){
+                                add_faq.push(item)                                
+                            }
+                        })
 
+                        add_faq.forEach(e => {
+                            send_data.some(item => {
+                                if((e.identify === item.identify && e.category_identify === item.category_identify)){
+                                    add_faq = add_faq.filter(element => element !== e)
+                                }
+                            })
+                        })
+                        add_faq.forEach(item => {
+                            send_data.push(item)
+                        })
+                        
                 }catch (e) {
                     errorLog.error(e.message)
                 }
@@ -63,7 +84,7 @@ exports.findFaqs = async (shop, locale) => {
         }).catch(error => {
             errorLog.error(`get faqs nodejs proxy error ${error.message}`)
         });
-    return data;
+    return send_data;
 };
 exports.findSetting = async (shop, locale) => {
     let returnData = {};
@@ -94,8 +115,8 @@ exports.findSetting = async (shop, locale) => {
                                 if (v.locale === locale) {
                                     data.search_not_found = v.content;
                                     return false;
-                                } else {
-                                    data.search_not_found = null;
+                                } else if(v.locale === 'default'){
+                                    data.search_not_found = v.content;
                                 }
                                 return true;
                             });
@@ -103,14 +124,15 @@ exports.findSetting = async (shop, locale) => {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
+
                     if (settingData.intro_text_content) {
                         try {
                             JSON.parse(settingData.intro_text_content).every(v => {
                                 if (v.locale === locale) {
                                     data.intro_text_content = v.content;
                                     return false;
-                                } else {
-                                    data.intro_text_content = null;
+                                } else if(v.locale === 'default') {
+                                    data.intro_text_content = v.content;
                                 }
                                 return true;
                             });
@@ -124,8 +146,8 @@ exports.findSetting = async (shop, locale) => {
                                 if (v.locale === locale) {
                                     data.search_placehoder = v.content;
                                     return false;
-                                } else {
-                                    data.search_placehoder = null;
+                                } else if(v.locale === 'default') {
+                                    data.search_placehoder = v.content;
                                 }
                                 return true;
                             });
@@ -139,10 +161,9 @@ exports.findSetting = async (shop, locale) => {
                                 if (v.locale === locale) {
                                     data.page_title_content = v.content;
                                     return false;
-                                } else {
-                                    data.page_title_content = null;
+                                } else if(v.locale === 'default') {
+                                    data.page_title_content = v.content;
                                 }
-                                return true;
                             });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
@@ -154,8 +175,8 @@ exports.findSetting = async (shop, locale) => {
                                 if (v.locale === locale) {
                                     data.footer_text_content = v.content;
                                     return false;
-                                } else {
-                                    data.footer_text_content = null;
+                                } else if(v.locale === 'default') {
+                                    data.footer_text_content = v.content;
                                 }
                                 return true;
                             });
@@ -163,6 +184,7 @@ exports.findSetting = async (shop, locale) => {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
+                    console.log(data)
                     templateSetting = await getTemplateSetting(settingData.id, settingData.faq_template_number);
                     returnData = {data, templateSetting}
                 }).catch(error => {

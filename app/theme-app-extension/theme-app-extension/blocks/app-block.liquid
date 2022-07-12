@@ -5,10 +5,12 @@
   <script>
     var background_color = ''
     var background_hover = ''
+    // fetch('https://50f0-2402-800-61b3-5275-e1d5-598e-2188-f48d.ngrok.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
     fetch('https://dev-be-faq.yanet.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
       .then(response => response.json())
       .then(data => {
         const faqs = data.faq
+        console.log(data)
         var block_container = ''
         const categories = data.category
         var listCategoryIdentify = []
@@ -21,8 +23,8 @@
         var item = ''
         var list_category = []
         for(let i = 0; i < check_category_identify.length; i++){
-          item = categories[0].filter(function(item){
-            return item.identify === check_category_identify[i]
+          item = categories[0].filter(function(element){
+            return element.identify === check_category_identify[i]
           })
           list_category.push(item)
         }
