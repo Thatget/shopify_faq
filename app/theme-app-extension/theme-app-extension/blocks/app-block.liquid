@@ -5,12 +5,13 @@
   <script>
     var background_color = ''
     var background_hover = ''
-    // fetch('https://50f0-2402-800-61b3-5275-e1d5-598e-2188-f48d.ngrok.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
-    fetch('https://dev-be-faq.yanet.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
+    console.log('https://1d83-2402-800-61b3-5275-2d3d-2305-49c7-8037.ngrok.io/api/no-token/block/')
+    fetch('https://1d83-2402-800-61b3-5275-2d3d-2305-49c7-8037.ngrok.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
+    // fetch('https://dev-be-faq.yanet.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
       .then(response => response.json())
       .then(data => {
         const faqs = data.faq
-        console.log(faqs)
+        console.log(data)
         var block_container = ''
         const categories = data.category
         var listCategoryIdentify = []

@@ -34,7 +34,8 @@ exports.findAllProduct = async (req, res) => {
             .then(data => {
                 TemplateSetting.findOne({
                     where: {
-                        template_number: data.dataValues.faq_template_number
+                        template_number: data.dataValues.faq_template_number,
+                        setting_id: data.dataValues.id
                     }
                 })
                 .then(data => {
