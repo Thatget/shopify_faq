@@ -238,7 +238,7 @@ exports.getAll = (req, res) => {
     }
     const user_id = req.jwtDecoded.data.user_id;
     Faq.findAll({ where: {
-        user_id: user_id
+            user_id: user_id
         } 
     })
     .then(data => {
@@ -379,29 +379,72 @@ exports.update = async (req, res) => {
         });
 };
 
-exports.updateBulk = (req, res) => {
+exports.updateBulk = async (req, res) => {
     let listId = req.body
-    Faq.update({category_identify: 'Uncategorized1'},{
+    let listIdentify = []
+    let data = []
+    let dataUpdate = []
+    await Faq.findAll({
         where: {
-            id: listId
+            id : listId
         }
     })
-        .then( num => {
-            if (num == 1) {
-                res.send({
-                    message: "Faq was updated successfully!"
-                });
-            } else {
-                res.send({
-                    message: `Cannot update this faq Maybe faq was not found!`
-                });
+    .then(response => {
+        response.forEach(item => {
+            data.push(item.dataValues)
+            if(item.locale === 'default')
+            listIdentify.push(
+                {
+                    faq_id: item.dataValues.id,
+                    faq_identify: item.dataValues.identify
+                }
+            )
+        })
+
+        listIdentify.forEach(item => {
+            let faqByIdentify = []
+            faqByIdentify = data.filter(element => {
+                return item.faq_identify === element.identify
+            })
+            let count = []
+            count = faqByIdentify.filter(e => {
+                return e.locale === 'default'
+            })[0].id
+            faqByIdentify.forEach(ele => {
+                ele.identify = ele.identify + count
+                dataUpdate.push(ele)
+            })
+        })
+    })
+    .catch(e => {
+        console.log(e)
+    })
+    dataUpdate.forEach(item => {
+        Faq.update({
+            identify: item.identify,
+            category_identify: 'Uncategorized1'
+        },{
+            where: {
+                id: item.id
             }
         })
-        .catch(err => {
-            res.status(500).send({
-                message: "Could not update faq"
-            });
-        });
+    })
+        // .then( num => {
+        //     if (num == 1) {
+        //         res.send({
+        //             message: "Faq was updated successfully!"
+        //         });
+        //     } else {
+        //         res.send({
+        //             message: `Cannot update this faq Maybe faq was not found!`
+        //         });
+        //     }
+        // })
+        // .catch(err => {
+        //     res.status(500).send({
+        //         message: "Could not update faq"
+        //     });
+        // });
 };
 
 
