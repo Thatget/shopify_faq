@@ -430,23 +430,10 @@ exports.updateBulk = async (req, res) => {
                 }
             })
         })
+        res.send({
+            message: 'Update Successfully !'
+        })
     }
-        // .then( num => {
-        //     if (num == 1) {
-        //         res.send({
-        //             message: "Faq was updated successfully!"
-        //         });
-        //     } else {
-        //         res.send({
-        //             message: `Cannot update this faq Maybe faq was not found!`
-        //         });
-        //     }
-        // })
-        // .catch(err => {
-        //     res.status(500).send({
-        //         message: "Could not update faq"
-        //     });
-        // });
 };
 
 
