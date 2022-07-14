@@ -160,6 +160,36 @@ exports.update = async (req, res) => {
             });
         })
 };
+
+//Update FAQs in FaqProduct
+exports.updateFaqs = async (req, res) => {
+    const data = req.body
+    console.log(data)
+    await FaqProduct.update({
+        faq_identify: data.faq_identify,
+        category_identify: data.category_identify
+    }, {
+        where: { id: data.list_id }
+    })
+        .then( num => {
+            if (num == 1) {
+                res.send({
+                    message: "FaqProduct was updated successfully."
+                });
+            } else {
+                res.send({
+                    message: `Cannot update category with id=${id}. Maybe category was not found or req.body is empty!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error updating category with id=" + id
+            });
+        });
+
+};
+
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
     if (!req.params.id) {

@@ -102,6 +102,7 @@ async function getFaqsId(product_id , locale, Faqs, userID){
         if(data){
             listFaqId = data
             for(let i = 0; i < listFaqId.length; i++){
+                console.log(listFaqId[i].dataValues)
                 await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
             }
         }
