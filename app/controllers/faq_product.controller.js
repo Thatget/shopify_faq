@@ -164,7 +164,6 @@ exports.update = async (req, res) => {
 //Update FAQs in FaqProduct
 exports.updateFaqs = async (req, res) => {
     const data = req.body
-    console.log(data)
     await FaqProduct.update({
         faq_identify: data.faq_identify,
         category_identify: data.category_identify

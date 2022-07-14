@@ -52,7 +52,7 @@ let initAPIs = (app) => {
     router.get("/api/faq_by_identify", faq.getByIdentify);
     router.get("/api/faq/:id", faq.findOne);
     router.put("/api/faq/:id", faq.update);
-    router.put("/api/faq", faq.updateBulk);
+    router.put("/api/faq-update", faq.updateBulk);
     router.delete("/api/faq/:id", faq.delete);
     router.delete("/api/faq", faq.deleteAll);
 
