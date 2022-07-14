@@ -384,51 +384,53 @@ exports.updateBulk = async (req, res) => {
     let listIdentify = []
     let data = []
     let dataUpdate = []
-    await Faq.findAll({
-        where: {
-            id : listId
-        }
-    })
-    .then(response => {
-        response.forEach(item => {
-            data.push(item.dataValues)
-            if(item.locale === 'default')
-            listIdentify.push(
-                {
-                    faq_id: item.dataValues.id,
-                    faq_identify: item.dataValues.identify
-                }
-            )
-        })
-
-        listIdentify.forEach(item => {
-            let faqByIdentify = []
-            faqByIdentify = data.filter(element => {
-                return item.faq_identify === element.identify
-            })
-            let count = []
-            count = faqByIdentify.filter(e => {
-                return e.locale === 'default'
-            })[0].id
-            faqByIdentify.forEach(ele => {
-                ele.identify = ele.identify + count
-                dataUpdate.push(ele)
-            })
-        })
-    })
-    .catch(e => {
-        console.log(e)
-    })
-    dataUpdate.forEach(item => {
-        Faq.update({
-            identify: item.identify,
-            category_identify: 'Uncategorized1'
-        },{
+    if(listId.length > 0){
+        await Faq.findAll({
             where: {
-                id: item.id
+                id : listId
             }
         })
-    })
+        .then(response => {
+            response.forEach(item => {
+                data.push(item.dataValues)
+                if(item.locale === 'default')
+                listIdentify.push(
+                    {
+                        faq_id: item.dataValues.id,
+                        faq_identify: item.dataValues.identify
+                    }
+                )
+            })
+    
+            listIdentify.forEach(item => {
+                let faqByIdentify = []
+                faqByIdentify = data.filter(element => {
+                    return item.faq_identify === element.identify
+                })
+                let count = []
+                count = faqByIdentify.filter(e => {
+                    return e.locale === 'default'
+                })[0].id
+                faqByIdentify.forEach(ele => {
+                    ele.identify = ele.identify + count
+                    dataUpdate.push(ele)
+                })
+            })
+        })
+        .catch(e => {
+            console.log(e)
+        })
+        dataUpdate.forEach(item => {
+            Faq.update({
+                identify: item.identify,
+                category_identify: 'Uncategorized1'
+            },{
+                where: {
+                    id: item.id
+                }
+            })
+        })
+    }
         // .then( num => {
         //     if (num == 1) {
         //         res.send({
