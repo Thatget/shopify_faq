@@ -8,9 +8,7 @@ const { QueryTypes } = require('sequelize');
 
 // Using in nodeJs
 exports.findFaqs = async (shop, locale) => {
-    let data = [];
     let send_data = []
-    let add_faq = []
     let selectCondition = {}
     await User.findOne({
         attributes: ['id', 'shopLocales'],
@@ -34,50 +32,103 @@ exports.findFaqs = async (shop, locale) => {
                     selectCondition = settingData.dataValues
                 })
                 try {
-                    let selectQuery = "SELECT `faq_category`.`title` as `category_title`, `faq`.`title`,`faq`.`content`,`faq`.`locale`,`faq`.`identify`" +
-                        ", `faq_category`.`identify` as `category_identify`"+
-                        " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify`" +
-                        " and `faq`.`locale` = `faq_category`.`locale` " +
-                        " and `faq`.`user_id` = `faq_category`.`user_id` " +
-                        " where `faq`.`is_visible` = true and `faq_category`.`is_visible` = true" +
-                        " and `faq`.`user_id` = ?";
+                    let selectQueryFaqs = "SELECT `faq`.`title`,`faq`.`content`,`faq`.`locale`,`faq`.`identify`,`faq`.`category_identify` FROM faq" +
+                        " where `faq`.`user_id` = ? and `faq`.`is_visible` = 1 and (`faq`.`locale` = 'default' or `faq`.`locale` = ?)";
+
+                    dataFaqs = await db.sequelize.query(
+                        selectQueryFaqs+";",
+                        {
+                            replacements: [userID, locale],
+                            type: QueryTypes.SELECT
+                        }
+                    );
+                    let listCategoryIdentify = []
+                    let listFaqIdentify = []
+                    let listCategory = []
+                    let listCategoryDefault = []
+                    let listFaq = []
+                    let listFaqDefault = []
+
+                    dataFaqs.forEach(item => {
+                        listCategoryIdentify.push(item.category_identify)
+                        listFaqIdentify.push(item.identify)
+                    })
+                    listCategoryIdentify = [...new Set(listCategoryIdentify)]
+                    listFaqIdentify = [...new Set(listFaqIdentify)]
+                    let selectQueryCategories = "SELECT `faq_category`.`title`,`faq_category`.`locale`,`faq_category`.`identify` FROM faq_category" +
+                    " where `faq_category`.`user_id` = ? and `faq_category`.`is_visible` = 1 and `faq_category`.`identify` in (?) and (`faq_category`.`locale` = 'default' or `faq_category`.`locale` = ?)";
+
                     if (selectCondition.category_sort_name) {
-                        selectQuery += " ORDER BY `category_title`"
+                        selectQueryCategories += " ORDER BY `category_title`"
                         if (selectCondition.faq_sort_name) {
-                            selectQuery += ", `faq`.`title`"
+                            selectQueryFaqs += ", `faq`.`title`"
                         }
                     }else {
                         if (selectCondition.faq_sort_name) {
-                            selectQuery += " ORDER BY `faq`.`title`"
+                            selectQueryFaqs += " ORDER BY `faq`.`title`"
                         }
                     }
 
-                    data = await db.sequelize.query(
-                        selectQuery+";",
+                    dataCategories = await db.sequelize.query(
+                        selectQueryCategories+";",
                         {
-                            replacements: [userID],
+                            replacements: [userID, listCategoryIdentify, locale],
                             type: QueryTypes.SELECT
-                        });
-                        data.forEach(item => {
-                            if(item.locale === locale){
-                                send_data.push(item)
-                            }
-                            if(item.locale === 'default'){
-                                add_faq.push(item)                                
-                            }
-                        })
+                        }
+                    );
 
-                        add_faq.forEach(e => {
-                            send_data.some(item => {
-                                if((e.identify === item.identify && e.category_identify === item.category_identify)){
-                                    add_faq = add_faq.filter(element => element !== e)
-                                }
-                            })
+                    dataCategories.forEach(item => {
+                        if(item.locale === locale){
+                            listCategory.push(item)
+                        }
+                        else{
+                            listCategoryDefault.push(item)
+                        }
+                    })
+
+                    listCategoryDefault.forEach(item => {
+                        if(!listCategory.some(ele => {
+                            return ele.identify === item.identify
+                        })){
+                            listCategory.push(item)
+                        }
+                    })
+                    
+                    dataFaqs.forEach(item => {
+                        if(item.locale === locale){
+                            listFaq.push(item)
+                        }
+                        else{
+                            listFaqDefault.push(item)
+                        }
+                    })
+                    for(let i = 0; i < listFaqDefault.length; i++){
+                        for(let j = 0; j < listFaq.length; j++){
+                            if((listFaqDefault[i].identify === listFaq[j].identify && listFaqDefault[i].category_identify === listFaq[j].category_identify)){
+                                listFaqDefault.splice(i,1)
+                            }
+                            // else{
+                            //     console.log(listFaqDefault[i],'1')
+                            // }
+                        }
+                    }
+                    if(listFaqDefault.length > 0){
+                        listFaqDefault.forEach(item => {
+                            listFaq.push(item)
                         })
-                        add_faq.forEach(item => {
-                            send_data.push(item)
-                        })
-                        console.log(send_data)
+                    }
+                    for(let i = 0; i < listFaq.length; i++){
+                        for(let j = 0; j < listCategory.length; j++){
+                            if(listFaq[i].category_categry === listCategory[j].category){
+                                listFaq[i]['category_title'] = listCategory[j].title
+                            }
+                        }
+                    }
+
+                    send_data = {
+                        faq: listFaq,
+                        categories: listCategory
+                    }
                 }catch (e) {
                     errorLog.error(e.message)
                 }
@@ -185,7 +236,6 @@ exports.findSetting = async (shop, locale) => {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
-                    console.log(data)
                     templateSetting = await getTemplateSetting(settingData.id, settingData.faq_template_number);
                     returnData = {data, templateSetting}
                 }).catch(error => {

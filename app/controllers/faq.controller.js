@@ -141,23 +141,43 @@ exports.create = async (req, res) => {
 };
 
 exports.getByIdentify = async (req, res) => {
-    Faq.findAll({ 
-        where: {
-            identify:  req.query.identify, 
-            category_identify: req.query.category_identify, 
-            locale: req.query.locale, user_id:  
-            req.jwtDecoded.data.user_id 
-        } 
-    })
-    .then(data => {
-        res.send(data);
-    })
-    .catch(err => {
-        res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving faq."
+    if(req.query.locale){
+        Faq.findAll({ 
+            where: {
+                identify:  req.query.identify, 
+                category_identify: req.query.category_identify, 
+                locale: req.query.locale, 
+                user_id:  req.jwtDecoded.data.user_id 
+            } 
         })
-    });
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving faq."
+            })
+        });
+    }
+    else{
+        Faq.findAll({ 
+            where: {
+                identify:  req.query.identify, 
+                category_identify: req.query.category_identify, 
+                user_id:  req.jwtDecoded.data.user_id 
+            } 
+        })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving faq."
+            })
+        });
+    }
 }
 
 exports.findAllFaq = async (req, res) => {
@@ -299,6 +319,7 @@ exports.update = async (req, res) => {
                     title: req.body.title,
                     content: req.body.content,
                     is_visible: req.body.is_visible,
+                    list_id: req.body.list_id
                 };
                 if (req.body.position) {
                     faq.position = req.body.position;
@@ -343,8 +364,11 @@ exports.update = async (req, res) => {
                 }
                 faq.identify = identify;
                 faq.category_identify = category_identify;
-                await Faq.update(faq, {
-                    where: { id: id }
+                await Faq.update({
+                    identify: identify,
+                    category_identify: category_identify
+                }, {
+                    where: { id: faq.list_id }
                 })
                     .then(async num => {
                         if (num == 1) {
@@ -379,7 +403,7 @@ exports.update = async (req, res) => {
         });
 };
 
-exports.updateBulk = async (req, res) => {
+exports.updateWhenDeleteCategory = async (req, res) => {
     let listId = req.body
     let listIdentify = []
     let data = []
