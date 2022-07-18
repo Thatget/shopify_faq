@@ -49,6 +49,18 @@ exports.create = async (req, res) => {
         }
 };
 
+exports.findAllCategory = async (req, res) => {
+    FaqCategory.findAll()
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving product."
+            })});
+};
+
 // Retrieve all faq_category from the database of a user.
 exports.findAll = (req, res) => {
     if (!req.query.locale) {
@@ -59,6 +71,21 @@ exports.findAll = (req, res) => {
     }
     const user_id = req.jwtDecoded.data.user_id;
     let condition = { user_id: { [Op.eq]: `${user_id}` }, locale: req.query.locale };
+    FaqCategory.findAll({ where: condition })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving category."
+            });
+        });
+};
+
+exports.getAll = (req, res) => {
+    const user_id = req.jwtDecoded.data.user_id;
+    let condition = { user_id: { [Op.eq]: `${user_id}` }};
     FaqCategory.findAll({ where: condition })
         .then(data => {
             res.send(data);
@@ -111,7 +138,7 @@ exports.findOne = async (req, res) => {
 
 // Update a Category by the id in the request
 exports.update = async (req, res) => {
-    if (!req.params.id || !req.body.title || !req.body.description) {
+    if (!req.params.id || !req.body.title) {
         res.status(400).send({
             message: "Category update missing params!"
         });
@@ -128,7 +155,7 @@ exports.update = async (req, res) => {
                 let locale = data.dataValues.locale;
                 let faq_category = {
                     title: req.body.title,
-                    description: req.body.description,
+                    description: req.body.description? req.body.description : '',
                     is_visible: req.body.is_visible,
                 };
                 if (req.body.position) {

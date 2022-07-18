@@ -27,7 +27,6 @@ exports.import = async (req, res) => {
             is_visible: row['is_visible'],
             position: row['position'],
         }));
-
         // Prepare for category data
         const uniqueCategory = Array.from(new Set(data.map(a => a.category_identify)))
             .map(category_identify => {
@@ -41,7 +40,6 @@ exports.import = async (req, res) => {
             locale: row['locale']
 
         }))
-
         // Import faqs to database !
         responseResult = await importFaqs(category, faqs);
     }

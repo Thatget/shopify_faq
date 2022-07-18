@@ -52,58 +52,32 @@
         </div>
     <%}%>
     <div class="faq-main">
-        <% if(faqs.length && !setting.data.dont_category_faq){ %>
+        <% if(faqs && !setting.data.dont_category_faq){ %>
             <div style="margin: 20px 0 30px 0">
                 <div class="">
-                    <% var faq_category = [] %>
-                    <% var faq_category_count = 0 %>
-                    <% for(var i=0; i < faqs.length; i++) { %>
-                        <% let faq_category_content = {} %>
-                        <% 
-                        if(!faq_category.length){%>
-                            <% faq_category_content.title = faqs[i].category_title %>
-                            <% faq_category_content.identify = faqs[i].category_identify %>
-                            <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
-                            <% faq_category[faq_category_count] = faq_category_content %>
-                        <% } 
-                        else { %>
-                            <% let checkExites = false %>
-                            <% for(var j=0; j < faq_category.length; j++) { %>
-                                <% if(faq_category[j].title === faqs[i].category_title){%>
-                                    <% faq_category[j].faqs.push({title:faqs[i].title,content:faqs[i].content})%>
-                                    <% checkExites = true %>
-                                <% } %>
-                            <% } %>
-                            <% if(!checkExites){%>
-                                <% faq_category_count++ %>
-                                <% faq_category_content.title = faqs[i].category_title %>
-                                <% faq_category_content.identify = faqs[i].category_identify %>
-                                <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
-                                <% faq_category[faq_category_count] = faq_category_content %>
-                            <% } %> 
-                        <% } %>
-                    <% } %>
-                    <% if(faq_category.length){%>
+                    <% if(faqs.categories.length){%>
                         <div class="category-bar">
-                            <% for(var i=0; i < faq_category.length; i++) { %>
-                                <a href="#<%- faq_category[i].title %>" class="faq-category-link"><%- faq_category[i].title %></a>
+                            <% for(var i=0; i < faqs.categories.length; i++) { %>
+                                <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link"><%- faqs.categories[i].title %></a>
                             <% } %>
                         </div>
                         <div style="margin-top: 20px">
-                            <% for(var i=0; i < faq_category.length; i++) { %>
+                            <% for(var i=0; i < faqs.categories.length; i++) { %>
                                 <div class="category-faq-container">
-                                    <div id="<%- faq_category[i].title %>" class="faq-category-width">
-                                        <span class="faq-category-title faq-category-border"><%- faq_category[i].title %></span>
+                                    <div id="<%- faqs.categories[i].title %>" class="faq-category-width">
+                                        <span class="faq-category-title faq-category-border"><%- faqs.categories[i].title %></span>
                                     </div>
-                                    <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
-                                        <div class="faq-main-content">
-                                            <div class="faq-question-title-1">
-                                                <span class="listed-faq"><%= faq_category[i].faqs[j].title %></span>
+                                    <% for(var j=0; j < faqs.faq.length; j++) { %>
+                                        <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                            <div class="faq-main-content">
+                                                <div class="faq-question-title-1">
+                                                    <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                </div>
+                                                <div class="faq-answer-content-1">
+                                                    <%- faqs.faq[j].content %>
+                                                </div>
                                             </div>
-                                            <div class="faq-answer-content-1">
-                                                <%- faq_category[i].faqs[j].content %>
-                                            </div>
-                                        </div>
+                                        <% } %>
                                     <%}%>
                                 </div>
                             <% } %>
@@ -119,13 +93,13 @@
         <% }
         else{ %>
             <div class="faq-dont-category">
-                <% for(var j=0; j < faqs.length; j++) { %>
+                <% for(var j=0; j < faqs.faq.length; j++) { %>
                     <div class="faq-main-content">
                         <div class="faq-question-title-1">
-                            <span class="listed-faq"><%= faqs[j].title %></span>
+                            <span class="listed-faq"><%= faqs.faq[j].title %></span>
                         </div>
                         <div class="faq-answer-content-1">
-                            <%- faqs[j].content %>
+                            <%- faqs.faq[j].content %>
                         </div>
                     </div>
                 <%}%>
@@ -229,6 +203,7 @@
             display: flex; 
             align-items: center; 
             width: 100%; 
+            word-wrap: break-word;
             border-radius: 4px 4px 0 0;
             <% if (setting.templateSetting.answer_font_weight) { %>
                 font-weight: <%=  setting.templateSetting.answer_font_weight %>;
@@ -281,7 +256,7 @@
         font-size: 18px;
     }
     .faq-dont-category{
-        margin-top: 80px;
+        margin-top: 30px;
     }
     .category-bar{
         display: flex; 
@@ -308,10 +283,12 @@
         border-radius: 4px; 
         text-decoration: none; 
         font-size: 16px !important;
+        font-weight: normal;
     }
     .listed-faq{
         width: 100%;
         user-select: none;
+        word-wrap: break-word;
     }
     .faq-category-border{
         border-bottom: 1px solid #ccc;

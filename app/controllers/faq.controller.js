@@ -36,7 +36,7 @@ exports.create = async (req, res) => {
         });
         return;
     } else {
-        let checkCategory = await checkFaqCategory(req.body.category_identify, req.body.locale, req.jwtDecoded.data.user_id)
+        let checkCategory = await checkFaqCategory(req.body.category_identify, req.jwtDecoded.data.user_id)
         if (!checkCategory.status) {
             res.status(400).send({
                 message: checkCategory.message
@@ -140,6 +140,85 @@ exports.create = async (req, res) => {
     }
 };
 
+exports.getByIdentify = async (req, res) => {
+    if(req.query.locale){
+        Faq.findAll({ 
+            where: {
+                identify:  req.query.identify, 
+                category_identify: req.query.category_identify, 
+                locale: req.query.locale, 
+                user_id:  req.jwtDecoded.data.user_id 
+            } 
+        })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving faq."
+            })
+        });
+    }
+    else{
+        Faq.findAll({ 
+            where: {
+                identify:  req.query.identify, 
+                category_identify: req.query.category_identify, 
+                user_id:  req.jwtDecoded.data.user_id 
+            } 
+        })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving faq."
+            })
+        });
+    }
+}
+
+exports.findAllFaq = async (req, res) => {
+    // Validate request
+    // if (!req.params.shop) {
+    //     return  res.status(400).send({
+    //         message: "Shop can not be empty!"
+    //     });
+    //     return false;
+    // }
+    let userID = null;
+    const shop = req.params.shop;
+    await User.findOne({ where: { shopify_domain: shop}})
+        .then( async userData => {
+            if (userData) {
+                userID = userData.dataValues.id;
+                await Faq.findAll({
+                    where: {
+                        user_id: userID
+                    },
+                })
+                    .then(data => {
+                        return  res.send(data);
+                    })
+                    .catch(err => {
+                        return res.status(500).send({
+                            message:
+                                err.message || "Some error occurred while retrieving faq."
+                        })
+                    });
+            } else {
+                return res.status(400).send({
+                    message: "Shop name is not found !"
+                });
+                return false;
+            }
+        }).catch(error => {
+        return res.status(500).send("some error");
+    })
+};
+
 // Retrieve all Faq of a category from the database.
 exports.findAll = (req, res) => {
     if (!req.query.locale) {
@@ -156,18 +235,42 @@ exports.findAll = (req, res) => {
     }
     const user_id = req.jwtDecoded.data.user_id;
     Faq.findAll({ where: {
-        user_id:user_id, locale: req.query.locale
-     } })
-        .then(data => {
-            res.send(data);
+        user_id: user_id, locale: req.query.locale
+        } 
+    })
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving faq."
         })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving faq."
-            })});
+    });
 };
 
+exports.getAll = (req, res) => {
+    if (!req.jwtDecoded.data.user_id) {
+        res.status(400).send({
+            message: "Error not user selected ?"
+        });
+        return;
+    }
+    const user_id = req.jwtDecoded.data.user_id;
+    Faq.findAll({ where: {
+            user_id: user_id
+        } 
+    })
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving faq."
+        })
+    });
+};
 // Find a single Faq with an id
 exports.findOne = (req, res) => {
     if (!req.params.id) {
@@ -216,6 +319,7 @@ exports.update = async (req, res) => {
                     title: req.body.title,
                     content: req.body.content,
                     is_visible: req.body.is_visible,
+                    list_id: req.body.list_id
                 };
                 if (req.body.position) {
                     faq.position = req.body.position;
@@ -260,11 +364,19 @@ exports.update = async (req, res) => {
                 }
                 faq.identify = identify;
                 faq.category_identify = category_identify;
-                await Faq.update(faq, {
-                    where: { id: id }
+                await Faq.update({
+                    identify: identify,
+                    category_identify: category_identify
+                }, {
+                    where: { id: faq.list_id }
                 })
-                    .then( num => {
+                    .then(async num => {
                         if (num == 1) {
+                            await Faq.update({category_identify: faq.category_identify}, {
+                                where: {
+                                    identify: faq.identify
+                                }
+                            })
                             res.send({
                                 message: "Faq was updated successfully."
                             });
@@ -290,6 +402,64 @@ exports.update = async (req, res) => {
             return;
         });
 };
+
+exports.updateWhenDeleteCategory = async (req, res) => {
+    let listId = req.body
+    let listIdentify = []
+    let data = []
+    let dataUpdate = []
+    if(listId.length > 0){
+        await Faq.findAll({
+            where: {
+                id : listId
+            }
+        })
+        .then(response => {
+            response.forEach(item => {
+                data.push(item.dataValues)
+                if(item.locale === 'default')
+                listIdentify.push(
+                    {
+                        faq_id: item.dataValues.id,
+                        faq_identify: item.dataValues.identify
+                    }
+                )
+            })
+    
+            listIdentify.forEach(item => {
+                let faqByIdentify = []
+                faqByIdentify = data.filter(element => {
+                    return item.faq_identify === element.identify
+                })
+                let count = []
+                count = faqByIdentify.filter(e => {
+                    return e.locale === 'default'
+                })[0].id
+                faqByIdentify.forEach(ele => {
+                    ele.identify = ele.identify + count
+                    dataUpdate.push(ele)
+                })
+            })
+        })
+        .catch(e => {
+            console.log(e)
+        })
+        dataUpdate.forEach(item => {
+            Faq.update({
+                identify: item.identify,
+                category_identify: 'Uncategorized1'
+            },{
+                where: {
+                    id: item.id
+                }
+            })
+        })
+        res.send({
+            message: 'Update Successfully !'
+        })
+    }
+};
+
 
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
@@ -481,11 +651,12 @@ async function checkFaqIdentify(user_id, identify, locale, category_identify) {
 //     return checkedIdentify;
 // }
 
-async function checkFaqCategory(identify, locale, user_id) {
+
+async function checkFaqCategory(identify, user_id) {
     let responseData = {};
     await FaqCategory.findOne({
         attributes: ['id'],
-        where: {identify: identify, locale: locale, user_id: user_id }
+        where: {identify: identify, locale: 'default', user_id: user_id }
     })
         .then(data =>{
             if (data) {

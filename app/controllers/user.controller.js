@@ -16,7 +16,7 @@ exports.create = (req, res) => {
       shopify_domain: req.body.shopify_domain,
       shopify_access_token: req.body.shopify_access_token,
       email: req.body.email,
-      phone: req.body.phone
+      phone: req.body.phone,
     };
 
     User.create(user)
@@ -56,7 +56,6 @@ exports.findOne = (req, res) => {
 
 // Update a User by the id in the request
 exports.update = (req, res) => {
-    console.log(req);
   User.update(req.body, {
     where: { shopify_domain: req.body.shopify_domain, }
   })

@@ -7,15 +7,21 @@ const errorLog = require('../app/helpers/log.helper');
 const { QueryTypes } = require('sequelize');
 
 // Using in nodeJs
-exports.findFaqs = async (shop, locale = 'en') => {
-    let data = [];
+exports.findFaqs = async (shop, locale) => {
+    let send_data = []
     let selectCondition = {}
     await User.findOne({
-        attributes: ['id'],
+        attributes: ['id', 'shopLocales'],
         where: { shopify_domain: shop}
     })
         .then( async userData => {
             if (userData) {
+                if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
+                    locale = 'default'
+                }
+                else{
+                    locale = locale
+                }
                 let userID = userData.dataValues.id;
                 await Setting.findOne({
                     attributes: ['category_sort_name','faq_sort_name'],
@@ -26,29 +32,103 @@ exports.findFaqs = async (shop, locale = 'en') => {
                     selectCondition = settingData.dataValues
                 })
                 try {
-                    let selectQuery = "SELECT `faq_category`.`title` as `category_title`, `faq`.`title`,`faq`.`content`" +
-                        ", `faq_category`.`identify` as `category_identify`"+
-                        " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify` and `faq`.`locale` = `faq_category`.`locale` " +
-                        " and `faq`.`user_id` = `faq_category`.`user_id` " +
-                        " where `faq`.`is_visible` = true and `faq_category`.`is_visible` = true" +
-                        " and `faq`.`locale` = ? and `faq`.`user_id` = ?";
+                    let selectQueryFaqs = "SELECT `faq`.`title`,`faq`.`content`,`faq`.`locale`,`faq`.`identify`,`faq`.`category_identify` FROM faq" +
+                        " where `faq`.`user_id` = ? and `faq`.`is_visible` = 1 and (`faq`.`locale` = 'default' or `faq`.`locale` = ?)";
+
+                    dataFaqs = await db.sequelize.query(
+                        selectQueryFaqs+";",
+                        {
+                            replacements: [userID, locale],
+                            type: QueryTypes.SELECT
+                        }
+                    );
+                    let listCategoryIdentify = []
+                    let listFaqIdentify = []
+                    let listCategory = []
+                    let listCategoryDefault = []
+                    let listFaq = []
+                    let listFaqDefault = []
+
+                    dataFaqs.forEach(item => {
+                        listCategoryIdentify.push(item.category_identify)
+                        listFaqIdentify.push(item.identify)
+                    })
+                    listCategoryIdentify = [...new Set(listCategoryIdentify)]
+                    listFaqIdentify = [...new Set(listFaqIdentify)]
+                    let selectQueryCategories = "SELECT `faq_category`.`title`,`faq_category`.`locale`,`faq_category`.`identify` FROM faq_category" +
+                    " where `faq_category`.`user_id` = ? and `faq_category`.`is_visible` = 1 and `faq_category`.`identify` in (?) and (`faq_category`.`locale` = 'default' or `faq_category`.`locale` = ?)";
+
                     if (selectCondition.category_sort_name) {
-                        selectQuery += " ORDER BY `category_title`"
+                        selectQueryCategories += " ORDER BY `category_title`"
                         if (selectCondition.faq_sort_name) {
-                            selectQuery += ", `faq`.`title`"
+                            selectQueryFaqs += ", `faq`.`title`"
                         }
                     }else {
                         if (selectCondition.faq_sort_name) {
-                            selectQuery += " ORDER BY `faq`.`title`"
+                            selectQueryFaqs += " ORDER BY `faq`.`title`"
                         }
                     }
 
-                    data = await db.sequelize.query(
-                        selectQuery+";",
+                    dataCategories = await db.sequelize.query(
+                        selectQueryCategories+";",
                         {
-                            replacements: [locale, userID],
+                            replacements: [userID, listCategoryIdentify, locale],
                             type: QueryTypes.SELECT
-                        });
+                        }
+                    );
+
+                    dataCategories.forEach(item => {
+                        if(item.locale === locale){
+                            listCategory.push(item)
+                        }
+                        else{
+                            listCategoryDefault.push(item)
+                        }
+                    })
+
+                    listCategoryDefault.forEach(item => {
+                        if(!listCategory.some(ele => {
+                            return ele.identify === item.identify
+                        })){
+                            listCategory.push(item)
+                        }
+                    })
+                    
+                    dataFaqs.forEach(item => {
+                        if(item.locale === locale){
+                            listFaq.push(item)
+                        }
+                        else{
+                            listFaqDefault.push(item)
+                        }
+                    })
+                    for(let i = 0; i < listFaqDefault.length; i++){
+                        for(let j = 0; j < listFaq.length; j++){
+                            if((listFaqDefault[i].identify === listFaq[j].identify && listFaqDefault[i].category_identify === listFaq[j].category_identify)){
+                                listFaqDefault.splice(i,1)
+                            }
+                            // else{
+                            //     console.log(listFaqDefault[i],'1')
+                            // }
+                        }
+                    }
+                    if(listFaqDefault.length > 0){
+                        listFaqDefault.forEach(item => {
+                            listFaq.push(item)
+                        })
+                    }
+                    for(let i = 0; i < listFaq.length; i++){
+                        for(let j = 0; j < listCategory.length; j++){
+                            if(listFaq[i].category_categry === listCategory[j].category){
+                                listFaq[i]['category_title'] = listCategory[j].title
+                            }
+                        }
+                    }
+
+                    send_data = {
+                        faq: listFaq,
+                        categories: listCategory
+                    }
                 }catch (e) {
                     errorLog.error(e.message)
                 }
@@ -56,18 +136,25 @@ exports.findFaqs = async (shop, locale = 'en') => {
         }).catch(error => {
             errorLog.error(`get faqs nodejs proxy error ${error.message}`)
         });
-    return data;
+    return send_data;
 };
-exports.findSetting = async (shop, locale = 'en') => {
+exports.findSetting = async (shop, locale) => {
     let returnData = {};
     let data = {};
     let templateSetting = {};
     await User.findOne({
-        attributes: ['id'],
+        attributes: ['id', 'shopLocales'],
         where: { shopify_domain: shop}
     })
         .then( async userData => {
             if (userData) {
+                if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
+                    locale = 'default'
+                }
+                else{
+                    locale = locale
+                }
+                
                 await Setting.findOne({
                     where: {
                         user_id: userData.dataValues.id
@@ -80,8 +167,8 @@ exports.findSetting = async (shop, locale = 'en') => {
                                 if (v.locale === locale) {
                                     data.search_not_found = v.content;
                                     return false;
-                                } else {
-                                    data.search_not_found = null;
+                                } else if(v.locale === 'default'){
+                                    data.search_not_found = v.content;
                                 }
                                 return true;
                             });
@@ -89,14 +176,15 @@ exports.findSetting = async (shop, locale = 'en') => {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
+
                     if (settingData.intro_text_content) {
                         try {
                             JSON.parse(settingData.intro_text_content).every(v => {
                                 if (v.locale === locale) {
                                     data.intro_text_content = v.content;
                                     return false;
-                                } else {
-                                    data.intro_text_content = null;
+                                } else if(v.locale === 'default') {
+                                    data.intro_text_content = v.content;
                                 }
                                 return true;
                             });
@@ -110,8 +198,8 @@ exports.findSetting = async (shop, locale = 'en') => {
                                 if (v.locale === locale) {
                                     data.search_placehoder = v.content;
                                     return false;
-                                } else {
-                                    data.search_placehoder = null;
+                                } else if(v.locale === 'default') {
+                                    data.search_placehoder = v.content;
                                 }
                                 return true;
                             });
@@ -125,10 +213,9 @@ exports.findSetting = async (shop, locale = 'en') => {
                                 if (v.locale === locale) {
                                     data.page_title_content = v.content;
                                     return false;
-                                } else {
-                                    data.page_title_content = null;
+                                } else if(v.locale === 'default') {
+                                    data.page_title_content = v.content;
                                 }
-                                return true;
                             });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
@@ -140,8 +227,8 @@ exports.findSetting = async (shop, locale = 'en') => {
                                 if (v.locale === locale) {
                                     data.footer_text_content = v.content;
                                     return false;
-                                } else {
-                                    data.footer_text_content = null;
+                                } else if(v.locale === 'default') {
+                                    data.footer_text_content = v.content;
                                 }
                                 return true;
                             });

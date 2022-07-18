@@ -53,55 +53,31 @@
     <%} %>
     
     <div class="faq-main">
-        <% if(faqs.length && !setting.data.dont_category_faq){ %>
+        <% if(faqs && !setting.data.dont_category_faq){ %>
             <div style="margin: 30px 0">
                 <div>
-                    <% var faq_category = [] %>
-                    <% var faq_category_count = 0 %>
-                    <% for(var i=0; i < faqs.length; i++) { %>
-                        <% let faq_category_content = {} %>
-                        <% 
-                        if(!faq_category.length){%>
-                            <% faq_category_content.title = faqs[i].category_title %>
-                            <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
-                            <% faq_category[faq_category_count] = faq_category_content %>
-                        <% } 
-                        else { %>
-                            <% let checkExites = false %>
-                            <% for(var j=0; j < faq_category.length; j++) { %>
-                                <% if(faq_category[j].title === faqs[i].category_title){%>
-                                    <% faq_category[j].faqs.push({title:faqs[i].title,content:faqs[i].content})%>
-                                    <% checkExites = true %>
-                                <% } %>
-                            <% } %>
-                            <% if(!checkExites){%>
-                                <% faq_category_count++ %>
-                                <% faq_category_content.title = faqs[i].category_title %>
-                                <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
-                                <% faq_category[faq_category_count] = faq_category_content %>
-                            <% } %>
-                        <% } %>
-                    <% } %>
-                    <% if(faq_category.length){%>
+                    <% if(faqs.categories.length){%>
                         <div class="category-bar">
-                            <% for(var i=0; i < faq_category.length; i++) { %>
-								<a href="#<%- faq_category[i].title %>" class="faq-category-title faq-category-link"><%- faq_category[i].title %></a>
+                            <% for(var i=0; i < faqs.categories.length; i++) { %>
+								<a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link"><%- faqs.categories[i].title %></a>
                             <% } %>
                         </div>
                         <div style="margin-top: 20px">
-                            <% for(var i=0; i < faq_category.length; i++) { %>
+                            <% for(var i=0; i < faqs.categories.length; i++) { %>
                                 <div class="category-faq-container">
-                                    <div id="<%- faq_category[i].title %>" class="faq-category-title faq-category-width"><%- faq_category[i].title %></div>
-                                    <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
-                                        <div class="faq-main-content">
-                                            <div class="faq-question-title" onclick="showHideContent(this)">
-                                                <span class="listed-faq"><%= faq_category[i].faqs[j].title %></span>
-                                                <svg class="svg-right" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
+                                    <div id="<%- faqs.categories[i].title %>" class="faq-category-title faq-category-width"><%- faqs.categories[i].title %></div>
+                                    <% for(var j=0; j < faqs.faq.length; j++) { %>
+                                        <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                            <div class="faq-main-content">
+                                                <div class="faq-question-title" onclick="showHideContent(this)">
+                                                    <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                    <svg class="svg-right" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
+                                                </div>
+                                                <div class="faq-answer-content">
+                                                    <%- faqs.faq[j].content %>
+                                                </div>
                                             </div>
-                                            <div class="faq-answer-content">
-                                                <%- faq_category[i].faqs[j].content %>
-                                            </div>
-                                        </div>
+                                        <%}%>
                                     <%}%>
                                 </div>
                             <% } %>
@@ -117,14 +93,14 @@
         <% }
         else{ %>
             <div style="margin: 30px 0;">
-                <% for(var j=0; j < faqs.length; j++) { %>
+                <% for(var j=0; j < faqs.faq.length; j++) { %>
                     <div class="faq-main-content">
                         <div class="faq-question-title" onclick="showHideContent(this)">
-                            <span class="listed-faq"><%= faqs[j].title %></span>
+                            <span class="listed-faq"><%= faqs.faq[j].title %></span>
                             <svg class="svg-right" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 256 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                         </div>
                         <div class="faq-answer-content">
-                            <%- faqs[j].content %>
+                            <%- faqs.faq[j].content %>
                         </div>
                     </div>
                 <%}%>
@@ -271,16 +247,22 @@
     }
     .faq-question-title{
         display: flex; 
-        align-items: center; 
+        align-items: center;
+        justify-content: space-between;
         width: 100%;
         cursor: pointer; 
         padding: 12px;
         border-radius: 4px 4px 0 0; 
         border: 1px solid #ccc
     }
+    svg:not(:root) {
+        overflow:unset !important;
+    }
     .listed-faq{
         width: 100%;
         user-select: none;
+        word-wrap: break-word;
+        padding-right: 12px;
     }
     .category-bar{
         display: flex; 
@@ -293,6 +275,7 @@
     }
     .faq-category-width{
         width: 100%;
+        margin-bottom: 4px;
     }
     .faq-category-link{
         padding: 4px 8px; 
@@ -303,7 +286,7 @@
         text-decoration: none; 
         font-size: 16px !important; 
         background-color: #f6f6f7;
-        color: 
+        font-weight: normal !important;
     }
     .faq-not-found{
         display: none; 
@@ -316,6 +299,7 @@
         padding: 12px; 
         border-radius: 0 0 4px 4px; 
         border:1px solid #ccc;
+        word-wrap: break-word;
     }
     .faq-footer-text{
         text-align: center; 

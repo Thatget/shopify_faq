@@ -52,95 +52,73 @@
         </div>
     <%} %>
     <div class="faq-main">
-        <% if(faqs.length && !setting.data.dont_category_faq){ %>
+        <% if(faqs && !setting.data.dont_category_faq){ %>
             <div>
                 <div class="container">
-                    <% var faq_category = [] %>
-                    <% var faq_category_count = 0 %>
-                    <% for(var i=0; i < faqs.length; i++) { %>
-                        <% let faq_category_content = {} %>
-                        <% 
-                        if(!faq_category.length){%>
-                            <% faq_category_content.title = faqs[i].category_title %>
-                            <% faq_category_content.identify = faqs[i].category_identify %>
-                            <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
-                            <% faq_category[faq_category_count] = faq_category_content %>
-                        <% } 
-                        else { %>
-                            <% let checkExites = false %>
-                            <% for(var j=0; j < faq_category.length; j++) { %>
-                                <% if(faq_category[j].title === faqs[i].category_title){%>
-                                    <% faq_category[j].faqs.push({title:faqs[i].title,content:faqs[i].content})%>
-                                    <% checkExites = true %>
-                                <% } %>
-                            <% } %>
-                            <% if(!checkExites){%>
-                                <% faq_category_count++ %>
-                                <% faq_category_content.title = faqs[i].category_title %>
-                                <% faq_category_content.identify = faqs[i].category_identify %>
-                                <% faq_category_content.faqs = [{title:faqs[i].title,content:faqs[i].content}] %>
-                                <% faq_category[faq_category_count] = faq_category_content %>
-                            <% } %> 
-                        <% } %>
-                    <% } %>
-                    <% if(faq_category.length){%>
+                    <% if(faqs.categories.length){%>
                         <div class="category-bar">
-                            <% for(var i=0; i < faq_category.length; i++) { %>
-								<div onclick="changeCategory('<%- faq_category[i].title %>')" class="category-bar-item" id="faq-category<%- faq_category[i].title %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: #ccc; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faq_category[i].title %></div>
+                            <% for(var i = 0; i < faqs.categories.length; i++) { %>
+								<div onclick="changeCategory('<%- faqs.categories[i].title %>')" class="category-bar-item" id="faq-category<%- faqs.categories[i].title %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: #ccc; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>
                             <% } %>
                         </div>
                         <div class="faq-container">
                             <div class="category-faq-container">
-                                <% for(var i=0; i < faq_category.length; i++) { %>
+                                <% for(var i=0; i < faqs.categories.length; i++) { %>
                                     <% if(i === 0) {%>
                                         <div id="dung">
-                                            <div id="<%- faq_category[i].title %>" class="faq-category-title"><%- faq_category[i].title %></div>
-                                            <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
-                                                <div class="faq-main-content">
-                                                    <div class="faq-question-title-3" onclick="showHideContent(this)">
-                                                        <span class="listed-faq" value><%= faq_category[i].faqs[j].title %></span>
-                                                        <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
-                                                        <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                            <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
+                                            <% for(var j=0; j < faqs.faq.length; j++) { %>
+                                                <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                                    <div class="faq-main-content">
+                                                        <div class="faq-question-title-3" onclick="showHideContent(this)">
+                                                            <span class="listed-faq" value><%= faqs.faq[j].title %></span>
+                                                            <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                            <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                        </div>
+                                                        <div class="faq-answer-content ">
+                                                            <%- faqs.faq[j].content %>
+                                                        </div>
                                                     </div>
-                                                    <div class="faq-answer-content ">
-                                                        <%- faq_category[i].faqs[j].content %>
-                                                    </div>
-                                                </div>
+                                                <% } %>    
                                             <%}%>
                                         </div>
                                     <% } %>
-                                    <div style="display: none;" id="faq<%- faq_category[i].title %>">
-                                        <div id="<%- faq_category[i].title %>" class="faq-category-title"><%- faq_category[i].title %></div>
-                                        <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
-                                            <div class="faq-main-content">
-                                                <div class="faq-question-title-3" onclick="showHideContent(this)">
-                                                    <span class="listed-faq" value><%= faq_category[i].faqs[j].title %></span>
-                                                    <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
-                                                    <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                    <div style="display: none;" id="faq<%- faqs.categories[i].title %>">
+                                        <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
+                                        <% for(var j=0; j < faqs.faq.length; j++) { %>
+                                            <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                                <div class="faq-main-content">
+                                                    <div class="faq-question-title-3" onclick="showHideContent(this)">
+                                                        <span class="listed-faq" value><%= faqs.faq[j].title %></span>
+                                                        <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                        <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                    </div>
+                                                    <div id="faq-answer-content" class="faq-answer-content ">
+                                                        <%- faqs.faq[j].content %>
+                                                    </div>
                                                 </div>
-                                                <div id="faq-answer-content" class="faq-answer-content ">
-                                                    <%- faq_category[i].faqs[j].content %>
-                                                </div>
-                                            </div>
+                                            <% } %>
                                         <%}%>
                                     </div>
                                 <% } %>
                             </div>
                             <div class="category-faq-search">
-                                <% for(var i=0; i < faq_category.length; i++) { %>
+                                <% for(var i=0; i < faqs.categories.length; i++) { %>
                                     <div>
-                                        <div class="faq-category-search"><%- faq_category[i].title %></div>
-                                        <% for(var j=0; j < faq_category[i].faqs.length; j++) { %>
-                                            <div class="faq-main-content">
-                                                <div class="faq-question-title-3" onclick="showHideContent(this)">
-                                                    <span class="listed-faq"><%= faq_category[i].faqs[j].title %></span>
-                                                    <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
-                                                    <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                        <div class="faq-category-search"><%- faqs.categories[i].title %></div>
+                                        <% for(var j=0; j < faqs.faq.length; j++) { %>
+                                            <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                                <div class="faq-main-content">
+                                                    <div class="faq-question-title-3" onclick="showHideContent(this)">
+                                                        <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                        <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                        <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                    </div>
+                                                    <div class="faq-answer-content ">
+                                                        <%- faqs.faq[j].content %>
+                                                    </div>
                                                 </div>
-                                                <div class="faq-answer-content ">
-                                                    <%- faq_category[i].faqs[j].content %>
-                                                </div>
-                                            </div>
+                                            <% } %>
                                         <%}%>
                                     </div>
                                 <% } %>
@@ -157,15 +135,15 @@
         <% }
         else{ %>
             <div class="faq-dont-category">
-                <% for(var j=0; j < faqs.length; j++) { %>
+                <% for(var j=0; j < faqs.faq.length; j++) { %>
                     <div class="faq-main-content">
                         <div class="faq-question-title-3" onclick="showHideContent(this)">
-                            <span class="listed-faq"><%= faqs[j].title %></span>
+                            <span class="listed-faq"><%= faqs.faq[j].title %></span>
                             <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                             <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                         </div>
                         <div class="faq-answer-content ">
-                            <%- faqs[j].content %>
+                            <%- faqs.faq[j].content %>
                         </div>
                     </div>
                 <%}%>
@@ -188,6 +166,12 @@
         })){            
             categoryName.push(s)
         }
+        var categoryShow = categoryName.filter(item => {
+            return item === s
+        })
+        var categoryHide = categoryName.filter(item => {
+            return item !== s
+        })
         for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
             document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
             document.getElementsByClassName('svg-plus')[i].style.opacity = '1'
@@ -252,6 +236,8 @@
         var filter = input.value.toLowerCase();
         var nodes = document.getElementsByClassName('listed-faq');
         var nodeCategory = document.getElementsByClassName('category-faq-search');
+        // console.log(nodeCategory)
+        console.log(document.getElementById('search-text').value === '')
         if(document.getElementById('search-text').value === ''){
             document.getElementsByClassName("category-faq-container")[0].style.display = "block"
             document.getElementsByClassName('category-bar')[0].style.display = "flex"

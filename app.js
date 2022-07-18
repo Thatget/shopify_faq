@@ -7,9 +7,10 @@ const request = require('request-promise');
 const cookie = require('cookie');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+
 // const proxy = require('express-http-proxy');
 
-const errorLog = require('./app/helpers/log.helper')
+const errorLog = require('./app/helpers/log.helper');
 
 const app = express();
 // for parsing application/json
@@ -50,8 +51,29 @@ app.get('/', async (req, res) => {
     const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
         '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
     res.cookie('state',state);
+    // res.cookie("state", state, { httpOnly: false, secure: true, sameSite: "none" });
     res.redirect(pageUri);
 });
+
+// app.get('/', async (req, res) => {
+//     return res.redirect(app_link+'/storeFAQs');
+// });
+
+// app.get('/categories', async (req, res) => {
+//     return res.redirect(app_link+'/categories');
+// });
+
+// app.get('/design', async (req, res) => {
+//     return res.redirect(app_link+'/design');
+// });
+
+// app.get('/setting', async (req, res) => {
+//     return res.redirect(app_link+'/setting');
+// });
+
+// app.get('/products-faqs', async (req, res) => {
+//     return res.redirect(app_link+'/products-faqs');
+// });
 
 app.get('/shopify/callback', async (req, res) => {
     const {shop, hmac, code, state} = req.query;
@@ -105,13 +127,14 @@ app.get('/shopify/callback', async (req, res) => {
                               }
                             }`
                         };
-                        const shopRequestUrlLocale = 'https://' + shop + '/admin/api/2022-01/graphql.json';
+                        const shopRequestUrlLocale = 'https://' + shop + process.env.API_GRAPHQL;
                         await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
                             .then(data => {
                                 shopLocales = JSON.stringify(data.data);
                             }).catch(e => {
-                                errorLog.error(`get shop locale: ${error.message}`)
+                                errorLog.error(`get shop locale: ${e.message}`)
                             });
+                            
                         shopResonse = JSON.parse(shopResonse);
                         const user = {
                             store_name: shopResonse.shop.name,
@@ -119,9 +142,8 @@ app.get('/shopify/callback', async (req, res) => {
                             shopify_access_token: accessToken,
                             email: shopResonse.shop.email,
                             phone: shopResonse.shop.phone,
-                            shopLocales: shopLocales
+                            shopLocales: shopLocales,
                         };
-
                         await User.findOne({where: {shopify_domain: user.shopify_domain }}).
                         then( async data =>{
                             if (data) {
@@ -130,7 +152,7 @@ app.get('/shopify/callback', async (req, res) => {
                                 }).then(data => {
                                 }).catch(err => {
                                     errorLog.error(`user update error ${err.message}`)
-                                    res.status(err.code).send(err.error);
+                                    // res.status(err.code).send(err.error);
                                 });
                             } else {
                                 await User.create(user).then(data => {
@@ -153,12 +175,14 @@ app.get('/shopify/callback', async (req, res) => {
                                         errorLog.error(`webhook create: ${error.message}`)
                                     });
                             }
-                        })
+                        }).catch((quyet) => {
+                            console.log(quyet.message)
+                        }); 
                         let token = await login(user);
                         res.redirect(app_link + '/login' + `${token}`);
                     })
                     .catch((error) => {
-                        errorLog.error(`user get shop data: error ${error.message}`)
+                        errorLog.error(`user get shop data 2: error ${error.message}`)
                         res.status(error.status).send(error.error);
                     });
             }).catch((error) => {
@@ -203,13 +227,13 @@ app.set("views","./views");
 const defaultPage = require('./controller/defaultPage');
 
 app.get('/faq-page', async (req, res) => {
-    const query_signature = req.query.signature;
-    const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;
-    const generateHash = crypto.createHmac('sha256', apiSecret)
-        .update(sorted_params)
-        .digest('hex');
-
-    if (query_signature === generateHash) {
+    
+    // const query_signature = req.query.signature;
+    // const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;
+    // const generateHash = crypto.createHmac('sha256', apiSecret)
+    //     .update(sorted_params)
+    //     .digest('hex');
+    // if (query_signature === generateHash) {
         // const shop = req.query.shop;
         const shop = req.headers['x-shop-domain'];
         if (shop) {
@@ -226,9 +250,10 @@ app.get('/faq-page', async (req, res) => {
         } else {
             return res.status(400).send('Required parameters missing');
         }
-    } else {
-        res.sendStatus(403);
-    }
+    // } 
+    // else {
+    //     res.sendStatus(403);
+    // }
     res.end();
 });
 

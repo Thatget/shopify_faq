@@ -49,14 +49,12 @@ exports.upload = async (req, res) => {
                             if (err) errorLog.error('error unlink image' + err.message);
                         }));
                     }
-                    console.log(aaa)
                     if(aaa !== null) {
-                        console.log('update')
                         templateSetting.update(template_data, {
                             where: {id: templateId}
                         }).then(num => {
                         if (num == 1) {
-                            console.log('update1')
+                            num = 1
                         }
                         else{
                             errorLog.error('update template setting error <update image>')
@@ -66,12 +64,10 @@ exports.upload = async (req, res) => {
                         })
                     }
                     else{
-                        console.log('create')
                         templateSetting.update(template_data, {
                             where: {id: templateId}
                         }).then(num => {
                         if (num == 1) {
-                            console.log('create1')
                             } else {
                                 errorLog.error('update template setting error <update image>')
                             }
