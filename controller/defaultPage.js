@@ -34,6 +34,10 @@ exports.findFaqs = async (shop, locale) => {
                 try {
                     let selectQueryFaqs = "SELECT `faq`.`title`,`faq`.`content`,`faq`.`locale`,`faq`.`identify`,`faq`.`category_identify` FROM faq" +
                         " where `faq`.`user_id` = ? and `faq`.`is_visible` = 1 and (`faq`.`locale` = 'default' or `faq`.`locale` = ?)";
+					
+					if (selectCondition.faq_sort_name) {
+                        selectQueryFaqs += " ORDER BY `faq`.`title`"
+                    }
 
                     dataFaqs = await db.sequelize.query(
                         selectQueryFaqs+";",
@@ -55,44 +59,50 @@ exports.findFaqs = async (shop, locale) => {
                     })
                     listCategoryIdentify = [...new Set(listCategoryIdentify)]
                     listFaqIdentify = [...new Set(listFaqIdentify)]
-                    let selectQueryCategories = "SELECT `faq_category`.`title`,`faq_category`.`locale`,`faq_category`.`identify` FROM faq_category" +
-                    " where `faq_category`.`user_id` = ? and `faq_category`.`is_visible` = 1 and `faq_category`.`identify` in (?) and (`faq_category`.`locale` = 'default' or `faq_category`.`locale` = ?)";
+					if (listCategoryIdentify.length > 0 ) {
+						let selectQueryCategories = "SELECT `faq_category`.`title`,`faq_category`.`locale`,`faq_category`.`identify` FROM faq_category" +
+						" where `faq_category`.`user_id` = ? and `faq_category`.`is_visible` = 1 and `faq_category`.`identify` in (?) and (`faq_category`.`locale` = 'default' or `faq_category`.`locale` = ?)";
 
-                    if (selectCondition.category_sort_name) {
-                        selectQueryCategories += " ORDER BY `category_title`"
-                        if (selectCondition.faq_sort_name) {
-                            selectQueryFaqs += ", `faq`.`title`"
+						// if (selectCondition.category_sort_name) {
+							// selectQueryCategories += " ORDER BY `category_title`"
+							// if (selectCondition.faq_sort_name) {
+								// selectQueryFaqs += ", `faq`.`title`"
+							// }
+						// }else {
+							// if (selectCondition.faq_sort_name) {
+								// selectQueryFaqs += " ORDER BY `faq`.`title`"
+							// }
+						// }
+						if (selectCondition.category_sort_name) {
+                            selectQueryCategories += " ORDER BY `faq_category`.`title`"
                         }
-                    }else {
-                        if (selectCondition.faq_sort_name) {
-                            selectQueryFaqs += " ORDER BY `faq`.`title`"
-                        }
-                    }
 
-                    dataCategories = await db.sequelize.query(
-                        selectQueryCategories+";",
-                        {
-                            replacements: [userID, listCategoryIdentify, locale],
-                            type: QueryTypes.SELECT
-                        }
-                    );
 
-                    dataCategories.forEach(item => {
-                        if(item.locale === locale){
-                            listCategory.push(item)
-                        }
-                        else{
-                            listCategoryDefault.push(item)
-                        }
-                    })
+						dataCategories = await db.sequelize.query(
+							selectQueryCategories+";",
+							{
+								replacements: [userID, listCategoryIdentify, locale],
+								type: QueryTypes.SELECT
+							}
+						);
 
-                    listCategoryDefault.forEach(item => {
-                        if(!listCategory.some(ele => {
-                            return ele.identify === item.identify
-                        })){
-                            listCategory.push(item)
-                        }
-                    })
+						dataCategories.forEach(item => {
+							if(item.locale === locale){
+								listCategory.push(item)
+							}
+							else{
+								listCategoryDefault.push(item)
+							}
+						})
+
+						listCategoryDefault.forEach(item => {
+							if(!listCategory.some(ele => {
+								return ele.identify === item.identify
+							})){
+								listCategory.push(item)
+							}
+						})
+					}
                     
                     dataFaqs.forEach(item => {
                         if(item.locale === locale){
