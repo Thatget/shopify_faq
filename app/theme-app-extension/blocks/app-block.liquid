@@ -5,9 +5,10 @@
 <script>
   var background_color = ''
   var background_hover = ''
-  fetch('http://localhost:8080/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
+  fetch('https://6172-2402-800-61b3-5275-a42a-868c-ae4d-85c.ngrok.io/api/shop/faq/{{shop.domain}}?locale={{request.locale.iso_code}}')
     .then(response => response.json())
     .then(data => {
+      console.log(data)
       const faqs = data.faq
       var block_container = ''
       const categories = data.category
@@ -115,11 +116,11 @@
 </script>
 {% schema %}
   {
-    "name": "Professional Faqs",
+    "name": "Professional Faqs CART",
     "target": "section",
     "tag": "section",
     "stylesheet": "faqs-block.css",
     "javascript": "faqs-block.js",
-    "templates": ["product", "index"]
+    "templates": ["cart", "index"]
   }
 {% endschema %}

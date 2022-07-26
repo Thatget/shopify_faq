@@ -145,7 +145,7 @@ exports.update = async (req, res) => {
         return;
     }
     const id = req.params.id;
-
+    const id_translate = req.body.category_translate_id
     // Check this faq_category is exits or not
     await FaqCategory.findByPk(id)
         .then(async data => {
@@ -157,6 +157,7 @@ exports.update = async (req, res) => {
                     title: req.body.title,
                     description: req.body.description? req.body.description : '',
                     is_visible: req.body.is_visible,
+                    show_on_cart : req.body.show_on_cart
                 };
                 if (req.body.position) {
                     faq_category.position = req.body.position;
@@ -186,11 +187,33 @@ exports.update = async (req, res) => {
                 await FaqCategory.update(faq_category, {
                     where: { id: id }
                 })
-                    .then( num => {
+                    .then(async num => {
                         if (num == 1) {
+                            await FaqCategory.update({
+                                show_on_cart : req.body.show_on_cart,
+                                is_visible: req.body.is_visible,
+                            },{
+                                where: {
+                                    user_id: user_id,
+                                    identify: identify,
+                                    [Op.not]: [{id: id}]
+                                }
+                            })
+                            if(req.body.locale_translate){
+                                let category_translate = {
+                                    title: req.body.title_translate,
+                                    description: req.body.description_translate,
+                                    is_visible: req.body.is_visible,
+                                    show_on_cart : req.body.show_on_cart,
+                                    locale : req.body.locale_translate
+                                }
+                                await FaqCategory.update(category_translate, {
+                                    where: { id: id_translate }
+                                })
+                            }  
                             res.send({
                                 message: "Category was updated successfully."
-                            });
+                            });          
                         } else {
                             res.send({
                                 message: `Cannot update category with id=${id}. Maybe category was not found or req.body is empty!`
@@ -202,6 +225,7 @@ exports.update = async (req, res) => {
                             message: "Error updating category with id=" + id
                         });
                     });
+    
             } else {
                 res.send({
                     message: `Cannot find category with id=${id}.`

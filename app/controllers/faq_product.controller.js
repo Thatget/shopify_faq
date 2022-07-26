@@ -177,13 +177,13 @@ exports.updateFaqs = async (req, res) => {
                 });
             } else {
                 res.send({
-                    message: `Cannot update category with id=${id}. Maybe category was not found or req.body is empty!`
+                    message: `Cannot update FaqProduct!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating category with id=" + id
+                message: "Error updating FaqProduct"
             });
         });
 

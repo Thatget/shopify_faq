@@ -3,6 +3,8 @@ const Faq = db.faq;
 const FaqCategory = db.faq_category;
 const User = db.user;
 const errorLog = require('../helpers/log.helper');
+const { response } = require("express");
+const Op = db.Sequelize.Op;
 
 exports.create = async (req, res) => {
     // Validate request
@@ -300,21 +302,23 @@ exports.findOne = (req, res) => {
 // Update a Faq by the id in the request
 exports.update = async (req, res) => {
     // Check requirement params
-    if (!req.params.id || !req.body.title || !req.body.content ) {
-        res.status(400).send({
-            message: "Faq update missing params!"
-        });
-        return;
-    }
+    console.log(req.body)
+    // if (!req.params.id || !req.body.title || !req.body.content ) {
+    //     res.status(400).send({
+    //         message: "Faq update missing params!"
+    //     });
+    //     return;
+    // }
     const id = req.params.id;
+    console.log(id)
     // Check this faq is exits or not
     await Faq.findByPk(id)
-        .then(async data => {
-            if (data) {
-                const user_id = data.dataValues.user_id;
-                let identify = data.dataValues.identify;
-                let locale = data.dataValues.locale;
-                let category_identify = data.dataValues.category_identify;
+        .then(async response => {
+            if (response) {
+                const user_id = response.dataValues.user_id;
+                let identify = response.dataValues.identify;
+                let locale = response.dataValues.locale;
+                let category_identify = response.dataValues.category_identify;
                 let faq = {
                     title: req.body.title,
                     content: req.body.content,
@@ -364,36 +368,67 @@ exports.update = async (req, res) => {
                 }
                 faq.identify = identify;
                 faq.category_identify = category_identify;
-                await Faq.update({
-                    identify: identify,
-                    category_identify: category_identify
-                }, {
-                    where: { id: faq.list_id }
+                const data = {
+                    user_id: user_id,
+                    locale: req.body.locale,
+                    is_visible: req.body.is_visible,
+                    identify : identify,
+                    category_identify: category_identify,
+                    title: req.body.title,
+                    content: req.body.content
+                }
+                await Faq.update(data, {
+                    where: { id: id}
                 })
-                    .then(async num => {
-                        if (num == 1) {
-                            await Faq.update({category_identify: faq.category_identify}, {
-                                where: {
-                                    identify: faq.identify
-                                }
-                            })
-                            res.send({
-                                message: "Faq was updated successfully."
-                            });
-                            return;
-                        } else {
-                            res.send({
-                                message: `Cannot update faq with id=${id}. Maybe faq was not found or req.body is empty!`
-                            });
-                            return;
-                        }
-                    })
-                    .catch(err => {
-                        res.status(500).send({
-                            message: "Error updating faq with id=" + id
+                .then(async num => {
+                    if (num == 1) {
+                        console.log(user_id,identify,category_identify)
+                        await Faq.update({category_identify: category_identify, is_visible: req.body.is_visible}, {
+                            where: {
+                                user_id: user_id,
+                                identify: response.dataValues.identify,
+                                category_identify: response.dataValues.category_identify
+                            } 
+                        })
+                        .then(num => {
+                            console.log(num)
+                            if(num == 0){
+                                console.log(num)
+                            }
+                        })
+                        // .catch(e => {
+                        //     console.log(e)
+                        // })
+                        res.send({
+                            message: "Faq was updated successfully."
                         });
-                        return;
+                    } else {
+                        res.send({
+                            message: `Cannot update faq with id=${id}. Maybe faq was not found or req.body is empty!`
+                        });
+                    }
+                })
+                .catch(err => {
+                    res.status(500).send({
+                        message: "Error updating faq with id=" + id
                     });
+                    return;
+                });
+                if(req.body.title_translate){
+                    const dataTranslate = {
+                        is_visible: req.body.is_visible,
+                        identify : identify,
+                        category_identify: category_identify,
+                        title: req.body.title_translate,
+                        content: req.body.content_translate
+                    }
+                    console.log(dataTranslate)
+                    await Faq.update(dataTranslate,
+                        {
+                            where: {id: req.body.id_translate}
+                        }
+                    )
+                }
             }
         }).catch(error => {
             res.status(500).send({
@@ -577,12 +612,22 @@ exports.findAllInFaqPage = async (req, res) => {
         return false;
     }
     const shop = req.params.shop;
-    const locale = req.query.locale;
+    let locale = req.query.locale;
     let userID = null;
     await User.findOne({ where: { shopify_domain: shop}})
         .then( async userData => {
             if (userData) {
+                console.log(JSON.parse(userData.dataValues.shopLocales).shopLocales)
                 userID = userData.dataValues.id;
+
+                if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
+                    locale = 'default'
+                }
+                else{
+                    locale = req.query.locale                    
+                }
+                console.log(locale)
+
                 await Faq.findAll({
                     where: {
                         user_id: userID, locale: locale
@@ -590,6 +635,7 @@ exports.findAllInFaqPage = async (req, res) => {
                     order:[[db.sequelize.literal('position'), 'DESC']],
                 })
                     .then(data => {
+                        console.log(data)
                         return  res.send(data);
                     })
                     .catch(err => {

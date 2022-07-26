@@ -15,7 +15,7 @@ exports.import = async (req, res) => {
 
     if(sheets.length > 0) {
         const data = XLSX.utils.sheet_to_json(wb.Sheets[sheets[0]]);
-
+        console.log(data)
         // Prepare for Faqs data
         const faqs = data.map(row => ({
             user_id: user_id,
@@ -60,7 +60,7 @@ exports.export = async (req, res) => {
     let selectQuery = "SELECT `faq`.`title`, `faq`.`content`, `faq_category`.`title` as `category_title`," +
         " `faq`.`locale`, `faq`.`is_visible`, `faq_category`.`is_visible` as `category_visible`"+
         " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify`" +
-        " and  `faq`.`locale` = `faq_category`.`locale` and `faq`.`user_id` = `faq_category`.`user_id`" +
+        " and `faq`.`user_id` = `faq_category`.`user_id`" +
         " where `faq`.`user_id` = ? " ;
 
     if (req.query.locale) {
@@ -95,26 +95,26 @@ exports.export = async (req, res) => {
 async function importFaqs(category, faqs) {
     let responseResult = {};
     responseResult.status = true;
-    await Category.bulkCreate(category,
-        {
-            fields:['user_id', 'identify', 'title', 'locale', 'is_visible'],
-            updateOnDuplicate: ["identify", "user_id", "locale"]
-        }
-        ).then( async () => {
-            await Faq.bulkCreate(faqs,
-                {
-                    fields: ['user_id', 'identify', 'title', 'content', 'locale', 'category_identify', 'is_visible'],
-                    updateOnDuplicate: ["identify", "user_id", "category_identify", "locale"]
-                }).catch(errorLog => {
-                    responseResult.message = errorLog.message;
-                    responseResult.status = false;
-                    responseResult.statusCode = 500;
-            })
-        })
-        .catch(e=>{
-            responseResult.message = e.message;
-            responseResult.status = false;
-            responseResult.statusCode = 500;
-    })
+    // await Category.bulkCreate(category,
+    //     {
+    //         fields:['user_id', 'identify', 'title', 'locale', 'is_visible'],
+    //         updateOnDuplicate: ["identify", "user_id", "locale"]
+    //     }
+    //     ).then( async () => {
+    //         await Faq.bulkCreate(faqs,
+    //             {
+    //                 fields: ['user_id', 'identify', 'title', 'content', 'locale', 'category_identify', 'is_visible'],
+    //                 updateOnDuplicate: ["identify", "user_id", "category_identify", "locale"]
+    //             }).catch(errorLog => {
+    //                 responseResult.message = errorLog.message;
+    //                 responseResult.status = false;
+    //                 responseResult.statusCode = 500;
+    //         })
+    //     })
+    //     .catch(e=>{
+    //         responseResult.message = e.message;
+    //         responseResult.status = false;
+    //         responseResult.statusCode = 500;
+    // })
     return responseResult;
 }

@@ -70,10 +70,10 @@
                                         <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                             <div class="faq-main-content">
                                                 <div class="faq-question-title" onclick="showHideContent(this)">
-                                                    <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                    <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                                     <svg class="svg-right" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                                                 </div>
-                                                <div class="faq-answer-content">
+                                                <div class="faq-answer-content faq-answer-search">
                                                     <%- faqs.faq[j].content %>
                                                 </div>
                                             </div>
@@ -133,7 +133,8 @@
     function simpleSearch() {
         var input = document.getElementById("search-text");
         var filter = input.value.toLowerCase();
-        var nodes = document.getElementsByClassName('listed-faq');
+        var filterByQuestion = document.getElementsByClassName('faq-question-search');
+        var filterByAnswer = document.getElementsByClassName('faq-answer-search');
         var nodeCategory = document.getElementsByClassName('category-faq-container');
         if(document.getElementById('search-text').value === ''){
             document.getElementsByClassName('category-bar')[0].style.display = "flex"
@@ -148,12 +149,21 @@
             }
         }
         var checkexist = true;
-        for (i = 0; i < nodes.length; i++) {
-            if (nodes[i].innerText.toLowerCase().includes(filter)) {
-                nodes[i].parentNode.parentNode.style.display = "block";
+        for (i = 0; i < filterByQuestion.length; i++) {
+            if (filterByQuestion[i].innerText.toLowerCase().includes(filter)) {
+                filterByQuestion[i].parentNode.parentNode.style.display = "block";
                 checkexist = false;
-            } else {
-                nodes[i].parentNode.parentNode.style.display = "none";
+            }
+            else {
+                for(j = 0; j < filterByAnswer.length; j++){
+                    if(filterByAnswer[j].innerText.toLowerCase().includes(filter)){
+                        filterByQuestion[j].parentNode.parentNode.style.display = "block";
+                        checkexist = false;        
+                    }
+                    else{
+                        filterByQuestion[i].parentNode.parentNode.style.display = "none";
+                    }
+                }
             }
         }
         for (j = 0; j < nodeCategory.length; j++) {

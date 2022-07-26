@@ -5,10 +5,11 @@
   <script>
     var background_color = ''
     var background_hover = ''
-    // fetch('https://5d61-116-99-41-211.ngrok.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
-    fetch('https://dev-be-faq.yanet.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
+    fetch('https://6172-2402-800-61b3-5275-a42a-868c-ae4d-85c.ngrok.io/api/shop/faq/{{shop.domain}}?locale={{request.locale.iso_code}}')
+    // fetch('https://dev-be-faq.yanet.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         const faqs = data.faq
         var block_container = ''
         const categories = data.category
@@ -116,11 +117,11 @@
   </script>
   {% schema %}
     {
-      "name": "Professional Faqs",
+      "name": "Professional Faqs Cart",
       "target": "section",
       "tag": "section",
       "stylesheet": "faqs-block.css",
       "javascript": "faqs-block.js",
-      "templates": ["product", "index"]
+      "templates": ["cart", "index"]
     }
   {% endschema %}

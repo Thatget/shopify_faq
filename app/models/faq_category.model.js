@@ -28,6 +28,10 @@ module.exports = (sequelize, Sequelize) => {
         is_visible: {
             type: Sequelize.BOOLEAN,
             defaultValue: true,
+        },
+        show_on_cart: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: true,
         }
     }, {
         uniqueKeys: {
