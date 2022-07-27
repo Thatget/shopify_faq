@@ -55,7 +55,7 @@ app.get('/', async (req, res) => {
     res.redirect(pageUri);
 });
 
-app.get('/', async (req, res) => {
+app.get('/storeFAQs', async (req, res) => {
     return res.redirect(app_link+'/storeFAQs');
 });
 
@@ -64,6 +64,7 @@ app.get('/categories', async (req, res) => {
 });
 
 app.get('/design', async (req, res) => {
+
     return res.redirect(app_link+'/design');
 });
 

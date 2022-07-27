@@ -5,8 +5,8 @@
   <script>
     var background_color = ''
     var background_hover = ''
-    fetch('https://6172-2402-800-61b3-5275-a42a-868c-ae4d-85c.ngrok.io/api/shop/faq/{{shop.domain}}?locale={{request.locale.iso_code}}')
-    // fetch('https://dev-be-faq.yanet.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
+    // fetch('https://6172-2402-800-61b3-5275-a42a-868c-ae4d-85c.ngrok.io/api/shop/faq/{{shop.domain}}?locale={{request.locale.iso_code}}')
+    fetch('https://dev-be-faq.yanet.io/api/no-token/block/{{shop.domain}}/{{product.id}}/{{request.locale.iso_code}}')
       .then(response => response.json())
       .then(data => {
         console.log(data)
@@ -122,6 +122,6 @@
       "tag": "section",
       "stylesheet": "faqs-block.css",
       "javascript": "faqs-block.js",
-      "templates": ["cart", "index"]
+      "templates": ["product", "index"]
     }
   {% endschema %}

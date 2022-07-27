@@ -157,7 +157,7 @@ exports.update = async (req, res) => {
                     title: req.body.title,
                     description: req.body.description? req.body.description : '',
                     is_visible: req.body.is_visible,
-                    show_on_cart : req.body.show_on_cart
+                    // show_on_cart : req.body.show_on_cart
                 };
                 if (req.body.position) {
                     faq_category.position = req.body.position;
@@ -190,7 +190,7 @@ exports.update = async (req, res) => {
                     .then(async num => {
                         if (num == 1) {
                             await FaqCategory.update({
-                                show_on_cart : req.body.show_on_cart,
+                                // show_on_cart : req.body.show_on_cart,
                                 is_visible: req.body.is_visible,
                             },{
                                 where: {
@@ -204,7 +204,7 @@ exports.update = async (req, res) => {
                                     title: req.body.title_translate,
                                     description: req.body.description_translate,
                                     is_visible: req.body.is_visible,
-                                    show_on_cart : req.body.show_on_cart,
+                                    // show_on_cart : req.body.show_on_cart,
                                     locale : req.body.locale_translate
                                 }
                                 await FaqCategory.update(category_translate, {
