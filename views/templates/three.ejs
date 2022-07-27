@@ -110,11 +110,11 @@
                                             <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                 <div class="faq-main-content">
                                                     <div class="faq-question-title-3" onclick="showHideContent(this)">
-                                                        <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                        <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                                         <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                         <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                     </div>
-                                                    <div class="faq-answer-content ">
+                                                    <div class="faq-answer-content faq-answer-search">
                                                         <%- faqs.faq[j].content %>
                                                     </div>
                                                 </div>
@@ -234,10 +234,9 @@
     function simpleSearch() {
         var input = document.getElementById("search-text");
         var filter = input.value.toLowerCase();
-        var nodes = document.getElementsByClassName('listed-faq');
+        var filterByQuestion = document.getElementsByClassName('faq-question-search');
+        var filterByAnswer = document.getElementsByClassName('faq-answer-search');
         var nodeCategory = document.getElementsByClassName('category-faq-search');
-        // console.log(nodeCategory)
-        console.log(document.getElementById('search-text').value === '')
         if(document.getElementById('search-text').value === ''){
             document.getElementsByClassName("category-faq-container")[0].style.display = "block"
             document.getElementsByClassName('category-bar')[0].style.display = "flex"
@@ -257,12 +256,21 @@
             }
         }
         var checkexist = true;
-        for (i = 0; i < nodes.length; i++) {
-            if (nodes[i].innerText.toLowerCase().includes(filter)) {
-                nodes[i].parentNode.parentNode.style.display = "block";
+        for (i = 0; i < filterByQuestion.length; i++) {
+            if (filterByQuestion[i].innerText.toLowerCase().includes(filter)) {
+                filterByQuestion[i].parentNode.parentNode.style.display = "block";
                 checkexist = false;
-            } else {
-                nodes[i].parentNode.parentNode.style.display = "none";
+            } 
+            else {
+                for(j = 0; j < filterByAnswer.length; j++){
+                    if(filterByAnswer[j].innerText.toLowerCase().includes(filter)){
+                        filterByQuestion[j].parentNode.parentNode.style.display = "block";
+                        checkexist = false;        
+                    }
+                    else{
+                        filterByQuestion[i].parentNode.parentNode.style.display = "none";
+                    }
+                }
             }
         }
         if (checkexist) {

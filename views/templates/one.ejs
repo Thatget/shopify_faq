@@ -71,9 +71,9 @@
                                         <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                             <div class="faq-main-content">
                                                 <div class="faq-question-title-1">
-                                                    <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                    <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                                 </div>
-                                                <div class="faq-answer-content-1">
+                                                <div class="faq-answer-content-1 faq-answer-search">
                                                     <%- faqs.faq[j].content %>
                                                 </div>
                                             </div>
@@ -115,11 +115,11 @@
     </div>
 </div>
 <script>
-
     function simpleSearch() {
         var input = document.getElementById("search-text");
         var filter = input.value.toLowerCase();
-        var nodes = document.getElementsByClassName('listed-faq');
+        var filterByQuestion = document.getElementsByClassName('faq-question-search');
+        var filterByAnswer = document.getElementsByClassName('faq-answer-search');
         var categoryList = document.getElementsByClassName('faq-category-width')
         var nodeCategory = document.getElementsByClassName('category-faq-container');
         if(document.getElementById('search-text').value === ''){
@@ -135,12 +135,21 @@
             }
         }
         var checkexist = true;
-        for (i = 0; i < nodes.length; i++) {
-            if (nodes[i].innerText.toLowerCase().includes(filter)) {
-                nodes[i].parentNode.parentNode.style.display = "block";
+        for (i = 0; i < filterByQuestion.length; i++) {
+            if (filterByQuestion[i].innerText.toLowerCase().includes(filter)) {
+                filterByQuestion[i].parentNode.parentNode.style.display = "block";
                 checkexist = false;
-            } else {
-                nodes[i].parentNode.parentNode.style.display = "none";
+            }
+            else {
+                for(j = 0; j < filterByAnswer.length; j++){
+                    if(filterByAnswer[j].innerText.toLowerCase().includes(filter)){
+                        filterByQuestion[j].parentNode.parentNode.style.display = "block";
+                        checkexist = false;        
+                    }
+                    else{
+                        filterByQuestion[i].parentNode.parentNode.style.display = "none";
+                    }
+                }
             }
         }
         for (j = 0; j < nodeCategory.length; j++) {
