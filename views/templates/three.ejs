@@ -58,7 +58,7 @@
                     <% if(faqs.categories.length){%>
                         <div class="category-bar">
                             <% for(var i = 0; i < faqs.categories.length; i++) { %>
-								<div onclick="changeCategory('<%- faqs.categories[i].title %>')" class="category-bar-item" id="faq-category<%- faqs.categories[i].title %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: #ccc; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>
+								<div onclick="changeCategory('<%- faqs.categories[i].title %>')" class="category-bar-item" id="faq-category<%- faqs.categories[i].title %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: #ccc; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>
                             <% } %>
                         </div>
                         <div class="faq-container">
@@ -160,17 +160,17 @@
 </div>
 <script>
     var categoryName = []
-    function changeCategory(s){
+    function changeCategory(id){
         if(!categoryName.some(item => {
-            return item === s
+            return item === id
         })){            
-            categoryName.push(s)
+            categoryName.push(id)
         }
         var categoryShow = categoryName.filter(item => {
-            return item === s
+            return item === id
         })
         var categoryHide = categoryName.filter(item => {
-            return item !== s
+            return item !== id
         })
         for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
             document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
@@ -182,20 +182,20 @@
             document.getElementsByClassName('svg-minus')[i].style.opacity = '0'
         }
         for(let i = 0; i < categoryName.length; i++){
-            if(categoryName[i] === document.getElementById(s).innerText){
+            if(categoryName[i].toLowerCase() === document.getElementById(id).innerText.toLowerCase()){
                 document.getElementById(`faq${categoryName[i]}`).style.display = 'block'
                 document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = '#ccc'
             }
             else{
                 document.getElementById(`faq${categoryName[i]}`).style.display = 'none'
-                document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = '#fff'
+                document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = 'inherit'
             }
-            if(categoryName.length > 0){
-                document.getElementById('dung').style.display= "none"
-            }
-            if(categoryName.length === 1){
-                document.getElementsByClassName('category-bar-item')[0].style.backgroundColor = '#fff'
-            }
+        }
+        if(categoryName.length > 0){
+            document.getElementById('dung').style.display= "none"
+        }
+        if(categoryName.length === 1){
+            document.getElementsByClassName('category-bar-item')[0].style.backgroundColor = 'inherit'
         }
 
     }
