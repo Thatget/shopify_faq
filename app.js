@@ -8,8 +8,6 @@ const cookie = require('cookie');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-// const proxy = require('express-http-proxy');
-
 const errorLog = require('./app/helpers/log.helper');
 
 const app = express();
@@ -56,7 +54,12 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/storeFAQs', async (req, res) => {
-    return res.redirect(app_link+'/storeFAQs');
+    let a =await getToken(req.query);
+    let txt = "";
+    if (a.accessToken) {
+        txt = '?accessToken=' + a.accessToken + '&refreshToken=' + a.refreshToken;
+    }
+    return res.redirect(app_link+'/storeFAQs'+txt);
 });
 
 app.get('/categories', async (req, res) => {
@@ -64,7 +67,6 @@ app.get('/categories', async (req, res) => {
 });
 
 app.get('/design', async (req, res) => {
-
     return res.redirect(app_link+'/design');
 });
 
@@ -309,4 +311,34 @@ async function removeShop(shop) {
     } catch (error) {
         errorLog.error(error.message)
     }
+}
+async function getToken(query) {
+    let accessToken = '';
+    let refreshToken = '';
+    const {shop, hmac} = query;
+    if (shop && hmac ) {
+        const map = Object.assign({}, query);
+        delete map['signature'];
+        delete map['hmac'];
+        const message = querystring.stringify(map);
+        const generateHash = crypto.createHmac('sha256', apiSecret)
+            .update(message)
+            .digest('hex');
+
+        if (generateHash === hmac) {
+            try {
+                let jwtHelper = require("./app/helpers/jwt.helper");
+                let userData = await User.findOne({
+                    attributes: [['id', 'user_id'],'email','shopify_domain'],
+                    where: { shopify_domain: shop }
+                });
+                accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
+                refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
+            } catch (error) {
+                errorLog.error(`error in login function ${error.message}`);
+            }
+        }
+    }
+    console.log(accessToken)
+    return {accessToken, refreshToken};
 }
