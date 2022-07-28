@@ -54,28 +54,48 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/storeFAQs', async (req, res) => {
-    let a =await getToken(req.query);
+    let tokenData = await getToken(req.query);
     let txt = "";
-    if (a.accessToken) {
-        txt = '?accessToken=' + a.accessToken + '&refreshToken=' + a.refreshToken;
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
     }
     return res.redirect(app_link+'/storeFAQs'+txt);
 });
 
 app.get('/categories', async (req, res) => {
-    return res.redirect(app_link+'/categories');
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/categories'+txt);
 });
 
 app.get('/design', async (req, res) => {
-    return res.redirect(app_link+'/design');
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/design'+txt);
 });
 
 app.get('/setting', async (req, res) => {
-    return res.redirect(app_link+'/setting');
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/setting'+txt);
 });
 
 app.get('/products-faqs', async (req, res) => {
-    return res.redirect(app_link+'/products-faqs');
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/products-faqs'+txt);
 });
 
 app.get('/shopify/callback', async (req, res) => {
