@@ -1,6 +1,7 @@
 const jwtHelper = require("../helpers/jwt.helper");
 
 const accessTokenSecret = process.env.JWT_KEY;
+const app_link = process.env.FRONT_END;
 
 let isAuth = async (req, res, next) => {
     const tokenFromClient = req.params.token || req.headers["x-access-token"] || '';
@@ -15,9 +16,7 @@ let isAuth = async (req, res, next) => {
             });
         }
     } else {
-        return res.status(403).send({
-            message: 'No token provided...',
-        });
+        return res.status(403).redirect(app_link+'/not-found');
     }
 }
 
