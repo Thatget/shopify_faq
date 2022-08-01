@@ -177,7 +177,12 @@ app.get('/shopify/callback', async (req, res) => {
                                     errorLog.error(`user update error ${err.message}`)
                                     res.status(err.code).send(err.error);
                                 });
-                                return res.redirect(app_link)
+                                let tokenData = await getToken(req.query);
+                                let txt = "";
+                                if (tokenData.accessToken) {
+                                    txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+                                }
+                                return res.redirect(app_link + '/storeFAQs' + txt);                            
                             } else {
                                 await User.create(user).then(data => {
                                 }).catch(err => {
@@ -360,6 +365,5 @@ async function getToken(query) {
             }
         }
     }
-    console.log(accessToken)
     return {accessToken, refreshToken};
 }
