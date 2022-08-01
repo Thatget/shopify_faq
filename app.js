@@ -177,6 +177,7 @@ app.get('/shopify/callback', async (req, res) => {
                                     errorLog.error(`user update error ${err.message}`)
                                     res.status(err.code).send(err.error);
                                 });
+                                return res.redirect(app_link)
                             } else {
                                 await User.create(user).then(data => {
                                 }).catch(err => {
@@ -197,10 +198,10 @@ app.get('/shopify/callback', async (req, res) => {
                                     .catch((error) => {
                                         errorLog.error(`webhook create: ${error.message}`)
                                     });
+                                let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
+                                res.redirect(pageUri);
                             }
                         });
-                        let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
-                        res.redirect(pageUri);
                     })
                     .catch((error) => {
                         errorLog.error(`user get shop data: error ${error.message}`)
@@ -213,7 +214,7 @@ app.get('/shopify/callback', async (req, res) => {
     } else {
         res.status(400).send('Required parameters missing');
     }
-    res.end();
+    res.redirect(app_link);
 });
 
 app.post('/uninstall', async (req, res) => {
