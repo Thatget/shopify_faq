@@ -48,55 +48,55 @@ app.get('/', async (req, res) => {
     const redirectUri = forwardingAddress + '/shopify/callback';
     const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
         '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
-    res.cookie('state',state);
-    // res.cookie("state", state, { httpOnly: false, secure: true, sameSite: "none" });
+    // res.cookie('state',state);
+    res.cookie("state", state, { httpOnly: false, secure: true, sameSite: "none" });
     res.redirect(pageUri);
 });
 
-// app.get('/storeFAQs', async (req, res) => {
-//     let tokenData = await getToken(req.query);
-//     let txt = "";
-//     if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-//     }
-//     return res.redirect(app_link+'/storeFAQs'+txt);
-// });
+app.get('/storeFAQs', async (req, res) => {
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/storeFAQs'+txt);
+});
 
-// app.get('/categories', async (req, res) => {
-//     let tokenData = await getToken(req.query);
-//     let txt = "";
-//     if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-//     }
-//     return res.redirect(app_link+'/categories'+txt);
-// });
+app.get('/categories', async (req, res) => {
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/categories'+txt);
+});
 
-// app.get('/design', async (req, res) => {
-//     let tokenData = await getToken(req.query);
-//     let txt = "";
-//     if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-//     }
-//     return res.redirect(app_link+'/design'+txt);
-// });
+app.get('/design', async (req, res) => {
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/design'+txt);
+});
 
-// app.get('/setting', async (req, res) => {
-//     let tokenData = await getToken(req.query);
-//     let txt = "";
-//     if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-//     }
-//     return res.redirect(app_link+'/setting'+txt);
-// });
+app.get('/setting', async (req, res) => {
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/setting'+txt);
+});
 
-// app.get('/products-faqs', async (req, res) => {
-//     let tokenData = await getToken(req.query);
-//     let txt = "";
-//     if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-//     }
-//     return res.redirect(app_link+'/products-faqs'+txt);
-// });
+app.get('/products-faqs', async (req, res) => {
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/products-faqs'+txt);
+});
 
 app.get('/shopify/callback', async (req, res) => {
     const {shop, hmac, code, state} = req.query;
@@ -177,6 +177,12 @@ app.get('/shopify/callback', async (req, res) => {
                                     errorLog.error(`user update error ${err.message}`)
                                     res.status(err.code).send(err.error);
                                 });
+                                let tokenData = await getToken(req.query);
+                                let txt = "";
+                                if (tokenData.accessToken) {
+                                    txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+                                }
+                                return res.redirect(app_link + '/storeFAQs' + txt);                            
                             } else {
                                 await User.create(user).then(data => {
                                 }).catch(err => {
@@ -197,10 +203,10 @@ app.get('/shopify/callback', async (req, res) => {
                                     .catch((error) => {
                                         errorLog.error(`webhook create: ${error.message}`)
                                     });
+                                let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
+                                res.redirect(pageUri);
                             }
-                        })
-                        let token = await login(user);
-                        res.redirect(app_link + '/login' + `${token}`);
+                        });
                     })
                     .catch((error) => {
                         errorLog.error(`user get shop data: error ${error.message}`)
@@ -213,7 +219,7 @@ app.get('/shopify/callback', async (req, res) => {
     } else {
         res.status(400).send('Required parameters missing');
     }
-    res.end();
+    res.redirect(app_link);
 });
 
 app.post('/uninstall', async (req, res) => {
@@ -332,32 +338,32 @@ async function removeShop(shop) {
         errorLog.error(error.message)
     }
 }
-// async function getToken(query) {
-//     let accessToken = '';
-//     let refreshToken = '';
-//     const {shop, hmac} = query;
-//     if (shop && hmac ) {
-//         const map = Object.assign({}, query);
-//         delete map['signature'];
-//         delete map['hmac'];
-//         const message = querystring.stringify(map);
-//         const generateHash = crypto.createHmac('sha256', apiSecret)
-//             .update(message)
-//             .digest('hex');
+async function getToken(query) {
+    let accessToken = '';
+    let refreshToken = '';
+    const {shop, hmac} = query;
+    if (shop && hmac ) {
+        const map = Object.assign({}, query);
+        delete map['signature'];
+        delete map['hmac'];
+        const message = querystring.stringify(map);
+        const generateHash = crypto.createHmac('sha256', apiSecret)
+            .update(message)
+            .digest('hex');
 
-//         if (generateHash === hmac) {
-//             try {
-//                 let jwtHelper = require("./app/helpers/jwt.helper");
-//                 let userData = await User.findOne({
-//                     attributes: [['id', 'user_id'],'email','shopify_domain'],
-//                     where: { shopify_domain: shop }
-//                 });
-//                 accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
-//                 refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
-//             } catch (error) {
-//                 errorLog.error(`error in login function ${error.message}`);
-//             }
-//         }
-//     }
-//     return {accessToken, refreshToken};
-// }
+        if (generateHash === hmac) {
+            try {
+                let jwtHelper = require("./app/helpers/jwt.helper");
+                let userData = await User.findOne({
+                    attributes: [['id', 'user_id'],'email','shopify_domain'],
+                    where: { shopify_domain: shop }
+                });
+                accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
+                refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
+            } catch (error) {
+                errorLog.error(`error in login function ${error.message}`);
+            }
+        }
+    }
+    return {accessToken, refreshToken};
+}
