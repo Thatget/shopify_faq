@@ -8,8 +8,6 @@ const cookie = require('cookie');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-// const proxy = require('express-http-proxy');
-
 const errorLog = require('./app/helpers/log.helper');
 
 const app = express();
@@ -55,24 +53,49 @@ app.get('/', async (req, res) => {
     res.redirect(pageUri);
 });
 
-// app.get('/', async (req, res) => {
-//     return res.redirect(app_link+'/storeFAQs');
+// app.get('/storeFAQs', async (req, res) => {
+//     let tokenData = await getToken(req.query);
+//     let txt = "";
+//     if (tokenData.accessToken) {
+//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+//     }
+//     return res.redirect(app_link+'/storeFAQs'+txt);
 // });
 
 // app.get('/categories', async (req, res) => {
-//     return res.redirect(app_link+'/categories');
+//     let tokenData = await getToken(req.query);
+//     let txt = "";
+//     if (tokenData.accessToken) {
+//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+//     }
+//     return res.redirect(app_link+'/categories'+txt);
 // });
 
 // app.get('/design', async (req, res) => {
-//     return res.redirect(app_link+'/design');
+//     let tokenData = await getToken(req.query);
+//     let txt = "";
+//     if (tokenData.accessToken) {
+//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+//     }
+//     return res.redirect(app_link+'/design'+txt);
 // });
 
 // app.get('/setting', async (req, res) => {
-//     return res.redirect(app_link+'/setting');
+//     let tokenData = await getToken(req.query);
+//     let txt = "";
+//     if (tokenData.accessToken) {
+//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+//     }
+//     return res.redirect(app_link+'/setting'+txt);
 // });
 
 // app.get('/products-faqs', async (req, res) => {
-//     return res.redirect(app_link+'/products-faqs');
+//     let tokenData = await getToken(req.query);
+//     let txt = "";
+//     if (tokenData.accessToken) {
+//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+//     }
+//     return res.redirect(app_link+'/products-faqs'+txt);
 // });
 
 app.get('/shopify/callback', async (req, res) => {
@@ -132,7 +155,7 @@ app.get('/shopify/callback', async (req, res) => {
                             .then(data => {
                                 shopLocales = JSON.stringify(data.data);
                             }).catch(e => {
-                                errorLog.error(`get shop locale: ${e.message}`)
+                                errorLog.error(`get shop locale: ${error.message}`)
                             });
                             
                         shopResonse = JSON.parse(shopResonse);
@@ -152,7 +175,7 @@ app.get('/shopify/callback', async (req, res) => {
                                 }).then(data => {
                                 }).catch(err => {
                                     errorLog.error(`user update error ${err.message}`)
-                                    // res.status(err.code).send(err.error);
+                                    res.status(err.code).send(err.error);
                                 });
                             } else {
                                 await User.create(user).then(data => {
@@ -175,14 +198,12 @@ app.get('/shopify/callback', async (req, res) => {
                                         errorLog.error(`webhook create: ${error.message}`)
                                     });
                             }
-                        }).catch((quyet) => {
-                            console.log(quyet.message)
-                        }); 
+                        })
                         let token = await login(user);
                         res.redirect(app_link + '/login' + `${token}`);
                     })
                     .catch((error) => {
-                        errorLog.error(`user get shop data 2: error ${error.message}`)
+                        errorLog.error(`user get shop data: error ${error.message}`)
                         res.status(error.status).send(error.error);
                     });
             }).catch((error) => {
@@ -311,3 +332,32 @@ async function removeShop(shop) {
         errorLog.error(error.message)
     }
 }
+// async function getToken(query) {
+//     let accessToken = '';
+//     let refreshToken = '';
+//     const {shop, hmac} = query;
+//     if (shop && hmac ) {
+//         const map = Object.assign({}, query);
+//         delete map['signature'];
+//         delete map['hmac'];
+//         const message = querystring.stringify(map);
+//         const generateHash = crypto.createHmac('sha256', apiSecret)
+//             .update(message)
+//             .digest('hex');
+
+//         if (generateHash === hmac) {
+//             try {
+//                 let jwtHelper = require("./app/helpers/jwt.helper");
+//                 let userData = await User.findOne({
+//                     attributes: [['id', 'user_id'],'email','shopify_domain'],
+//                     where: { shopify_domain: shop }
+//                 });
+//                 accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
+//                 refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
+//             } catch (error) {
+//                 errorLog.error(`error in login function ${error.message}`);
+//             }
+//         }
+//     }
+//     return {accessToken, refreshToken};
+// }
