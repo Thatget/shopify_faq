@@ -48,55 +48,55 @@ app.get('/', async (req, res) => {
     const redirectUri = forwardingAddress + '/shopify/callback';
     const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
         '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
-    res.cookie('state',state);
-    // res.cookie("state", state, { httpOnly: false, secure: true, sameSite: "none" });
+    // res.cookie('state',state);
+    res.cookie("state", state, { httpOnly: false, secure: true, sameSite: "none" });
     res.redirect(pageUri);
 });
 
-// app.get('/storeFAQs', async (req, res) => {
-//     let tokenData = await getToken(req.query);
-//     let txt = "";
-//     if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-//     }
-//     return res.redirect(app_link+'/storeFAQs'+txt);
-// });
+app.get('/storeFAQs', async (req, res) => {
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/storeFAQs'+txt);
+});
 
-// app.get('/categories', async (req, res) => {
-//     let tokenData = await getToken(req.query);
-//     let txt = "";
-//     if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-//     }
-//     return res.redirect(app_link+'/categories'+txt);
-// });
+app.get('/categories', async (req, res) => {
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/categories'+txt);
+});
 
-// app.get('/design', async (req, res) => {
-//     let tokenData = await getToken(req.query);
-//     let txt = "";
-//     if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-//     }
-//     return res.redirect(app_link+'/design'+txt);
-// });
+app.get('/design', async (req, res) => {
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/design'+txt);
+});
 
-// app.get('/setting', async (req, res) => {
-//     let tokenData = await getToken(req.query);
-//     let txt = "";
-//     if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-//     }
-//     return res.redirect(app_link+'/setting'+txt);
-// });
+app.get('/setting', async (req, res) => {
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/setting'+txt);
+});
 
-// app.get('/products-faqs', async (req, res) => {
-//     let tokenData = await getToken(req.query);
-//     let txt = "";
-//     if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-//     }
-//     return res.redirect(app_link+'/products-faqs'+txt);
-// });
+app.get('/products-faqs', async (req, res) => {
+    let tokenData = await getToken(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link+'/products-faqs'+txt);
+});
 
 app.get('/shopify/callback', async (req, res) => {
     const {shop, hmac, code, state} = req.query;
@@ -198,9 +198,9 @@ app.get('/shopify/callback', async (req, res) => {
                                         errorLog.error(`webhook create: ${error.message}`)
                                     });
                             }
-                        })
-                        let token = await login(user);
-                        res.redirect(app_link + '/login' + `${token}`);
+                        });
+                        let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
+                        res.redirect(pageUri);
                     })
                     .catch((error) => {
                         errorLog.error(`user get shop data: error ${error.message}`)
