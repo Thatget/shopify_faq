@@ -59,7 +59,7 @@ exports.findFaqs = async (shop, locale) => {
                     " where `faq_category`.`user_id` = ? and `faq_category`.`is_visible` = 1 and `faq_category`.`identify` in (?) and (`faq_category`.`locale` = 'default' or `faq_category`.`locale` = ?)";
 
                     if (selectCondition.category_sort_name) {
-                        selectQueryCategories += " ORDER BY `category_title`"
+                        selectQueryCategories += " ORDER BY `title`"
                         if (selectCondition.faq_sort_name) {
                             selectQueryFaqs += ", `faq`.`title`"
                         }
