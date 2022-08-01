@@ -2,6 +2,7 @@
 node_modules
 /dist
 
+/var/
 
 # local env files
 # .env
