@@ -39,18 +39,16 @@ db.sequelize.sync({ force: false }).then(() => {
 });
 
 app.get('/', async (req, res) => {
-    if (!req.query.shop ) {
-        // return res.status(400).send('Required parameters missing');
-        // res.end()
+    if (!req.query.shop || !req.query.host) {
         return res.redirect(app_link);
     }
-    const state = nonce();
-    const redirectUri = forwardingAddress + '/shopify/callback';
-    const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
-        '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
-    // res.cookie('state',state);
-    res.cookie("state", state, { httpOnly: false, secure: true, sameSite: "none" });
-    res.redirect(pageUri);
+    return  res.render('index', {
+        shop: req.query.shop,
+        host: req.query.host,
+        apiKey: apiKey,
+        scopes: scopes,
+        forwardingAddress: forwardingAddress
+    });
 });
 
 app.get('/storeFAQs', async (req, res) => {
@@ -99,14 +97,7 @@ app.get('/products-faqs', async (req, res) => {
 });
 
 app.get('/shopify/callback', async (req, res) => {
-    const {shop, hmac, code, state} = req.query;
-    if (!req.headers.cookie) {
-        return res.status(403).send('Your cookie error !');
-    }
-    const stateCookie = cookie.parse(req.headers.cookie).state;
-    if (state !== stateCookie) {
-        return res.status(403).send('Request origin cannot be verified');
-    }
+    const {shop, hmac, code} = req.query;
 
     if (shop && hmac && code) {
         const map = Object.assign({}, req.query);
@@ -175,19 +166,11 @@ app.get('/shopify/callback', async (req, res) => {
                                 }).then(data => {
                                 }).catch(err => {
                                     errorLog.error(`user update error ${err.message}`)
-                                    res.status(err.code).send(err.error);
-                                });
-                                let tokenData = await getToken(req.query);
-                                let txt = "";
-                                if (tokenData.accessToken) {
-                                    txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-                                }
-                                return res.redirect(app_link + '/storeFAQs' + txt);                            
+                                });                         
                             } else {
                                 await User.create(user).then(data => {
                                 }).catch(err => {
-                                    errorLog.error(`user created error: ${err.message}`)
-                                    res.status(err.status).send(err.error);
+                                    errorLog.error(`user created error: ${err.message}`);
                                 });
                                 const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
                                 const webhook = {
@@ -203,23 +186,21 @@ app.get('/shopify/callback', async (req, res) => {
                                     .catch((error) => {
                                         errorLog.error(`webhook create: ${error.message}`)
                                     });
-                                let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
-                                res.redirect(pageUri);
                             }
                         });
                     })
                     .catch((error) => {
                         errorLog.error(`user get shop data: error ${error.message}`)
-                        res.status(error.status).send(error.error);
                     });
             }).catch((error) => {
                 errorLog.error(`get data api error: ${error.message}`)
-                res.status(error.statusCode).send(error.message);
             });
     } else {
-        res.status(400).send('Required parameters missing');
+        errorLog.error("app.js callback misssing data")
+        return res.redirect(app_link);
     }
-    res.redirect(app_link);
+    let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
+    res.redirect(pageUri);
 });
 
 app.post('/uninstall', async (req, res) => {
@@ -295,35 +276,6 @@ app.listen(port, () => {
 function verifyRequest(req, res, buf, encoding) {
     req.rawBody=buf
 };
-
-async function login(user) {
-    try {
-        let shopify_access_token = '';
-        let jwtHelper = require("./app/helpers/jwt.helper");
-        let userId = null;
-
-        await User.findOne({where: { shopify_domain: user.shopify_domain }})
-            .then(async data => {
-                shopify_access_token = data.dataValues.shopify_access_token;
-                userId = data.dataValues.id;
-                const userData = {
-                    email: user.email,
-                    shopify_domain:user.shopify_domain,
-                    user_id: userId
-                };
-                accessToken = await jwtHelper.generateToken(userData, accessTokenSecret, accessTokenLife) || '';
-                refreshToken = await jwtHelper.generateToken(userData, refreshTokenSecret, refreshTokenLife) || '';
-            })
-            .catch(err => {
-                errorLog.error(`error in login function get user from database ${err.message}`);
-                return null;
-            });
-    } catch (error) {
-        errorLog.error(`error in login function ${error.message}`);
-        return null;
-    }
-    return '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
-}
 
 async function removeShop(shop) {
     try {
