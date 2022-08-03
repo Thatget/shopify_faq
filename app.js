@@ -57,7 +57,7 @@ app.get('/storeFAQs', async (req, res) => {
     if (tokenData.accessToken) {
         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
     }
-    return res.redirect(app_link+'/storeFAQs'+txt);
+    return res.redirect(app_link+txt);
 });
 
 app.get('/categories', async (req, res) => {
