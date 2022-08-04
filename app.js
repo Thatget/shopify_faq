@@ -152,7 +152,7 @@ app.get('/shopify/callback', async (req, res) => {
                         shopResonse = JSON.parse(shopResonse);
                         const user = {
                             store_name: shopResonse.shop.name,
-                            shopify_domain: shopResonse.shop.domain,
+                            shopify_domain: shopResonse.shop.myshopify_domain,
                             shopify_access_token: accessToken,
                             email: shopResonse.shop.email,
                             phone: shopResonse.shop.phone,
@@ -243,7 +243,14 @@ app.get('/faq-page', async (req, res) => {
     //     .digest('hex');
     // if (query_signature === generateHash) {
         // const shop = req.query.shop;
-        const shop = req.headers['x-shop-domain'];
+        let shop = req.query.shop;
+        let userData = await User.findOne({
+            attributes: ['id'],
+            where: { shopify_domain: shop }
+        });
+        if (!userData) {
+            shop = req.headers['x-shop-domain'];
+        }
         if (shop) {
             try {
                 const locale = req.headers['accept-language'].split(',')[0];

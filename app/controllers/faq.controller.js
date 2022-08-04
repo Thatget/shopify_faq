@@ -1,5 +1,6 @@
 const db = require("../models");
 const Faq = db.faq;
+const Faq_Product = db.faq_product;
 const FaqCategory = db.faq_category;
 const User = db.user;
 const errorLog = require('../helpers/log.helper');
@@ -319,7 +320,6 @@ exports.update = async (req, res) => {
                     title: req.body.title,
                     content: req.body.content,
                     is_visible: req.body.is_visible,
-                    list_id: req.body.list_id
                 };
                 if (req.body.position) {
                     faq.position = req.body.position;
@@ -364,36 +364,23 @@ exports.update = async (req, res) => {
                 }
                 faq.identify = identify;
                 faq.category_identify = category_identify;
-                await Faq.update({
-                    identify: identify,
-                    category_identify: category_identify
-                }, {
-                    where: { id: faq.list_id }
-                })
-                    .then(async num => {
-                        if (num == 1) {
-                            await Faq.update({category_identify: faq.category_identify}, {
-                                where: {
-                                    identify: faq.identify
-                                }
-                            })
-                            res.send({
-                                message: "Faq was updated successfully."
-                            });
-                            return;
-                        } else {
-                            res.send({
-                                message: `Cannot update faq with id=${id}. Maybe faq was not found or req.body is empty!`
-                            });
-                            return;
-                        }
+                if(req.body.list_id){
+                    await Faq_Product.update({
+                        identify: identify,
+                        category_identify: category_identify
+                    }, {
+                        where: { id: faq.list_id }
                     })
-                    .catch(err => {
-                        res.status(500).send({
-                            message: "Error updating faq with id=" + id
-                        });
-                        return;
-                    });
+                }
+                await Faq.update(faq, {
+                    where: {
+                        identify: faq.identify
+                    }
+                })
+                res.send({
+                    message: "Faq was updated successfully."
+                });
+                return;
             }
         }).catch(error => {
             res.status(500).send({
