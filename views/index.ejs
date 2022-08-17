@@ -1,0 +1,28 @@
+<script src="https://unpkg.com/@shopify/app-bridge@3"></script>
+<script src="https://unpkg.com/@shopify/app-bridge-utils@3"></script>
+<script>
+    var AppBridge = window['app-bridge'];
+    var AppBridgeUtils = window['app-bridge-utils'];
+    var createApp = AppBridge.createApp;
+    var actions = AppBridge.actions;
+    var Redirect = actions.Redirect;
+    var host = '<%= host %>';
+    var apiKey = '<%= apiKey %>';
+    var redirectUri =  '<%= forwardingAddress %>/shopify/callback';
+    var permissionUrl = 'https://<%= shop %>'+
+        '/admin/oauth/authorize?client_id='+ apiKey+
+        '&scope=<%= scopes %>' +
+        '&redirect_uri='+ redirectUri;
+    // If your app is embedded inside Shopify, use App Bridge to redirect
+    if (AppBridgeUtils.isShopifyEmbedded()) {
+        var app = createApp({
+            apiKey: apiKey,
+            host: host
+        });
+
+        Redirect.create(app).dispatch(Redirect.Action.REMOTE, permissionUrl);
+     // Otherwise, redirect using the `window` object
+    } else {
+        window.location.assign(permissionUrl);
+    }
+</script>
