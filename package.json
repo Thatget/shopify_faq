@@ -18,6 +18,8 @@
   "homepage": "https://github.com/Thatget/shopify_faq#readme",
   "dependencies": {
     "@shopify/shopify-api": "^2.1.0",
+    "@shopify/app-bridge": "^3.2.0",
+    "@shopify/app-bridge-utils": "^3.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "ejs": "^3.1.6",

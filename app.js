@@ -32,6 +32,7 @@ const accessTokenLife = process.env.JWT_KEY_LIFE;
 const accessTokenSecret = process.env.JWT_KEY;
 const refreshTokenLife = process.env.REFRESH_JWT_KEY_LIFE;
 const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
+import { isShopifyEmbedded } from '@shopify/app-bridge-utils';
 
 // const debug = console.log.bind(console);
 db.sequelize.sync({ force: false }).then(() => {
@@ -39,16 +40,30 @@ db.sequelize.sync({ force: false }).then(() => {
 });
 
 app.get('/', async (req, res) => {
-    if (!req.query.shop || !req.query.host) {
-        return res.redirect(app_link);
-    }
-    return  res.render('index', {
-        shop: req.query.shop,
-        host: req.query.host,
-        apiKey: apiKey,
-        scopes: scopes,
-        forwardingAddress: forwardingAddress
-    });
+    if (isShopifyEmbedded()) {
+        if (!req.query.shop || !req.query.host) {
+            return res.redirect(app_link);
+        }
+        return  res.render('index', {
+            shop: req.query.shop,
+            host: req.query.host,
+            apiKey: apiKey,
+            scopes: scopes,
+            forwardingAddress: forwardingAddress
+        });
+      } else {
+        if (!req.query.shop ) {
+            // return res.status(400).send('Required parameters missing');
+            // res.end()
+            return res.redirect(app_link);
+        }
+        const state = nonce();
+        const redirectUri = forwardingAddress + '/shopify/callback';
+        const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+            '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
+        res.cookie('state',state);
+        res.redirect(pageUri);
+      }
 });
 
 app.get('/storeFAQs', async (req, res) => {
