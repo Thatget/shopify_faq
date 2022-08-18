@@ -155,7 +155,7 @@ app.get('/shopify/callback', async (req, res) => {
                             }
                         })
                         let token = await login(user);
-                        res.redirect(app_link + '/login' + `${token}`);
+                        res.redirect(app_link + '/storeFAQs' + `${token}`);
                     })
                     .catch((error) => {
                         errorLog.error(`user get shop data: error ${error.message}`)
