@@ -75,7 +75,7 @@ exports.export = async (req, res) => {
             type: QueryTypes.SELECT
         });
     const headings = [
-        [ 'title', 'content', 'category name', 'locale', 'is Visible', 'Category Visible']
+        [ 'title', 'content', 'category name', 'locale', 'Faq Visible', 'Category Visible']
     ];
 
     const wb = XLSX.utils.book_new();
