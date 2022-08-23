@@ -30,7 +30,7 @@
                     <% if(faqs.categories.length){%>
                         <div class="category-bar">
                             <% for(var i = 0; i < faqs.categories.length; i++) { %>
-								<div onclick="changeCategory('<%- faqs.categories[i].title %>')" class="category-bar-item" id="faq-category<%- faqs.categories[i].title %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: #ccc; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>
+								<div onclick="changeCategory('<%- i %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: #ccc; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>
                             <% } %>
                         </div>
                         <div class="faq-container">
@@ -55,7 +55,7 @@
                                             <%}%>
                                         </div>
                                     <% } %>
-                                    <div style="display: none;" id="faq<%- faqs.categories[i].title %>">
+                                    <div style="display: none;" id="category<%- i %>">
                                         <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                         <% for(var j=0; j < faqs.faq.length; j++) { %>
                                             <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
@@ -153,12 +153,12 @@
             document.getElementsByClassName('svg-minus')[i].style.opacity = '0'
         }
         for(let i = 0; i < categoryName.length; i++){
-            if(categoryName[i].toLowerCase() === document.getElementById(id).innerText.toLowerCase()){
-                document.getElementById(`faq${categoryName[i]}`).style.display = 'block'
+            if(categoryName[i] == id){
+                document.getElementById(`category${id}`).style.display = 'block'
                 document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = '#ccc'
             }
             else{
-                document.getElementById(`faq${categoryName[i]}`).style.display = 'none'
+                document.getElementById(`category${categoryName[i]}`).style.display = 'none'
                 document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = 'inherit'
             }
         }
@@ -334,7 +334,7 @@
         border-radius: 4px; 
         outline: none; 
         border: none; 
-        font-size: 1.6rem;
+        font-size: 16px;
     }
     @media only screen and (max-width: 700px) {
         .faq-search-input {
@@ -399,11 +399,11 @@
     }
     .faq-search{
         text-align: center; 
-        padding: 2rem;
+        padding: 16px;
     }
     .faq-search-no-title{
         text-align: center; 
-        padding: 2rem; 
+        padding: 16px; 
         margin-top: 70px;
     }
     .faq-intro-text{
@@ -422,7 +422,7 @@
     #not-found-text{
         display: none; 
         text-align: center; 
-        font-size: 3rem; 
+        font-size:48px; 
         margin-top: 100px;
     }
     .container{

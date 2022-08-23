@@ -351,13 +351,15 @@ exports.update = async (req, res) => {
                         });
                 }
 
-
                 else if (!(req.body.locale && (locale !== req.body.locale)) && (req.body.category_identify && (category_identify !== req.body.category_identify))) {
                     identify = await generateIdentify(user_id, identify, locale, req.body.category_identify);
                     if (!identify) {
                         continueCondition.check = true;
                         continueCondition.message = "Error generate faq identify !";
                     } else category_identify = req.body.category_identify;
+                }
+                else if((req.body.locale && (locale === req.body.locale)) && (req.body.category_identify)){
+                    category_identify = req.body.category_identify;
                 }
                 if (continueCondition.check) {
                     throw new Error(continueCondition.message);
@@ -372,11 +374,25 @@ exports.update = async (req, res) => {
                         where: { id: faq.list_id }
                     })
                 }
-                await Faq.update(faq, {
-                    where: {
-                        identify: faq.identify
-                    }
-                })
+                if(req.body.category_identify !== data.dataValues.category_identify){
+                    await Faq.update({
+                        category_identify: category_identify
+                    }, {
+                        where: {
+                            identify: data.dataValues.identify,
+                            category_identify: data.dataValues.category_identify
+                        }
+                    })
+                }
+                else{
+                    await Faq.update(faq, {
+                        where: {
+                            id: data.dataValues.id,
+                            identify: data.dataValues.identify,
+                            category_identify: data.dataValues.category_identify
+                        }
+                    })
+                }
                 res.send({
                     message: "Faq was updated successfully."
                 });
