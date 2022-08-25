@@ -40,19 +40,11 @@ let initAPIs = (app) => {
     router.get("/api/shop/faq/search/:shop", faq.searchFaqTitle);
     router.get("/api/shop/setting/:shop", setting.findOneInFaqPage);
     router.get("/api/shop/faq-category/:shop", category.findAllInFaqPage);
-<<<<<<< HEAD
     router.get("/api/no-token/block/:shop/:product_id/:locale", block.findAllProduct)
     router.get("/api/no-token/block-more-page/:shop/:page/:locale", block_faq_more_page.findFaqOnPage)
     router.get("/api/gdpr/customer-redact", ensureEnpoint.customerRedact);
     router.get("/api/gdpr/customer-data", ensureEnpoint.customerData);
     router.get("/api/gdpr/shop-redact", ensureEnpoint.shopRedact);
-=======
-
-    router.get("/api/gdpr/customer-redact", ensureEnpoint.customerRedact);
-    router.get("/api/gdpr/customer-data", ensureEnpoint.customerData);
-    router.get("/api/gdpr/shop-redact", ensureEnpoint.shopRedact);
-
->>>>>>> 0ddc58b3ea5ce585614ee4ac8f10010986a652c9
     // Sử dụng authMiddleware.isAuth trước những api cần xác thực
     router.use(AuthMiddleWare.isAuth);
 
