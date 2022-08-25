@@ -56,7 +56,7 @@ exports.create = async (req, res) => {
 // }
 
 // Retrieve all Product of a category from the database.
-exports.findAll = (req, res) => {
+exports.findAll = async (req, res) => {
     if (!req.jwtDecoded.data.user_id) {
         res.status(400).send({
             message: "Error not user selected ?"
@@ -64,7 +64,7 @@ exports.findAll = (req, res) => {
         return;
     }
     const user_id = req.jwtDecoded.data.user_id;
-    Product.findAll({ where: {
+    await Product.findAll({ where: {
         user_id: user_id
      } })
         .then(data => {
