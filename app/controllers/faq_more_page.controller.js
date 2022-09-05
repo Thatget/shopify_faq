@@ -5,9 +5,7 @@ const errorLog = require('../helpers/log.helper');
 exports.create = async (req, res) => {
     // Validate request
     const faq_more_page = req.body;
-    console.log(faq_more_page)
     const user_id = req.jwtDecoded.data.user_id;
-    console.log(user_id)
     faq_more_page.forEach(async element => {
         // await checkProductId(user_id, element.product_id)
         // console.log(checkProductId(user_id, element.product_id))
@@ -56,43 +54,34 @@ exports.findAll = (req, res) => {
     });
 };
 
-// exports.findAllProduct = async (req, res) => {
-//     let userID = null;
-//     const shop = req.params.shop;
-//     await User.findOne({ where: { shopify_domain: shop}})
-//     .then( async userData => {
-//         if (userData) {
-//             userID = userData.dataValues.id;
-//             console.log(userID)
-//             await FaqMorePage.findAll({
-//                 where: {
-//                     user_id: userID
-//                 },
-//             })
-//                 .then(data => {
-//                     console.log(data)
-//                     return  res.send(data);
-//                 })
-//                 .catch(err => {
-//                     return res.status(500).send({
-//                         message:
-//                             err.message || "Some error occurred while retrieving FaqMorePage."
-//                     })
-//                 });
-//         } else {
-//             return res.status(400).send({
-//                 message: "Shop name is not found !"
-//             });
-//             return false;
-//         }
-//     }).catch(error => {
-//     return res.status(500).send("some error");
-// })
+exports.findByPage = (req, res) => {
+    if (!req.params.page) {
+        res.status(400).send({
+            message: "FaqMorePage page not selected"
+        });
+        return;
+    }
+    const user_id = req.jwtDecoded.data.user_id;
+    const page_name = req.params.page
+    FaqMorePage.findAll({
+        where: {
+            user_id: user_id,
+            page_name: page_name
+        }
+    })
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving faq_more_page."
+        })
+    });
+};
 
-// };
 
 // Find a single FaqMorePage with an id
-
 exports.findOne = (req, res) => {
     if (!req.params.id) {
         res.status(400).send({
