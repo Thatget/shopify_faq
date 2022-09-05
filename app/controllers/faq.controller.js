@@ -236,9 +236,11 @@ exports.findAll = (req, res) => {
         return;
     }
     const user_id = req.jwtDecoded.data.user_id;
-    Faq.findAll({ where: {
-        user_id: user_id, locale: req.query.locale
-        } 
+    Faq.findAll({ 
+        where: {
+            user_id: user_id, locale: req.query.locale
+        },
+        order:['position'],
     })
     .then(data => {
         res.send(data);
@@ -633,7 +635,6 @@ exports.findAllInFaqPage = async (req, res) => {
     await User.findOne({ where: { shopify_domain: shop}})
         .then( async userData => {
             if (userData) {
-                console.log(JSON.parse(userData.dataValues.shopLocales).shopLocales)
                 userID = userData.dataValues.id;
 
                 if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
@@ -642,7 +643,6 @@ exports.findAllInFaqPage = async (req, res) => {
                 else{
                     locale = req.query.locale                    
                 }
-                console.log(locale)
 
                 await Faq.findAll({
                     where: {
@@ -651,7 +651,6 @@ exports.findAllInFaqPage = async (req, res) => {
                     order:[[db.sequelize.literal('position'), 'DESC']],
                 })
                     .then(data => {
-                        console.log(data)
                         return  res.send(data);
                     })
                     .catch(err => {
