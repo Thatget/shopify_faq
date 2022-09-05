@@ -302,7 +302,6 @@ exports.findOne = (req, res) => {
 // Update a Faq by the id in the request
 exports.update = async (req, res) => {
     // Check requirement params
-    console.log(req.body)
     // if (!req.params.id || !req.body.title || !req.body.content ) {
     //     res.status(400).send({
     //         message: "Faq update missing params!"
@@ -310,7 +309,6 @@ exports.update = async (req, res) => {
     //     return;
     // }
     const id = req.params.id;
-    console.log(id)
     // Check this faq is exits or not
     await Faq.findByPk(id)
         .then(async response => {
@@ -382,7 +380,6 @@ exports.update = async (req, res) => {
                 })
                 .then(async num => {
                     if (num == 1) {
-                        console.log(user_id,identify,category_identify)
                         await Faq.update({category_identify: category_identify, is_visible: req.body.is_visible}, {
                             where: {
                                 user_id: user_id,
@@ -391,7 +388,6 @@ exports.update = async (req, res) => {
                             } 
                         })
                         .then(num => {
-                            console.log(num)
                             if(num == 0){
                                 console.log(num)
                             }
@@ -422,7 +418,6 @@ exports.update = async (req, res) => {
                         title: req.body.title_translate,
                         content: req.body.content_translate
                     }
-                    console.log(dataTranslate)
                     await Faq.update(dataTranslate,
                         {
                             where: {id: req.body.id_translate}
@@ -495,6 +490,27 @@ exports.updateWhenDeleteCategory = async (req, res) => {
     }
 };
 
+exports.updateRearrangeFaqs = async (req, res) => {
+    let faqs = req.body
+    if(!faqs){
+        res.status(400).send({
+            message: "Could not update Faqs !"
+        });
+        return;
+    }
+    faqs.forEach(item => {
+        Faq.update({
+            position: item.position,
+        },{
+            where: {
+                id: item.id
+            }
+        })
+    })
+    res.send({
+        message: 'Update Successfully !'
+    })
+};
 
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {

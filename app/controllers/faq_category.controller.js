@@ -239,6 +239,29 @@ exports.update = async (req, res) => {
         })
 };
 
+// Update rearrange Categories
+exports.updateRearrangeCategories = async (req, res) => {
+    let categories = req.body
+    if(!categories){
+        res.status(400).send({
+            message: "Could not update Categories !"
+        });
+        return;
+    }
+    categories.forEach(item => {
+        FaqCategory.update({
+            position: item.position,
+        },{
+            where: {
+                id: item.id
+            }
+        })
+    })
+    res.send({
+        message: 'Update Successfully !'
+    })
+};
+
 // Delete a Category with the specified id in the request
 exports.delete = async (req, res) => {
     if (!req.params.id) {
