@@ -71,7 +71,7 @@ exports.findAll = (req, res) => {
     }
     const user_id = req.jwtDecoded.data.user_id;
     let condition = { user_id: { [Op.eq]: `${user_id}` }, locale: req.query.locale };
-    FaqCategory.findAll({ where: condition })
+    FaqCategory.findAll({ where: condition, order:['position'] })
         .then(data => {
             res.send(data);
         })
