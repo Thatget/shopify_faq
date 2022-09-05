@@ -44,6 +44,7 @@ exports.findAll = (req, res) => {
         }
     })
     .then(data => {
+        console.log(data)
         res.send(data);
     })
     .catch(err => {
@@ -164,29 +165,53 @@ exports.update = async (req, res) => {
 //Update FAQs in FaqProduct
 exports.updateFaqs = async (req, res) => {
     const data = req.body
-    await FaqProduct.update({
-        faq_identify: data.faq_identify,
-        category_identify: data.category_identify
-    }, {
-        where: { id: data.list_id }
-    })
-        .then( num => {
-            if (num == 1) {
-                res.send({
-                    message: "FaqProduct was updated successfully."
-                });
-            } else {
-                res.send({
-                    message: `Cannot update FaqProduct!`
-                });
+    const user_id = req.jwtDecoded.data.user_id;
+    if(data){
+        for(let i = 0; i < data.length; i++){
+            await FaqProduct.update({
+                category_identify: 'Uncategorized1',
+                faq_identify : data[i].identify
+            }, {
+                where: {
+                    faq_id : data[i].id,
+                    user_id : user_id
+                }
+            })
+        }
+        res.send({
+            message: "FaqProduct was updated successfully."
+        });
+    }
+    else{
+        res.send({
+            message: `Cannot update FaqProduct!`
+        });
+    }
+};
+
+exports.updateFaqsWhenChangeCategory = async (req, res) => {
+    const data = req.body
+    const user_id = req.jwtDecoded.data.user_id;
+    console.log(data.length,'aaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    if(data){
+        await FaqProduct.update({
+            category_identify: data.category_identify,
+            faq_identify : data.identify
+        }, {
+            where: {
+                faq_id : data.id,
+                user_id : user_id
             }
         })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating FaqProduct"
-            });
+        res.send({
+            message: "FaqProduct was updated successfully."
         });
-
+    }
+    else{
+        res.send({
+            message: `Cannot update FaqProduct!`
+        });
+    }
 };
 
 // Delete a Tutorial with the specified id in the request
@@ -246,5 +271,3 @@ exports.deleteAll = (req, res) => {
             });
         });
 };
-
-
