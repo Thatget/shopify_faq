@@ -26,12 +26,14 @@ exports.findAllProduct = async (req, res) => {
             else{
                 locale = req.params.locale
             }
+            let settingData = []
             Setting.findOne({
                 where:{
                     user_id: userID
                 }
             })
             .then(data => {
+                settingData = data.dataValues
                 TemplateSetting.findOne({
                     where: {
                         template_number: data.dataValues.faq_template_number,
@@ -40,6 +42,12 @@ exports.findAllProduct = async (req, res) => {
                 })
                 .then(data => {
                     templateSetting = data.dataValues
+                    if(settingData){
+                        templateSetting.category_sort_name = settingData.category_sort_name
+                        templateSetting.faq_sort_name = settingData.faq_sort_name
+                        templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
+                        templateSetting.dont_category_faq = settingData.dont_category_faq
+                    }
                 })
                 .catch(e =>{
                     console.log(e)
@@ -63,6 +71,7 @@ exports.findAllProduct = async (req, res) => {
     // const result = await User.findOne({ where: { shopify_domain: shop}}).catch(error => {
     //     return res.status(500).send("some error");
     // });
+
     return res.send({faq: Faqs, category: Categories, templateSetting: templateSetting})
 };
 
@@ -102,7 +111,6 @@ async function getFaqsId(product_id , locale, Faqs, userID){
         if(data){
             listFaqId = data
             for(let i = 0; i < listFaqId.length; i++){
-                console.log(listFaqId[i].dataValues)
                 await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
             }
         }
@@ -115,11 +123,13 @@ async function getFaqsId(product_id , locale, Faqs, userID){
     // });
 }
 
-async function getFaqs(faq_identify, category_identify, locale, Faqs){
+async function getFaqs(faq_identify, category_identify, locale, Faqs, userID){
+    console.log(faq_identify, category_identify)
     await Faq.findAll({
         where: {
             identify : faq_identify ,
             category_identify : category_identify,
+            user_id : userID
         },
     })
     .then(async data => {

@@ -7,6 +7,7 @@ const block = require("../controllers/block_product.controller");
 const product = require("../controllers/product.controller");
 const faq_product = require("../controllers/faq_product.controller");
 const faq_more_page = require("../controllers/faq_more_page.controller");
+const faq_more_page_setting = require("../controllers/faq_more_page_setting.controller");
 const block_faq_more_page = require("../controllers/block_more_page.controller");
 const user = require("../controllers/user.controller");
 const setting = require("../controllers/setting.controller");
@@ -56,6 +57,7 @@ let initAPIs = (app) => {
     router.get("/api/faq/:id", faq.findOne);
     router.put("/api/faq/:id", faq.update);
     router.put("/api/faq-update", faq.updateWhenDeleteCategory);
+    router.put("/api/faq/update/rearrange", faq.updateRearrangeFaqs);
     router.delete("/api/faq/:id", faq.delete);
     router.delete("/api/faq", faq.deleteAll);
 
@@ -72,6 +74,7 @@ let initAPIs = (app) => {
     router.get("/api/faq-category", category.findAll);
     router.get("/api/faq-category/:id", category.findOne);
     router.put("/api/faq-category/:id", category.update);
+    router.put("/api/faq-category/update/rearrange", category.updateRearrangeCategories);
     router.delete("/api/faq-category/:id", category.delete);
     router.delete("/api/faq-category", category.deleteAll);
 
@@ -99,17 +102,29 @@ let initAPIs = (app) => {
     router.get("/api/faq-product/:id", faq_product.findOne);
     router.put("/api/faq-product/:id", faq_product.update);
     router.put("/api/faq-product-update", faq_product.updateFaqs);
+    router.put("/api/faq-product-update/category", faq_product.updateFaqsWhenChangeCategory);
     router.delete("/api/faq-product/:id", faq_product.delete);
     router.delete("/api/faq-product/product", faq_product.deleteAll);
 
     //Faq More Page router
     router.post("/api/faq-more-page", faq_more_page.create);
-    router.get("/api/faq-more-page/page", faq_more_page.findAll);
+    router.get("/api/faq-more-page", faq_more_page.findAll);
     router.get("/api/faq-more-page/:id", faq_more_page.findOne);
+    router.get("/api/faq-more-page/page/:page", faq_more_page.findByPage);
     router.put("/api/faq-more-page/:id", faq_more_page.update);
     router.put("/api/faq-more-page-update", faq_more_page.updateFaqs);
     router.delete("/api/faq-more-page/:id", faq_more_page.delete);
     router.delete("/api/faq-more-page/page", faq_more_page.deleteAll);
+
+    //Setting Faq More Page router
+    router.post("/api/faq-more-page-setting", faq_more_page_setting.create);
+    router.get("/api/faq-more-page-setting", faq_more_page_setting.findAll);
+    router.get("/api/faq-more-page-setting/:id", faq_more_page_setting.findOne);
+    router.get("/api/faq-more-page-setting/page/:page", faq_more_page_setting.findByPage);
+    router.put("/api/faq-more-page-setting/:id", faq_more_page_setting.update);
+    router.delete("/api/faq-more-page-setting/:id", faq_more_page_setting.delete);
+    router.delete("/api/faq-more-page-setting/page", faq_more_page_setting.deleteAll);
+
 
     // get Product list
     router.get("/api/shop/product-list", shopifyApi.getProductList);

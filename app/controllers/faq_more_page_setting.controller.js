@@ -1,14 +1,12 @@
 const db = require("../models");
-const FaqMorePage = db.faq_more_page;
+const FaqMorePageSetting = db.faq_more_page_setting;
 const errorLog = require('../helpers/log.helper');
 
 exports.create = async (req, res) => {
     // Validate request
-    const faq_more_page = req.body;
     const user_id = req.jwtDecoded.data.user_id;
-    faq_more_page.forEach(async element => {
-        // await checkProductId(user_id, element.product_id)
-        // console.log(checkProductId(user_id, element.product_id))
+    const faq_more_page_setting = req.body;
+    faq_more_page_setting.forEach(async element => {
         element.user_id = user_id;
     }) 
     if (!req.body) {
@@ -17,10 +15,10 @@ exports.create = async (req, res) => {
         });
         return;
     }
-    // Create faq_more_page when identify is not set
+    // Create faq_more_page_setting when identify is not set
     else {
-        // Create a faq_more_page
-        await FaqMorePage.bulkCreate(faq_more_page)
+        // Create a faq_more_page_setting
+        await FaqMorePageSetting.bulkCreate(faq_more_page_setting)
             .then(data => {
                 res.send(data);
                 return;
@@ -28,17 +26,17 @@ exports.create = async (req, res) => {
             .catch(err => {
                 res.status(500).send({
                     message:
-                        err.message || "Some error occurred while creating the faq_more_page."
+                        err.message || "Some error occurred while creating the faq_more_page_setting."
                 });
                 return;
             });
     }
 };
 
-// Retrieve all FaqMorePage of a category from the database.
+// Retrieve all FaqMorePageSetting of a category from the database.
 exports.findAll = (req, res) => {
     const user_id = req.jwtDecoded.data.user_id;
-    FaqMorePage.findAll({
+    FaqMorePageSetting.findAll({
         where: {
             user_id: user_id
         }
@@ -49,7 +47,7 @@ exports.findAll = (req, res) => {
     .catch(err => {
         res.status(500).send({
             message:
-                err.message || "Some error occurred while retrieving faq_more_page."
+                err.message || "Some error occurred while retrieving faq_more_page_setting."
         })
     });
 };
@@ -57,13 +55,13 @@ exports.findAll = (req, res) => {
 exports.findByPage = (req, res) => {
     if (!req.params.page) {
         res.status(400).send({
-            message: "FaqMorePage page not selected"
+            message: "FaqMorePageSetting page not selected"
         });
         return;
     }
     const user_id = req.jwtDecoded.data.user_id;
     const page_name = req.params.page
-    FaqMorePage.findAll({
+    FaqMorePageSetting.findAll({
         where: {
             user_id: user_id,
             page_name: page_name
@@ -75,58 +73,59 @@ exports.findByPage = (req, res) => {
     .catch(err => {
         res.status(500).send({
             message:
-                err.message || "Some error occurred while retrieving faq_more_page."
+                err.message || "Some error occurred while retrieving faq_more_page_setting."
         })
     });
 };
 
 
-// Find a single FaqMorePage with an id
+// Find a single FaqMorePageSetting with an id
 exports.findOne = (req, res) => {
     if (!req.params.id) {
         res.status(400).send({
-            message: "FaqMorePage id not selected"
+            message: "FaqMorePageSetting id not selected"
         });
         return;
     }
     const id = req.params.id;
-    FaqMorePage.findByPk(id)
+    FaqMorePageSetting.findByPk(id)
         .then(data => {
             if (data) {
                 res.send(data);
             } else {
                 res.status(404).send({
-                    message: `Cannot find faq_more_page with id=${id}.`
+                    message: `Cannot find faq_more_page_setting with id=${id}.`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving faq_more_page with id=" + id
+                message: "Error retrieving faq_more_page_setting with id=" + id
             });
         });
 };
 
-// Update a FaqMorePage by the id in the request
+// Update a FaqMorePageSetting by the id in the request
 exports.update = async (req, res) => {
     if (!req.params.id) {
         res.status(400).send({
-            message: "FaqMorePage update missing params!"
+            message: "FaqMorePageSetting update missing params!"
         });
         return;
     }
-    // Check this faq_more_page is exits or not
-    await FaqMorePage.findByPk(req.body.id)
+    console.log(req.params.id)
+    // Check this faq_more_page_setting is exits or not
+    await FaqMorePageSetting.findByPk(req.params.id)
         .then(async data => {
             if (data) {
                 // const user_id = data.dataValues.user_id;
-                await FaqMorePage.update(req.body, {
-                    where: { id: req.body.id }
+                await FaqMorePageSetting.update(req.body, {
+                    where: { id: req.params.id }
                 })
                     .then( num => {
                         if (num == 1) {
                             res.send({
-                                message: "FaqMorePage was updated successfully."
+                                message: "FaqMorePageSetting was updated successfully."
                             });
                         } else {
                             res.send({
@@ -152,10 +151,10 @@ exports.update = async (req, res) => {
         })
 };
 
-//Update FAQs in FaqMorePage
+//Update FAQs in FaqMorePageSetting
 exports.updateFaqs = async (req, res) => {
     const data = req.body
-    await FaqMorePage.update({
+    await FaqMorePageSetting.update({
         faq_identify: data.faq_identify,
         category_identify: data.category_identify
     }, {
@@ -164,17 +163,17 @@ exports.updateFaqs = async (req, res) => {
         .then( num => {
             if (num == 1) {
                 res.send({
-                    message: "FaqMorePage was updated successfully."
+                    message: "FaqMorePageSetting was updated successfully."
                 });
             } else {
                 res.send({
-                    message: `Cannot update FaqMorePage!`
+                    message: `Cannot update FaqMorePageSetting!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating FaqMorePage"
+                message: "Error updating FaqMorePageSetting"
             });
         });
 
@@ -184,7 +183,7 @@ exports.updateFaqs = async (req, res) => {
 exports.delete = (req, res) => {
     if (!req.params.id) {
         res.status(400).send({
-            message: "Missing faq_more_page data!"
+            message: "Missing faq_more_page_setting data!"
         });
         return;
     }
@@ -193,28 +192,28 @@ exports.delete = (req, res) => {
     //     condition = { identify:  req.query.identify, category_identify: req.query.category_identify, user_id:  req.jwtDecoded.data.user_id}
     // }
 
-    FaqMorePage.destroy({
+    FaqMorePageSetting.destroy({
         where: condition
     })
         .then( num => {
             if (num == 1) {
                 res.send({
-                    message: "FaqMorePage was deleted successfully!"
+                    message: "FaqMorePageSetting was deleted successfully!"
                 });
             } else {
                 res.send({
-                    message: `Cannot delete this faq_more_page Maybe faq_more_page was not found!`
+                    message: `Cannot delete this faq_more_page_setting Maybe faq_more_page_setting was not found!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete faq_more_page"
+                message: "Could not delete faq_more_page_setting"
             });
         });
 };
 
-// Delete all FaqMorePage from the database.
+// Delete all FaqMorePageSetting from the database.
 exports.deleteAll = (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -223,7 +222,7 @@ exports.deleteAll = (req, res) => {
         return;
     }
     const product_id = req.body
-    FaqMorePage.destroy({
+    FaqMorePageSetting.destroy({
         where: {product_id: product_id},
         truncate: false
     })
