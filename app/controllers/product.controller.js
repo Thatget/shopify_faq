@@ -125,7 +125,6 @@ exports.findOne = async (req, res) => {
         }
     })
         .then(data => {
-            console.log(data,'1')
             if (data) {
                 res.send(data);
             } else {

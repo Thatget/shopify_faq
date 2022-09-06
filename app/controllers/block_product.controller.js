@@ -56,8 +56,8 @@ exports.findAllProduct = async (req, res) => {
             .catch(e =>{
                 console.log(e)
             })
-            await getProduct(userID, product_id, locale, Faqs, Categories)
-            await getCategory(locale, userID, Categories)
+            await getProduct(userID, product_id, locale, Faqs, templateSetting)
+            await getCategory(locale, userID, Categories, templateSetting)
         }
         //  else {
         //     return res.status(400).send({
@@ -75,7 +75,7 @@ exports.findAllProduct = async (req, res) => {
     return res.send({faq: Faqs, category: Categories, templateSetting: templateSetting})
 };
 
-async function getProduct(userID, product_id, locale, Faqs, Categories){
+async function getProduct(userID, product_id, locale, Faqs, templateSetting){
     let productId = null
     await Product.findOne({
         where: {
@@ -86,7 +86,7 @@ async function getProduct(userID, product_id, locale, Faqs, Categories){
     .then(async data => {
         if(data){
             productId = data.dataValues.id
-            await getFaqsId(productId, locale, Faqs, userID, Categories)
+            await getFaqsId(productId, locale, Faqs, userID, templateSetting)
         }
         else{
             productId = data
@@ -101,20 +101,39 @@ async function getProduct(userID, product_id, locale, Faqs, Categories){
     return Product;
 }
 
-async function getFaqsId(product_id , locale, Faqs, userID){
-    await FaqProduct.findAll({
-        where: {
-            product_id: product_id
-        },
-    })
-    .then( async data => {
-        if(data){
-            listFaqId = data
-            for(let i = 0; i < listFaqId.length; i++){
-                await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
+async function getFaqsId(product_id , locale, Faqs, userID, templateSetting){
+    if(templateSetting.faq_sort_name === true){
+        await FaqProduct.findAll({
+            where: {
+                product_id: product_id
+            },
+        })
+        .then( async data => {
+            if(data){
+                listFaqId = data
+                for(let i = 0; i < listFaqId.length; i++){
+                    await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
+                }
             }
-        }
-    })
+        })
+    }
+    else{
+        await FaqProduct.findAll({
+            where: {
+                product_id: product_id
+            },
+            order:['position']
+        })
+        .then( async data => {
+            if(data){
+                console.log(data,'dddddddddddddddddd')
+                listFaqId = data
+                for(let i = 0; i < listFaqId.length; i++){
+                    await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
+                }
+            }
+        })
+    }
     // .catch(err => {
     //     return res.status(500).send({
     //         message:
@@ -124,7 +143,6 @@ async function getFaqsId(product_id , locale, Faqs, userID){
 }
 
 async function getFaqs(faq_identify, category_identify, locale, Faqs, userID){
-    console.log(faq_identify, category_identify)
     await Faq.findAll({
         where: {
             identify : faq_identify ,
@@ -159,21 +177,42 @@ async function getFaqs(faq_identify, category_identify, locale, Faqs, userID){
     });
 }
 
-async function getCategory(locale, userID, Categories){
-    await FaqCategory.findAll({
-        where: {
-            locale: 'default',
-            user_id: userID
-        }
-    })
-    .then(data => {
-        Categories.push(data)
-    })
-    .catch(err => {
-        return res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving Product."
+async function getCategory(locale, userID, Categories, templateSetting){
+    if(templateSetting.category_sort_name === true){
+        await FaqCategory.findAll({
+            where: {
+                locale: locale,
+                user_id: userID
+            },
+            order:['title']
         })
-    });
+        .then(data => {
+            Categories.push(data)
+        })
+        .catch(err => {
+            return res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving Product."
+            })
+        });
+    }
+    else{
+        await FaqCategory.findAll({
+            where: {
+                locale: locale,
+                user_id: userID
+            },
+            order:['position']
+        })
+        .then(data => {
+            Categories.push(data)
+        })
+        .catch(err => {
+            return res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving Product."
+            })
+        });
+    }
     return Categories;
 }

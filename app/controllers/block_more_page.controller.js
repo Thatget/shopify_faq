@@ -6,7 +6,6 @@ const Setting = db.setting
 const TemplateSetting = db.template_setting
 let listFaqId = []
 const FaqMorePage = db.faq_more_page;
-console.log('aaa')
 exports.findFaqOnPage = async (req, res) => {
     let Faqs = [];
     console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')

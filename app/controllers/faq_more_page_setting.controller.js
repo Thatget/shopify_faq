@@ -113,7 +113,6 @@ exports.update = async (req, res) => {
         });
         return;
     }
-    console.log(req.params.id)
     // Check this faq_more_page_setting is exits or not
     await FaqMorePageSetting.findByPk(req.params.id)
         .then(async data => {

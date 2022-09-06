@@ -74,7 +74,6 @@ exports.findAll = (req, res) => {
     FaqCategory.findAll({ where: condition, order:['position'],
 })
         .then(data => {
-            console.log(data)
             res.send(data);
         })
         .catch(err => {
