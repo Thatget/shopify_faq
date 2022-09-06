@@ -126,7 +126,6 @@ async function getFaqsId(product_id , locale, Faqs, userID, templateSetting){
         })
         .then( async data => {
             if(data){
-                console.log(data,'dddddddddddddddddd')
                 listFaqId = data
                 for(let i = 0; i < listFaqId.length; i++){
                     await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)

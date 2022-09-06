@@ -73,7 +73,6 @@ exports.findFaqs = async (shop, locale) => {
                             selectQueryCategories += " ORDER BY `faq_category`.`position`"
                         }
 
-
 						dataCategories = await db.sequelize.query(
 							selectQueryCategories+";",
 							{
@@ -81,7 +80,6 @@ exports.findFaqs = async (shop, locale) => {
 								type: QueryTypes.SELECT
 							}
 						);
-                        console.log(dataCategories,'aaaaaaaaaa')
 						dataCategories.forEach(item => {
 							if(item.locale === locale){
 								listCategory.push(item)
