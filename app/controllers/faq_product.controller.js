@@ -41,10 +41,10 @@ exports.findAll = (req, res) => {
     FaqProduct.findAll({
         where: {
             user_id: user_id
-        }
+        },
+        order:['position']
     })
     .then(data => {
-        console.log(data)
         res.send(data);
     })
     .catch(err => {
@@ -162,6 +162,33 @@ exports.update = async (req, res) => {
         })
 };
 
+// Update position a FaqProduct by the id in the request
+
+exports.updatePosition = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({
+            message: "FaqProduct update missing params!"
+        });
+        return;
+    }
+    // Check this faq_product is exits or not
+    const faq_product = req.body
+    // const user_id = data.dataValues.user_id;
+    faq_product.forEach(item => {
+        FaqProduct.update({
+            position: item.position,
+        },{
+            where: {
+                id: item.id
+            }
+        })
+    })
+    res.send({
+        message: 'Update Successfully !'
+    })
+};
+
+
 //Update FAQs in FaqProduct
 exports.updateFaqs = async (req, res) => {
     const data = req.body
@@ -192,7 +219,6 @@ exports.updateFaqs = async (req, res) => {
 exports.updateFaqsWhenChangeCategory = async (req, res) => {
     const data = req.body
     const user_id = req.jwtDecoded.data.user_id;
-    console.log(data.length,'aaaaaaaaaaaaaaaaaaaaaaaaaaa')
     if(data){
         await FaqProduct.update({
             category_identify: data.category_identify,
