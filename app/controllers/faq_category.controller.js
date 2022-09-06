@@ -2,6 +2,8 @@ const db = require("../models");
 const FaqCategory = db.faq_category;
 const User = db.user;
 const Op = db.Sequelize.Op;
+const Setting = db.setting
+
 exports.create = async (req, res) => {
     // Validate request
     if (!req.body.title || !req.body.locale || !req.jwtDecoded.data.user_id) {
@@ -63,25 +65,52 @@ exports.findAllCategory = async (req, res) => {
 
 // Retrieve all faq_category from the database of a user.
 exports.findAll = (req, res) => {
+    const user_id = req.jwtDecoded.data.user_id;
+    let settingData = false
     if (!req.query.locale) {
         res.status(400).send({
             message: "Locale must be selected!"
         });
         return;
     }
-    const user_id = req.jwtDecoded.data.user_id;
-    let condition = { user_id: { [Op.eq]: `${user_id}` }, locale: req.query.locale };
-    FaqCategory.findAll({ where: condition, order:['position'],
-})
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving category."
+    Setting.findOne({
+        where:{
+            user_id: user_id
+        }
+    })
+    .then(data => {
+        settingData = data.dataValues
+        let condition = { user_id: { [Op.eq]: `${user_id}` }, locale: req.query.locale };
+        if(settingData.category_sort_name === true){
+            FaqCategory.findAll({ where: condition, order:['title']})
+            .then(data => {
+                res.send(data);
+                console.log(data)
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while retrieving category."
+                });
             });
-        });
+        }
+        else{
+            FaqCategory.findAll({ where: condition, order:['position']})
+            .then(data => {
+                res.send(data);
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while retrieving category."
+                });
+            });
+        }
+    })
+    .catch(e =>{
+        console.log(e)
+    })
+
 };
 
 exports.getAll = (req, res) => {
@@ -334,7 +363,7 @@ exports.findAllInFaqPage = async (req, res) => {
                 userID = userData.dataValues.id;
                 await FaqCategory.findAll({
                     where: {user_id: userID, locale: locale},
-                    order:[[db.sequelize.literal('position'), 'DESC']],
+                    order:['position']
                 })
                     .then(data => {
                         res.send(data);
