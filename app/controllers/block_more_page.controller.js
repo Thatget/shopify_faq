@@ -8,7 +8,6 @@ let listFaqId = []
 const FaqMorePage = db.faq_more_page;
 exports.findFaqOnPage = async (req, res) => {
     let Faqs = [];
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     let Categories = [];
     let userID = null;
     let templateSetting = []
@@ -33,7 +32,6 @@ exports.findFaqOnPage = async (req, res) => {
             })
             .then(data => {
                 settingData = data.dataValues
-                console.log(settingData, 'setting')
                 TemplateSetting.findOne({
                     where: {
                         template_number: data.dataValues.faq_template_number,
@@ -48,7 +46,6 @@ exports.findFaqOnPage = async (req, res) => {
                         templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
                         templateSetting.dont_category_faq = settingData.dont_category_faq
                     }
-                    console.log(templateSetting, 'template_setting')
                 })
                 .catch(e =>{
                     console.log(e)

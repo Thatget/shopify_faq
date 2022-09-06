@@ -5,6 +5,7 @@ const User = db.user;
 const errorLog = require('../helpers/log.helper');
 const { response } = require("express");
 const Op = db.Sequelize.Op;
+const Setting = db.setting
 
 exports.create = async (req, res) => {
     // Validate request
@@ -236,21 +237,54 @@ exports.findAll = (req, res) => {
         return;
     }
     const user_id = req.jwtDecoded.data.user_id;
-    Faq.findAll({ 
-        where: {
-            user_id: user_id, locale: req.query.locale
-        },
-        order:['position'],
+    let settingData = []
+
+    Setting.findOne({
+        where:{
+            user_id: user_id
+        }
     })
     .then(data => {
-        res.send(data);
+        settingData = data.dataValues
+        if(settingData.faq_sort_name === true){
+            Faq.findAll({ 
+                where: {
+                    user_id: user_id, locale: req.query.locale
+                },
+                order:['title'],
+            })
+            .then(data => {
+                res.send(data);
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while retrieving faq."
+                })
+            });
+        }
+        else{
+            Faq.findAll({ 
+                where: {
+                    user_id: user_id, locale: req.query.locale
+                },
+                order:['position'],
+            })
+            .then(data => {
+                res.send(data);
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while retrieving faq."
+                })
+            });
+        }
     })
-    .catch(err => {
-        res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving faq."
-        })
-    });
+    .catch(e =>{
+        console.log(e)
+    })
+
 };
 
 exports.getAll = (req, res) => {
