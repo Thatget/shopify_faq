@@ -4,7 +4,8 @@
 /* .category-container-1{
   margin-bottom: 40px
 } */
-.faq-main-content{
+.faq-main-content, 
+.faq-container-2{
   margin-bottom: 12px;
 }
 .faq-category-width{
