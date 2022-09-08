@@ -7,6 +7,7 @@ const Setting = db.setting
 const TemplateSetting = db.template_setting
 let listFaqId = []
 const FaqProduct = db.faq_product;
+const errorLog = require('../helpers/log.helper');
 
 exports.findAllProduct = async (req, res) => {
     let Faqs = [];
@@ -27,14 +28,14 @@ exports.findAllProduct = async (req, res) => {
                 locale = req.params.locale
             }
             let settingData = []
-            Setting.findOne({
+            await Setting.findOne({
                 where:{
                     user_id: userID
                 }
             })
-            .then(data => {
+            .then(async data => {
                 settingData = data.dataValues
-                TemplateSetting.findOne({
+                await TemplateSetting.findOne({
                     where: {
                         template_number: data.dataValues.faq_template_number,
                         setting_id: data.dataValues.id
@@ -50,24 +51,27 @@ exports.findAllProduct = async (req, res) => {
                     }
                 })
                 .catch(e =>{
+                    errorLog.error(e, 'block_product')
                     console.log(e)
                 })
             })
             .catch(e =>{
+                errorLog.error(e, 'block_product')
                 console.log(e)
             })
             await getProduct(userID, product_id, locale, Faqs, templateSetting)
             await getCategory(locale, userID, Categories, templateSetting)
         }
-        //  else {
-        //     return res.status(400).send({
-        //         message: "Shop name is not found !"
-        //     });
-        // }
+         else {
+            return res.status(400).send({
+                message: "Shop name is not found !"
+            });
+        }
     })
-    // .catch(error => {
-    //     return res.status(500).send("some error");
-    // })
+    .catch(error => {
+        errorLog.error(error, 'block_product')
+        return res.status(500).send("some error");
+    })
     // const result = await User.findOne({ where: { shopify_domain: shop}}).catch(error => {
     //     return res.status(500).send("some error");
     // });
@@ -102,43 +106,19 @@ async function getProduct(userID, product_id, locale, Faqs, templateSetting){
 }
 
 async function getFaqsId(product_id , locale, Faqs, userID, templateSetting){
-    if(templateSetting.faq_sort_name === true){
-        await FaqProduct.findAll({
-            where: {
-                product_id: product_id
-            },
-        })
-        .then( async data => {
-            if(data){
-                listFaqId = data
-                for(let i = 0; i < listFaqId.length; i++){
-                    await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
-                }
+    await FaqProduct.findAll({
+        where: {
+            product_id: product_id
+        },
+    })
+    .then( async data => {
+        if(data){
+            listFaqId = data
+            for(let i = 0; i < listFaqId.length; i++){
+                await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
             }
-        })
-    }
-    else{
-        await FaqProduct.findAll({
-            where: {
-                product_id: product_id
-            },
-            order:['position']
-        })
-        .then( async data => {
-            if(data){
-                listFaqId = data
-                for(let i = 0; i < listFaqId.length; i++){
-                    await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
-                }
-            }
-        })
-    }
-    // .catch(err => {
-    //     return res.status(500).send({
-    //         message:
-    //             err.message || "Some error occurred while retrieving Product."
-    //     })
-    // });
+        }
+    })
 }
 
 async function getFaqs(faq_identify, category_identify, locale, Faqs, userID){
