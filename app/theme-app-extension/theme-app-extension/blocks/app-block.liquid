@@ -41,6 +41,16 @@
         list_category.push(item)
       }
       if(template_setting.dont_category_faq === true){
+        if(template_setting.faq_sort_name === true){
+          faqs.sort(function(a, b){
+            if (a.title.toLowerCase() < b.title.toLowerCase()) {return -1;}
+            if (a.title.toLowerCase() > b.title.toLowerCase()) {return 1;}
+            return 0;
+          });
+        }
+        else{
+          faqs.sort(function(a, b){return a.position - b.position});
+        }
         block_container = ''
         for(let j = 0; j < faqs.length; j++){
           var faq_title = faqs[j].title
@@ -75,7 +85,16 @@
         else{
           list_category.sort(function(a, b){return a[0].position - b[0].position});
         }
-        console.log(list_category,'list_category')
+        if(template_setting.faq_sort_name === true){
+          faqs.sort(function(a, b){
+            if (a.title.toLowerCase() < b.title.toLowerCase()) {return -1;}
+            if (a.title.toLowerCase() > b.title.toLowerCase()) {return 1;}
+            return 0;
+          });
+        }
+        else{
+          faqs.sort(function(a, b){return a.position - b.position});
+        }
         for(let i = 0; i < list_category.length; i++){
           content_block = ''
           for(let j = 0; j < faqs.length; j++){
@@ -111,18 +130,6 @@
           }
         }
         document.getElementById('professional-faqs-block').innerHTML = block_container
-        if(list_category.length > 0){
-          if(template_setting.dont_category_faq === true){
-            for(let i = 0; i< list_category.length; i++){
-              document.getElementsByClassName('category-title')[i].style.display = 'none'
-            }
-          }
-          else{
-            for(let i = 0; i< list_category.length; i++){
-              document.getElementsByClassName('category-title')[i].style.display = 'block'
-            }
-          }
-        }
       }
     }
     
@@ -178,7 +185,7 @@
 </script>
 {% schema %}
   {
-    "name": "Dev Product FAQs",
+    "name": "dp-shop-faq",
     "target": "section",
     "tag": "section",
     "stylesheet": "faqs-block.css",
@@ -186,3 +193,4 @@
     "templates": ["product", "index", "page", "cart", "collection"]
   }
 {% endschema %}
+
