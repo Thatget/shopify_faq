@@ -1,9 +1,11 @@
 const db = require("../models");
 const Faq = db.faq;
-const Faq_Product = db.faq_product;
 const FaqCategory = db.faq_category;
 const User = db.user;
 const errorLog = require('../helpers/log.helper');
+const { response } = require("express");
+const Op = db.Sequelize.Op;
+const Setting = db.setting
 
 exports.create = async (req, res) => {
     // Validate request
@@ -235,19 +237,54 @@ exports.findAll = (req, res) => {
         return;
     }
     const user_id = req.jwtDecoded.data.user_id;
-    Faq.findAll({ where: {
-        user_id: user_id, locale: req.query.locale
-        } 
+    let settingData = []
+
+    Setting.findOne({
+        where:{
+            user_id: user_id
+        }
     })
     .then(data => {
-        res.send(data);
+        settingData = data.dataValues
+        if(settingData.faq_sort_name === true){
+            Faq.findAll({ 
+                where: {
+                    user_id: user_id, locale: req.query.locale
+                },
+                order:['title'],
+            })
+            .then(data => {
+                res.send(data);
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while retrieving faq."
+                })
+            });
+        }
+        else{
+            Faq.findAll({ 
+                where: {
+                    user_id: user_id, locale: req.query.locale
+                },
+                order:['position'],
+            })
+            .then(data => {
+                res.send(data);
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while retrieving faq."
+                })
+            });
+        }
     })
-    .catch(err => {
-        res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving faq."
-        })
-    });
+    .catch(e =>{
+        console.log(e)
+    })
+
 };
 
 exports.getAll = (req, res) => {
@@ -301,25 +338,26 @@ exports.findOne = (req, res) => {
 // Update a Faq by the id in the request
 exports.update = async (req, res) => {
     // Check requirement params
-    if (!req.params.id || !req.body.title || !req.body.content ) {
-        res.status(400).send({
-            message: "Faq update missing params!"
-        });
-        return;
-    }
+    // if (!req.params.id || !req.body.title || !req.body.content ) {
+    //     res.status(400).send({
+    //         message: "Faq update missing params!"
+    //     });
+    //     return;
+    // }
     const id = req.params.id;
     // Check this faq is exits or not
     await Faq.findByPk(id)
-        .then(async data => {
-            if (data) {
-                const user_id = data.dataValues.user_id;
-                let identify = data.dataValues.identify;
-                let locale = data.dataValues.locale;
-                let category_identify = data.dataValues.category_identify;
+        .then(async response => {
+            if (response) {
+                const user_id = response.dataValues.user_id;
+                let identify = response.dataValues.identify;
+                let locale = response.dataValues.locale;
+                let category_identify = response.dataValues.category_identify;
                 let faq = {
                     title: req.body.title,
                     content: req.body.content,
                     is_visible: req.body.is_visible,
+                    list_id: req.body.list_id
                 };
                 if (req.body.position) {
                     faq.position = req.body.position;
@@ -351,6 +389,7 @@ exports.update = async (req, res) => {
                         });
                 }
 
+
                 else if (!(req.body.locale && (locale !== req.body.locale)) && (req.body.category_identify && (category_identify !== req.body.category_identify))) {
                     identify = await generateIdentify(user_id, identify, locale, req.body.category_identify);
                     if (!identify) {
@@ -358,45 +397,69 @@ exports.update = async (req, res) => {
                         continueCondition.message = "Error generate faq identify !";
                     } else category_identify = req.body.category_identify;
                 }
-                else if((req.body.locale && (locale === req.body.locale)) && (req.body.category_identify)){
-                    category_identify = req.body.category_identify;
-                }
                 if (continueCondition.check) {
                     throw new Error(continueCondition.message);
                 }
                 faq.identify = identify;
                 faq.category_identify = category_identify;
-                if(req.body.list_id){
-                    await Faq_Product.update({
-                        identify: identify,
-                        category_identify: category_identify
-                    }, {
-                        where: { id: faq.list_id }
-                    })
+                const data = {
+                    user_id: user_id,
+                    locale: req.body.locale,
+                    is_visible: req.body.is_visible,
+                    identify : identify,
+                    category_identify: category_identify,
+                    title: req.body.title,
+                    content: req.body.content
                 }
-                if(req.body.category_identify !== data.dataValues.category_identify){
-                    await Faq.update({
-                        category_identify: category_identify
-                    }, {
-                        where: {
-                            identify: data.dataValues.identify,
-                            category_identify: data.dataValues.category_identify
-                        }
-                    })
-                }
-                else{
-                    await Faq.update(faq, {
-                        where: {
-                            id: data.dataValues.id,
-                            identify: data.dataValues.identify,
-                            category_identify: data.dataValues.category_identify
-                        }
-                    })
-                }
-                res.send({
-                    message: "Faq was updated successfully."
+                await Faq.update(data, {
+                    where: { id: id}
+                })
+                .then(async num => {
+                    if (num == 1) {
+                        await Faq.update({category_identify: category_identify, is_visible: req.body.is_visible}, {
+                            where: {
+                                user_id: user_id,
+                                identify: response.dataValues.identify,
+                                category_identify: response.dataValues.category_identify
+                            } 
+                        })
+                        .then(num => {
+                            if(num == 0){
+                                console.log(num)
+                            }
+                        })
+                        // .catch(e => {
+                        //     console.log(e)
+                        // })
+                        res.send({
+                            message: "Faq was updated successfully."
+                        });
+                    } else {
+                        res.send({
+                            message: `Cannot update faq with id=${id}. Maybe faq was not found or req.body is empty!`
+                        });
+                    }
+                })
+                .catch(err => {
+                    res.status(500).send({
+                        message: "Error updating faq with id=" + id
+                    });
+                    return;
                 });
-                return;
+                if(req.body.title_translate){
+                    const dataTranslate = {
+                        is_visible: req.body.is_visible,
+                        identify : identify,
+                        category_identify: category_identify,
+                        title: req.body.title_translate,
+                        content: req.body.content_translate
+                    }
+                    await Faq.update(dataTranslate,
+                        {
+                            where: {id: req.body.id_translate}
+                        }
+                    )
+                }
             }
         }).catch(error => {
             res.status(500).send({
@@ -463,6 +526,27 @@ exports.updateWhenDeleteCategory = async (req, res) => {
     }
 };
 
+exports.updateRearrangeFaqs = async (req, res) => {
+    let faqs = req.body
+    if(!faqs){
+        res.status(400).send({
+            message: "Could not update Faqs !"
+        });
+        return;
+    }
+    faqs.forEach(item => {
+        Faq.update({
+            position: item.position,
+        },{
+            where: {
+                id: item.id
+            }
+        })
+    })
+    res.send({
+        message: 'Update Successfully !'
+    })
+};
 
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
@@ -580,12 +664,20 @@ exports.findAllInFaqPage = async (req, res) => {
         return false;
     }
     const shop = req.params.shop;
-    const locale = req.query.locale;
+    let locale = req.query.locale;
     let userID = null;
     await User.findOne({ where: { shopify_domain: shop}})
         .then( async userData => {
             if (userData) {
                 userID = userData.dataValues.id;
+
+                if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
+                    locale = 'default'
+                }
+                else{
+                    locale = req.query.locale                    
+                }
+
                 await Faq.findAll({
                     where: {
                         user_id: userID, locale: locale

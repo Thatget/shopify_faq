@@ -3,7 +3,7 @@ module.exports = (sequelize, Sequelize) => {
     const Faq_Category = sequelize.define("faq_category", {
         user_id: {
             type: Sequelize.INTEGER,
-            allowNull: false
+            allowNull: false,
         },
         identify: {
             type: Sequelize.STRING,
@@ -28,7 +28,11 @@ module.exports = (sequelize, Sequelize) => {
         is_visible: {
             type: Sequelize.BOOLEAN,
             defaultValue: true,
-        }
+        },
+        // show_on_cart: {
+        //     type: Sequelize.BOOLEAN,
+        //     defaultValue: true,
+        // }
     }, {
         uniqueKeys: {
             Items_unique: {

@@ -38,6 +38,9 @@ exports.findFaqs = async (shop, locale) => {
 					if (selectCondition.faq_sort_name) {
                         selectQueryFaqs += " ORDER BY `faq`.`title`"
                     }
+                    else{
+                        selectQueryFaqs += " ORDER BY `faq`.`position`"
+                    }
 
                     dataFaqs = await db.sequelize.query(
                         selectQueryFaqs+";",
@@ -63,18 +66,11 @@ exports.findFaqs = async (shop, locale) => {
 						let selectQueryCategories = "SELECT `faq_category`.`title`,`faq_category`.`locale`,`faq_category`.`identify` FROM faq_category" +
 						" where `faq_category`.`user_id` = ? and `faq_category`.`is_visible` = 1 and `faq_category`.`identify` in (?) and (`faq_category`.`locale` = 'default' or `faq_category`.`locale` = ?)";
 
-						// if (selectCondition.category_sort_name) {
-							// selectQueryCategories += " ORDER BY `category_title`"
-							// if (selectCondition.faq_sort_name) {
-								// selectQueryFaqs += ", `faq`.`title`"
-							// }
-						// }else {
-							// if (selectCondition.faq_sort_name) {
-								// selectQueryFaqs += " ORDER BY `faq`.`title`"
-							// }
-						// }
 						if (selectCondition.category_sort_name) {
                             selectQueryCategories += " ORDER BY `faq_category`.`title`"
+                        }
+                        else{
+                            selectQueryCategories += " ORDER BY `faq_category`.`position`"
                         }
 
 
@@ -85,7 +81,6 @@ exports.findFaqs = async (shop, locale) => {
 								type: QueryTypes.SELECT
 							}
 						);
-
 						dataCategories.forEach(item => {
 							if(item.locale === locale){
 								listCategory.push(item)
@@ -134,7 +129,6 @@ exports.findFaqs = async (shop, locale) => {
                             }
                         }
                     }
-
                     send_data = {
                         faq: listFaq,
                         categories: listCategory
