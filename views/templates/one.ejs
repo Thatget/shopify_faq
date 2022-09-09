@@ -26,7 +26,7 @@
 
     <div class="faq-main">
         <% if(faqs && !setting.data.dont_category_faq){ %>
-            <div style="margin: 50px 0 30px 0">
+            <div class="faq-main-container-1">
                 <div class="">
                     <% if(faqs.categories.length){%>
                         <div class="category-bar">
@@ -34,11 +34,11 @@
                                 <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link"><%- faqs.categories[i].title %></a>
                             <% } %>
                         </div>
-                        <div style="margin-top: 20px">
+                        <div class="category-faq-main-1">
                             <% for(var i=0; i < faqs.categories.length; i++) { %>
                                 <div class="category-faq-container">
                                     <div id="<%- faqs.categories[i].title %>" class="faq-category-width">
-                                        <span class="faq-category-title faq-category-border"><%- faqs.categories[i].title %></span>
+                                        <div class="faq-category-title faq-category-border"><%- faqs.categories[i].title %></span>
                                     </div>
                                     <% for(var j=0; j < faqs.faq.length; j++) { %>
                                         <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
@@ -215,6 +215,9 @@
     .faq-main-content{
         margin-bottom: 16px;
     }
+    .faq-main-container{
+        margin: 30px 0;
+    }
     .search-input{
         width: 60%; 
         padding: 1rem; 
@@ -231,6 +234,9 @@
     }
     .faq-dont-category{
         margin-top: 30px;
+    }
+    .category-faq-main-1{
+        padding-top: 20px
     }
     .category-bar{
         display: flex; 
