@@ -40,7 +40,7 @@
                                     <div id="<%- faqs.categories[i].title %>" class="faq-category-width">
                                         <div class="faq-category-title">
                                             <span class=" faq-category-border"><%- faqs.categories[i].title %></span>
-                                        </span>
+                                        </div>
                                     </div>
                                     <% for(var j=0; j < faqs.faq.length; j++) { %>
                                         <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
@@ -102,7 +102,7 @@
             if(document.getElementById('search-text').value === ''){
                 categoryBar[0].style.display = "flex"
                 for(i = 0; i < categoryList.length; i++){
-                    categoryList[i].style.display = "flex"
+                    categoryList[i].style.display = "block"
                 }
             }
             else{

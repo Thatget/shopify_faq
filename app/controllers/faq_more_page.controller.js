@@ -152,32 +152,55 @@ exports.update = async (req, res) => {
         })
 };
 
+exports.updateFaqsWhenChangeCategory = async (req, res) => {
+    const data = req.body
+    const user_id = req.jwtDecoded.data.user_id;
+    if(data){
+        await FaqMorePage.update({
+            category_identify: data.category_identify,
+            faq_identify : data.identify
+        }, {
+            where: {
+                faq_id : data.id,
+                user_id : user_id
+            }
+        })
+        res.send({
+            message: "FaqProduct was updated successfully."
+        });
+    }
+    else{
+        res.send({
+            message: `Cannot update FaqProduct!`
+        });
+    }
+};
+
 //Update FAQs in FaqMorePage
 exports.updateFaqs = async (req, res) => {
     const data = req.body
-    await FaqMorePage.update({
-        faq_identify: data.faq_identify,
-        category_identify: data.category_identify
-    }, {
-        where: { id: data.list_id }
-    })
-        .then( num => {
-            if (num == 1) {
-                res.send({
-                    message: "FaqMorePage was updated successfully."
-                });
-            } else {
-                res.send({
-                    message: `Cannot update FaqMorePage!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating FaqMorePage"
-            });
+    const user_id = req.jwtDecoded.data.user_id;
+    if(data){
+        for(let i = 0; i < data.length; i++){
+            await FaqMorePage.update({
+                category_identify: 'Uncategorized1',
+                faq_identify : data[i].identify
+            }, {
+                where: {
+                    faq_id : data[i].id,
+                    user_id : user_id
+                }
+            })
+        }
+        res.send({
+            message: "FaqProduct was updated successfully."
         });
-
+    }
+    else{
+        res.send({
+            message: `Cannot update FaqProduct!`
+        });
+    }
 };
 
 // Delete a Tutorial with the specified id in the request

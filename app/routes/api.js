@@ -114,6 +114,7 @@ let initAPIs = (app) => {
     router.get("/api/faq-more-page/page/:page", faq_more_page.findByPage);
     router.put("/api/faq-more-page/:id", faq_more_page.update);
     router.put("/api/faq-more-page-update", faq_more_page.updateFaqs);
+    router.put("/api/faq-more-page-update/category", faq_more_page.updateFaqsWhenChangeCategory);
     router.delete("/api/faq-more-page/:id", faq_more_page.delete);
     router.delete("/api/faq-more-page/page", faq_more_page.deleteAll);
 

@@ -5,6 +5,7 @@ const Faq = db.faq
 const Setting = db.setting
 const TemplateSetting = db.template_setting
 let listFaqId = []
+const FaqMorePageSetting = db.faq_more_page_setting;
 const FaqMorePage = db.faq_more_page;
 
 exports.findFaqOnPage = async (req, res) => {
@@ -25,39 +26,73 @@ exports.findFaqOnPage = async (req, res) => {
             else{
                 locale = req.params.locale
             }
-            let settingData = []
-            Setting.findOne({
+            let settingMorePageData = []
+            await FaqMorePageSetting.findAll({
                 where:{
                     user_id: userID
                 }
             })
-            .then(data => {
-                settingData = data.dataValues
-                console.log(settingData, 'setting')
-                TemplateSetting.findOne({
-                    where: {
-                        template_number: data.dataValues.faq_template_number,
-                        setting_id: data.dataValues.id
+            .then(async data => {
+                settingMorePageData = data[0].dataValues
+                switch(page_name){
+                    case 'index':
+                        if(settingMorePageData.home_page_visible === false){
+                            return
+                        }
+                        break;
+                    case 'cart':
+                        if(settingMorePageData.cart_page_visible === false){
+                            return
+                        }
+                        break;
+                    case 'page':
+                        if(settingMorePageData.cms_page_visible === false){
+                            return
+                        }
+                        break;
+                    case 'collection':
+                        if(settingMorePageData.collection_page_visible === false){
+                            return
+                        }
+                        break;
+                }
+                let settingData = []
+                await Setting.findOne({
+                    where:{
+                        user_id: userID
                     }
                 })
-                .then(data => {
-                    templateSetting = data.dataValues
-                    if(settingData){
-                        templateSetting.category_sort_name = settingData.category_sort_name
-                        templateSetting.faq_sort_name = settingData.faq_sort_name
-                        templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
-                        templateSetting.dont_category_faq = settingData.dont_category_faq
-                    }
+                .then(async data => {
+                    settingData = data.dataValues
+                    await TemplateSetting.findOne({
+                        where: {
+                            template_number: data.dataValues.faq_template_number,
+                            setting_id: data.dataValues.id
+                        }
+                    })
+                    .then(data => {
+                        templateSetting = data.dataValues
+                        if(settingData){
+                            templateSetting.category_sort_name = settingData.category_sort_name
+                            templateSetting.faq_sort_name = settingData.faq_sort_name
+                            templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
+                            templateSetting.dont_category_faq = settingData.dont_category_faq
+                        }
+                    })
+                    .catch(e =>{
+                        console.log(e)
+                    })
                 })
                 .catch(e =>{
                     console.log(e)
                 })
+                await getFaqsId(userID, page_name, locale, Faqs)
+                await getCategory(locale, userID, Categories,templateSetting)
             })
-            .catch(e =>{
+            .catch(e => {
                 console.log(e)
             })
-            await getFaqsId(userID, page_name, locale, Faqs)
-            await getCategory(locale, userID, Categories)
+
         }
          else {
             return res.status(400).send({
@@ -75,7 +110,6 @@ exports.findFaqOnPage = async (req, res) => {
 };
 
 async function getFaqsId(userID, page_name , locale, Faqs){
-    console.log(userID, page_name , locale, Faqs)
     await FaqMorePage.findAll({
         where: {
             user_id: userID,
@@ -133,21 +167,42 @@ async function getFaqs(faq_identify, category_identify, locale, Faqs){
     });
 }
 
-async function getCategory(locale, userID, Categories){
-    await FaqCategory.findAll({
-        where: {
-            locale: locale,
-            user_id: userID
-        }
-    })
-    .then(data => {
-        Categories.push(data)
-    })
-    .catch(err => {
-        return res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving Product."
+async function getCategory(locale, userID, Categories, templateSetting){
+    if(templateSetting.category_sort_name === true){
+        await FaqCategory.findAll({
+            where: {
+                locale: locale,
+                user_id: userID
+            },
+            order:['title']
         })
-    });
+        .then(data => {
+            Categories.push(data)
+        })
+        .catch(err => {
+            return res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving Product."
+            })
+        });
+    }
+    else{
+        await FaqCategory.findAll({
+            where: {
+                locale: locale,
+                user_id: userID
+            },
+            order:['position']
+        })
+        .then(data => {
+            Categories.push(data)
+        })
+        .catch(err => {
+            return res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving Product."
+            })
+        });
+    }
     return Categories;
 }

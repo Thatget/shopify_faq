@@ -85,7 +85,6 @@ exports.findAll = (req, res) => {
             FaqCategory.findAll({ where: condition, order:['title']})
             .then(data => {
                 res.send(data);
-                console.log(data)
             })
             .catch(err => {
                 res.status(500).send({
