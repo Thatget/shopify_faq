@@ -23,10 +23,9 @@
             <% } %>    
         </div>
     </div>
-
     <div class="faq-main">
         <% if(faqs && !setting.data.dont_category_faq){ %>
-            <div style="margin: 50px 0 30px 0">
+            <div class="faq-main-container-1">
                 <div class="">
                     <% if(faqs.categories.length){%>
                         <div class="category-bar">
@@ -34,11 +33,13 @@
                                 <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link"><%- faqs.categories[i].title %></a>
                             <% } %>
                         </div>
-                        <div style="margin-top: 20px">
+                        <div class="category-faq-main-1">
                             <% for(var i=0; i < faqs.categories.length; i++) { %>
                                 <div class="category-faq-container">
                                     <div id="<%- faqs.categories[i].title %>" class="faq-category-width">
-                                        <span class="faq-category-title faq-category-border"><%- faqs.categories[i].title %></span>
+                                        <div class="faq-category-title">
+                                            <span class=" faq-category-border"><%- faqs.categories[i].title %></span>
+                                        </div>
                                     </div>
                                     <% for(var j=0; j < faqs.faq.length; j++) { %>
                                         <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
@@ -100,7 +101,7 @@
             if(document.getElementById('search-text').value === ''){
                 categoryBar[0].style.display = "flex"
                 for(i = 0; i < categoryList.length; i++){
-                    categoryList[i].style.display = "flex"
+                    categoryList[i].style.display = "block"
                 }
             }
             else{
@@ -159,6 +160,7 @@
     <% } %>
     <% if (setting.data) { %>
         .faq-question-title {
+            padding-top: 8px;
             <% if (setting.templateSetting.faq_font_weight) { %>
                 font-weight: <%=  setting.templateSetting.faq_font_weight %>;
             <% } if (setting.templateSetting.faq_font_color) { %>
@@ -203,20 +205,25 @@
         text-align: center; 
     }
     .faq-page-title{
-        color: #fff;
+        color: inherit;
         margin:0; 
         padding: 20px 0; 
         font-weight: 600;
     }
     .faq-search-input{
-        text-align: center; 
-        padding: 2rem;
+        width: 60%;
+        margin: auto;
+        border: 1px solid #ccc;
+        border-radius: 4px;
     }
     .faq-main-content{
         margin-bottom: 16px;
     }
+    .faq-main-container-1{
+        margin: 30px 0;
+    }
     .search-input{
-        width: 60%; 
+        width: 100%; 
         padding: 1rem; 
         border-radius: 4px; 
         outline: none; 
@@ -226,11 +233,14 @@
     .faq-intro-text{
         text-align: center; 
         padding: 10px 0; 
-        color: #fff; 
+        color: inherit; 
         font-size: 18px;
     }
     .faq-dont-category{
         margin-top: 30px;
+    }
+    .category-faq-main-1{
+        padding-top: 20px
     }
     .category-bar{
         display: flex; 
@@ -242,7 +252,7 @@
         margin-bottom: 20px;
     }
     .faq-category-width{
-        margin-bottom: 10px;
+        padding-bottom: 10px;
         width: 100%;
     }
     .faq-not-found{
@@ -272,17 +282,12 @@
         padding: 10px 0; 
         font-size: 18px;
     }
-    .search-input{
-        width: 60%;
-        padding: 10px;
-        border-radius: 4px;
-        outline: none;
-        font-size: 1.6rem;
-        border: none;
-    }
     @media only screen and (max-width: 700px) {
-        .search-input{
-            width: 90%;
+        .faq-search-input{
+            width: 95%;
+            margin: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
     }
     <%

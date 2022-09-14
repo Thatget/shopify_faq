@@ -260,11 +260,17 @@ async function getTemplateSetting(setting_id, template_number) {
             if (data){
                 templateSetting = data.dataValues;
                 delete templateSetting.id;
-                if (templateSetting.image_banner) {
+                if (templateSetting.image_banner && templateSetting.banner_visible === true) {
                     templateSetting.image_banner = forwardingAddress +"/var/images/banner/"+templateSetting.image_banner
                 }
-                if (templateSetting.banner_default) {
+                else{
+                    templateSetting.image_banner = ''
+                }
+                if (templateSetting.banner_default && templateSetting.banner_visible === true) {
                     templateSetting.banner_default = forwardingAddress +"/var/images/banner/"+templateSetting.banner_default
+                }
+                else{
+                    templateSetting.banner_default = ''
                 }
             }
         }).catch(e => {

@@ -75,6 +75,9 @@ module.exports = (sequelize, Sequelize) => {
             },
             banner_default: {
                 type: Sequelize.STRING
+            },
+            banner_visible: {
+                type: Sequelize.BOOLEAN
             }
         },
         {
