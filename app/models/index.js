@@ -16,6 +16,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.faq = require("./faq.model.js")(sequelize, Sequelize);
+db.faq_messages = require("./faq_messages.model.js")(sequelize, Sequelize);
 db.product = require("./product.model.js")(sequelize, Sequelize);
 db.faq_product = require("./faq_product.model.js")(sequelize, Sequelize);
 db.faq_more_page = require("./faq_more_page.model.js")(sequelize, Sequelize);

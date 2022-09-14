@@ -34,67 +34,56 @@ exports.findFaqOnPage = async (req, res) => {
             })
             .then(async data => {
                 settingMorePageData = data[0].dataValues
-                switch(page_name){
-                    case 'index':
-                        if(settingMorePageData.home_page_visible === false){
-                            return
-                        }
-                        break;
-                    case 'cart':
-                        if(settingMorePageData.cart_page_visible === false){
-                            return
-                        }
-                        break;
-                    case 'page':
-                        if(settingMorePageData.cms_page_visible === false){
-                            return
-                        }
-                        break;
-                    case 'collection':
-                        if(settingMorePageData.collection_page_visible === false){
-                            return
-                        }
-                        break;
+                console.log(page_name)
+                console.log(settingMorePageData)    
+                if((page_name === 'index' && settingMorePageData.home_page_visible === false) ||
+                    (page_name === 'cart' && settingMorePageData.cart_page_visible === false) ||
+                    (page_name === 'page' && settingMorePageData.cms_page_visible === false) ||
+                    (page_name === 'collection' && settingMorePageData.collection_page_visible === false)
+                ){
+                    return
                 }
-                let settingData = []
-                await Setting.findOne({
-                    where:{
-                        user_id: userID
-                    }
-                })
-                .then(async data => {
-                    settingData = data.dataValues
-                    await TemplateSetting.findOne({
-                        where: {
-                            template_number: data.dataValues.faq_template_number,
-                            setting_id: data.dataValues.id
+                else{
+                    let settingData = []
+                    await Setting.findOne({
+                        where:{
+                            user_id: userID
                         }
                     })
-                    .then(data => {
-                        templateSetting = data.dataValues
-                        if(settingData){
-                            templateSetting.category_sort_name = settingData.category_sort_name
-                            templateSetting.faq_sort_name = settingData.faq_sort_name
-                            templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
-                            templateSetting.dont_category_faq = settingData.dont_category_faq
-                        }
+                    .then(async data => {
+                        settingData = data.dataValues
+                        await TemplateSetting.findOne({
+                            where: {
+                                template_number: data.dataValues.faq_template_number,
+                                setting_id: data.dataValues.id
+                            }
+                        })
+                        .then(data => {
+                            templateSetting = data.dataValues
+                            if(settingData){
+                                templateSetting.category_sort_name = settingData.category_sort_name
+                                templateSetting.faq_sort_name = settingData.faq_sort_name
+                                templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
+                                templateSetting.dont_category_faq = settingData.dont_category_faq
+                            }
+                        })
+                        .catch(e =>{
+                            console.log(e)
+                        })
                     })
                     .catch(e =>{
                         console.log(e)
                     })
-                })
-                .catch(e =>{
-                    console.log(e)
-                })
-                await getFaqsId(userID, page_name, locale, Faqs)
-                await getCategory(locale, userID, Categories,templateSetting)
+                    await getFaqsId(userID, page_name, locale, Faqs)
+                    await getCategory(locale, userID, Categories,templateSetting)
+                }
             })
             .catch(e => {
                 console.log(e)
             })
 
         }
-         else {
+        else {
             return res.status(400).send({
                 message: "Shop name is not found !"
             });
@@ -106,6 +95,8 @@ exports.findFaqOnPage = async (req, res) => {
     // const result = await User.findOne({ where: { shopify_domain: shop}}).catch(error => {
     //     return res.status(500).send("some error");
     // });
+    console.log(Faqs)
+    console.log(Categories)
     return res.send({faq: Faqs, category: Categories, templateSetting: templateSetting})
 };
 

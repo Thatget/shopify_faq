@@ -11,12 +11,11 @@ const faq_more_page_setting = require("../controllers/faq_more_page_setting.cont
 const block_faq_more_page = require("../controllers/block_more_page.controller");
 const user = require("../controllers/user.controller");
 const setting = require("../controllers/setting.controller");
+const messages = require("../controllers/faq_messages.controller.js");
 const category = require("../controllers/faq_category.controller.js");
 const uploadBanner = require("../controllers/uploadTemplateBanner");
 const importExport = require("../helpers/importExport");
-
 const shopifyApi = require("../helpers/shopifyApi.helper");
-
 const ensureEnpoint = require("../helpers/ensureEnpoint.helper");
 
 /**
@@ -32,9 +31,10 @@ let initAPIs = (app) => {
         const imagePath = path.join(__dirname, '../../var/images/');
         res.sendFile(imagePath+req.params[0]);
     });
+    //send Faq messages
+    router.post("/api/no-token/send-messages", messages.create)
 
     router.post("/login", AuthController.login);
-
     router.post("/refresh-token", AuthController.refreshToken);
     router.get("/api/product/:product_id", product.findOne);
     router.get("/api/shop/faq/:shop", faq.findAllInFaqPage);
@@ -67,6 +67,11 @@ let initAPIs = (app) => {
     router.put("/api/setting", setting.update);
     router.delete("/api/setting", setting.delete);
     router.get("/api/template/:faq_template_number", setting.findTemplateSetting);
+
+    //Messages router
+    router.get("/api/messages", messages.findOne);
+    router.delete("/api/messages/:id", messages.delete);
+    router.delete("/api/all-messages", messages.deleteAll);
 
     //Category
     router.get("/api/faq-category/all", category.getAll);
