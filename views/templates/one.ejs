@@ -205,7 +205,13 @@
         text-align: center; 
     }
     .faq-page-title{
-        color: inherit;
+        <% if (setting.templateSetting.image_banner) { %>
+            color: #fff;
+        <% }
+        else {%> 
+            color: inherit;
+            <%} 
+        %>; 
         margin:0; 
         padding: 20px 0; 
         font-weight: 600;
@@ -233,7 +239,13 @@
     .faq-intro-text{
         text-align: center; 
         padding: 10px 0; 
-        color: inherit; 
+        <% if (setting.templateSetting.image_banner) { %>
+            color: #fff;
+        <% }
+        else {%> 
+            color: inherit;
+            <%} 
+        %>; 
         font-size: 18px;
     }
     .faq-dont-category{
