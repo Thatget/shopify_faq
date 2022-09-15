@@ -205,7 +205,7 @@
         text-align: center; 
     }
     .faq-page-title{
-        <% if (setting.templateSetting.image_banner) { %>
+        <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
             color: #fff;
         <% }
         else {%> 
@@ -239,7 +239,7 @@
     .faq-intro-text{
         text-align: center; 
         padding: 10px 0; 
-        <% if (setting.templateSetting.image_banner) { %>
+        <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
             color: #fff;
         <% }
         else {%> 
