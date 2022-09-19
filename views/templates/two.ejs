@@ -261,6 +261,9 @@
         justify-content: center; 
         flex-wrap: wrap; 
         margin-bottom: 20px;
+        <% if (setting.templateSetting.faq_font_family) { %>
+            font-family: <%=  setting.templateSetting.faq_font_family %>;
+        <% } %>    
     }
     .faq-main-content{
         margin-bottom: 12px;

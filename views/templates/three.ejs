@@ -304,7 +304,6 @@
         margin: auto;
     }
     <% } %>
-
     .faq-header-3 {
         display: flex; 
         flex-direction: column; 
@@ -371,7 +370,10 @@
         flex-direction: column; 
         flex-wrap: wrap; 
         margin: calc(<%=  setting.templateSetting.category_font_size %>px*1.8 + 40px) 30px 30px 0; 
-        width: 30%
+        width: 30%;
+        <% if (setting.templateSetting.faq_font_family) { %>
+            font-family: <%=  setting.templateSetting.faq_font_family %>;
+        <% } %>
     }
     .faq-category-search{
         border-bottom: 1px solid #ccc; 
@@ -478,6 +480,9 @@
             width: 100% !important;
             margin: 0 !important;
             margin-top: 40px !important;
+            <% if (setting.templateSetting.faq_font_family) { %>
+                font-family: <%=  setting.templateSetting.faq_font_family %>;
+            <% } %>    
         }
     }
     @media only screen and (max-width: 700px) {
