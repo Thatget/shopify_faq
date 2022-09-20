@@ -4,19 +4,14 @@ const Messages = db.faq_messages;
 
 exports.create = async (req, res) => {
   // Create a setting
-  console.log(req.body)
   const messages = req.body;
-  // const user_id = req.jwtDecoded.data.user_id;
-  // messages.forEach(item => {
-  //   item.user_id = user_id
-  // })
   const data = {
     user_id: messages.user_id,
     customer_name: messages.customer_name,
     customer_contact: messages.customer_contact,
-    faq_title: messages.faq_title
+    faq_title: messages.faq_title,
+    time: messages.time
   }
-  console.log(data)
   if(data){
     Messages.create(data)
     .then(data => {

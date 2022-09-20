@@ -55,6 +55,9 @@ module.exports = (sequelize, Sequelize) => {
     show_page_construction: {
       type: Sequelize.BOOLEAN
     },
+    faq_messages_visible: {
+      type: Sequelize.BOOLEAN
+    },
   },
   {
     freezeTableName: true
