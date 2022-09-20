@@ -1,16 +1,29 @@
 <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Playfair+Display" />
 <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Varela+Round" />
+<<<<<<< HEAD
+=======
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Questrial" />
+>>>>>>> 313dd214473269cb4ac2f6119c0cee935e61e527
 <% if (setting.data) {
     if (setting.data.faq_template_number) {
         switch(setting.data.faq_template_number) {
         case 1 : %>
-        <%- include('./templates/one.ejs') %>
+            <%- include('./templates/one.ejs') %>
+            <% if(setting.data.faq_messages_visible){%>
+                <%- include('./templates/faq_question.ejs') %>
+            <% }%>
         <% break;
         case 2 : %>
             <%- include('./templates/two.ejs') %>
+            <% if(setting.data.faq_messages_visible){%>
+                <%- include('./templates/faq_question.ejs') %>
+            <%  }%>    
         <% break;
         case 3 : %>
             <%- include('./templates/three.ejs') %>
+            <% if(setting.data.faq_messages_visible){%>
+                <%- include('./templates/faq_question.ejs') %>
+            <%  }%>   
         <% break;
         default: %>
         <%- include('./templates/one.ejs') %>
@@ -19,6 +32,130 @@
     <%- include('./templates/one.ejs') %>
     <% } %>
     <style>
+        .send__faq-submit{
+            color: white;
+            background-color: #FF8200;
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer
+        }
+        .send__faq-header{
+            border-bottom: 1px solid #ccc;
+            text-align: end;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px;
+            font-weight: 600;
+            font-size: 16px;
+            background-color: #FF8200;
+            color: #fff;
+            border-radius: 6px 6px 0 0;
+        }
+        .send__faq-footer{
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+        .send__faq-question, .send__faq-contact {
+            margin-top: 6px;
+        }
+        .send__faq-component{
+            display: flex;
+            flex-direction: column;
+        }
+        .send__faq-scroll::-webkit-scrollbar{
+            width: 5px;
+            background-color: #F5F5F5;
+        }
+
+        .send__faq-scroll::-webkit-scrollbar-thumb{
+            background-color: gray;	
+            border-radius: 5px;
+        }
+        .send__faq-container{
+            display: none;
+            width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+        }
+        .send__faq-textarea{
+            max-width: 100%;
+            min-width: 100%;
+            min-height: 80px;
+            max-height: 200px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .send__faq-info{
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .send__faq-input{
+            width: 100%;
+            padding: 8px; 
+            border-radius: 4px; 
+            outline: none; 
+            border: none; 
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .send__faq-icon{
+            height: 30px;
+            width: 30px;
+            cursor: pointer;
+            display: flex;
+        }
+        .send__faq{
+            position:fixed; 
+            bottom: 50px; 
+            right: 0;
+        }
+        @media only screen and (max-width: 500px) {
+            .send__faq-container{
+                display: none;
+                width: calc(100vw - 20px);
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                background-color: white;
+                padding: 10px;
+            }
+            .send__faq{
+                position:fixed; 
+                bottom: 0; 
+                right: 0;
+            }
+        }
+        .send__faq-body{
+            padding: 8px 10px 10px 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .send__faq-button{
+            display: flex;
+            align-items:center;
+            justify-content: center;
+            padding: 16px 8px; 
+            width: 40px; 
+            height: 110px;
+            border-radius: 6px 0 0 6px; 
+            border: 2px solid white;
+            border-right: none;
+            background-color: #FF8200; 
+            cursor:pointer;
+            color: white;
+        }
+        .send__faq-button:hover{
+            background-color: #c96902; 
+        }
+        .send__faq-submit:hover {
+            background-color: #c96902; 
+        }
         <% if (setting.templateSetting) { %>
         .faq-category-title {
         <% if (setting.templateSetting.category_font_weight) { %>

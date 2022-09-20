@@ -22,8 +22,23 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         // primaryKey: true
       },
+<<<<<<< HEAD
   }, {
       freezeTableName: true,
+=======
+      time: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        // primaryKey: true
+      },
+  }, {
+      freezeTableName: true,
+      uniqueKeys: {
+        Items_unique: {
+            fields: ['user_id', 'faq_title', 'customer_name', 'customer_contact']
+        }
+    },
+>>>>>>> 313dd214473269cb4ac2f6119c0cee935e61e527
   });
   FaqMessages.belongsTo(User, {foreignKey: 'user_id', targetKey: 'id', onDelete: 'CASCADE',});
   return FaqMessages;

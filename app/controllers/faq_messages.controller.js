@@ -5,12 +5,18 @@ const Messages = db.faq_messages;
 exports.create = async (req, res) => {
   // Create a setting
   const messages = req.body;
-  console.log(messages)
-  if(messages){
-    Messages.create(messages)
+  const data = {
+    user_id: messages.user_id,
+    customer_name: messages.customer_name,
+    customer_contact: messages.customer_contact,
+    faq_title: messages.faq_title,
+    time: messages.time
+  }
+  if(data){
+    Messages.create(data)
     .then(data => {
-        console.log(data)
-        res.send(return_data);
+      console.log(data)
+      res.send('create success!');
     })
     .catch(err => {
         res.status(500).send({
@@ -22,9 +28,9 @@ exports.create = async (req, res) => {
 };
 
 // Find a single Messages with an id
-exports.findOne = (req, res) => {
+exports.findAll = (req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
-  Messages.findOne({
+  Messages.findAll({
     where:{
       user_id: user_id
     }

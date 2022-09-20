@@ -28,4 +28,8 @@ module.exports = (sequelize, Sequelize) => {
     Product.belongsTo(User, {foreignKey: 'user_id', targetKey: 'id', onDelete: 'CASCADE',});
 
     return Product;
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 313dd214473269cb4ac2f6119c0cee935e61e527

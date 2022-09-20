@@ -1,0 +1,121 @@
+<div class="send__faq" id="send__faq">
+  <div class="send__faq-button" onclick="showContent()">
+    <span class="send__faq-text">Contact us</span>
+  </div>
+  <div>
+    <div class="send__faq-container">
+      <div class="send__faq-header">
+        <span class="send__faq-title">Can I help you?</span>
+        <div class="send__faq-icon" onclick="closeSend()" title="Close">
+          <svg width="20" height="20" fill="#fff" style="margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+        </div>
+      </div>
+      <div class="send__faq-body send__faq-scroll">
+        <div class="send__faq-name send__faq-component">
+          <label class="send__faq-label" for="customer-name">Your name:</label>
+          <div class="send__faq-info">
+            <input class="send__faq-input" id="customer-name" name="customer_name" type="text" placeholder="">
+          </div>
+        </div>
+        <div class="send__faq-question send__faq-component">
+          <label  class="send__faq-label" for="faq-title">Question:</label>
+          <div class="">
+            <textarea class="send__faq-textarea" id="faq-title" name="faq_title" cols="6" rows="4"></textarea>
+          </div>
+        </div>
+        <div class="send__faq-contact send__faq-component">
+          <label  class="send__faq-label" for="customer-contact">Email:</label>
+          <div class="send__faq-info">
+            <input class="send__faq-input" id="customer-contact" name="customer_contact" type="text" placeholder="">
+          </div>
+        </div>
+        <div class="send__faq-contact send__faq-component" style="display: none">
+          <div class="send__faq-info">
+            <input class="send__faq-input" id="user-id" value="<%- setting.data.user_id %>" name="user_id" type="text" placeholder="">
+          </div>
+        </div>
+      </div>
+      <div class="send__faq-footer">
+        <span style="text-align:start; font-size: 14px;" id="messages"></span>
+        <button onclick="Submit()" class="send__faq-submit">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const messages = document.getElementById('messages')
+  function showContent() {
+    document.getElementsByClassName('send__faq-container')[0].style.display = 'block'
+    document.getElementsByClassName('send__faq-button')[0].style.display = 'none'
+  }
+  function closeSend() {
+    document.getElementsByClassName('send__faq-container')[0].style.display = 'none' 
+    messages.innerText = ''
+    document.getElementsByClassName('send__faq-button')[0].style.display = 'flex'  
+  }
+  function Submit() {
+    const date = new Date()
+    const ms = Date.now()
+    const offset = date.getTimezoneOffset();
+    const GMT = -offset/60
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const second = date.getSeconds()
+    const minutes = date.getMinutes()
+    const hours = date.getHours()
+    const date_time = {
+      time: hours + ':' + minutes + ':' + second,
+      date: day + '-' + month + '-' + year,
+      timezone: GMT
+    }
+    const customer_name = document.getElementById('customer-name').value
+    const customer_contact = document.getElementById('customer-contact').value
+    const faq_title = document.getElementById('faq-title').value
+    const user_id = document.getElementById('user-id').value
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    messages.innerText = ''
+    if(faq_title === '' || customer_contact === '' || customer_name === ''){
+      messages.innerText = 'Please completess all information !'
+      messages.style.color = 'red'
+      return
+    }
+    if(!customer_contact.match(mailformat)&& customer_contact !== ''){
+      messages.innerText = "Email must be a valid email !"
+      messages.style.color = 'red'
+      return
+    }
+    const data = {
+      customer_name: customer_name,
+      customer_contact: customer_contact,
+      faq_title: faq_title,
+      user_id: user_id,
+      time: ms
+    }
+    const url = `https://b312-2402-800-61b3-8f4d-e1e3-5f0-1658-6b81.ngrok.io/api/messages`
+    let xhr = new XMLHttpRequest()
+    xhr.open('POST', url, true)
+    xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
+    xhr.send(JSON.stringify(data));
+    xhr.onload = function () {
+      if(xhr.status === 200) {
+        messages.innerText = "Successfully!"
+        messages.style.color = 'green'
+      }
+      else{
+        messages.innerText = "Error!"
+        messages.style.color = 'red'
+      }
+    } 
+  }
+</script>
+<style>
+  .send__faq-icon:hover{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .send__faq-text{
+    transform: rotate(-90deg);
+    white-space: nowrap;
+  }
+</style>

@@ -178,4 +178,7 @@ module.exports = {
     getProductList: productList,
     searchProductByTitle: searchProductByTitle
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 313dd214473269cb4ac2f6119c0cee935e61e527

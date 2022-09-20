@@ -160,6 +160,7 @@ app.get('/shopify/callback', async (req, res) => {
                             });
                             
                         shopResonse = JSON.parse(shopResonse);
+                        console.log(shopResonse.shop.timezone)
                         const user = {
                             store_name: shopResonse.shop.name,
                             shopify_domain: shopResonse.shop.myshopify_domain,
@@ -167,6 +168,7 @@ app.get('/shopify/callback', async (req, res) => {
                             email: shopResonse.shop.email,
                             phone: shopResonse.shop.phone,
                             shopLocales: shopLocales,
+                            timezone: shopResonse.shop.timezone
                         };
                         await User.findOne({where: {shopify_domain: user.shopify_domain }}).
                         then( async data =>{

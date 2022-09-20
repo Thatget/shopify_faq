@@ -32,7 +32,7 @@ let initAPIs = (app) => {
         res.sendFile(imagePath+req.params[0]);
     });
     //send Faq messages
-    router.post("/api/no-token/send-messages", messages.create)
+    router.post("/api/messages/", messages.create)
 
     router.post("/login", AuthController.login);
     router.post("/refresh-token", AuthController.refreshToken);
@@ -69,7 +69,7 @@ let initAPIs = (app) => {
     router.get("/api/template/:faq_template_number", setting.findTemplateSetting);
 
     //Messages router
-    router.get("/api/messages", messages.findOne);
+    router.get("/api/messages", messages.findAll);
     router.delete("/api/messages/:id", messages.delete);
     router.delete("/api/all-messages", messages.deleteAll);
 
