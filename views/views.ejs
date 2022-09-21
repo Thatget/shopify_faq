@@ -118,16 +118,22 @@
         @media only screen and (max-width: 500px) {
             .send__faq-container{
                 display: none;
-                width: calc(100vw - 20px);
                 border: 1px solid #ccc;
                 border-radius: 6px;
                 background-color: white;
-                padding: 10px;
+                left: 0;
+                overflow-y: auto;
+                bottom: 0;
+                height: 100vh;
+                width: 100vw;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                background-color: white;
             }
             .send__faq{
                 position:fixed; 
                 bottom: 0; 
-                right: 0;
+                left: 0;
             }
         }
         .send__faq-body{
@@ -141,9 +147,9 @@
             padding: 16px 8px; 
             width: 40px; 
             height: 110px;
-            border-radius: 6px 0 0 6px; 
+            border-radius: 0 6px 6px 0; 
             border: 2px solid white;
-            border-right: none;
+            border-left: none;
             background-color: #FF8200; 
             cursor:pointer;
             color: white;
