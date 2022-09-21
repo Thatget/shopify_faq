@@ -20,7 +20,7 @@
         <div class="send__faq-question send__faq-component">
           <label  class="send__faq-label" for="faq-title"><span style="color:red">* </span>Messages:</label>
           <div class="">
-            <textarea class="send__faq-textarea" id="faq-title" name="faq_title" cols="6" rows="4" placeholder="Write your messages here"></textarea>
+            <textarea class="send__faq-textarea" id="faq-title" name="faq_title" cols="12" rows="4" placeholder="Write your messages here"></textarea>
           </div>
         </div>
         <div class="send__faq-contact send__faq-component">
@@ -44,14 +44,19 @@
 </div>
 <script>
   const messages = document.getElementById('messages')
+  let show = false
   function showContent() {
-    document.getElementsByClassName('send__faq-container')[0].style.display = 'block'
-    document.getElementsByClassName('send__faq-button')[0].style.display = 'none'
+    show = !show
+    if(show === true){
+      document.getElementsByClassName('send__faq-container')[0].style.display = 'block'
+    }
+    else{
+      document.getElementsByClassName('send__faq-container')[0].style.display = 'none' 
+    }
   }
   function closeSend() {
     document.getElementsByClassName('send__faq-container')[0].style.display = 'none' 
     messages.innerText = ''
-    document.getElementsByClassName('send__faq-button')[0].style.display = 'flex'  
   }
   function Submit() {
     const date = new Date()
