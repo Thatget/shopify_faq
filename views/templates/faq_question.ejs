@@ -12,21 +12,21 @@
       </div>
       <div class="send__faq-body send__faq-scroll">
         <div class="send__faq-name send__faq-component">
-          <label class="send__faq-label" for="customer-name">Your name:</label>
+          <label class="send__faq-label" for="customer-name"><span style="color:red">*</span>Name:</label>
           <div class="send__faq-info">
-            <input class="send__faq-input" id="customer-name" name="customer_name" type="text" placeholder="">
+            <input class="send__faq-input" id="customer-name" name="customer_name" type="text" placeholder="Your name">
           </div>
         </div>
         <div class="send__faq-question send__faq-component">
-          <label  class="send__faq-label" for="faq-title">Question:</label>
+          <label  class="send__faq-label" for="faq-title"><span style="color:red">*</span>Question:</label>
           <div class="">
-            <textarea class="send__faq-textarea" id="faq-title" name="faq_title" cols="6" rows="4"></textarea>
+            <textarea class="send__faq-textarea" id="faq-title" name="faq_title" cols="6" rows="4" placeholder="Write your messages here"></textarea>
           </div>
         </div>
         <div class="send__faq-contact send__faq-component">
-          <label  class="send__faq-label" for="customer-contact">Email:</label>
+          <label  class="send__faq-label" for="customer-contact"><span style="color:red">*</span>Email:</label>
           <div class="send__faq-info">
-            <input class="send__faq-input" id="customer-contact" name="customer_contact" type="text" placeholder="">
+            <input class="send__faq-input" id="customer-contact" name="customer_contact" type="text" placeholder="Your email">
           </div>
         </div>
         <div class="send__faq-contact send__faq-component" style="display: none">
@@ -101,6 +101,9 @@
       if(xhr.status === 200) {
         messages.innerText = "Successfully!"
         messages.style.color = 'green'
+        customer_name = ''
+        customer_contact = ''
+        faq_title = ''
       }
       else{
         messages.innerText = "Error!"
