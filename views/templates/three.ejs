@@ -42,7 +42,7 @@
                                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                     <div class="faq-main-content">
-                                                        <div class="faq-question-title-3" onclick="showHideContent(this)">
+                                                        <div class="faq-question-title" onclick="showHideContent(this)">
                                                             <span class="listed-faq" value><%= faqs.faq[j].title %></span>
                                                             <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                             <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -60,7 +60,7 @@
                                         <% for(var j=0; j < faqs.faq.length; j++) { %>
                                             <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                 <div class="faq-main-content">
-                                                    <div class="faq-question-title-3" onclick="showHideContent(this)">
+                                                    <div class="faq-question-title" onclick="showHideContent(this)">
                                                         <span class="listed-faq" value><%= faqs.faq[j].title %></span>
                                                         <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                         <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -83,7 +83,7 @@
             <div class="faq-dont-category">
                 <% for(var j=0; j < faqs.faq.length; j++) { %>
                     <div class="faq-main-content">
-                        <div class="faq-question-title-3" onclick="showHideContent(this)">
+                        <div class="faq-question-title" onclick="showHideContent(this)">
                             <span class="listed-faq"><%= faqs.faq[j].title %></span>
                             <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                             <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -101,7 +101,7 @@
                     <% for(var j=0; j < faqs.faq.length; j++) { %>
                         <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                             <div class="faq-main-content">
-                                <div class="faq-question-title-3" onclick="showHideContent(this)">
+                                <div class="faq-question-title" onclick="showHideContent(this)">
                                     <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                     <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                     <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -304,10 +304,6 @@
         margin: auto;
     }
     <% } %>
-<<<<<<< HEAD
-
-=======
->>>>>>> 313dd214473269cb4ac2f6119c0cee935e61e527
     .faq-header-3 {
         display: flex; 
         flex-direction: column; 
@@ -338,12 +334,9 @@
         outline: none; 
         border: none; 
         font-size: 16px;
-<<<<<<< HEAD
-=======
         margin: 0 !important;
->>>>>>> 313dd214473269cb4ac2f6119c0cee935e61e527
     }
-    .faq-question-title-3 {
+    .faq-question-title {
         padding: 10px; 
         display: flex; 
         align-items: center;
@@ -390,9 +383,6 @@
         padding-bottom: 10px
     }
     .faq-page-title{
-<<<<<<< HEAD
-        color: inherit;
-=======
         <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
             color: #fff;
         <% }
@@ -400,7 +390,6 @@
             color: inherit;
             <%} 
         %>;  
->>>>>>> 313dd214473269cb4ac2f6119c0cee935e61e527
         margin:0; 
         padding: 20px 0; 
         font-weight: 600;
@@ -428,9 +417,6 @@
     .faq-intro-text{
         text-align: center; 
         padding: 10px 0; 
-<<<<<<< HEAD
-        color: inherit; 
-=======
         <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
             color: #fff;
         <% }
@@ -438,7 +424,6 @@
             color: inherit;
             <%} 
         %>;  
->>>>>>> 313dd214473269cb4ac2f6119c0cee935e61e527
         font-size: 18px
     }
     .faq-category-title{
