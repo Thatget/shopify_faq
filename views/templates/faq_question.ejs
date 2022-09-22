@@ -5,7 +5,10 @@
   <div>
     <div class="send__faq-container">
       <div class="send__faq-header">
-        <span class="send__faq-title">Can I help you?</span>
+        <div>
+          <p class="send__faq-hi">Hi 👋</p>
+          <span class="send__faq-title">May I help you?</span>
+        </div>
         <div class="send__faq-icon" onclick="closeSend()" title="Close">
           <svg width="20" height="20" fill="#fff" style="margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
         </div>
@@ -99,6 +102,8 @@
       time: ms
     }
     const url = `https://dev-be-faq.yanet.io/api/messages`
+    // const url = ` https://7e37-2402-800-61b3-8f4d-7d7b-72da-fd30-7122.ngrok.io/api/messages`
+
     let xhr = new XMLHttpRequest()
     xhr.open('POST', url, true)
     xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
@@ -107,9 +112,7 @@
       if(xhr.status === 200) {
         messages.innerText = "Successfully!"
         messages.style.color = 'green'
-        customer_name = ''
-        customer_contact = ''
-        faq_title = ''
+        document.getElementById('faq-title').value = ''
       }
       else{
         messages.innerText = "Error!"
@@ -126,5 +129,10 @@
   .send__faq-text{
     transform: rotate(-90deg);
     white-space: nowrap;
+  }
+  .send__faq-hi{
+    font-size: 30px;
+    text-align: start;
+    margin: 0;
   }
 </style>
