@@ -42,7 +42,7 @@
                                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                     <div class="faq-main-content">
-                                                        <div class="faq-question-title-3" onclick="showHideContent(this)">
+                                                        <div class="faq-question-title" onclick="showHideContent(this)">
                                                             <span class="listed-faq" value><%= faqs.faq[j].title %></span>
                                                             <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                             <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -60,7 +60,7 @@
                                         <% for(var j=0; j < faqs.faq.length; j++) { %>
                                             <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                 <div class="faq-main-content">
-                                                    <div class="faq-question-title-3" onclick="showHideContent(this)">
+                                                    <div class="faq-question-title" onclick="showHideContent(this)">
                                                         <span class="listed-faq" value><%= faqs.faq[j].title %></span>
                                                         <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                         <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -83,7 +83,7 @@
             <div class="faq-dont-category">
                 <% for(var j=0; j < faqs.faq.length; j++) { %>
                     <div class="faq-main-content">
-                        <div class="faq-question-title-3" onclick="showHideContent(this)">
+                        <div class="faq-question-title" onclick="showHideContent(this)">
                             <span class="listed-faq"><%= faqs.faq[j].title %></span>
                             <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                             <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -101,7 +101,7 @@
                     <% for(var j=0; j < faqs.faq.length; j++) { %>
                         <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                             <div class="faq-main-content">
-                                <div class="faq-question-title-3" onclick="showHideContent(this)">
+                                <div class="faq-question-title" onclick="showHideContent(this)">
                                     <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                     <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                     <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -328,15 +328,16 @@
         margin-top: 60px
     }
     .faq-search-input{
-        width: 100%; 
-        padding: 1rem; 
+        width: 100% !important; 
+        max-width: 100% !important;
+        padding: 16px !important; 
         border-radius: 4px; 
         outline: none; 
-        border: none; 
+        border: 1px solid #ccc; 
         font-size: 16px;
         margin: 0 !important;
     }
-    .faq-question-title-3 {
+    .faq-question-title {
         padding: 10px; 
         display: flex; 
         align-items: center;
@@ -404,15 +405,15 @@
     .faq-search{
         width: 60%;
         margin: auto;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+        padding: 0;
+        overflow: hidden;
     }
     .faq-search-no-title{
         width: 60%;
         margin: auto;
-        border: 1px solid #ccc;
-        border-radius: 4px;
         margin-top: 70px;
+        padding: 0;
+        overflow: hidden;
     }
     .faq-intro-text{
         text-align: center; 
@@ -488,17 +489,17 @@
     }
     @media only screen and (max-width: 700px) {
         .faq-search {
-            width: 95%;
+            width: 95% !important;
             margin: auto;
-            border: 1px solid #ccc;
-            border-radius: 4px;    
+            padding: 0;
+            overflow: hidden; 
         }
         .faq-search-no-title{
-            width: 95%;
+            width: 95% !;
             margin: auto;
-            border: 1px solid #ccc;
-            border-radius: 4px;
             margin-top: 70px;
+            padding: 0;
+            overflow: hidden;
         }
     
     }

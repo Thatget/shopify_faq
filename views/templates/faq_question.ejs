@@ -1,32 +1,35 @@
-<div class="send__faq" id="send__faq">
+<!-- <div class="send__faq" id="send__faq">
   <div class="send__faq-button" onclick="showContent()">
     <span class="send__faq-text">Contact us</span>
   </div>
   <div>
     <div class="send__faq-container">
       <div class="send__faq-header">
-        <span class="send__faq-title">Can I help you?</span>
+        <div>
+          <p class="send__faq-hi">Hi 👋</p>
+          <span class="send__faq-title">May I help you?</span>
+        </div>
         <div class="send__faq-icon" onclick="closeSend()" title="Close">
           <svg width="20" height="20" fill="#fff" style="margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
         </div>
       </div>
       <div class="send__faq-body send__faq-scroll">
         <div class="send__faq-name send__faq-component">
-          <label class="send__faq-label" for="customer-name">Your name:</label>
+          <label class="send__faq-label" for="customer-name"><span style="color:red">* </span>Name:</label>
           <div class="send__faq-info">
-            <input class="send__faq-input" id="customer-name" name="customer_name" type="text" placeholder="">
+            <input class="send__faq-input" id="customer-name" name="customer_name" type="text" placeholder="Your name">
           </div>
         </div>
         <div class="send__faq-question send__faq-component">
-          <label  class="send__faq-label" for="faq-title">Question:</label>
+          <label  class="send__faq-label" for="faq-title"><span style="color:red">* </span>Messages:</label>
           <div class="">
-            <textarea class="send__faq-textarea" id="faq-title" name="faq_title" cols="6" rows="4"></textarea>
+            <textarea class="send__faq-textarea" id="faq-title" name="faq_title" cols="12" rows="4" placeholder="Write your messages here"></textarea>
           </div>
         </div>
         <div class="send__faq-contact send__faq-component">
-          <label  class="send__faq-label" for="customer-contact">Email:</label>
+          <label  class="send__faq-label" for="customer-contact"><span style="color:red">* </span>Email:</label>
           <div class="send__faq-info">
-            <input class="send__faq-input" id="customer-contact" name="customer_contact" type="text" placeholder="">
+            <input class="send__faq-input" id="customer-contact" name="customer_contact" type="text" placeholder="Your email">
           </div>
         </div>
         <div class="send__faq-contact send__faq-component" style="display: none">
@@ -44,14 +47,20 @@
 </div>
 <script>
   const messages = document.getElementById('messages')
+  let show = false
   function showContent() {
-    document.getElementsByClassName('send__faq-container')[0].style.display = 'block'
-    document.getElementsByClassName('send__faq-button')[0].style.display = 'none'
+    show = !show
+    if(show === true){
+      document.getElementsByClassName('send__faq-container')[0].style.display = 'block'
+    }
+    else{
+      document.getElementsByClassName('send__faq-container')[0].style.display = 'none' 
+    }
   }
   function closeSend() {
+    show = false
     document.getElementsByClassName('send__faq-container')[0].style.display = 'none' 
     messages.innerText = ''
-    document.getElementsByClassName('send__faq-button')[0].style.display = 'flex'  
   }
   function Submit() {
     const date = new Date()
@@ -92,7 +101,9 @@
       user_id: user_id,
       time: ms
     }
-    const url = `https://b312-2402-800-61b3-8f4d-e1e3-5f0-1658-6b81.ngrok.io/api/messages`
+    const url = `https://dev-be-faq.yanet.io/api/messages`
+    // const url = ` https://7e37-2402-800-61b3-8f4d-7d7b-72da-fd30-7122.ngrok.io/api/messages`
+
     let xhr = new XMLHttpRequest()
     xhr.open('POST', url, true)
     xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
@@ -101,6 +112,7 @@
       if(xhr.status === 200) {
         messages.innerText = "Successfully!"
         messages.style.color = 'green'
+        document.getElementById('faq-title').value = ''
       }
       else{
         messages.innerText = "Error!"
@@ -118,4 +130,10 @@
     transform: rotate(-90deg);
     white-space: nowrap;
   }
-</style>
+  .send__faq-hi{
+    font-size: 30px;
+    text-align: start;
+    margin: 0;
+  }
+  
+</style> -->
