@@ -6,21 +6,21 @@
         switch(setting.data.faq_template_number) {
         case 1 : %>
             <%- include('./templates/one.ejs') %>
-            <!-- <% if(setting.data.faq_messages_visible){%>
+            <% if(messagesSetting.faq_messages_visible){%>
                 <%- include('./templates/faq_question.ejs') %>
-            <% }%> -->
+            <% }%>
         <% break;
         case 2 : %>
             <%- include('./templates/two.ejs') %>
-            <!-- <% if(setting.data.faq_messages_visible){%>
+            <% if(messagesSetting.faq_messages_visible){%>
                 <%- include('./templates/faq_question.ejs') %>
-            <%  }%>     -->
+            <%  }%>    
         <% break;
         case 3 : %>
             <%- include('./templates/three.ejs') %>
-            <!-- <% if(setting.data.faq_messages_visible){%>
+            <% if(messagesSetting.faq_messages_visible){%>
                 <%- include('./templates/faq_question.ejs') %>
-            <%  }%>    -->
+            <%  }%>   
         <% break;
         default: %>
         <%- include('./templates/one.ejs') %>
@@ -30,39 +30,52 @@
     <% } %>
     <style>
         .send__faq-submit{
-            color: white;
-            background-color: #FF8200;
-            padding: 10px;
+            color: <%- messagesSetting.text_color %>;
+            background-color: <%- messagesSetting.theme_color %>;
+            padding: 10px 16px;
             border-radius: 4px;
             border: none;
             font-size: 16px;
-            cursor: pointer
+            cursor: pointer;
+            line-height: 1.5;
+            font-family: <%- messagesSetting.font_family %>;
         }
+
         .send__faq-header{
             border-bottom: 1px solid #ccc;
-            text-align: end;
             display: flex;
-            align-items: start;
+            align-items: flex-start;
             justify-content: space-between;
-            padding: 6px 10px;
-            font-weight: 600;
+            padding: 16px;
+            font-weight: 500;
             font-size: 16px;
-            background-color: #FF8200;
-            color: #fff;
-            border-radius: 6px 6px 0 0;
-        }
+            background-color: <%- messagesSetting.theme_color %>;
+            color: <%- messagesSetting.text_color %>;
+            border-radius: 6px 0 6% 6%;
+          }
+        
         .send__faq-footer{
             display: flex;
             justify-content: space-between;
-            padding: 10px;
+            padding: 16px;
+            background-color: #f8f8f8;
+            border-radius: 0 0 0 6px;
         }
-        .send__faq-question, .send__faq-contact {
-            margin-top: 6px;
+
+        .send__faq-question, .send__faq-name, .send__faq-contact-more {
+            margin-bottom: 16px;
         }
+
         .send__faq-component{
             display: flex;
             flex-direction: column;
+            border: 1px solid #dee2e6; 
+            border-radius: 6px; 
+            background-color: #fff; 
+            padding: 16px;
+            box-shadow: 1px 1px 8px #ccc;
         }
+
         .send__faq-scroll::-webkit-scrollbar{
             width: 5px;
             background-color: #F5F5F5;
@@ -70,18 +83,64 @@
 
         .send__faq-scroll::-webkit-scrollbar-thumb{
             background-color: gray;	
-            border-radius: 5px;
+            border-radius: 5px 0 0 0;
         }
+
+        .send__faq-icon:hover{
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          }
+          .send__faq-text{
+            transform: rotate(-90deg);
+            white-space: nowrap;
+          }
+          .send__faq-hi{
+            font-size: 30px;
+            text-align: start;
+            margin: 0;
+          }
+        
+        .send__faq-height{
+            max-height: 550px; 
+            overflow-y: auto;
+        }
+
         .send__faq-container{
             display: none;
             position: fixed;
-            left: 50px;
-            bottom: 50px;
+            bottom: 100px;
             width: 400px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            border-radius: 6px 0 0 6px;
             background-color: white;
+            z-index: 9999999999;
+            font-family: <%- messagesSetting.font_family %>;
+            <% if (messagesSetting.aligment_faq_messages === 'left') { %>
+                left: 20px;
+            <% } %>
+            <% if (messagesSetting.aligment_faq_messages === 'right') { %>
+                right: 20px;
+            <% } %>
         }
+        @media only screen and (max-height: 650px) {
+            .send__faq-container{
+                bottom: 0;
+            }
+            .send__faq-height{
+                max-height: calc(100vh - 30px); 
+                overflow-y: auto;
+            }
+        }
+
+        .custom-scroll::-webkit-scrollbar{
+            width: 5px;
+            background-color: #F5F5F5;
+        }
+          
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: gray;	
+            border-radius: 5px;
+        }
+
         .send__faq-textarea{
             padding: 8px;
             max-width: 100%;
@@ -93,6 +152,7 @@
             outline: none;
             font-size: 16px;
             font-family: inherit;
+            line-height: 1.5;
         }
         .send__faq-info{
             border: 1px solid #ccc;
@@ -106,18 +166,17 @@
             border: none; 
             font-size: 16px;
             font-family: inherit;
+            line-height: 1.5;
         }
         .send__faq-icon{
-            height: 30px;
-            width: 30px;
+            height: 40px;
+            width: 40px;
             cursor: pointer;
             display: flex;
         }
         .send__faq{
-            position:fixed; 
-            bottom: 50px; 
-            left: 0;
-            z-index: 99999999999;
+            font-size: 16px;
+            z-index: 999999999999;
         }
         @media only screen and (max-width: 500px) {
             .send__faq-container{
@@ -125,44 +184,58 @@
                 border: 1px solid #ccc;
                 border-radius: 6px;
                 background-color: white;
-                left: 0;
+                <% if (messagesSetting.aligment_faq_messages === 'left') { %>
+                    left: 0;
+                <% } %>
+                <% if (messagesSetting.aligment_faq_messages === 'right') { %>
+                    right: 0;
+                <% } %>    
                 overflow-y: auto;
                 bottom: 0;
-                height: 100vh;
-                width: 100vw;
                 border: 1px solid #ccc;
                 border-radius: 6px;
                 background-color: white;
             }
-            .send__faq{
-                position:fixed; 
-                bottom: 50px; 
-                left: 0;
+        }
+        @media only screen and (max-width: 400px) {
+            .send__faq-container{
+                width: 100vw;
             }
         }
         .send__faq-body{
-            padding: 8px 10px 10px 10px;
-            border-bottom: 1px solid #ccc;
+            padding: 16px 16px 0 16px;
+            background-color: #f8f8f8;
         }
         .send__faq-button{
             display: flex;
             align-items:center;
             justify-content: center;
-            padding: 16px 8px; 
-            width: 40px; 
-            height: 110px;
-            border-radius: 0 6px 6px 0; 
-            border: 2px solid white;
-            border-left: none;
-            background-color: #FF8200; 
+            width: 66px; 
+            height: 66px;
+            border-radius: 50%; 
+            background-color: <%- messagesSetting.button_background_color %>; 
             cursor:pointer;
-            color: white;
+            position:fixed; 
+            bottom: 20px; 
+            <% if (messagesSetting.aligment_faq_messages === 'left') { %>
+                left: 20px;
+            <% } %>
+            <% if (messagesSetting.aligment_faq_messages === 'right') { %>
+                right: 20px;
+            <% } %>
+            z-index: 999999999999;
         }
-        .send__faq-button:hover{
-            background-color: #c96902; 
+        .send_faq-contact-link{
+            padding: 8px; 
+            border-radius: 4px;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
         }
-        .send__faq-submit:hover {
-            background-color: #c96902; 
+        .send__faq-label{
+            margin-bottom: 4px;
+            font-weight: 700;
+            color: #5c6282;
         }
         <% if (setting.templateSetting) { %>
         .faq-category-title {

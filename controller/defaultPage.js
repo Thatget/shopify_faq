@@ -1,6 +1,7 @@
 const db = require("../app/models");
 const User = db.user;
 const Setting = db.setting;
+const MessageSetting = db.faq_messages_setting;
 const TemplateSetting = db.template_setting;
 const forwardingAddress = process.env.HOST;
 const errorLog = require('../app/helpers/log.helper');
@@ -277,4 +278,30 @@ async function getTemplateSetting(setting_id, template_number) {
             errorLog.error(`template Setting ${e.message}`)
     });
     return templateSetting;
+}
+
+exports.findMessagesSetting = async (shop) => {
+    let returnData = {};
+    await User.findOne({
+        attributes: ['id'],
+        where: { shopify_domain: shop}
+    })
+        .then( async userData => {
+            if (userData) {
+                await MessageSetting.findOne({
+                    where: {
+                        user_id: userData.dataValues.id
+                    }
+                }).then(async settingData => {
+                    returnData = settingData.dataValues;
+                    console.log(returnData)
+                }).catch(error => {
+                    errorLog.error(`get setting frontend proxy ${error.message}`)
+                });
+            }
+        })
+        .catch(e =>{
+            errorLog.error(`get setting frontend proxy get user error ${e.message}`)
+        })
+    return returnData;
 }

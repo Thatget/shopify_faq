@@ -12,6 +12,7 @@ const block_faq_more_page = require("../controllers/block_more_page.controller")
 const user = require("../controllers/user.controller");
 const setting = require("../controllers/setting.controller");
 const messages = require("../controllers/faq_messages.controller.js");
+const messages_setting = require("../controllers/faq_messages_setting.controller.js");
 const category = require("../controllers/faq_category.controller.js");
 const uploadBanner = require("../controllers/uploadTemplateBanner");
 const importExport = require("../helpers/importExport");
@@ -73,10 +74,15 @@ let initAPIs = (app) => {
     router.delete("/api/messages/:id", messages.delete);
     router.delete("/api/all-messages", messages.deleteAll);
 
+    //Messages setting router
+    router.post("/api/messages-setting/", messages_setting.create);
+    router.get("/api/messages-setting", messages_setting.findOne);
+    router.put("/api/messages-setting/", messages_setting.update);
+    
     //Category
     router.get("/api/faq-category/all", category.getAll);
     router.post("/api/faq-category", category.create);
-    router.get("/api/faq-category", category.findAll);
+    router.get("/api/faq-category-locale", category.findAll);
     router.get("/api/faq-category/:id", category.findOne);
     router.put("/api/faq-category/:id", category.update);
     router.put("/api/faq-category/update/rearrange", category.updateRearrangeCategories);
