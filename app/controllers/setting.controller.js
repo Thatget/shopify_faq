@@ -12,8 +12,8 @@ exports.create = async (req, res) => {
 
     let template_setting = {};
     let setting_data = {};
-  Setting.create(setting)
-  .then(async data => {
+    Setting.create(setting)
+    .then(async data => {
       let return_data = {};
       setting_data = data.dataValues;
       setting.setting_id = setting_data.id;

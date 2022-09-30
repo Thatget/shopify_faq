@@ -23,7 +23,6 @@ exports.create = async (req, res) => {
     // };
     const faq_category = req.body;
     faq_category.user_id = user_id;
-
     let identify = locale + user_id;
     if (!req.body.identify) {
         identify = await generateIdentify(user_id, identify, locale);

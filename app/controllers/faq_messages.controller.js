@@ -15,7 +15,6 @@ exports.create = async (req, res) => {
   if(data){
     Messages.create(data)
     .then(data => {
-      console.log(data)
       res.send('create success!');
     })
     .catch(err => {
@@ -37,7 +36,6 @@ exports.findAll = (req, res) => {
   })
   .then(data => {
       if (data) {
-        console.log(data)
           res.send(data);
       } else {
           res.status(404).send({
