@@ -30,6 +30,9 @@
     <% } %>
     <style>
         .send__faq-submit{
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: <%- messagesSetting.text_color %>;
             background-color: <%- messagesSetting.theme_color %>;
             padding: 10px 16px;
@@ -40,23 +43,46 @@
             line-height: 1.5;
             font-family: <%- messagesSetting.font_family %>;
         }
-
+        .send__faq-submit:hover, .send__faq-button:hover{
+            opacity: .8;
+        }
+        <% if (messagesSetting.animation_visible) { %>
+            .send__faq-open-icon{            
+                animation-name: example;
+                animation-duration: 3s;
+                animation-iteration-count:infinite;
+            }
+            @keyframes example {
+                0%   {left:0px; top:0px;transform: rotateY(0deg)}
+                25%  {left:200px; top:0px;transform: rotateY(90deg)}
+                50%  {left:200px; top:200px;transform: rotateY(180deg)}
+                75%  {left:0px; top:200px;transform: rotateY(90deg)}
+                100% {left:0px; top:0px;transform: rotateY(0deg)}
+            }
+            <% } %>
+        
         .send__faq-header{
             border-bottom: 1px solid #ccc;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
             padding: 16px;
-            font-weight: 500;
+            font-weight: 700;
             font-size: 16px;
             background-color: <%- messagesSetting.theme_color %>;
             color: <%- messagesSetting.text_color %>;
             border-radius: 6px 0 6% 6%;
           }
-        
+        .send__faq-loader{
+            display: none;
+            padding-left: 4px;
+            position: relative;
+            top: 3px;
+        }
         .send__faq-footer{
             display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: 16px;
             background-color: #f8f8f8;
             border-radius: 0 0 0 6px;
@@ -101,7 +127,7 @@
           }
         
         .send__faq-height{
-            max-height: 550px; 
+            max-height: 600px; 
             overflow-y: auto;
         }
 
@@ -109,7 +135,7 @@
             display: none;
             position: fixed;
             bottom: 100px;
-            width: 400px;
+            width: 370px;
             border-radius: 6px 0 0 6px;
             background-color: white;
             z-index: 9999999999;
@@ -121,7 +147,7 @@
                 right: 20px;
             <% } %>
         }
-        @media only screen and (max-height: 650px) {
+        @media only screen and (max-height: 630px) {
             .send__faq-container{
                 bottom: 0;
             }
@@ -210,8 +236,8 @@
             display: flex;
             align-items:center;
             justify-content: center;
-            width: 66px; 
-            height: 66px;
+            width: 60px; 
+            height: 60px;
             border-radius: 50%; 
             background-color: <%- messagesSetting.button_background_color %>; 
             cursor:pointer;
@@ -231,6 +257,7 @@
             display: flex; 
             justify-content: center; 
             align-items: center;
+            margin-left: 28px;
         }
         .send__faq-label{
             margin-bottom: 4px;

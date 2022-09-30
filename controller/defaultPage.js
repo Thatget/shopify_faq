@@ -294,7 +294,6 @@ exports.findMessagesSetting = async (shop) => {
                     }
                 }).then(async settingData => {
                     returnData = settingData.dataValues;
-                    console.log(returnData)
                 }).catch(error => {
                     errorLog.error(`get setting frontend proxy ${error.message}`)
                 });

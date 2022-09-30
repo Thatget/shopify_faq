@@ -41,6 +41,11 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         // primaryKey: true
       },
+      animation_visible: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        // primaryKey: true
+      },
       email_link: {
         type: Sequelize.STRING,
         allowNull: false,

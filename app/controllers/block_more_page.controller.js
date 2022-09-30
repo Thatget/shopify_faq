@@ -34,8 +34,6 @@ exports.findFaqOnPage = async (req, res) => {
             })
             .then(async data => {
                 settingMorePageData = data[0].dataValues
-                console.log(page_name)
-                console.log(settingMorePageData)    
                 if((page_name === 'index' && settingMorePageData.home_page_visible === false) ||
                     (page_name === 'cart' && settingMorePageData.cart_page_visible === false) ||
                     (page_name === 'page' && settingMorePageData.cms_page_visible === false) ||
@@ -95,8 +93,6 @@ exports.findFaqOnPage = async (req, res) => {
     // const result = await User.findOne({ where: { shopify_domain: shop}}).catch(error => {
     //     return res.status(500).send("some error");
     // });
-    console.log(Faqs)
-    console.log(Categories)
     return res.send({faq: Faqs, category: Categories, templateSetting: templateSetting})
 };
 
