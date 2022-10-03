@@ -8,7 +8,7 @@ const errorLog = require('../app/helpers/log.helper');
 const { QueryTypes } = require('sequelize');
 
 // Using in nodeJs
-exports.findFaqs = async (shop, locale) => {
+exports.findFaqs = async (shop, locale, path_prefix = "") => {
     let send_data = []
     let selectCondition = {}
     await User.findOne({
@@ -24,6 +24,13 @@ exports.findFaqs = async (shop, locale) => {
                     locale = locale
                 }
                 let userID = userData.dataValues.id;
+                if ( path_prefix ) {
+                    try {
+                        await Setting.update({ faq_page_url: path_prefix}, { where:{ user_id: userID } });
+                    } catch (error) {
+                        errorLog.error(error.message)
+                    }
+                }
                 await Setting.findOne({
                     attributes: ['category_sort_name','faq_sort_name'],
                     where: {
