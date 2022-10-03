@@ -211,7 +211,7 @@ app.get('/shopify/callback', async (req, res) => {
         errorLog.error("app.js callback misssing data")
         return res.redirect(app_link);
     }
-    let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
+    let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey;
     res.redirect(pageUri);
 });
 
