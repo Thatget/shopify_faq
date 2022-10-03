@@ -50,11 +50,6 @@ app.get('/', async (req, res) => {
             res.cookie('state',state);
             res.redirect(pageUri);
         }
-        let tokenData = await getToken(req.query);
-        let txt = "";
-        if (tokenData.accessToken) {
-            txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-        }    
         return  res.render('index', {
             shop: req.query.shop,
             host: req.query.host,
@@ -64,7 +59,7 @@ app.get('/', async (req, res) => {
         });
     }
     else{
-        return res.redirect(app_link + txt);
+        return res.redirect(app_link);
     }
 });
 
