@@ -69,7 +69,7 @@ app.get('/storeFAQs', async (req, res) => {
     if (tokenData.accessToken) {
         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
     }
-    return res.redirect(app_link+'/storeFAQs'+txt);
+    return res.redirect(app_link + txt);
 });
 
 app.get('/categories', async (req, res) => {
@@ -211,7 +211,7 @@ app.get('/shopify/callback', async (req, res) => {
         errorLog.error("app.js callback misssing data")
         return res.redirect(app_link);
     }
-    let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
+    let pageUri = 'https://' + req.query.shop + '/admin/apps/' + 'private-48' + '/storeFAQs';
     res.redirect(pageUri);
 });
 
