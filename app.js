@@ -42,6 +42,7 @@ db.sequelize.sync({ force: false }).then(() => {
 
 app.get('/', async (req, res) => {
     if (req.query.shop) {
+        errorLog.error(req.query.shop, 'req.query.shop')
         if(!req.query.host){
             const state = nonce();
             const redirectUri = forwardingAddress + '/shopify/callback';
@@ -50,6 +51,7 @@ app.get('/', async (req, res) => {
             res.cookie('state',state);
             res.redirect(pageUri);
         }
+        errorLog.error(req.query.host, 'req.query.host')
         return  res.render('index', {
             shop: req.query.shop,
             host: req.query.host,
@@ -65,10 +67,13 @@ app.get('/', async (req, res) => {
 
 app.get('/storeFAQs', async (req, res) => {
     let tokenData = await getToken(req.query);
+    errorLog.error(tokenData, 'tokenData')
+
     let txt = "";
     if (tokenData.accessToken) {
         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
     }
+    errorLog.error(txt, 'txt')
     return res.redirect(app_link+txt);
 });
 
