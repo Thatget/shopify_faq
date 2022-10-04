@@ -42,7 +42,6 @@ db.sequelize.sync({ force: false }).then(() => {
 
 app.get('/', async (req, res) => {
     if (req.query.shop) {
-        errorLog.error(req.query.shop, 'req.query.shop')
         if(!req.query.host){
             const state = nonce();
             const redirectUri = forwardingAddress + '/shopify/callback';
@@ -51,7 +50,6 @@ app.get('/', async (req, res) => {
             res.cookie('state',state);
             res.redirect(pageUri);
         }
-        errorLog.error(req.query.host, 'req.query.host')
         return  res.render('index', {
             shop: req.query.shop,
             host: req.query.host,
@@ -67,13 +65,10 @@ app.get('/', async (req, res) => {
 
 app.get('/storeFAQs', async (req, res) => {
     let tokenData = await getToken(req.query);
-    errorLog.error(tokenData, 'tokenData')
-
     let txt = "";
     if (tokenData.accessToken) {
         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
     }
-    errorLog.error(txt, 'txt')
     return res.redirect(app_link+txt);
 });
 
@@ -270,12 +265,10 @@ app.get('/faq-page', async (req, res) => {
         }
         if (shop) {
             try {
-                let path_prefix = req.query.path_prefix??'';
                 const locale = req.headers['accept-language'].split(',')[0];
-                const faqs = await defaultPage.findFaqs(shop, locale, path_prefix);
+                const faqs = await defaultPage.findFaqs(shop, locale);
                 const setting = await defaultPage.findSetting(shop, locale);
-                const messagesSetting = await defaultPage.findMessagesSetting(shop);
-                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting});
+                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting});
             } catch (e) {
                 errorLog.error(e.message);
                 res.status(400).send('unexpected error occurred');
