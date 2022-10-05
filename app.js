@@ -211,7 +211,7 @@ app.get('/shopify/callback', async (req, res) => {
         errorLog.error("app.js callback misssing data")
         return res.redirect(app_link);
     }
-    let pageUri = 'https://' + req.query.shop + '/admin/apps/' + 'yanet-professional-faq-page' + '/storeFAQs';
+    let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
     res.redirect(pageUri);
 });
 
@@ -265,12 +265,10 @@ app.get('/faq-page', async (req, res) => {
         }
         if (shop) {
             try {
-                let path_prefix = req.query.path_prefix??'';
                 const locale = req.headers['accept-language'].split(',')[0];
-                const faqs = await defaultPage.findFaqs(shop, locale, path_prefix);
+                const faqs = await defaultPage.findFaqs(shop, locale);
                 const setting = await defaultPage.findSetting(shop, locale);
-                const messagesSetting = await defaultPage.findMessagesSetting(shop);
-                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting});
+                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting});
             } catch (e) {
                 errorLog.error(e.message);
                 res.status(400).send('unexpected error occurred');
