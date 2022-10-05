@@ -42,7 +42,6 @@ exports.findAll = (req, res) => {
         where: {
             user_id: user_id
         },
-        order:['position']
     })
     .then(data => {
         res.send(data);

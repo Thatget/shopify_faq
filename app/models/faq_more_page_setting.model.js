@@ -31,6 +31,11 @@ module.exports = (sequelize, Sequelize) => {
           allowNull: false,
           // primaryKey: true
       },
+      active_feature: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        // primaryKey: true
+      },
   }, {
       freezeTableName: true,
       uniqueKeys: {
