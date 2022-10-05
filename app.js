@@ -265,10 +265,12 @@ app.get('/faq-page', async (req, res) => {
         }
         if (shop) {
             try {
+                let path_prefix = req.query.path_prefix??'';
                 const locale = req.headers['accept-language'].split(',')[0];
-                const faqs = await defaultPage.findFaqs(shop, locale);
+                const faqs = await defaultPage.findFaqs(shop, locale, path_prefix);
                 const setting = await defaultPage.findSetting(shop, locale);
-                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting});
+                const messagesSetting = await defaultPage.findMessagesSetting(shop);
+                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting});
             } catch (e) {
                 errorLog.error(e.message);
                 res.status(400).send('unexpected error occurred');
