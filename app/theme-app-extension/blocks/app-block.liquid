@@ -1,68 +1,156 @@
 <image-gallery data-id="{{ block.id }}">
-  <div class="professional-faqs" id="template-2">
-  </div>
+  <div class="professional-faqs" id="template-2"></div>
 </image-gallery>
 <script>
   var background_color = ''
   var background_hover = ''
-  fetch('https://6172-2402-800-61b3-5275-a42a-868c-ae4d-85c.ngrok.io/api/shop/faq/{{shop.domain}}?locale={{request.locale.iso_code}}')
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-      const faqs = data.faq
-      var block_container = ''
-      const categories = data.category
-      var listCategoryIdentify = []
-      for(let i = 0; i < faqs.length; i++){
-        listCategoryIdentify.push(faqs[i].category_identify)
-      }
-      var check_category_identify = Array.from(new Set(listCategoryIdentify))
-      const template_setting = data.templateSetting
-      var content_block = ""
-      var item = ''
-      var list_category = []
-      for(let i = 0; i < check_category_identify.length; i++){
-        item = categories[0].filter(function(item){
-          return item.identify === check_category_identify[i]
-        })
-        list_category.push(item)
-      }
-      for(let i = 0; i < list_category.length; i++){
-        content_block = ''
-        for(let j = 0; j < faqs.length; j++){
-          var faq_title = faqs[j].title
-          var faq_content = faqs[j].content
-          background_color = template_setting.faq_bg_color
-          background_hover = template_setting.faq_hover_color
-          if(list_category[i][0].identify === faqs[j].category_identify){
-            var category_title = list_category[i][0].title
-            switch(template_setting.template_number){
-              case 1:
-                content_block +=  `<div id="faq-container" class="faq-container-1" ><li id="faq-list-${j}" style="margin-top: 20px; color: ${template_setting.faq_font_color}; font-weight: ${template_setting.faq_font_weight}; font-family: ${template_setting.faq_font_family}; font-size: ${template_setting.faq_font_size}px "><div class="faq-list-1"><div class="faq-title-1">`+ faq_title +`</div></div><div class="faq-content-1" style="color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}">`+ faq_content +`</div></li></div>`
-                break;
-              case 2:
-                content_block += `<div id="faq-container" class="faq-container-2" onmouseleave="myLeaveFunction(this)" onmouseover="myOverFunction(this)" onclick="showHideContent(this)"><li class="faq-list-2" id="faq-list-${j}" style="color: ${template_setting.faq_font_color}; background-color: ${template_setting.faq_bg_color}; font-weight: ${template_setting.faq_font_weight}; font-family: ${template_setting.faq_font_family}; font-size: ${template_setting.faq_font_size}px"> <div id="faq-title"  class="faq-title-2">` + faq_title + `</div><svg class="svg-right" fill="${template_setting.faq_font_color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></div><div id="faq-content" style="background-color:${template_setting.answer_bg_color}; color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}" class="faq-content-2">`+ faq_content +'</li></div>'
-                break;
-              case 3:
-                content_block += `<div id="faq-container" class="faq-container-3" ><li id="faq-list-${j}" style="border-bottom: 1px solid #ccc; color: ${template_setting.faq_font_color}; background-color: ${template_setting.faq_bg_color}; font-weight: ${template_setting.faq_font_weight}; font-family: ${template_setting.faq_font_family}; font-size: ${template_setting.faq_font_size}px"><div onclick="showHideContent(this)" class="faq-list-3"><div class="faq-title-3">`+ faq_title +`</div><div class="list-svg"><svg class="svg-plus" fill="${template_setting.faq_font_color}" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg><svg class="svg-minus" fill="${template_setting.faq_font_color}" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg></div></div><div class="faq-content-3" style="color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}">`+ faq_content +`</div></li></div>`
-                break;
-            }
+  fetch('https://6172-2402-800-61b3-5275-a42a-868c-ae4d-85c.ngrok.io/api/shop/faq/{{shop.domain}}?locale={{request.locale.iso_code}}').then(response => response.json()).then(data => {
+    console.log(data)
+    const faqs = data.faq
+    var block_container = ''
+    const categories = data.category
+    var listCategoryIdentify = []
+    for (let i = 0; i < faqs.length; i++) {
+      listCategoryIdentify.push(faqs[i].category_identify)
+    }
+    var check_category_identify = Array.from(new Set(listCategoryIdentify))
+    const template_setting = data.templateSetting
+    var content_block = ""
+    var item = ''
+    var list_category = []
+    for (let i = 0; i < check_category_identify.length; i++) {
+      item = categories[0].filter(function(item) {
+        return item.identify === check_category_identify[i]
+      })
+      list_category.push(item)
+    }
+    for (let i = 0; i < list_category.length; i++) {
+      content_block = ''
+      for (let j = 0; j < faqs.length; j++) {
+        var faq_title = faqs[j].title
+        var faq_content = faqs[j].content
+        background_color = template_setting.faq_bg_color
+        background_hover = template_setting.faq_hover_color
+        if (list_category[i][0].identify === faqs[j].category_identify) {
+          var category_title = list_category[i][0].title
+          switch (template_setting.template_number) {
+            case 1: content_block += `<div id="faq-container" class="faq-container-1" ><li id="faq-list-${j}" style="margin-top: 20px; color: ${
+                template_setting.faq_font_color
+              }; font-weight: ${
+                template_setting.faq_font_weight
+              }; font-family: ${
+                template_setting.faq_font_family
+              }; font-size: ${
+                template_setting.faq_font_size
+              }px "><div class="faq-list-1"><div class="faq-title-1">` + faq_title + `</div></div><div class="faq-content-1" style="color: ${
+                template_setting.answer_font_color
+              }; font-family:${
+                template_setting.answer_font_family
+              }; font-size: ${
+                template_setting.answer_font_size
+              }px; font-weight: ${
+                template_setting.answer_font_weight
+              }">` + faq_content + `</div></li></div>`
+              break;
+            case 2: content_block += `<div id="faq-container" class="faq-container-2" onmouseleave="myLeaveFunction(this)" onmouseover="myOverFunction(this)" onclick="showHideContent(this)"><li class="faq-list-2" id="faq-list-${j}" style="color: ${
+                template_setting.faq_font_color
+              }; background-color: ${
+                template_setting.faq_bg_color
+              }; font-weight: ${
+                template_setting.faq_font_weight
+              }; font-family: ${
+                template_setting.faq_font_family
+              }; font-size: ${
+                template_setting.faq_font_size
+              }px"> <div id="faq-title"  class="faq-title-2">` + faq_title + `</div><svg class="svg-right" fill="${
+                template_setting.faq_font_color
+              }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></div><div id="faq-content" style="background-color:${
+                template_setting.answer_bg_color
+              }; color: ${
+                template_setting.answer_font_color
+              }; font-family:${
+                template_setting.answer_font_family
+              }; font-size: ${
+                template_setting.answer_font_size
+              }px; font-weight: ${
+                template_setting.answer_font_weight
+              }" class="faq-content-2">` + faq_content + '</li></div>'
+              break;
+            case 3: content_block += `<div id="faq-container" class="faq-container-3" ><li id="faq-list-${j}" style="border-bottom: 1px solid #ccc; color: ${
+                template_setting.faq_font_color
+              }; background-color: ${
+                template_setting.faq_bg_color
+              }; font-weight: ${
+                template_setting.faq_font_weight
+              }; font-family: ${
+                template_setting.faq_font_family
+              }; font-size: ${
+                template_setting.faq_font_size
+              }px"><div onclick="showHideContent(this)" class="faq-list-3"><div class="faq-title-3">` + faq_title + `</div><div class="list-svg"><svg class="svg-plus" fill="${
+                template_setting.faq_font_color
+              }" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg><svg class="svg-minus" fill="${
+                template_setting.faq_font_color
+              }" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg></div></div><div class="faq-content-3" style="color: ${
+                template_setting.answer_font_color
+              }; font-family:${
+                template_setting.answer_font_family
+              }; font-size: ${
+                template_setting.answer_font_size
+              }px; font-weight: ${
+                template_setting.answer_font_weight
+              }">` + faq_content + `</div></li></div>`
+              break;
           }
         }
-        if(category_title){
-          if(template_setting.template_number === 1){
-            block_container += `<div class="category-container" style="color: ${template_setting.category_font_color}; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}; text-align: ${template_setting.category_text_align}; text-transform: ${template_setting.category_text_style}">`+ `<div style="line-height: normal;"><span style="border-bottom: 1px solid #ccc">`+ category_title +`</span></div>` + content_block +`</div>`
-          }
-          else if(template_setting.template_number === 2){
-            block_container += `<div class="category-container" style="color: ${template_setting.category_font_color}; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}; text-align: ${template_setting.category_text_align}; text-transform: ${template_setting.category_text_style}">`+ `<div style="line-height: normal">`+ category_title +`</div>` + content_block +`</div>`
-          }
-          else{
-            block_container += `<div class="category-container" style="color: ${template_setting.category_font_color}; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}; text-align: ${template_setting.category_text_align}; text-transform: ${template_setting.category_text_style}">`+ `<div style="line-height: normal; border-bottom: 1px solid #ccc; padding: 12px 0">`+ category_title +`</div>` + content_block +`</div>`
-          }
+      }
+      if (category_title) {
+        if (template_setting.template_number === 1) {
+          block_container += `<div class="category-container" style="color: ${
+            template_setting.category_font_color
+          }; font-family: ${
+            template_setting.category_font_family
+          }; font-size: ${
+            template_setting.category_font_size
+          }px; font-weight: ${
+            template_setting.category_font_weight
+          }; text-align: ${
+            template_setting.category_text_align
+          }; text-transform: ${
+            template_setting.category_text_style
+          }">` + `<div style="line-height: normal;"><span style="border-bottom: 1px solid #ccc">` + category_title + `</span></div>` + content_block + `</div>`
+        } else if (template_setting.template_number === 2) {
+          block_container += `<div class="category-container" style="color: ${
+            template_setting.category_font_color
+          }; font-family: ${
+            template_setting.category_font_family
+          }; font-size: ${
+            template_setting.category_font_size
+          }px; font-weight: ${
+            template_setting.category_font_weight
+          }; text-align: ${
+            template_setting.category_text_align
+          }; text-transform: ${
+            template_setting.category_text_style
+          }">` + `<div style="line-height: normal">` + category_title + `</div>` + content_block + `</div>`
+        } else {
+          block_container += `<div class="category-container" style="color: ${
+            template_setting.category_font_color
+          }; font-family: ${
+            template_setting.category_font_family
+          }; font-size: ${
+            template_setting.category_font_size
+          }px; font-weight: ${
+            template_setting.category_font_weight
+          }; text-align: ${
+            template_setting.category_text_align
+          }; text-transform: ${
+            template_setting.category_text_style
+          }">` + `<div style="line-height: normal; border-bottom: 1px solid #ccc; padding: 12px 0">` + category_title + `</div>` + content_block + `</div>`
         }
       }
-      document.getElementById('template-2').innerHTML = block_container
-    })
+    }
+    document.getElementById('template-2').innerHTML = block_container
+  })
 
   function myLeaveFunction(el) {
     el.getElementsByClassName('faq-list-2')[0].style.backgroundColor = background_color
@@ -75,28 +163,27 @@
     var svgRight = el.getElementsByClassName('svg-right')
     var svgPlus = el.getElementsByClassName('svg-plus')
     var svgMinus = el.getElementsByClassName('svg-minus')
-    if(svgRight.length > 0){
+    if (svgRight.length > 0) {
       if (content.style.display === "block") {
         content.style.display = "none";
         svgRight[0].style.transform = "rotate(0deg)";
-        svgRight[0].style.transition  = "all .2s";
+        svgRight[0].style.transition = "all .2s";
       } else {
         content.style.display = "block";
         svgRight[0].style.transform = "rotate(90deg)";
-        svgRight[0].style.transition  = "all .2s";
+        svgRight[0].style.transition = "all .2s";
       }
     }
-    if(svgPlus.length > 0 && svgMinus.length > 0){
+    if (svgPlus.length > 0 && svgMinus.length > 0) {
       if (svgPlus[0].style.opacity === "0") {
         content.style.display = "block";
         svgPlus[0].style.opacity = "1";
         svgPlus[0].style.transform = "rotate(0deg)";
-        svgPlus[0].style.transition  = "all .7s";
-      } 
-      else {
+        svgPlus[0].style.transition = "all .7s";
+      } else {
         content.style.display = "none";
         svgPlus[0].style.transform = "rotate(180deg)";
-        svgPlus[0].style.transition  = "all 0s";
+        svgPlus[0].style.transition = "all 0s";
         svgPlus[0].style.opacity = "0";
       }
 
@@ -104,11 +191,11 @@
         content.style.display = "none";
         svgMinus[0].style.opacity = "0";
         svgMinus[0].style.transform = "rotate(0deg)";
-        svgMinus[0].style.transition  = "all 0s";
+        svgMinus[0].style.transition = "all 0s";
       } else {
         content.style.display = "block";
         svgMinus[0].style.transform = "rotate(180deg)";
-        svgMinus[0].style.transition  = "ease-in .3s";
+        svgMinus[0].style.transition = "ease-in .3s";
         svgMinus[0].style.opacity = "1";
       }
     }
@@ -123,4 +210,4 @@
     "javascript": "faqs-block.js",
     "templates": ["cart", "index"]
   }
-{% endschema %}
+{% endschema %}}

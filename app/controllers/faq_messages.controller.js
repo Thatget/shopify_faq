@@ -50,6 +50,42 @@ exports.findAll = (req, res) => {
   });
 };
 
+exports.findAllEmbedApp = async (req, res) => {
+  const shop = req.params.shop
+  let userID = null;
+  let messagesSetting = []
+  const user_id = req.jwtDecoded.data.user_id;
+  await User.findOne({ where: { shopify_domain: shop}})
+  .then(async response => {
+    userID = response.dataValues.id
+    await Messages.findAll({
+      where:{
+        user_id: userID
+      }
+    })
+    .then(data => {
+        if (data) {
+          messagesSetting = data.dataValues
+        } else {
+          res.status(404).send({
+              message: `Cannot find messages with user_id=${user_id}.`
+          });
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Error retrieving messages with user_id =" + user_id
+        });
+    }); 
+    return res.send({message_setting: messagesSetting}) 
+  })
+  .catch(e => {
+    console.log(e)
+  })
+
+};
+
+
 // Delete a Messages with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;

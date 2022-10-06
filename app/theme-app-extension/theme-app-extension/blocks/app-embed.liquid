@@ -3,9 +3,10 @@
   <span class="visually-hidden">Start the party!</span>
 </button>
 <script>
-  fetch('https://a3e7-2402-800-61b3-3c20-1182-1bc1-482d-9956.ngrok.io/api/help-desk {{ shop.domain }}').then(response => response.json()).then(data => {
+  fetch('https://a3e7-2402-800-61b3-3c20-1182-1bc1-482d-9956.ngrok.io/api/help-desk/message{{ shop.domain }}')
+  .then(response => response.json())
+  .then(data => {
     consoel.log(data)
-    sds {{ shop.domain }}
   })
 </script>
 <style>

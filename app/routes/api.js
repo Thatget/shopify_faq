@@ -35,6 +35,7 @@ let initAPIs = (app) => {
     });
     //send Faq messages
     router.post("/api/messages/", messages.create)
+    router.get("/api/help-desk/messages/:shop", messages.findAllEmbedApp);
 
     router.post("/login", AuthController.login);
     router.post("/refresh-token", AuthController.refreshToken);
