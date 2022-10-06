@@ -265,7 +265,10 @@ app.get('/faq-page', async (req, res) => {
         }
         if (shop) {
             try {
-                let path_prefix = req.query.path_prefix??'';
+                let path_prefix = '';
+				if (req.query.path_prefix) {
+					path_prefix = req.query.path_prefix;
+				}
                 const locale = req.headers['accept-language'].split(',')[0];
                 const faqs = await defaultPage.findFaqs(shop, locale, path_prefix);
                 const setting = await defaultPage.findSetting(shop, locale);
