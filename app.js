@@ -17,7 +17,7 @@ app.use(bodyParser.json({ verify: verifyRequest }));
 // for parsing application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors({
-    origin: '*'
+    origin: 'no-cors'
 }));
 
 const db = require("./app/models");

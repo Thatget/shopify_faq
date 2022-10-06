@@ -3,7 +3,7 @@
   <span class="visually-hidden">Start the party!</span>
 </button>
 <script>
-  fetch('https://dev-be-faq.yanet.io/api/help-desk/message{{ shop.domain }}')
+  fetch('https://dev-be-faq.yanet.io/api/help-desk/messages/{{ shop.domain }}')
   .then(response => response.json())
   .then(data => {
     consoel.log(data)
