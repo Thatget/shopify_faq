@@ -233,7 +233,8 @@ exports.update = async (req, res) => {
                                     description: req.body.description_translate,
                                     is_visible: req.body.is_visible,
                                     // show_on_cart : req.body.show_on_cart,
-                                    locale : req.body.locale_translate
+                                    locale : req.body.locale_translate,
+                                    position: req.body.position
                                 }
                                 await FaqCategory.update(category_translate, {
                                     where: { id: id_translate }
@@ -281,7 +282,7 @@ exports.updateRearrangeCategories = async (req, res) => {
             position: item.position,
         },{
             where: {
-                id: item.id
+                identify: item.identify
             }
         })
     })
