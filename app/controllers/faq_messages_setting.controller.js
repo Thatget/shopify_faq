@@ -1,6 +1,7 @@
 const db = require("../models");
 const MessagesSetting = db.faq_messages_setting;
 // const errorLog = require('../helpers/log.helper')
+const User = db.user
 
 // Create a messages setting
 exports.create = async (req, res) => {
@@ -21,6 +22,42 @@ exports.create = async (req, res) => {
         });
     });
     }
+};
+
+exports.findAllEmbedApp = async (req, res) => {
+  const shop = req.params.shop
+  let userID = null;
+  let messagesSetting = []
+  await User.findOne({ where: { shopify_domain: shop}})
+  .then(async response => {
+    response.dataValues.id? userID = response.dataValues.id : ''
+    if(userID){
+      await MessagesSetting.findOne({
+        where:{
+          user_id: userID
+        }
+      })
+      .then(data => {
+          if (data) {
+            messagesSetting = data.dataValues
+          } else {
+            res.status(404).send({
+                message: `Cannot find messages with user_id=${userID}.`
+            });
+          }
+      })
+      .catch(err => {
+          res.status(500).send({
+              message: "Error retrieving messages with user_id =" + userID
+          });
+      }); 
+    }
+    return res.send({message_setting: messagesSetting}) 
+  })
+  .catch(e => {
+    console.log(e)
+  })
+
 };
 
 // Find a single MessagesSetting with an id

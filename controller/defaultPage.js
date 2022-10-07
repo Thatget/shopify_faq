@@ -148,6 +148,7 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
         }).catch(error => {
             errorLog.error(`get faqs nodejs proxy error ${error.message}`)
         });
+        errorLog.error(send_data)
     return send_data;
 };
 exports.findSetting = async (shop, locale) => {

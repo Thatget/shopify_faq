@@ -6,19 +6,19 @@
         switch(setting.data.faq_template_number) {
         case 1 : %>
             <%- include('./templates/one.ejs') %>
-            <% if(messagesSetting.faq_messages_visible){%>
+            <% if(messagesSetting.help_desk_visible){%>
                 <%- include('./templates/faq_question.ejs') %>
             <% }%>
         <% break;
         case 2 : %>
             <%- include('./templates/two.ejs') %>
-            <% if(messagesSetting.faq_messages_visible){%>
+            <% if(messagesSetting.help_desk_visible){%>
                 <%- include('./templates/faq_question.ejs') %>
             <%  }%>    
         <% break;
         case 3 : %>
             <%- include('./templates/three.ejs') %>
-            <% if(messagesSetting.faq_messages_visible){%>
+            <% if(messagesSetting.help_desk_visible){%>
                 <%- include('./templates/faq_question.ejs') %>
             <%  }%>   
         <% break;

@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
           allowNull: false,
           // primaryKey: true
       },
-      faq_messages_visible: {
+      help_desk_visible: {
           type: Sequelize.BOOLEAN,
           allowNull: false,
           // primaryKey: true
@@ -111,6 +111,27 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         // primaryKey: true
       },
+      send_messages_text_color: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        // primaryKey: true
+      },
+      faq_messages_visible: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        // primaryKey: true
+      },
+      feature_questions_visible: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        // primaryKey: true
+      },
+      feature_categories_visible: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        // primaryKey: true
+      },
+      
   }, {
     freezeTableName: true,
   });

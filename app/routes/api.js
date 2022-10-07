@@ -34,8 +34,8 @@ let initAPIs = (app) => {
         res.sendFile(imagePath+req.params[0]);
     });
     //send Faq messages
-    router.post("/api/messages/", messages.create)
-    router.get("/api/help-desk/messages/:shop", messages.findAllEmbedApp);
+    router.post("/api/send-messages/", messages.create)
+    router.get("/api/help-desk/messages/:shop", messages_setting.findAllEmbedApp);
 
     router.post("/login", AuthController.login);
     router.post("/refresh-token", AuthController.refreshToken);
