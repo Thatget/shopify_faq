@@ -61,12 +61,6 @@ app.get('/', async (req, res) => {
     else{
         return res.redirect(app_link);
     }
-    // let tokenData = await getToken(req.query);
-    // let txt = "";
-    // if (tokenData.accessToken) {
-    //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-    // }
-    // return res.redirect(app_link+txt);
 });
 
 app.get('/storeFAQs', async (req, res) => {

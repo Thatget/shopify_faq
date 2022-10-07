@@ -136,13 +136,11 @@ let initAPIs = (app) => {
 
     //Setting Faq More Page router
     router.post("/api/faq-more-page-setting", faq_more_page_setting.create);
-    router.get("/api/faq-more-page-setting", faq_more_page_setting.findAll);
-    router.get("/api/faq-more-page-setting/:id", faq_more_page_setting.findOne);
+    router.get("/api/faq-more-page-setting", faq_more_page_setting.findOne);
     router.get("/api/faq-more-page-setting/page/:page", faq_more_page_setting.findByPage);
     router.put("/api/faq-more-page-setting/:id", faq_more_page_setting.update);
     router.delete("/api/faq-more-page-setting/:id", faq_more_page_setting.delete);
     router.delete("/api/faq-more-page-setting/page", faq_more_page_setting.deleteAll);
-
 
     // get Product list
     router.get("/api/shop/product-list", shopifyApi.getProductList);
