@@ -141,7 +141,7 @@
   height: 36px
 }
 .help__desk-list-faq{
-  margin: 8px 0
+  margin-bottom: 8px;
 }
 .help__desk-search-input{
   display: flex; 
@@ -183,7 +183,12 @@
   display: flex; 
   align-items:center; 
   justify-content:space-between;
-  padding: 8px;
+  padding: 8px 24px;
+}
+.help__desk-item:hover,
+.feature-faq-hover:hover,
+.help__desk-item-category:hover{
+  background-color: #e9edf1;
 }
 .help__desk-background{
   border-radius: 0 0 26% 26%; 
