@@ -185,6 +185,7 @@ exports.update = async (req, res) => {
                     title: req.body.title,
                     description: req.body.description? req.body.description : '',
                     is_visible: req.body.is_visible,
+                    feature_category: req.body.feature_category,
                     // show_on_cart : req.body.show_on_cart
                 };
                 if (req.body.position) {
@@ -220,6 +221,7 @@ exports.update = async (req, res) => {
                             await FaqCategory.update({
                                 // show_on_cart : req.body.show_on_cart,
                                 is_visible: req.body.is_visible,
+                                feature_category: req.body.feature_category,
                             },{
                                 where: {
                                     user_id: user_id,
@@ -232,8 +234,10 @@ exports.update = async (req, res) => {
                                     title: req.body.title_translate,
                                     description: req.body.description_translate,
                                     is_visible: req.body.is_visible,
+                                    feature_category: req.body.feature_category,
                                     // show_on_cart : req.body.show_on_cart,
-                                    locale : req.body.locale_translate
+                                    locale : req.body.locale_translate,
+                                    position: req.body.position
                                 }
                                 await FaqCategory.update(category_translate, {
                                     where: { id: id_translate }
@@ -281,7 +285,7 @@ exports.updateRearrangeCategories = async (req, res) => {
             position: item.position,
         },{
             where: {
-                id: item.id
+                identify: item.identify
             }
         })
     })

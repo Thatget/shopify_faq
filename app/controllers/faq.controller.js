@@ -309,6 +309,59 @@ exports.getAll = (req, res) => {
         })
     });
 };
+
+exports.findAllFeatureFaq = async (req, res) => {
+    let Faqs = [];
+    let Categories = [];
+    let user_id = ''
+    const shop = req.params.shop;
+    if (!shop) {
+        res.status(400).send({
+            message: "Error not user selected ?"
+        });
+        return;
+    }
+    await User.findOne({
+        where: { shopify_domain: shop}
+    })
+    .then(async data => {
+        user_id = data.dataValues.id
+        await Faq.findAll({ 
+            where: { user_id: user_id }
+        })
+        .then(data => {
+            Faqs = data
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving faq."
+            })
+        });
+        await FaqCategory.findAll({
+            where: {
+                user_id: user_id,
+                feature_category: true
+            }
+        })
+        .then(data => {
+            Categories = data
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving faq."
+            })
+        });
+    })
+    .catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving faq."
+        })
+    });
+    return res.send({faq: Faqs, category: Categories})
+};
 // Find a single Faq with an id
 exports.findOne = (req, res) => {
     if (!req.params.id) {
@@ -357,7 +410,8 @@ exports.update = async (req, res) => {
                     title: req.body.title,
                     content: req.body.content,
                     is_visible: req.body.is_visible,
-                    list_id: req.body.list_id
+                    list_id: req.body.list_id,
+                    feature_faq: req.body.feature_faq,
                 };
                 if (req.body.position) {
                     faq.position = req.body.position;
@@ -409,14 +463,15 @@ exports.update = async (req, res) => {
                     identify : identify,
                     category_identify: category_identify,
                     title: req.body.title,
-                    content: req.body.content
+                    content: req.body.content,
+                    feature_faq: req.body.feature_faq,
                 }
                 await Faq.update(data, {
                     where: { id: id}
                 })
                 .then(async num => {
                     if (num == 1) {
-                        await Faq.update({category_identify: category_identify, is_visible: req.body.is_visible}, {
+                        await Faq.update({category_identify: category_identify, is_visible: req.body.is_visible, feature_faq: req.body.feature_faq}, {
                             where: {
                                 user_id: user_id,
                                 identify: response.dataValues.identify,
@@ -452,7 +507,8 @@ exports.update = async (req, res) => {
                         identify : identify,
                         category_identify: category_identify,
                         title: req.body.title_translate,
-                        content: req.body.content_translate
+                        content: req.body.content_translate,
+                        feature_faq: req.body.feature_faq,
                     }
                     await Faq.update(dataTranslate,
                         {

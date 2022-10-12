@@ -6,25 +6,35 @@ exports.create = async (req, res) => {
     // Validate request
     const user_id = req.jwtDecoded.data.user_id;
     const faq_more_page_setting = req.body;
-    faq_more_page_setting.user_id = user_id;
-    await FaqMorePageSetting.create(faq_more_page_setting)
-    .then(data => {
-        res.send(data);
-        return;
-    })
-    .catch(err => {
-        res.status(500).send({
-            message:
-                err.message || "Some error occurred while creating the faq_more_page_setting."
+    faq_more_page_setting.user_id = user_id
+    if (!req.body) {
+        res.status(400).send({
+            message: "Faq id can not be empty!"
         });
         return;
-    });
+    }
+    // Create faq_more_page_setting when identify is not set
+    else {
+        // Create a faq_more_page_setting
+        await FaqMorePageSetting.bulkCreate(faq_more_page_setting)
+            .then(data => {
+                res.send(data);
+                return;
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while creating the faq_more_page_setting."
+                });
+                return;
+            });
+    }
 };
 
 // Retrieve all FaqMorePageSetting of a category from the database.
-exports.findAll = (req, res) => {
+exports.findOne = (req, res) => {
     const user_id = req.jwtDecoded.data.user_id;
-    FaqMorePageSetting.findAll({
+    FaqMorePageSetting.findOne({
         where: {
             user_id: user_id
         }
@@ -64,33 +74,6 @@ exports.findByPage = (req, res) => {
                 err.message || "Some error occurred while retrieving faq_more_page_setting."
         })
     });
-};
-
-
-// Find a single FaqMorePageSetting with an id
-exports.findOne = (req, res) => {
-    if (!req.params.id) {
-        res.status(400).send({
-            message: "FaqMorePageSetting id not selected"
-        });
-        return;
-    }
-    const id = req.params.id;
-    FaqMorePageSetting.findByPk(id)
-        .then(data => {
-            if (data) {
-                res.send(data);
-            } else {
-                res.status(404).send({
-                    message: `Cannot find faq_more_page_setting with id=${id}.`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error retrieving faq_more_page_setting with id=" + id
-            });
-        });
 };
 
 // Update a FaqMorePageSetting by the id in the request

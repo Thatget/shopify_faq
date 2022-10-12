@@ -1,10 +1,11 @@
 const db = require("../models");
 const Messages = db.faq_messages;
-// const errorLog = require('../helpers/log.helper')
 
+// const errorLog = require('../helpers/log.helper')
 exports.create = async (req, res) => {
   // Create a setting
   const messages = req.body;
+  console.log(messages)
   const data = {
     user_id: messages.user_id,
     customer_name: messages.customer_name,

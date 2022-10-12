@@ -6,19 +6,19 @@
         switch(setting.data.faq_template_number) {
         case 1 : %>
             <%- include('./templates/one.ejs') %>
-            <% if(messagesSetting.faq_messages_visible){%>
+            <% if(messagesSetting.help_desk_visible){%>
                 <%- include('./templates/faq_question.ejs') %>
             <% }%>
         <% break;
         case 2 : %>
             <%- include('./templates/two.ejs') %>
-            <% if(messagesSetting.faq_messages_visible){%>
+            <% if(messagesSetting.help_desk_visible){%>
                 <%- include('./templates/faq_question.ejs') %>
             <%  }%>    
         <% break;
         case 3 : %>
             <%- include('./templates/three.ejs') %>
-            <% if(messagesSetting.faq_messages_visible){%>
+            <% if(messagesSetting.help_desk_visible){%>
                 <%- include('./templates/faq_question.ejs') %>
             <%  }%>   
         <% break;
@@ -53,11 +53,11 @@
                 animation-iteration-count:infinite;
             }
             @keyframes example {
-                0%   {left:0px; top:0px;transform: rotateY(0deg)}
-                25%  {left:200px; top:0px;transform: rotateY(90deg)}
-                50%  {left:200px; top:200px;transform: rotateY(180deg)}
-                75%  {left:0px; top:200px;transform: rotateY(90deg)}
-                100% {left:0px; top:0px;transform: rotateY(0deg)}
+                0%   {transform: rotateY(0deg)}
+                25%  {transform: rotateY(-90deg)}
+                50%  {transform: rotateY(-180deg)}
+                75%  {transform: rotateY(-90deg)}
+                100% {transform: rotateY(0deg)}
             }
             <% } %>
         
@@ -104,14 +104,16 @@
 
         .send__faq-scroll::-webkit-scrollbar{
             width: 5px;
-            background-color: #F5F5F5;
         }
 
         .send__faq-scroll::-webkit-scrollbar-thumb{
             background-color: gray;	
-            border-radius: 5px 0 0 0;
+            border-radius: 5px;
         }
-
+        .send__faq-scroll::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+        }
         .send__faq-icon:hover{
             border: 1px solid #ccc;
             border-radius: 4px;

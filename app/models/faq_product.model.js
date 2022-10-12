@@ -29,11 +29,6 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             // primaryKey: true
         },
-        // position: {
-        //     type: Sequelize.INTEGER,
-        //     allowNull: false,
-        //     // primaryKey: true
-        // },
     }, {
         freezeTableName: true
     });

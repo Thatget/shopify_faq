@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         identify: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
         },
         title: {
             type: Sequelize.STRING,
@@ -22,6 +22,10 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
         is_visible: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: true,
+        },
+        feature_faq: {
             type: Sequelize.BOOLEAN,
             defaultValue: true,
         },

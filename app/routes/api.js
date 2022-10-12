@@ -34,12 +34,14 @@ let initAPIs = (app) => {
         res.sendFile(imagePath+req.params[0]);
     });
     //send Faq messages
-    router.post("/api/messages/", messages.create)
+    router.post("/api/send-messages/", messages.create)
+    router.get("/api/help-desk/messages/:shop", messages_setting.findAllEmbedApp);
 
     router.post("/login", AuthController.login);
     router.post("/refresh-token", AuthController.refreshToken);
     router.get("/api/product/:product_id", product.findOne);
     router.get("/api/shop/faq/:shop", faq.findAllInFaqPage);
+    router.get("/api/no-token/feature-faq/:shop", faq.findAllFeatureFaq);
     router.get("/api/shop/faq/search/:shop", faq.searchFaqTitle);
     router.get("/api/shop/setting/:shop", setting.findOneInFaqPage);
     router.get("/api/shop/faq-category/:shop", category.findAllInFaqPage);
@@ -135,13 +137,11 @@ let initAPIs = (app) => {
 
     //Setting Faq More Page router
     router.post("/api/faq-more-page-setting", faq_more_page_setting.create);
-    router.get("/api/faq-more-page-setting", faq_more_page_setting.findAll);
-    router.get("/api/faq-more-page-setting/:id", faq_more_page_setting.findOne);
+    router.get("/api/faq-more-page-setting", faq_more_page_setting.findOne);
     router.get("/api/faq-more-page-setting/page/:page", faq_more_page_setting.findByPage);
     router.put("/api/faq-more-page-setting/:id", faq_more_page_setting.update);
     router.delete("/api/faq-more-page-setting/:id", faq_more_page_setting.delete);
     router.delete("/api/faq-more-page-setting/page", faq_more_page_setting.deleteAll);
-
 
     // get Product list
     router.get("/api/shop/product-list", shopifyApi.getProductList);

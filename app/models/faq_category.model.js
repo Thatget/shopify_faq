@@ -29,6 +29,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             defaultValue: true,
         },
+        feature_category: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: true,
+        },
         // show_on_cart: {
         //     type: Sequelize.BOOLEAN,
         //     defaultValue: true,
