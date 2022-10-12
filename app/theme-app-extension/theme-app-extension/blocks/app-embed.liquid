@@ -190,7 +190,7 @@
   var content_feature_faqs = ''
   var content_feature_categories = ''
 
-  const domain = 'https://backend-faq.yanet.io'
+  const domain = 'https://dev-be-faq.yanet.io'
   fetch(`${domain}/api/help-desk/messages/{{shop.domain}}`)
   .then(response => response.json())
   .then (data => {
