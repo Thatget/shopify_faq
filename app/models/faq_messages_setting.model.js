@@ -131,7 +131,16 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         // primaryKey: true
       },
-      
+      translation: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+        // primaryKey: true
+      },
+      primary_language: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        // primaryKey: true
+      },
   }, {
     freezeTableName: true,
   });

@@ -9,7 +9,7 @@
       <svg class="help__desk-close-icon" fill="#fff" height="38" width="38" style="display: none; font-weight: 200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
     </div>
     <div class="help__desk-container" style="line-height: 1.5">
-      <div class="help__desk-height help__desk-scroll" >
+      <div class="help__desk-height help__desk-home help__desk-scroll" >
         <div class="help__desk-main" style="height: 100px; margin: -35px; position:relative">
           <div class="help__desk-background" style="display: block"></div>
           <div class="help__desk-header" style="position:absolute; top:12px; width: calc(100% - 32px)">
@@ -25,7 +25,7 @@
         <div class="help__desk-body" style="position:relative; margin-top: 66px; padding-bottom: 1px; border-radius: 6px;">
           <div class="help__desk-body-main">
             <div class="help__desk-contact-more help__desk-component" style="padding: 16px">
-              <div class="help__desk-label" style="margin: 0;">Contact us</div>
+              <div class="help__desk-label help__desk-label-contactUs" style="margin: 0;"></div>
               <div style="display: flex; align-items:center; margin-top: 12px;">
                 <a href="" class="send_faq-contact-link send_faq-contact-phone" id="send_faq-contact-phone" target="_blank" style="background-color: green">
                   <svg height="24" width="24" fill="#fff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
@@ -42,45 +42,46 @@
               </div>
             </div>
             <div class="help__desk-items-faq help__desk-component">
-              <div class="help__desk-label" style="margin: 0; padding: 16px 16px 0 16px">FAQs</div>
+              <div class="help__desk-label help__desk-label-faq" style="margin: 0; padding: 16px 16px 0 16px"></div>
               <div class="help__desk-search" style="padding: 16px 16px 0 16px; margin-bottom: 8px">
                 <div class="help__desk-search-main">
                   <svg width="16" height="16" fill="#000" xmlns="http://www.w3.org/2000/svg" style="margin: 2px 8px 0 12px" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
-                  <input class="help__desk-search-input" onkeyup="searchFeatureFaq()" id="search-feature-faq" type="text" placeholder="Search">
+                  <input class="help__desk-search-input" onkeyup="searchFeatureFaq()" id="search-feature-faq" type="text" placeholder="">
                 </div>
               </div>
               <div class="help__desk-main"> 
-                <div class="help__desk-list help__desk-list-faq">
+                <div class="help__desk-list help__desk-list-faq help__desk-scroll">
                 </div>
               </div>
             </div>
             <div class="help__desk-items-category help__desk-component">
-              <div class="help__desk-label" style="margin: 0; padding: 16px">Categories</div>
+              <div class="help__desk-label help__desk-label-category" style="margin: 0; padding: 16px; border-bottom: 1px solid #e9edf1"></div>
               <div class="help__desk-main"> 
-                <div class="help__desk-list help__desk-list-category" style="margin-bottom: 8px">
+                <div class="help__desk-list help__desk-list-category help__desk-scroll">
                 </div>
               </div>
             </div>
             <div class="help__desk-send-faq help__desk-component" style="padding: 16px">
               <div class="help__desk-name">
-                <label class="help__desk-label" for="customer-name">Your Name</label>
+                <label class="help__desk-label help__desk-label-name" for="customer-name"></label>
                 <div class="help__desk-info">
                   <input class="help__desk-input" id="customer-name" name="customer_name" type="text" placeholder="">
                 </div>
               </div>
               <div class="help__desk-question">
-                <label  class="help__desk-label" for="faq-title">Messages</label>
+                <label  class="help__desk-label help__desk-label-messages" for="faq-title"></label>
                 <textarea class="help__desk-textarea" id="faq-title" name="faq_title" cols="12" rows="4" placeholder=""></textarea>
               </div>
               <div class="help__desk-contact">
-                <label  class="help__desk-label" for="customer-contact">Contact</label>
+                <label  class="help__desk-label help__desk-label-contact" for="customer-contact"></label>
                 <div class="help__desk-info">
                   <input class="help__desk-input" id="customer-contact" name="customer_contact" type="text" placeholder="">
                 </div>
               </div>
             </div>
             <div class="help__desk-footer">
-              <button style="width: 72px" onclick="Submit()" class="help__desk-submit">Send
+              <span style="text-align:start; font-size: 16px;" id="messages"></span>
+              <button style="width: 72px" onclick="Submit()" class="help__desk-submit help__desk-label-send">
                 <div class="help__desk-loader">
                   <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                     width="20px" height="20px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
@@ -97,79 +98,78 @@
                   </svg>
                 </div>        
               </button>
-              <span style="text-align:start; font-size: 16px;" id="messages"></span>
             </div> 
           </div>
         </div>
-        <div class="help__desk-faq" style="display: none">
-          <div class="help__desk-faq--main" style="height: 500px; background-color: white; position:relative; padding-bottom: 1px; border-radius: 6px; border: 1px solid #dee2e6;">
-            <div class="help__desk-faq--header" style="position:relative">
-              <div class="help__desk-faq-component">
-                <div class="help__desk-icon">
-                  <svg fill="#fff" width="24px" height="24px" onclick="backHome()" style="cursor:pointer; margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 278.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>                
-                </div>
-                <div style="font-size: 24px">
-                  <span class="" style="color: white">FAQ</span>
-                </div>
-                <div class="help__desk-icon" onclick="closeSend()" title="Close">
-                  <svg width="26" height="26" fill="#fff" style="margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
-                </div>
-              </div>                          
-            </div>
-            <div>
-              <div class="" style="padding: 16px">
-                <p class="help__desk-faq--title" style="word-break: break-all; font-size: 16px; text-align: center; font-weight: 700; margin-top: 0"></p>
-                <span class="help__desk-faq--content" style="font-weight: 400; word-break: break-all"></span>
+      </div>
+      <div class="help__desk-faq" style="display: none">
+        <div class="help__desk-faq--main">
+          <div class="help__desk-faq--header" style="position:relative">
+            <div class="help__desk-faq-component">
+              <div class="help__desk-icon" onclick="backHome()">
+                <svg fill="#fff" width="24px" height="24px" style="cursor:pointer; margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 278.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>                
               </div>
+              <div style="font-size: 24px">
+                <span class="" style="color: white">FAQ</span>
+              </div>
+              <div class="help__desk-icon" onclick="closeSend()" title="Close">
+                <svg width="26" height="26" fill="#fff" style="margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+              </div>
+            </div>                          
+          </div>
+          <div class="help__desk-scroll help__desk-faq-height">
+            <div style="margin: 0 16px; overflow: hidden">
+              <p class="help__desk-faq--title" style="word-break: break-all; font-size: 16px; text-align: center; font-weight: 700; margin-top: 0"></p>
+              <span class="help__desk-faq--content" style="font-weight: 400; word-break: break-all"></span>            
             </div>
           </div>
         </div>
-        <div class="help__desk-category" style="display: none">
-          <div style="height: 500px; width: 370px; background-color: white; position:relative; padding-bottom: 1px; border-radius: 6px;">
-            <div class="help__desk-category--header" style="position:relative">
-              <div class="help__desk-category-component">
-                <div class="help__desk-icon">
-                  <svg fill="#fff" width="24px" height="24px" onclick="backHome()" style="cursor:pointer; margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 278.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>                
-                </div>
-                <div class="" style="font-size: 20px">
-                  <span class="help__desk-category--title" style="color: white"></span>
-                </div>
-                <div class="help__desk-icon" onclick="closeSend()" title="Close">
-                  <svg width="26" height="26" fill="#fff" style="margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
-                </div>
-              </div>                          
+      </div>
+      <div class="help__desk-category" style="display: none">
+        <div class="help__desk-faq--main">
+          <div class="help__desk-category--header" style="position:relative">
+            <div class="help__desk-category-component">
+              <div class="help__desk-icon" onclick="backHome()" >
+                <svg fill="#fff" width="24px" height="24px" style="cursor:pointer; margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 278.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>                
+              </div>
+              <div class="" style="font-size: 20px">
+                <span class="help__desk-category--title" style="color: white"></span>
+              </div>
+              <div class="help__desk-icon" onclick="closeSend()" title="Close">
+                <svg width="26" height="26" fill="#fff" style="margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+              </div>
+            </div>                          
+          </div>
+          <div class="help__desk-faq-height help__desk-scroll">
+            <div class="help__desk-search-main" style="margin: 0 16px 8px 16px">
+              <svg width="16" height="16" fill="#000" xmlns="http://www.w3.org/2000/svg" style="margin: 2px 8px 0 12px" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+              <input class="help__desk-search-input" onkeyup="searchFaq()" id="search-faq" type="text" placeholder="">
             </div>
-            <div class="" style="padding-top: 16px">
-              <div class="help__desk-search-main" style="margin: 8px 16px">
-                <svg width="16" height="16" fill="#000" xmlns="http://www.w3.org/2000/svg" style="margin: 2px 8px 0 12px" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
-                <input class="help__desk-search-input" onkeyup="searchFaq()" id="search-faq" type="text" placeholder="Search">
-              </div>
-              <div class="feature-faq-category" style="display: block">
-              </div>
+            <div class="feature-faq-category" style="display: block">
             </div>
           </div>
         </div>
-        <div class="help__desk-faq-category" style="display: none">
-          <div class="faq-category--main" style="height: 500px; background-color: white; position:relative; padding-bottom: 1px; border-radius: 6px; border: 1px solid #dee2e6;">
-            <div class="faq-category--header" style="position:relative">
-              <div class="faq-category-component">
-                <div class="help__desk-icon">
-                  <svg fill="#fff" width="24px" height="24px" onclick="backCategory()" style="cursor:pointer; margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 278.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>                
-                </div>
-                <div style="font-size: 24px">
-                  <span class="" style="color: white">FAQ</span>
-                </div>
-                <div class="help__desk-icon" onclick="closeSend()" title="Close">
-                  <svg width="26" height="26" fill="#fff" style="margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
-                </div>
-              </div>                          
-            </div>
-            <div>
-              <div class="" style="padding: 16px">
-                <p class="faq-category--title" style="word-break: break-all; font-size: 16px; text-align: center; font-weight: 700; margin-top: 0"></p>
-                <span class="faq-category--content" style="font-weight: 400; word-break: break-all"></span>
+      </div>
+      <div class="help__desk-faq-category" style="display: none">
+        <div class="help__desk-faq--main">
+          <div class="faq-category--header" style="position:relative">
+            <div class="faq-category-component">
+              <div class="help__desk-icon" onclick="backCategory()">
+                <svg fill="#fff" width="24px" height="24px" style="cursor:pointer; margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 278.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>                
               </div>
-            </div>
+              <div style="font-size: 24px">
+                <span class="" style="color: white">FAQ</span>
+              </div>
+              <div class="help__desk-icon" onclick="closeSend()" title="Close">
+                <svg width="26" height="26" fill="#fff" style="margin: auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+              </div>
+            </div>                          
+          </div>
+          <div class="help__desk-scroll help__desk-faq-height">
+            <div style="margin: 0 16px; overflow: hidden">
+              <p class="faq-category--title" style="word-break: break-all; font-size: 16px; text-align: center; font-weight: 700; margin-top: 0"></p>
+              <span class="faq-category--content" style="font-weight: 400; word-break: break-all"></span>
+            </div>            
           </div>
         </div>
       </div>
@@ -222,7 +222,20 @@
     document.getElementsByClassName('help__desk-faq--header')[0].style.color = messages_setting.text_color;
     
     help_desk_submit.style.fontFamily = messages_setting.font_family;
-
+    let translation = []
+    translation = JSON.parse(messages_setting.translation).filter(item => {
+      return item.country === messages_setting.primary_language
+    })
+    document.getElementsByClassName('help__desk-label-contactUs')[0].innerText = translation[0].contact_us
+    document.getElementsByClassName('help__desk-label-faq')[0].innerText = translation[0].faq
+    document.getElementsByClassName('help__desk-label-category')[0].innerText = translation[0].categories
+    document.getElementsByClassName('help__desk-label-name')[0].innerText = translation[0].your_name
+    document.getElementsByClassName('help__desk-label-messages')[0].innerText = translation[0].messages
+    document.getElementsByClassName('help__desk-label-contact')[0].innerText = translation[0].contact
+    document.getElementsByClassName('help__desk-label-send')[0].innerText = translation[0].send
+    document.getElementById('search-feature-faq').placeholder = translation[0].search
+    document.getElementById('search-faq').placeholder = translation[0].search
+    
     document.getElementsByClassName('help__desk-search-input')[0].style.fontFamily = messages_setting.font_family;
     document.getElementsByClassName('help__desk-search-input')[1].style.fontFamily = messages_setting.font_family;
 
@@ -311,7 +324,6 @@
     if (messages_setting.aligment_faq_messages === 'right') {
       help_desk_container.style.right = '20px';
     }
-
   })
   .catch(e => {
     console.log(e)
@@ -444,14 +456,13 @@
       return item.id === faq_id
     })
     document.getElementsByClassName('help__desk-body')[0].style.display = 'none'
-    document.getElementsByClassName('help__desk-main')[0].style.display = 'none'
+    document.getElementsByClassName('help__desk-home')[0].style.display = 'none'
     document.getElementsByClassName('help__desk-faq')[0].style.display = 'block'
     document.getElementsByClassName('help__desk-category')[0].style.display = 'none'
     document.getElementsByClassName('help__desk-faq-category')[0].style.display = 'none'
     document.getElementsByClassName('help__desk-faq--title')[0].innerHTML = faq_show[0].title
     document.getElementsByClassName('help__desk-faq--content')[0].innerHTML = faq_show[0].content
 
-    console.log(faq_show[0].title)
   }
 
   let category_show = []
@@ -462,7 +473,6 @@
     category_show = feature_categories.filter(item => {
       return item.id === category_id
     })
-    console.log(faqs)
     faq_show = faqs.filter(item => {
       return item.category_identify === category_show[0].identify
     })
@@ -478,7 +488,7 @@
     }
     document.getElementsByClassName('feature-faq-category')[0].innerHTML = feature_faqs_categories
     document.getElementsByClassName('help__desk-body')[0].style.display = 'none'
-    document.getElementsByClassName('help__desk-main')[0].style.display = 'none'
+    document.getElementsByClassName('help__desk-home')[0].style.display = 'none'
     {% comment %} document.getElementsByClassName('help__desk-faq')[0].style.display = 'none' {% endcomment %}
     document.getElementsByClassName('help__desk-category--title')[0].innerHTML = category_show[0].title
     {% comment %} document.getElementsByClassName('help__desk-faq--content')[0].innerText = category_show[0].content {% endcomment %}
@@ -494,7 +504,7 @@
       return item.id === faq_id
     })
     document.getElementsByClassName('help__desk-body')[0].style.display = 'none'
-    document.getElementsByClassName('help__desk-main')[0].style.display = 'none'
+    document.getElementsByClassName('help__desk-home')[0].style.display = 'none'
     document.getElementsByClassName('help__desk-faq')[0].style.display = 'none'
     document.getElementsByClassName('help__desk-faq-category')[0].style.display = 'block'
     document.getElementsByClassName('help__desk-category')[0].style.display = 'none'
@@ -503,8 +513,9 @@
   }
   
   function backHome(){
+    document.getElementById('search-faq').value = ''
     document.getElementsByClassName('help__desk-body')[0].style.display = 'block'
-    document.getElementsByClassName('help__desk-main')[0].style.display = 'block'
+    document.getElementsByClassName('help__desk-home')[0].style.display = 'block'
     document.getElementsByClassName('help__desk-faq')[0].style.display = 'none'
     document.getElementsByClassName('help__desk-category')[0].style.display = 'none'
     document.getElementsByClassName('help__desk-faq-category')[0].style.display = 'none'
@@ -512,7 +523,7 @@
 
   function backCategory(){
     document.getElementsByClassName('help__desk-body')[0].style.display = 'none'
-    document.getElementsByClassName('help__desk-main')[0].style.display = 'none'
+    document.getElementsByClassName('help__desk-home')[0].style.display = 'none'
     document.getElementsByClassName('help__desk-faq')[0].style.display = 'none'
     document.getElementsByClassName('help__desk-category')[0].style.display = 'block'
     document.getElementsByClassName('help__desk-faq-category')[0].style.display = 'none'
