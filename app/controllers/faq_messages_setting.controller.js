@@ -40,7 +40,6 @@ exports.findAllEmbedApp = async (req, res) => {
       .then(data => {
           if (data) {
             messagesSetting = data.dataValues
-            console.log(messagesSetting.help_desk_visible)
           } else {
             res.status(404).send({
                 message: `Cannot find messages with user_id=${userID}.`
@@ -89,7 +88,6 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
   const faq_messages_settings = req.body
-  console.log(faq_messages_settings)
   MessagesSetting.update(faq_messages_settings, {
     where:{
       user_id: user_id

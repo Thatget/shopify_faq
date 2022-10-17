@@ -5,7 +5,6 @@ const Messages = db.faq_messages;
 exports.create = async (req, res) => {
   // Create a setting
   const messages = req.body;
-  console.log(messages)
   const data = {
     user_id: messages.user_id,
     customer_name: messages.customer_name,
