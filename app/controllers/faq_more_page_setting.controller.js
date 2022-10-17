@@ -16,7 +16,7 @@ exports.create = async (req, res) => {
     // Create faq_more_page_setting when identify is not set
     else {
         // Create a faq_more_page_setting
-        await FaqMorePageSetting.bulkCreate(faq_more_page_setting)
+        await FaqMorePageSetting.create(faq_more_page_setting)
             .then(data => {
                 res.send(data);
                 return;
