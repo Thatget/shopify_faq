@@ -205,6 +205,21 @@ exports.findSetting = async (shop, locale) => {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
+                    if (settingData.page_under_contruction) {
+                        try {
+                            JSON.parse(settingData.page_under_contruction).every(v => {
+                                if (v.locale === locale) {
+                                    data.page_under_contruction = v.content;
+                                    return false;
+                                } else if(v.locale === 'default') {
+                                    data.page_under_contruction = v.content;
+                                }
+                                return true;
+                            });
+                        } catch (e) {
+                            errorLog.error(`setting json parse error ${e.message}`)
+                        }
+                    }
                     if (settingData.search_placehoder) {
                         try {
                             JSON.parse(settingData.search_placehoder).every(v => {

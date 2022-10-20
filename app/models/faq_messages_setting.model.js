@@ -141,7 +141,13 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         // primaryKey: true
       },
-  }, {
+  }, 
+  {
+    uniqueKeys: {
+      Items_unique: {
+        fields: ['user_id']
+      }
+    },
     freezeTableName: true,
   });
   MessageSetting.belongsTo(User, {foreignKey: 'user_id', targetKey: 'id', onDelete: 'CASCADE',});

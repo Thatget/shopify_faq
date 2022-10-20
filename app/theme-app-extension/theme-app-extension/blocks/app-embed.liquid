@@ -200,7 +200,7 @@
   document.getElementById('help__desk-loader').style.display = 'none'
 
   const domain = 'https://dev-be-faq.yanet.io'
-  fetch(`${domain}/api/help-desk/messages/{{shop.domain}}`)
+  fetch(`${domain}/api/help-desk/messages/{{shop.permanent_domain}}`)
   .then(response => response.json())
   .then (data => {
     messages_setting = data.message_setting
