@@ -30,6 +30,11 @@ module.exports = (sequelize, Sequelize) => {
             // primaryKey: true
         },
     }, {
+        uniqueKeys: {
+            Items_unique: {
+                fields: ['user_id', 'product_id', 'faq_id', 'faq_identify','category_identify']
+            }
+        },
         freezeTableName: true
     });
     ProductFaq.belongsTo(User, {foreignKey: 'user_id', targetKey: 'id', onDelete: 'CASCADE',});

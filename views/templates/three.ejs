@@ -27,7 +27,7 @@
         <% if(!setting.data.show_page_construction){%>
             <% if(faqs && !setting.data.dont_category_faq){ %>
                 <div class="faq-main-container">
-                    <div class="container">
+                    <div class="faq-category-container">
                         <% if(faqs.categories.length){%>
                             <div class="category-bar">
                                 <% for(var i = 0; i < faqs.categories.length; i++) { %>
@@ -458,9 +458,9 @@
     .page-under-contruction{
         text-align: center;
         font-size: 48px;
-        margin: 30px 0;
+        margin: 60px 0;
     }
-    .container{
+    .faq-category-container{
         display: flex; 
         width: 100%;
     }
@@ -492,7 +492,7 @@
         overflow:unset !important;
     }
     @media only screen and (max-width: 768px) {
-        .container{
+        .faq-category-container{
             flex-direction: column;
         }
         .faq-container{
