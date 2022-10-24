@@ -50,6 +50,22 @@ exports.findOne = (req, res) => {
     });
 };
 
+// FindAll
+exports.findAll = (req, res) => {
+    FaqMorePageSetting.findAll({
+    })
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving faq_more_page_setting."
+        })
+    });
+};
+
+
 exports.findByPage = (req, res) => {
     if (!req.params.page) {
         res.status(400).send({

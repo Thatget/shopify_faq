@@ -54,66 +54,89 @@ exports.findOne = (req, res) => {
       });
   };
 
-// Update a User by the id in the request
-exports.update = (req, res) => {
-  User.update(req.body, {
-    where: { shopify_domain: req.body.shopify_domain, }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "User was updated successfully."
-        });
+
+// Find all user
+exports.findAll = (req, res) => {
+  User.findAll(
+      {
+          attributes:['shopify_domain','id']
+      })
+    .then(data => {
+      if (data) {
+        res.send(data);
       } else {
-        res.send({
-          message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
+        res.status(404).send({
+          message: `Cannot find User with id=${id}.`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error updating user with id=" + id
+        message: "Error retrieving user with id=" + id
       });
     });
 };
+
+// Update a User by the id in the request
+// exports.update = (req, res) => {
+//   User.update(req.body, {
+//     where: { shopify_domain: req.body.shopify_domain, }
+//   })
+//     .then(num => {
+//       if (num == 1) {
+//         res.send({
+//           message: "User was updated successfully."
+//         });
+//       } else {
+//         res.send({
+//           message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
+//         });
+//       }
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message: "Error updating user with id=" + id
+//       });
+//     });
+// };
 
 // Delete a Tutorial with the specified id in the request
-exports.delete = (req, res) => {
-    const id = req.params.id;
-    User.destroy({
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "User was deleted successfully!"
-          });
-        } else {
-          res.send({
-            message: `Cannot delete user with id=${id}. Maybe user was not found!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Could not delete user with id=" + id
-        });
-      });
-  };
+// exports.delete = (req, res) => {
+//     const id = req.params.id;
+//     User.destroy({
+//       where: { id: id }
+//     })
+//       .then(num => {
+//         if (num == 1) {
+//           res.send({
+//             message: "User was deleted successfully!"
+//           });
+//         } else {
+//           res.send({
+//             message: `Cannot delete user with id=${id}. Maybe user was not found!`
+//           });
+//         }
+//       })
+//       .catch(err => {
+//         res.status(500).send({
+//           message: "Could not delete user with id=" + id
+//         });
+//       });
+//   };
 
 // Delete all Tutorials from the database.
-exports.deleteAll = (req, res) => {
-  User.destroy({
-    where: {},
-    truncate: false
-  })
-    .then(nums => {
-      res.send({ message: `${nums} user were deleted successfully!` });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all users."
-      });
-    });
-};
+// exports.deleteAll = (req, res) => {
+//   User.destroy({
+//     where: {},
+//     truncate: false
+//   })
+//     .then(nums => {
+//       res.send({ message: `${nums} user were deleted successfully!` });
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message:
+//           err.message || "Some error occurred while removing all users."
+//       });
+//     });
+// };

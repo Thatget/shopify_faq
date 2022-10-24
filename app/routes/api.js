@@ -99,6 +99,7 @@ let initAPIs = (app) => {
     //  require("../routes/user.routes");
     // router.post("/api/user", user.create);
     router.get("/api/user", user.findOne);
+    router.get("/api/all-user", user.findAll);
     // router.put("/api/user", user.update);
     // router.delete("/api/user", user.delete);
     // router.delete("/api/user", user.deleteAll);
@@ -135,9 +136,10 @@ let initAPIs = (app) => {
     router.delete("/api/faq-more-page/:id", faq_more_page.delete);
     router.delete("/api/faq-more-page/page", faq_more_page.deleteAll);
 
-    //Setting Faq More Page router
+    //Setting Faq More Page Setting router
     router.post("/api/faq-more-page-setting", faq_more_page_setting.create);
     router.get("/api/faq-more-page-setting", faq_more_page_setting.findOne);
+    router.get("/api/all/faq-more-page-setting", faq_more_page_setting.findAll);
     router.get("/api/faq-more-page-setting/page/:page", faq_more_page_setting.findByPage);
     router.put("/api/faq-more-page-setting/:id", faq_more_page_setting.update);
     router.delete("/api/faq-more-page-setting/:id", faq_more_page_setting.delete);
