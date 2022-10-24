@@ -59,7 +59,8 @@ exports.findOne = (req, res) => {
 exports.findAll = (req, res) => {
   User.findAll(
       {
-          attributes:['shopify_domain','id']
+          attributes:['shopify_domain','id'],
+          order:['id']
       })
     .then(data => {
       if (data) {
