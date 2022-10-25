@@ -110,7 +110,6 @@ app.get('/products-faqs', async (req, res) => {
 
 app.get('/shopify/callback', async (req, res) => {
     const {shop, hmac, code} = req.query;
-
     if (shop && hmac && code) {
         const map = Object.assign({}, req.query);
         delete map['signature'];
@@ -171,35 +170,52 @@ app.get('/shopify/callback', async (req, res) => {
                             shopLocales: shopLocales,
                         };
                         await User.findOne({where: {shopify_domain: user.shopify_domain }}).
-                        then( async data =>{
-                            if (data) {
-                                await User.update(user, {
-                                    where: { shopify_domain: user.shopify_domain, }
-                                }).then(data => {
-                                }).catch(err => {
-                                    errorLog.error(`user update error ${err.message}`)
-                                });                         
-                            } else {
-                                await User.create(user).then(data => {
-                                }).catch(err => {
-                                    errorLog.error(`user created error: ${err.message}`);
-                                });
-                                const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
-                                const webhook = {
-                                    webhook : {
-                                        topic: "app/uninstalled",
-                                        address: `${forwardingAddress}/uninstall?shop=${shop}`,
-                                        format: "json",
-                                    }
-                                };
-                                await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
-                                    .then((data) => {
+                            then( async data =>{
+                                if (data) {
+                                    await User.update(user, {
+                                        where: { shopify_domain: user.shopify_domain }
+                                    }).then(data => {
+                                    }).catch(err => {
+                                        errorLog.error(`user update error ${err.message}`)
+                                    });                         
+                                } 
+                                else {
+                                    await User.findOne({ where: { shopify_domain: shopResonse.shop.domain }})
+                                    .then(async data => {
+                                        if(data){
+                                            await User.update(user, {
+                                                where: { shopify_domain: shopResonse.shop.domain }
+                                            }).then(data => {
+                                            }).catch(err => {
+                                                errorLog.error(`user update error ${err.message}`)
+                                            }); 
+                                        }
+                                        else{
+                                            await User.create(user).then(data => {
+                                            }).catch(err => {
+                                                errorLog.error(`user created error: ${err.message}`);
+                                            });
+                                            const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
+                                            const webhook = {
+                                                webhook : {
+                                                    topic: "app/uninstalled",
+                                                    address: `${forwardingAddress}/uninstall?shop=${shop}`,
+                                                    format: "json",
+                                                }
+                                            };
+                                            await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
+                                                .then((data) => {
+                                                })
+                                                .catch((error) => {
+                                                    errorLog.error(`webhook create: ${error.message}`)
+                                                });
+                                        }
                                     })
-                                    .catch((error) => {
-                                        errorLog.error(`webhook create: ${error.message}`)
+                                    .catch(err => {
+                                        errorLog.error(`user update error ${err.message}`)
                                     });
-                            }
-                        });
+                                }
+                            });
                     })
                     .catch((error) => {
                         errorLog.error(`user get shop data: error ${error.message}`)
