@@ -140,6 +140,9 @@ module.exports = (sequelize, Sequelize) => {
             },
             show_category_bar: {
                 type: Sequelize.BOOLEAN
+            },
+            page_background_color: {
+                type: Sequelize.STRING
             }
         },
         {

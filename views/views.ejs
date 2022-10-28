@@ -71,6 +71,9 @@
         <% } %>
         .root-faq-template{
             line-height: 1.8;
+            <% if (setting.templateSetting.page_background_color) { %>
+                background-color: <%=  setting.templateSetting.page_background_color %>;
+            <% } %>    
         }
     </style>
 <% } %>
