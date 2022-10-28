@@ -78,6 +78,68 @@ module.exports = (sequelize, Sequelize) => {
             },
             banner_visible: {
                 type: Sequelize.BOOLEAN
+            },
+            page_title_fontsize: {
+                type: Sequelize.INTEGER
+            },
+            page_title_paddingtop: {
+                type: Sequelize.INTEGER
+            },
+            page_title_paddingbottom: 
+            {
+                type: Sequelize.INTEGER
+            },
+            page_title_color: {
+                type: Sequelize.STRING
+            },
+            search_input_style: {
+                type: Sequelize.STRING
+            },
+            intro_text_fontsize: {
+                type: Sequelize.INTEGER
+            },
+            intro_text_paddingtop: {
+                type: Sequelize.INTEGER
+            },
+            intro_text_paddingbottom: 
+            {
+                type: Sequelize.INTEGER
+            },
+            intro_text_color: {
+                type: Sequelize.STRING
+            },
+            footer_text_fontsize: {
+                type: Sequelize.INTEGER
+            },
+            footer_text_paddingtop: 
+            {
+                type: Sequelize.INTEGER
+            },
+            footer_text_paddingbottom: 
+            {
+                type: Sequelize.INTEGER
+            },
+            footer_text_color: {
+                type: Sequelize.STRING
+            },
+            show_search_input: {
+                type: Sequelize.BOOLEAN
+            },
+            page_title_font: {
+                type: Sequelize.STRING
+            },
+            intro_text_font: {
+                type: Sequelize.STRING
+            },
+            search_placeholder_font: 
+            {
+                type: Sequelize.STRING
+            },
+            footer_text_font: {
+                type: Sequelize.STRING
+            },
+            show_category_bar: {
+                type: Sequelize.BOOLEAN
             }
         },
         {

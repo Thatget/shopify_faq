@@ -56,7 +56,7 @@ app.get('/', async (req, res) => {
             apiKey: apiKey,
             scopes: scopes,
             forwardingAddress: forwardingAddress
-        });
+        });  
     }
     else{
         return res.redirect(app_link);
