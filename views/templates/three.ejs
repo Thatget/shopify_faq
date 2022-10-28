@@ -4,16 +4,34 @@
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
                 <h1 class="faq-page-title"><%- setting.data.page_title_content %></h1>
             <% } %>
-            <% if(setting.data.show_page_title && setting.data.page_title_content){%>
-                <div class="faq-search">
-                    <input class="faq-search-input" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
-                </div>
-            <%}
-            else{%>
-                <div class="faq-search-no-title">
-                    <input class="faq-search-input" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
-                </div>
-            <%} %>
+            <% if(setting.templateSetting.show_search_input) { %>
+                <% if(setting.data.show_page_title && setting.data.page_title_content){%>
+                    <div class="faq-search" style="box-shadow: none;">
+                        <% if(setting.templateSetting.search_input_style == 1) { %>
+                            <input class="faq-search-input faq-search-input-style1" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                        <% } %>   
+                        <% if(setting.templateSetting.search_input_style == 2) { %>
+                            <div style="position:relative;">
+                                <svg style="position: absolute; left: 0; top: 50%; transform:translateY(-50%); margin-left: 18px" height="22" width="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+                                <input class="faq-search-input faq-search-input-style2" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                            </div>
+                        <% } %>   
+                    </div>
+                <%}
+                else{%>
+                    <div class="faq-search-no-title">
+                        <% if(setting.templateSetting.search_input_style == 1) { %>
+                            <input class="faq-search-input faq-search-input-style1" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                        <% } %>
+                        <% if(setting.templateSetting.search_input_style == 2) { %>
+                            <div>
+                                <svg height="22" width="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+                                <input class="faq-search-input faq-search-input-style2" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">                                
+                            </div>
+                        <% } %>
+                    </div>
+                <%} %>
+            <% } %>
         </div>
         <div>
             <% if(setting.data.show_intro_text && setting.data.intro_text_content) {%>
@@ -339,13 +357,23 @@
     .faq-search-input{
         width: 100% !important; 
         max-width: 100% !important;
-        padding: 16px !important; 
-        border-radius: 4px; 
         outline: none; 
         border: 1px solid #ccc; 
         font-size: 16px;
         margin: 0 !important;
         background-color: white !important;
+        box-shadow: none;
+        <% if (setting.templateSetting.search_placeholder_font) { %>
+            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+        <% } %>
+    }
+    .faq-search-input-style1{
+        border-radius: 4px; 
+        padding: 16px !important; 
+    }
+    .faq-search-input-style2{
+        border-radius: 30px; 
+        padding: 16px 16px 16px 50px
     }
     .faq-question-title {
         padding: 10px; 
@@ -400,10 +428,22 @@
         else {%> 
             color: inherit;
             <%} 
-        %>;  
+        %>; 
         margin:0; 
         padding: 20px 0; 
         font-weight: 600;
+        font-size:36px;
+        <% if (setting.templateSetting.page_title_font) { %>
+            font-family: <%=  setting.templateSetting.page_title_font %>;
+        <% } if (setting.templateSetting.page_title_fontsize) { %>
+            font-size: <%=  setting.templateSetting.page_title_fontsize %>px;
+        <% } if (setting.templateSetting.page_title_color) { %>
+            color: <%=  setting.templateSetting.page_title_color %>;
+        <% } if (setting.templateSetting.page_title_paddingtop) { %>
+            padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px;
+        <% } if (setting.templateSetting.page_title_paddingbottom) { %>
+            padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px;
+        <% } %>
     }
     .faq-main-content{
         border-bottom: 1px solid #ccc;
@@ -430,7 +470,6 @@
         overflow: hidden;
     }
     .faq-intro-text{
-        text-align: center; 
         padding: 10px 0; 
         <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
             color: #fff;
@@ -438,8 +477,20 @@
         else {%> 
             color: inherit;
             <%} 
-        %>;  
-        font-size: 18px
+        %>; 
+        font-size: 18px;
+        text-align: center; 
+        <% if (setting.templateSetting.intro_text_font) { %>
+            font-family: <%=  setting.templateSetting.intro_text_font %>;
+        <% }  if (setting.templateSetting.intro_text_fontsize) { %>
+            font-size: <%=  setting.templateSetting.intro_text_fontsize %>px;
+        <% }  if (setting.templateSetting.intro_text_color) { %>
+            color: <%=  setting.templateSetting.intro_text_color %>;
+        <% }  if (setting.templateSetting.intro_text_paddingtop) { %>
+            padding-top: <%=  setting.templateSetting.intro_text_paddingtop %>px;
+        <% }  if (setting.templateSetting.intro_text_paddingbottom) { %>
+            padding-bottom: <%=  setting.templateSetting.intro_text_paddingbottom %>px;
+        <% } %>
     }
     .faq-category-title{
         border-bottom: 1px solid #ccc; 
@@ -453,12 +504,18 @@
         text-align: center; 
         font-size:48px; 
         margin-top: 30px;
-        padding-bottom: 30px
+        padding-bottom: 30px;
+        <% if (setting.templateSetting.search_placeholder_font) { %>
+            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+        <% } %>
     }
     .page-under-contruction{
         text-align: center;
         font-size: 48px;
         margin: 60px 0;
+        <% if (setting.templateSetting.search_placeholder_font) { %>
+            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+        <% } %>
     }
     .faq-category-container{
         display: flex; 
@@ -468,10 +525,28 @@
         width: 70%;
     }
     .faq-footer-text{
+        <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
+            color: #fff;
+        <% }
+        else {%> 
+            color: inherit;
+            <%} 
+        %>; 
+        padding: 10px 0; 
+        font-size: 18px;
         text-align: center;
         margin-top: 30px; 
-        padding: 10px 0; 
-        font-size: 18px
+        <% if (setting.templateSetting.footer_text_font) { %>
+            font-family: <%=  setting.templateSetting.footer_text_font %>;
+        <% } if (setting.templateSetting.footer_text_fontsize) { %>
+            font-size: <%=  setting.templateSetting.footer_text_fontsize %>px;
+        <% } if (setting.templateSetting.footer_text_color) { %>
+            color: <%=  setting.templateSetting.footer_text_color %>;
+        <% } if (setting.templateSetting.footer_text_paddingtop) { %>
+            padding-top: <%=  setting.templateSetting.footer_text_paddingtop %>px;
+        <% } if (setting.templateSetting.footer_text_paddingbottom) { %>
+            padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
+        <% } %>
     }
     .listed-faq{
         flex: 1;
