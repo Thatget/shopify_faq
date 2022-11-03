@@ -68,12 +68,15 @@ let initAPIs = (app) => {
     //Setting router
     router.post("/api/setting/", setting.create);
     router.get("/api/setting", setting.findOne);
+    router.get("/api/setting-all", setting.getAll);
     router.put("/api/setting", setting.update);
     router.delete("/api/setting", setting.delete);
     router.get("/api/template/:faq_template_number", setting.findTemplateSetting);
 
     //Template_setting
     router.get("/api/template_setting/:setting_id", template_setting.findAll);
+    router.get("/api/template_setting-all", template_setting.getAll);
+    router.put("/api/update/template_setting/:id", template_setting.update);
 
     //Messages router
     router.get("/api/messages", messages.findAll);
