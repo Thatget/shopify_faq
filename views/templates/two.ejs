@@ -377,6 +377,17 @@
             padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
         <% } %>
     }
+    #micro-scope{
+        <% if (setting.templateSetting.micro_scope_color) { %>
+            fill: <%=  setting.templateSetting.micro_scope_color %>;
+        <% } %>    
+    }
+    <% if (setting.templateSetting.placeholder_color) { %>
+        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
+        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
+        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
+    <% } %>
+    
     .faq-answer-content{
         display: none; 
         margin:0; 
