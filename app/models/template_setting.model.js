@@ -143,6 +143,12 @@ module.exports = (sequelize, Sequelize) => {
             },
             page_background_color: {
                 type: Sequelize.STRING
+            },
+            micro_scope_color: {
+                type: Sequelize.STRING
+            },
+            placeholder_color: {
+                type: Sequelize.STRING
             }
         },
         {
