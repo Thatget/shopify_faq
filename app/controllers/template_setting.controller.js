@@ -7,17 +7,12 @@ exports.create = async (req, res) => {
   const template = req.body;
   if(template.length < 0){
       res.status(500).send({
-          message: "Some error occurred while creating the Product."
+          message: "Some error occurred while creating the Template."
       });
       return;
   }
   else{
-      template.forEach(async element => {
-          // await checkProductId(user_id, element.product_id)
-          // console.log(checkProductId(user_id, element.product_id))
-          element.user_id = user_id;
-      }) 
-      await Product.bulkCreate(template)
+      await TemplateSetting.create(template)
           .then(data => {
               res.send(data);
               return;
@@ -25,7 +20,7 @@ exports.create = async (req, res) => {
           .catch(err => {
               res.status(500).send({
                   message:
-                      err.message || "Some error occurred while creating the product."
+                      err.message || "Some error occurred while creating the Template."
               });
               return;
           });
