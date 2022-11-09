@@ -2,6 +2,38 @@ const db = require("../models");
 const TemplateSetting = db.template_setting;
 const errorLog = require('../helpers/log.helper');
 
+// Create template
+exports.create = async (req, res) => {
+  const template = req.body;
+  if(template.length < 0){
+      res.status(500).send({
+          message: "Some error occurred while creating the Product."
+      });
+      return;
+  }
+  else{
+      template.forEach(async element => {
+          // await checkProductId(user_id, element.product_id)
+          // console.log(checkProductId(user_id, element.product_id))
+          element.user_id = user_id;
+      }) 
+      await Product.bulkCreate(template)
+          .then(data => {
+              res.send(data);
+              return;
+          })
+          .catch(err => {
+              res.status(500).send({
+                  message:
+                      err.message || "Some error occurred while creating the product."
+              });
+              return;
+          });
+
+  }
+};
+
+
 // Retrieve all TemplateSetting of a category from the database.
 exports.findAll = (req, res) => {
   TemplateSetting.findAll({
