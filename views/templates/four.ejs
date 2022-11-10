@@ -8,12 +8,12 @@
                 <% if(setting.data.show_page_title && setting.data.page_title_content){%>
                     <div class="faq-search" style="box-shadow: none;">
                         <% if(setting.templateSetting.search_input_style == 1) { %>
-                            <input class="faq-search-input faq-search-input-style1" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                            <input class="faq-search-input faq-search-input-style1" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
                         <% } %>   
                         <% if(setting.templateSetting.search_input_style == 2) { %>
                             <div style="position:relative;">
                                 <svg id="micro-scope" style="position: absolute; left: 0; top: 50%; transform:translateY(-50%); margin-left: 18px" height="22" width="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
-                                <input class="faq-search-input faq-search-input-style2" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                                <input class="faq-search-input faq-search-input-style2" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
                             </div>
                         <% } %>   
                     </div>
@@ -21,12 +21,12 @@
                 else{%>
                     <div class="faq-search-no-title">
                         <% if(setting.templateSetting.search_input_style == 1) { %>
-                            <input class="faq-search-input faq-search-input-style1" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                            <input class="faq-search-input faq-search-input-style1" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
                         <% } %>
                         <% if(setting.templateSetting.search_input_style == 2) { %>
-                            <div>
-                                <svg id="micro-scope" height="22" width="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
-                                <input class="faq-search-input faq-search-input-style2" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">                                
+                            <div style="position:relative;">
+                                <svg id="micro-scope" style="position: absolute; left: 0; top: 50%; transform:translateY(-50%); margin-left: 18px" height="22" width="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+                                <input class="faq-search-input faq-search-input-style2" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">                                
                             </div>
                         <% } %>
                     </div>
@@ -63,22 +63,22 @@
                                     <% for(var i=0; i < faqs.categories.length; i++) { %>
                                         <% if(i === 0) {%>
                                             <div id="dung">
-                                                    <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <% for(var j=0; j < faqs.faq.length; j++) { %>
-                                                            <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                                <div class="faq-main-content">
-                                                                    <div class="faq-question-title" onclick="showHideContent(this)">
-                                                                    <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                                                    <span class="listed-faq" value><%= faqs.faq[j].title %></span>
-                                                                    </div>
-                                                                    <div class="faq-answer-content" style="display: none;">
-                                                                        <%- faqs.faq[j].content %>
-                                                                    </div>
-                                                                </div>
-                                                            <% } %>    
-                                                        <%}%>
-                                                    </div>
+                                                  <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
+                                                  <div class="d-flex flex-column justify-content-center">
+                                                      <% for(var j=0; j < faqs.faq.length; j++) { %>
+                                                          <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                                              <div class="faq-main-content">
+                                                                  <div class="faq-question-title" onclick="showHideContent(this)">
+                                                                  <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                                                                  <span class="listed-faq" value><%= faqs.faq[j].title %></span>
+                                                                  </div>
+                                                                  <div class="faq-answer-content" style="display: none;">
+                                                                      <%- faqs.faq[j].content %>
+                                                                  </div>
+                                                              </div>
+                                                          <% } %>    
+                                                      <%}%>
+                                                  </div>
                                             </div>
                                         <% } %>
                                         <div style="display: none;" id="category<%- i %>">
@@ -161,8 +161,8 @@
             </div>
         <% } %>
     </div>
-</div>
-<script>
+  </div>
+  <script>
     var categoryName = []
     function changeCategory(id, category_bar_color, category_bar_background){
         if(!categoryName.some(item => {
@@ -279,7 +279,7 @@
         else{
             if(document.getElementById('search-text').value == ''){
                 document.getElementsByClassName('faq-dont-category')[0].style.display = "flex"
-
+  
                 nodeCategory[0].style.display = "none"
                 for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
                     document.getElementsByClassName("faq-category-search")[i].style.display = "block"
@@ -287,7 +287,7 @@
             }
             else{
                 document.getElementsByClassName('faq-dont-category')[0].style.display = "none"
-
+  
                 nodeCategory[0].style.display = "flex"
                 nodeCategory[0].style.justifyContent = "center"
                 for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
@@ -320,8 +320,8 @@
             }        
         }
     }
-</script>
-<style scoped>
+  </script>
+  <style scoped>
     <% if(setting.templateSetting.width_faqs_accordian) { %>
     .faq-main {
         padding: 0 20px;
@@ -394,7 +394,7 @@
         <% } %>
     }
     .svg-icon{
-        margin-top: calc(<%- setting.templateSetting.faq_font_size%>px * 0.45);
+        margin-top: calc(<%- setting.templateSetting.faq_font_size%>px * 0.4);
         width: <%- setting.templateSetting.faq_font_size%>px; 
         height: <%- setting.templateSetting.faq_font_size%>px;
     }
@@ -407,7 +407,7 @@
         display: flex; 
         flex-direction: column;
         flex-wrap: wrap; 
-        margin: calc(<%=  setting.templateSetting.category_font_size %>px*1.8 + 70px) 0 30px 0; 
+        margin: calc(<%=  setting.templateSetting.category_font_size %>px*1.8 + 70px + (<%=  setting.templateSetting.faq_font_size %>px*.4 - 16px*.4 + 1px)) 0 30px 0; 
         <% if (setting.templateSetting.category_font_family) { %>
             font-family: <%=  setting.templateSetting.category_font_family %>;
         <% } %>
@@ -469,6 +469,8 @@
         margin: auto;
         padding: 0;
         overflow: hidden;
+        border: none;
+        background-color: unset;
     }
     .faq-search-no-title{
         width: 60%;
@@ -509,7 +511,7 @@
     #not-found-text{
         display: none; 
         text-align: center; 
-        font-size:48px; 
+        font-size:36px; 
         margin-top: 30px;
         padding-bottom: 30px;
         <% if (setting.templateSetting.search_placeholder_font) { %>
@@ -518,7 +520,7 @@
     }
     .page-under-contruction{
         text-align: center;
-        font-size: 48px;
+        font-size: 36px;
         margin: 60px 0;
         <% if (setting.templateSetting.search_placeholder_font) { %>
             font-family: <%=  setting.templateSetting.search_placeholder_font %>;
@@ -588,7 +590,9 @@
             width: 95% !important;
             margin: auto;
             padding: 0;
-            overflow: hidden; 
+            overflow: hidden !important;
+          border: none !important;
+          background-color: unset !important;
         }
         .faq-search-no-title{
             width: 95% !;
@@ -604,4 +608,4 @@
             <%= setting.templateSetting.custom_css%>
         <%}
     %>
-</style>
+  </style>
