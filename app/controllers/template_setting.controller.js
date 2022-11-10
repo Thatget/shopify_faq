@@ -2,6 +2,33 @@ const db = require("../models");
 const TemplateSetting = db.template_setting;
 const errorLog = require('../helpers/log.helper');
 
+// Create template
+exports.create = async (req, res) => {
+  const template = req.body;
+  if(template.length < 0){
+      res.status(500).send({
+          message: "Some error occurred while creating the Template."
+      });
+      return;
+  }
+  else{
+      await TemplateSetting.create(template)
+          .then(data => {
+              res.send(data);
+              return;
+          })
+          .catch(err => {
+              res.status(500).send({
+                  message:
+                      err.message || "Some error occurred while creating the Template."
+              });
+              return;
+          });
+
+  }
+};
+
+
 // Retrieve all TemplateSetting of a category from the database.
 exports.findAll = (req, res) => {
   TemplateSetting.findAll({

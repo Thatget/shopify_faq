@@ -74,6 +74,7 @@ let initAPIs = (app) => {
     router.get("/api/template/:faq_template_number", setting.findTemplateSetting);
 
     //Template_setting
+    router.post("/api/template_setting", template_setting.create);
     router.get("/api/template_setting/:setting_id", template_setting.findAll);
     router.get("/api/template_setting-all", template_setting.getAll);
     router.put("/api/update/template_setting/:id", template_setting.update);

@@ -120,9 +120,6 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
                             if((listFaqDefault[i].identify === listFaq[j].identify && listFaqDefault[i].category_identify === listFaq[j].category_identify)){
                                 listFaqDefault.splice(i,1)
                             }
-                            // else{
-                            //     console.log(listFaqDefault[i],'1')
-                            // }
                         }
                     }
                     if(listFaqDefault.length > 0){
@@ -148,7 +145,6 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
         }).catch(error => {
             errorLog.error(`get faqs nodejs proxy error ${error.message}`)
         });
-        errorLog.error(send_data)
     return send_data;
 };
 exports.findSetting = async (shop, locale) => {

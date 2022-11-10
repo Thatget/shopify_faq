@@ -149,6 +149,16 @@ module.exports = (sequelize, Sequelize) => {
             },
             placeholder_color: {
                 type: Sequelize.STRING
+            },
+            //new
+            category_bar_number: {
+                type: Sequelize.INTEGER
+            },
+            category_bar_background: {
+                type: Sequelize.STRING
+            },
+            category_bar_color: {
+                type: Sequelize.STRING
             }
         },
         {
