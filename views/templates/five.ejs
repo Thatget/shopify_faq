@@ -1,469 +1,469 @@
 <div class="root-faq-template">
-    <div class="faq-header-2">
-        <div>
-            <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
-                <div class="faq-page-title"><%- setting.data.page_title_content %></div>
-            <% } %>
-            <% if(setting.templateSetting.show_search_input) { %>
-                <% if(setting.data.show_page_title && setting.data.page_title_content){%>
-                    <div class="faq-search-input">
-                        <% if(setting.templateSetting.search_input_style == 1) { %>
-                            <input class="search-input faq-search-input-style1" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
-                        <% } %>
-                        <% if(setting.templateSetting.search_input_style == 2) { %>
-                            <div style="position:relative;">
-                                <svg id="micro-scope" style="position: absolute; left: 0; top: 50%; transform:translateY(-50%); margin-left: 18px" height="22" width="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
-                                <input class="search-input faq-search-input-style2" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
-                            </div>
-                        <% } %>
-                    </div>
-                <%}
-                else{%>
-                    <div class="faq-search-input" style="margin-top: 70px;">
-                        <% if(setting.templateSetting.search_input_style == 1) { %>
-                            <input class="search-input faq-search-input-style1" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
-                        <% } %>
-                        <% if(setting.templateSetting.search_input_style == 2) { %>
-                            <div style="position:relative;">
-                                <svg id="micro-scope" style="position: absolute; left: 0; top: 50%; transform:translateY(-50%); margin-left: 18px" height="22" width="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
-                                <input class="search-input faq-search-input-style2" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">                                
-                            </div>
-                        <% } %>
-                    </div>
-                <%} %>
-            <% } %>
-        </div>
-        <div>
-            <% if(setting.data.show_intro_text && setting.data.intro_text_content) {%>
-                <div class="faq-intro-text">
-                    <span><%- setting.data.intro_text_content %></span>
-                </div>
-            <% } %>    
-        </div>
-    </div>
-    <div class="faq-main">
-        <% if(!setting.data.show_page_construction){%>
-            <% if(faqs && !setting.data.dont_category_faq){ %>
-                <div style="padding: 30px 0">
-                    <div>
-                        <% if(faqs.categories.length){%>
-                            <% if(setting.templateSetting.show_category_bar){%>
-                                <% if(setting.templateSetting.category_bar_number === 1){%>
-                                <div class="category-bar">
-                                    <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                        <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
-                                    <% } %>
-                                </div>
-                                <% } %>
-                                <% if(setting.templateSetting.category_bar_number === 2){%>
-                                <div class="category-bar">
-                                    <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                        <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
-                                    <% } %>
-                                </div>
-                                <% } %>
-                            <% } %>
-                            <div style="margin-top: 20px">
-                                <% for(var i= 0; i < faqs.categories.length; i++) { %>
-                                    <div class="category-faq-container">
-                                        <div id="<%- faqs.categories[i].title %>" class="faq-category-title faq-category-width"><%- faqs.categories[i].title %></div>
-                                        <% for(var j = 0; j < faqs.faq.length; j++) { %>
-                                            <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                <div class="faq-main-content">
-                                                    <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
-                                                        <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
-                                                        <i <% if(j % 2 === 0){%> class="fa-solid fa-caret-right question-title-right"<%}else{%>class="fa-solid fa-caret-left question-title-left"<%}%> :style="`color: ${settings.faq_bg_color}`"></i>
-                                                    </div>
-                                                    <div class="faq-answer-content faq-answer-search">
-                                                        <%- faqs.faq[j].content %>
-                                                    </div>
-                                                </div>
-                                            <%}%>
-                                        <%}%>
-                                    </div>
-                                <% } %>
-                            </div>
-                        <% } %>
-                    </div>
-                </div>
-            <% }
-            else{ %>
-                <div style="padding: 30px 0;">
-                    <% for(var j = 0; j < faqs.faq.length; j++) { %>
-                        <div class="category-faq-container">
-                            <div class="faq-main-content">
-                                <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
-                                    <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
-                                    <i <% if(j % 2 === 0){%> class="fa-solid fa-caret-right question-title-right"<%}else{%>class="fa-solid fa-caret-left question-title-left"<%}%> :style="`color: ${settings.faq_bg_color}`"></i>
-                                </div>
-                                <div class="faq-answer-content faq-answer-search">
-                                    <%- faqs.faq[j].content %>
-                                </div>
-                            </div>
-                        </div>
-                    <%}%>
-                </div>
-            <% } %>
-        <% }  
-        else{ %>
-            <div class="page-under-contruction">
-                <%- setting.data.page_under_contruction %>
-            </div>
-        <% } %>
-        <div id="not-found-text" class="faq-not-found">
-            <% if(setting.data.search_not_found) {%>
-                <%- setting.data.search_not_found %>
-            <% } %>
-        </div>
-        <% if(setting.data.show_footer_text) {%>
-            <div class="faq-footer-text">
-                <% if(setting.data.footer_text_content) {%>
-                    <%- setting.data.footer_text_content %>
-                <% } %>
-            </div>
-        <% } %>
-    </div>
+  <div class="faq-header-2">
+      <div>
+          <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
+              <div class="faq-page-title"><%- setting.data.page_title_content %></div>
+          <% } %>
+          <% if(setting.templateSetting.show_search_input) { %>
+              <% if(setting.data.show_page_title && setting.data.page_title_content){%>
+                  <div class="faq-search-input">
+                      <% if(setting.templateSetting.search_input_style == 1) { %>
+                          <input class="search-input faq-search-input-style1" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                      <% } %>
+                      <% if(setting.templateSetting.search_input_style == 2) { %>
+                          <div style="position:relative;">
+                              <svg id="micro-scope" style="position: absolute; left: 0; top: 50%; transform:translateY(-50%); margin-left: 18px" height="22" width="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+                              <input class="search-input faq-search-input-style2" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                          </div>
+                      <% } %>
+                  </div>
+              <%}
+              else{%>
+                  <div class="faq-search-input" style="margin-top: 70px;">
+                      <% if(setting.templateSetting.search_input_style == 1) { %>
+                          <input class="search-input faq-search-input-style1" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                      <% } %>
+                      <% if(setting.templateSetting.search_input_style == 2) { %>
+                          <div style="position:relative;">
+                              <svg id="micro-scope" style="position: absolute; left: 0; top: 50%; transform:translateY(-50%); margin-left: 18px" height="22" width="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+                              <input class="search-input faq-search-input-style2" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">                                
+                          </div>
+                      <% } %>
+                  </div>
+              <%} %>
+          <% } %>
+      </div>
+      <div>
+          <% if(setting.data.show_intro_text && setting.data.intro_text_content) {%>
+              <div class="faq-intro-text">
+                  <span><%- setting.data.intro_text_content %></span>
+              </div>
+          <% } %>    
+      </div>
+  </div>
+  <div class="faq-main">
+      <% if(!setting.data.show_page_construction){%>
+          <% if(faqs && !setting.data.dont_category_faq){ %>
+              <div style="padding: 30px 0">
+                  <div>
+                      <% if(faqs.categories.length){%>
+                          <% if(setting.templateSetting.show_category_bar){%>
+                              <% if(setting.templateSetting.category_bar_number === 1){%>
+                              <div class="category-bar">
+                                  <% for(var i=0; i < faqs.categories.length; i++) { %>
+                                      <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
+                                  <% } %>
+                              </div>
+                              <% } %>
+                              <% if(setting.templateSetting.category_bar_number === 2){%>
+                              <div class="category-bar">
+                                  <% for(var i=0; i < faqs.categories.length; i++) { %>
+                                      <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
+                                  <% } %>
+                              </div>
+                              <% } %>
+                          <% } %>
+                          <div style="margin-top: 20px">
+                              <% for(var i= 0; i < faqs.categories.length; i++) { %>
+                                  <div class="category-faq-container">
+                                      <div id="<%- faqs.categories[i].title %>" class="faq-category-title faq-category-width"><%- faqs.categories[i].title %></div>
+                                      <% for(var j = 0; j < faqs.faq.length; j++) { %>
+                                          <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                              <div class="faq-main-content">
+                                                  <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
+                                                      <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
+                                                      <i <% if(j % 2 === 0){%> class="fa-solid fa-caret-right question-title-right"<%}else{%>class="fa-solid fa-caret-left question-title-left"<%}%> :style="`color: ${settings.faq_bg_color}`"></i>
+                                                  </div>
+                                                  <div class="faq-answer-content faq-answer-search">
+                                                      <%- faqs.faq[j].content %>
+                                                  </div>
+                                              </div>
+                                          <%}%>
+                                      <%}%>
+                                  </div>
+                              <% } %>
+                          </div>
+                      <% } %>
+                  </div>
+              </div>
+          <% }
+          else{ %>
+              <div style="padding: 30px 0;">
+                  <% for(var j = 0; j < faqs.faq.length; j++) { %>
+                      <div class="category-faq-container">
+                          <div class="faq-main-content">
+                              <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
+                                  <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
+                                  <i <% if(j % 2 === 0){%> class="fa-solid fa-caret-right question-title-right"<%}else{%>class="fa-solid fa-caret-left question-title-left"<%}%> :style="`color: ${settings.faq_bg_color}`"></i>
+                              </div>
+                              <div class="faq-answer-content faq-answer-search">
+                                  <%- faqs.faq[j].content %>
+                              </div>
+                          </div>
+                      </div>
+                  <%}%>
+              </div>
+          <% } %>
+      <% }  
+      else{ %>
+          <div class="page-under-contruction">
+              <%- setting.data.page_under_contruction %>
+          </div>
+      <% } %>
+      <div id="not-found-text" class="faq-not-found">
+          <% if(setting.data.search_not_found) {%>
+              <%- setting.data.search_not_found %>
+          <% } %>
+      </div>
+      <% if(setting.data.show_footer_text) {%>
+          <div class="faq-footer-text">
+              <% if(setting.data.footer_text_content) {%>
+                  <%- setting.data.footer_text_content %>
+              <% } %>
+          </div>
+      <% } %>
+  </div>
 </div>
 <script>
-  function showHideContent(el) {
-      var content = el.nextElementSibling;
-      if (content.style.display === "block") {
-          content.style.display = "none";
-          el.style.borderRadius = '4px'
-      } else {
-          content.style.display = "block";
-          el.style.borderRadius = '4px 4px 0 0'
-      }
-  }
-  function simpleSearch() {
-      var input = document.getElementById("search-text");
-      var filter = input.value.toLowerCase();
-      var filterByQuestion = document.getElementsByClassName('faq-question-search');
-      var filterByAnswer = document.getElementsByClassName('faq-answer-search');
-      var nodeCategory = document.getElementsByClassName('category-faq-container');
-      var categoryBar = document.getElementsByClassName('category-bar')
-      if(categoryBar.length > 0){
-          if(document.getElementById('search-text').value === ''){
-              document.getElementsByClassName('category-bar')[0].style.display = "flex"
-              for(i = 0; i < nodeCategory.length; i++){
-                  document.getElementsByClassName("faq-category-width")[i].style.display = "block"
-              }
-          }
-          else{
-              document.getElementsByClassName('category-bar')[0].style.display = "none"
-              for(i = 0; i < nodeCategory.length; i++){
-                  document.getElementsByClassName("faq-category-width")[i].style.display = "none"
-              }
-          }
-      }
-      var checkexist = true;
-      for (i = 0; i < filterByQuestion.length; i++) {
-          if (filterByQuestion[i].innerText.toLowerCase().includes(filter)) {
-              filterByQuestion[i].parentNode.parentNode.style.display = "block";
-              checkexist = false;
-          }
-          else {
-              for(j = 0; j < filterByAnswer.length; j++){
-                  if(filterByAnswer[j].innerText.toLowerCase().includes(filter)){
-                      filterByQuestion[j].parentNode.parentNode.style.display = "block";
-                      checkexist = false;        
-                  }
-                  else{
-                      filterByQuestion[i].parentNode.parentNode.style.display = "none";
-                  }
-              }
-          }
-      }
-      for (j = 0; j < nodeCategory.length; j++) {
-          let subFaq = nodeCategory[j].getElementsByClassName('faq-main-content');
-          let checkDisplay = false;
-          for (k = 0; k < subFaq.length; k++) {
-              if(subFaq[k].style.display == "block") {
-                  checkDisplay = true;
-                  break;
-              }
-          }
-          if (checkDisplay) {
-              nodeCategory[j].style.display = "block";
-          } else nodeCategory[j].style.display = "none";
-      }
-      if (checkexist) {
-          document.getElementById("not-found-text").style.display = "block";
-      } else {
-          document.getElementById("not-found-text").style.display = "none";
-      }
-  }
+function showHideContent(el) {
+    var content = el.nextElementSibling;
+    if (content.style.display === "block") {
+        content.style.display = "none";
+        el.style.borderRadius = '4px'
+    } else {
+        content.style.display = "block";
+        el.style.borderRadius = '4px 4px 0 0'
+    }
+}
+function simpleSearch() {
+    var input = document.getElementById("search-text");
+    var filter = input.value.toLowerCase();
+    var filterByQuestion = document.getElementsByClassName('faq-question-search');
+    var filterByAnswer = document.getElementsByClassName('faq-answer-search');
+    var nodeCategory = document.getElementsByClassName('category-faq-container');
+    var categoryBar = document.getElementsByClassName('category-bar')
+    if(categoryBar.length > 0){
+        if(document.getElementById('search-text').value === ''){
+            document.getElementsByClassName('category-bar')[0].style.display = "flex"
+            for(i = 0; i < nodeCategory.length; i++){
+                document.getElementsByClassName("faq-category-width")[i].style.display = "block"
+            }
+        }
+        else{
+            document.getElementsByClassName('category-bar')[0].style.display = "none"
+            for(i = 0; i < nodeCategory.length; i++){
+                document.getElementsByClassName("faq-category-width")[i].style.display = "none"
+            }
+        }
+    }
+    var checkexist = true;
+    for (i = 0; i < filterByQuestion.length; i++) {
+        if (filterByQuestion[i].innerText.toLowerCase().includes(filter)) {
+            filterByQuestion[i].parentNode.parentNode.style.display = "block";
+            checkexist = false;
+        }
+        else {
+            for(j = 0; j < filterByAnswer.length; j++){
+                if(filterByAnswer[j].innerText.toLowerCase().includes(filter)){
+                    filterByQuestion[j].parentNode.parentNode.style.display = "block";
+                    checkexist = false;        
+                }
+                else{
+                    filterByQuestion[i].parentNode.parentNode.style.display = "none";
+                }
+            }
+        }
+    }
+    for (j = 0; j < nodeCategory.length; j++) {
+        let subFaq = nodeCategory[j].getElementsByClassName('faq-main-content');
+        let checkDisplay = false;
+        for (k = 0; k < subFaq.length; k++) {
+            if(subFaq[k].style.display == "block") {
+                checkDisplay = true;
+                break;
+            }
+        }
+        if (checkDisplay) {
+            nodeCategory[j].style.display = "block";
+        } else nodeCategory[j].style.display = "none";
+    }
+    if (checkexist) {
+        document.getElementById("not-found-text").style.display = "block";
+    } else {
+        document.getElementById("not-found-text").style.display = "none";
+    }
+}
 
 </script>
 <style>
-  <% if(setting.templateSetting.width_faqs_accordian) { %>
-      .faq-main {
-          padding: 0 40px;
-          max-width: <%- setting.templateSetting.width_faqs_accordian%>px;
-          margin: auto;
-      }<% } 
-  %>
-  .faq-header-2 {
-      display: flex; 
-      flex-direction: column; 
-      justify-content: space-between;
-      min-height: <%- setting.templateSetting.banner_height%>px;
-      max-width: 100vw;
-      <% if (setting.templateSetting.image_banner) { %>
-          background-image: url('<%- setting.templateSetting.image_banner%>');
-      <% }
-      else {%> 
-          background-image: url('<%- setting.templateSetting.banner_default%>');
-          <%} 
-      %>
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position-y: center;
-      background-position-x: center;
-      text-align: center; 
-  }
-  .faq-page-title{
-      <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
-          color: #fff;
-      <% }
-      else {%> 
-          color: inherit;
-          <%} 
-      %>; 
-      margin:0; 
-      padding: 20px 0; 
-      font-weight: 600;
-      font-size:36px;
-      <% if (setting.templateSetting.page_title_font) { %>
-          font-family: <%=  setting.templateSetting.page_title_font %>;
-      <% } if (setting.templateSetting.page_title_fontsize) { %>
-          font-size: <%=  setting.templateSetting.page_title_fontsize %>px;
-      <% } if (setting.templateSetting.page_title_color) { %>
-          color: <%=  setting.templateSetting.page_title_color %>;
-      <% } if (setting.templateSetting.page_title_paddingtop) { %>
-          padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px;
-      <% } if (setting.templateSetting.page_title_paddingbottom) { %>
-          padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px;
-      <% } %>
-  }
+<% if(setting.templateSetting.width_faqs_accordian) { %>
+    .faq-main {
+        padding: 0 40px;
+        max-width: <%- setting.templateSetting.width_faqs_accordian%>px;
+        margin: auto;
+    }<% } 
+%>
+.faq-header-2 {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between;
+    min-height: <%- setting.templateSetting.banner_height%>px;
+    max-width: 100vw;
+    <% if (setting.templateSetting.image_banner) { %>
+        background-image: url('<%- setting.templateSetting.image_banner%>');
+    <% }
+    else {%> 
+        background-image: url('<%- setting.templateSetting.banner_default%>');
+        <%} 
+    %>
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    background-position-x: center;
+    text-align: center; 
+}
+.faq-page-title{
+    <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
+        color: #fff;
+    <% }
+    else {%> 
+        color: inherit;
+        <%} 
+    %>; 
+    margin:0; 
+    padding: 20px 30px; 
+    font-weight: 600;
+    font-size:36px;
+    <% if (setting.templateSetting.page_title_font) { %>
+        font-family: <%=  setting.templateSetting.page_title_font %>;
+    <% } if (setting.templateSetting.page_title_fontsize) { %>
+        font-size: <%=  setting.templateSetting.page_title_fontsize %>px;
+    <% } if (setting.templateSetting.page_title_color) { %>
+        color: <%=  setting.templateSetting.page_title_color %>;
+    <% } if (setting.templateSetting.page_title_paddingtop) { %>
+        padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px;
+    <% } if (setting.templateSetting.page_title_paddingbottom) { %>
+        padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px;
+    <% } %>
+}
 
-  .faq-search-input{
-      width: 60% !important;
-      margin: auto;
-      padding: 0;
-      overflow: hidden;
-      border: none;
-      background-color: unset;
-  }
-  .faq-intro-text{
-      text-align: center; 
-      padding: 10px 0; 
-      <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
-          color: #fff;
-      <% }
-      else {%> 
-          color: inherit;
-          <%} 
-      %>; 
-      font-size: 18px;
-      <% if (setting.templateSetting.intro_text_font) { %>
-          font-family: <%=  setting.templateSetting.intro_text_font %>;
-      <% }  if (setting.templateSetting.intro_text_fontsize) { %>
-          font-size: <%=  setting.templateSetting.intro_text_fontsize %>px;
-      <% }  if (setting.templateSetting.intro_text_color) { %>
-          color: <%=  setting.templateSetting.intro_text_color %>;
-      <% }  if (setting.templateSetting.intro_text_paddingtop) { %>
-          padding-top: <%=  setting.templateSetting.intro_text_paddingtop %>px;
-      <% }  if (setting.templateSetting.intro_text_paddingbottom) { %>
-          padding-bottom: <%=  setting.templateSetting.intro_text_paddingbottom %>px;
-      <% } %>
-  }
+.faq-search-input{
+    width: 60% !important;
+    margin: auto;
+    padding: 0;
+    overflow: hidden;
+    border: none;
+    background-color: unset;
+}
+.faq-intro-text{
+    text-align: center; 
+    padding: 10px 30px; 
+    <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
+        color: #fff;
+    <% }
+    else {%> 
+        color: inherit;
+        <%} 
+    %>; 
+    font-size: 18px;
+    <% if (setting.templateSetting.intro_text_font) { %>
+        font-family: <%=  setting.templateSetting.intro_text_font %>;
+    <% }  if (setting.templateSetting.intro_text_fontsize) { %>
+        font-size: <%=  setting.templateSetting.intro_text_fontsize %>px;
+    <% }  if (setting.templateSetting.intro_text_color) { %>
+        color: <%=  setting.templateSetting.intro_text_color %>;
+    <% }  if (setting.templateSetting.intro_text_paddingtop) { %>
+        padding-top: <%=  setting.templateSetting.intro_text_paddingtop %>px;
+    <% }  if (setting.templateSetting.intro_text_paddingbottom) { %>
+        padding-bottom: <%=  setting.templateSetting.intro_text_paddingbottom %>px;
+    <% } %>
+}
 
-  .search-input{
-      line-height: 1 !important;
-      width: 100% !important; 
-      outline: none !important; 
-      border: 1px solid #ccc ; 
-      font-size: 16px !important;
-      margin: 0 !important;
-      max-width: 100% !important;
-      background-color: white !important;
-      box-shadow: none;
-      <% if (setting.templateSetting.search_placeholder_font) { %>
-          font-family: <%=  setting.templateSetting.search_placeholder_font %>;
-      <% } %>
-  }
-  .faq-search-input-style1{
-      border-radius: 4px !important; 
-      padding: 16px !important; 
-  }
-  .faq-search-input-style2{
-      border-radius: 30px !important; 
-      padding: 16px 16px 16px 50px !important
-  }
-  .faq-question-title{
-    border-radius: 4px;
-  }
-  .category-faq-container{
-      margin-bottom: 20px;
-  }
-  <% if (setting.templateSetting.faq_hover_color) { %>
-    .faq-question-title:hover {
-      background-color: <%=  setting.templateSetting.faq_bg_color %> !important;
-    }
-  <% } %>
-  .faq-question-title-left, .faq-question-title-right{
-      display: flex; 
-      justify-content: center;
-      position: relative;
-      width: 100%;
-      cursor: pointer; 
-  }
-  svg:not(:root) {
-      overflow:unset !important;
-  }
-  .listed-faq{
-      user-select: none;
-      word-wrap: break-word;
-      padding:0 <%- setting.templateSetting.faq_font_size%>px;
-      word-break: break-word;
-  }
-  .category-bar{
-      display: flex; 
-      justify-content: center; 
-      flex-wrap: wrap; 
-      margin-bottom: 20px;
-      <% if (setting.templateSetting.faq_font_family) { %>
-          font-family: <%=  setting.templateSetting.faq_font_family %>;
-      <% } %>    
-  }
-  .faq-main-content{
+.search-input{
+    line-height: 1 !important;
+    width: 100% !important; 
+    outline: none !important; 
+    border: 1px solid #ccc ; 
+    font-size: 16px !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    background-color: white !important;
+    box-shadow: none;
+    <% if (setting.templateSetting.search_placeholder_font) { %>
+        font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+    <% } %>
+}
+.faq-search-input-style1{
+    border-radius: 4px !important; 
+    padding: 16px !important; 
+}
+.faq-search-input-style2{
+    border-radius: 30px !important; 
+    padding: 16px 16px 16px 50px !important
+}
+.faq-question-title{
+  border-radius: 4px;
+}
+.category-faq-container{
     margin-bottom: 20px;
-    border-radius: 4px;
+}
+<% if (setting.templateSetting.faq_hover_color) { %>
+  .faq-question-title:hover {
+    background-color: <%=  setting.templateSetting.faq_bg_color %> !important;
   }
-  .question-title-right{
-    position: absolute;
-    top: 50%;
-    right: -30px;
-    transform: translate(-50% ,-50%);
-    font-size: 60px;
-    color: <%=  setting.templateSetting.faq_bg_color %>;
-  }
-  .question-title-left{
-    position: absolute;
-    top: 50%;
-    left: 2px;
-    transform: translate(-50% ,-50%);
-    font-size: 60px;
-    color: <%=  setting.templateSetting.faq_bg_color %>;
-  }
-  .page-under-contruction{
-      text-align: center;
-      font-size: 36px;
-      margin: 60px 0;
-      <% if (setting.templateSetting.footer_text_font) { %>
-          font-family: <%=  setting.templateSetting.footer_text_font %>;
-      <% } if (setting.templateSetting.footer_text_color) { %>
-          color: <%=  setting.templateSetting.footer_text_color %>;
-      <% } if (setting.templateSetting.footer_text_paddingtop) { %>
-          padding-top: <%=  setting.templateSetting.footer_text_paddingtop %>px;
-      <% } if (setting.templateSetting.footer_text_paddingbottom) { %>
-          padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
-      <% } %>
-  }
-  .faq-category-width{
-      width: 100%;
-      padding: 10px 0;
-  }
-  .faq-category-link{
-      padding: 4px 8px; 
-      margin:6px; 
-      border: 1px solid #ccc; 
-      border-radius: 4px; 
-      cursor: pointer; 
-      text-decoration: none; 
-      font-size: 16px !important; 
-      background-color: #f6f6f7;
-      font-weight: normal !important;
-      <% if (setting.templateSetting.category_bar_background) { %>
-          background-color: <%=  setting.templateSetting.category_bar_background %>;
-      <% } %>    
-  }
-  .faq-category-link-2{
-      padding: 8px 16px; 
-      margin:6px; 
-      border: 1px solid #ccc; 
-      border-radius: 50px; 
-      cursor: pointer; 
-      text-decoration: none; 
-      font-size: 16px !important; 
-      background-color: #f6f6f7;
-      font-weight: normal !important;
-      <% if (setting.templateSetting.category_bar_background) { %>
-          background-color: <%=  setting.templateSetting.category_bar_background %>;
-      <% } %>    
-  }
-  .faq-not-found{
-      display: none; 
-      text-align: center; 
-      font-size: 36px;
-      <% if (setting.templateSetting.footer_text_font) { %>
-          font-family: <%=  setting.templateSetting.footer_text_font %>;
-      <% } if (setting.templateSetting.footer_text_color) { %>
-          color: <%=  setting.templateSetting.footer_text_color %>;
-      <% } if (setting.templateSetting.footer_text_paddingtop) { %>
-          padding-top: <%=  setting.templateSetting.footer_text_paddingtop %>px;
-      <% } if (setting.templateSetting.footer_text_paddingbottom) { %>
-          padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
-      <% } %>
-  }
-  #micro-scope{
-      <% if (setting.templateSetting.micro_scope_color) { %>
-          fill: <%=  setting.templateSetting.micro_scope_color %>;
-      <% } %>    
-  }
-  <% if (setting.templateSetting.placeholder_color) { %>
-      ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-      :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-      ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-  <% } %>
-  
-  .faq-answer-content{
-      display: none; 
-      margin:0; 
-      padding: 12px 30px; 
-      border-radius: 0 0 4px 4px; 
-      word-wrap: break-word;
-  }
-  .faq-footer-text{
-      text-align: center; 
-      padding: 10px 0; 
-      font-size: 18px;
-      margin-top: 30px; 
-      <% if (setting.templateSetting.footer_text_font) { %>
-          font-family: <%=  setting.templateSetting.footer_text_font %>;
-      <% } if (setting.templateSetting.footer_text_fontsize) { %>
-          font-size: <%=  setting.templateSetting.footer_text_fontsize %>px;
-      <% } if (setting.templateSetting.footer_text_color) { %>
-          color: <%=  setting.templateSetting.footer_text_color %>;
-      <% } if (setting.templateSetting.footer_text_paddingtop) { %>
-          padding-top: <%=  setting.templateSetting.footer_text_paddingtop %>px;
-      <% } if (setting.templateSetting.footer_text_paddingbottom) { %>
-          padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
-      <% } %>
-  }
-  @media only screen and (max-width: 700px) {
-      .faq-search-input {
-          width: 95% !important;
-          margin: auto;
-          padding: 0;
-          overflow: hidden;
-      }
-  }
-  <%
-      if(setting.templateSetting.custom_css) { %>
-          <%- setting.templateSetting.custom_css%>
-          <%= setting.templateSetting.custom_css%>
-      <%}
-  %>
+<% } %>
+.faq-question-title-left, .faq-question-title-right{
+    display: flex; 
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    cursor: pointer; 
+}
+svg:not(:root) {
+    overflow:unset !important;
+}
+.listed-faq{
+    user-select: none;
+    word-wrap: break-word;
+    padding:0 <%- setting.templateSetting.faq_font_size%>px;
+    word-break: break-word;
+}
+.category-bar{
+    display: flex; 
+    justify-content: center; 
+    flex-wrap: wrap; 
+    margin-bottom: 20px;
+    <% if (setting.templateSetting.faq_font_family) { %>
+        font-family: <%=  setting.templateSetting.faq_font_family %>;
+    <% } %>    
+}
+.faq-main-content{
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+.question-title-right{
+  position: absolute;
+  top: 50%;
+  right: -30px;
+  transform: translate(-50% ,-50%);
+  font-size: 60px;
+  color: <%=  setting.templateSetting.faq_bg_color %>;
+}
+.question-title-left{
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translate(-50% ,-50%);
+  font-size: 60px;
+  color: <%=  setting.templateSetting.faq_bg_color %>;
+}
+.page-under-contruction{
+    text-align: center;
+    font-size: 36px;
+    margin: 60px 0;
+    <% if (setting.templateSetting.footer_text_font) { %>
+        font-family: <%=  setting.templateSetting.footer_text_font %>;
+    <% } if (setting.templateSetting.footer_text_color) { %>
+        color: <%=  setting.templateSetting.footer_text_color %>;
+    <% } if (setting.templateSetting.footer_text_paddingtop) { %>
+        padding-top: <%=  setting.templateSetting.footer_text_paddingtop %>px;
+    <% } if (setting.templateSetting.footer_text_paddingbottom) { %>
+        padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
+    <% } %>
+}
+.faq-category-width{
+    width: 100%;
+    padding: 10px 0;
+}
+.faq-category-link{
+    padding: 4px 8px; 
+    margin:6px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    text-decoration: none; 
+    font-size: 16px !important; 
+    background-color: #f6f6f7;
+    font-weight: normal !important;
+    <% if (setting.templateSetting.category_bar_background) { %>
+        background-color: <%=  setting.templateSetting.category_bar_background %>;
+    <% } %>    
+}
+.faq-category-link-2{
+    padding: 8px 16px; 
+    margin:6px; 
+    border: 1px solid #ccc; 
+    border-radius: 50px; 
+    cursor: pointer; 
+    text-decoration: none; 
+    font-size: 16px !important; 
+    background-color: #f6f6f7;
+    font-weight: normal !important;
+    <% if (setting.templateSetting.category_bar_background) { %>
+        background-color: <%=  setting.templateSetting.category_bar_background %>;
+    <% } %>    
+}
+.faq-not-found{
+    display: none; 
+    text-align: center; 
+    font-size: 36px;
+    <% if (setting.templateSetting.footer_text_font) { %>
+        font-family: <%=  setting.templateSetting.footer_text_font %>;
+    <% } if (setting.templateSetting.footer_text_color) { %>
+        color: <%=  setting.templateSetting.footer_text_color %>;
+    <% } if (setting.templateSetting.footer_text_paddingtop) { %>
+        padding-top: <%=  setting.templateSetting.footer_text_paddingtop %>px;
+    <% } if (setting.templateSetting.footer_text_paddingbottom) { %>
+        padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
+    <% } %>
+}
+#micro-scope{
+    <% if (setting.templateSetting.micro_scope_color) { %>
+        fill: <%=  setting.templateSetting.micro_scope_color %>;
+    <% } %>    
+}
+<% if (setting.templateSetting.placeholder_color) { %>
+    ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
+    :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
+    ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
+<% } %>
+
+.faq-answer-content{
+    display: none; 
+    margin:0; 
+    padding: 12px 30px; 
+    border-radius: 0 0 4px 4px; 
+    word-wrap: break-word;
+}
+.faq-footer-text{
+    text-align: center; 
+    padding: 10px 0; 
+    font-size: 18px;
+    margin-top: 30px; 
+    <% if (setting.templateSetting.footer_text_font) { %>
+        font-family: <%=  setting.templateSetting.footer_text_font %>;
+    <% } if (setting.templateSetting.footer_text_fontsize) { %>
+        font-size: <%=  setting.templateSetting.footer_text_fontsize %>px;
+    <% } if (setting.templateSetting.footer_text_color) { %>
+        color: <%=  setting.templateSetting.footer_text_color %>;
+    <% } if (setting.templateSetting.footer_text_paddingtop) { %>
+        padding-top: <%=  setting.templateSetting.footer_text_paddingtop %>px;
+    <% } if (setting.templateSetting.footer_text_paddingbottom) { %>
+        padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
+    <% } %>
+}
+@media only screen and (max-width: 700px) {
+    .faq-search-input {
+        width: 95% !important;
+        margin: auto;
+        padding: 0;
+        overflow: hidden;
+    }
+}
+<%
+    if(setting.templateSetting.custom_css) { %>
+        <%- setting.templateSetting.custom_css%>
+        <%= setting.templateSetting.custom_css%>
+    <%}
+%>
 </style>
