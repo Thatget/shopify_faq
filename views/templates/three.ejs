@@ -507,7 +507,7 @@
     #not-found-text{
         display: none; 
         text-align: center; 
-        font-size:48px; 
+        font-size:40px; 
         margin-top: 30px;
         padding-bottom: 30px;
         <% if (setting.templateSetting.search_placeholder_font) { %>
@@ -516,10 +516,12 @@
     }
     .page-under-contruction{
         text-align: center;
-        font-size: 48px;
+        font-size: 40px;
         margin: 60px 0;
-        <% if (setting.templateSetting.search_placeholder_font) { %>
-            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+        <% if (setting.templateSetting.footer_text_font) { %>
+            font-family: <%=  setting.templateSetting.footer_text_font %>;
+        <% } if (setting.templateSetting.footer_text_color) { %>
+            color: <%=  setting.templateSetting.footer_text_color %>;
         <% } %>
     }
     .faq-category-container{
