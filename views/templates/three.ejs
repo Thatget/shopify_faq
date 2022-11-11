@@ -1,4 +1,4 @@
-<div class="root-faq-template" id="faq-main">
+<div class="root-faq-template">
     <div class="faq-header-3">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -41,7 +41,7 @@
             <% } %>    
         </div>
     </div>
-    <div class="faq-main">
+    <div class="faq-main"  id="faq-main">
         <% if(!setting.data.show_page_construction){%>
             <% if(faqs && !setting.data.dont_category_faq){ %>
                 <div class="faq-main-container">
