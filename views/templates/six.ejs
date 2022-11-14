@@ -40,58 +40,47 @@
                 </div>
             <% } %>    
         </div>
+        <div>
+            <% if(!setting.data.dont_category_faq) {%>
+                <div class="category-bar">
+                    <% for(var i = 0; i < faqs.categories.length; i++) { %>
+                        <div class="category-bar-item" id="faq-category<%- i %>" onclick="changeCategory('<%- i %>', '<%= setting.templateSetting.faq_hover_color%>', '<%= setting.templateSetting.category_bar_background %>')"
+                        <% if(i === 0){%> style="color: <%= setting.templateSetting.category_bar_color %>;background-color: <%= setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}
+                        else{%>style="font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>; color: <%=  setting.templateSetting.category_bar_color %>"<%}%>>
+                            <span class="category-bar-title">
+                            <%- faqs.categories[i].title %>                                                  
+                            </span>
+                        </div>
+                    <% } %>                                
+                </div>
+            <% } %>        
+        </div>
     </div>
-    <div class="faq-main" id="faq-main">
+    <div class="faq-main">
         <% if(!setting.data.show_page_construction){%>
             <% if(faqs && !setting.data.dont_category_faq){ %>
                 <div class="faq-main-container">
                     <div class="faq-category-container">
                         <% if(faqs.categories.length){%>
-                                <div class="faq-category-menu">
-                                    <div class="category-bar">
-                                        <% for(var i = 0; i < faqs.categories.length; i++) { %>
-                                            <div class="category-bar-item" style="padding: 0 20px; margin-bottom: 16px">
-                                                <a href="#faq-main" style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>;">
-                                                    <span onclick="changeCategory('<%- i %>', '<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>')" class="category-bar-title" id="faq-category<%- i %>"<% if(i === 0){%> style="word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; border-bottom: 1px solid <%= setting.templateSetting.category_bar_background %>; text-decoration: none; font-size: 16px !important; user-select: none; color: <%= setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="color: <%= setting.templateSetting.category_bar_color %>;word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; text-decoration: none; font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></span>                                                  
-                                                </a>
-                                            </div>
-                                        <% } %>                                
-                                    </div>
-                                </div>
                             <div class="faq-container">
                                 <div class="category-faq-container">
                                     <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                        <% if(i === 0) {%>
-                                            <div id="dung">
-                                                  <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
-                                                  <div style="display: flex; justify-content: center; flex-direction: column">
-                                                      <% for(var j=0; j < faqs.faq.length; j++) { %>
-                                                          <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                              <div class="faq-main-content">
-                                                                  <div class="faq-question-title" onclick="showHideContent(this)">
-                                                                  <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                                                  <span class="listed-faq" value><%= faqs.faq[j].title %></span>
-                                                                  </div>
-                                                                  <div class="faq-answer-content" style="display: none;">
-                                                                      <%- faqs.faq[j].content %>
-                                                                  </div>
-                                                              </div>
-                                                          <% } %>    
-                                                      <%}%>
-                                                  </div>
-                                            </div>
-                                        <% } %>
-                                        <div style="display: none;" id="category<%- i %>">
+                                        <div <% if(i === 0){%> style="display: block"<%}
+                                            else{%>style="display: none"<%}%> id="category<%- i %>">
                                             <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
-                                            <% for(var j=0; j < faqs.faq.length; j++) { %>
+                                            <% for(var j = 0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                     <div class="faq-main-content">
                                                         <div class="faq-question-title" onclick="showHideContent(this)">
-                                                            <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                                            <span class="listed-faq" value><%= faqs.faq[j].title %></span>
+                                                            <i class="faq-icon fa-solid fa-plus" class="fa-solid fa-plus" <% if(j === 0){%> style="opacity: 0"<%}
+                                                                else{%>style="opacity: 1"<%}%>></i>
+                                                            <i class="fa-solid fa-minus faq-icon" <% if(j === 0){%> style="opacity: 1"<%}
+                                                                else{%>style="opacity: 0"<%}%>></i>
+                                                            <span class="listed-faq" value><%= faqs.faq[j].title %> </span>
                                                         </div>
-                                                        <div id="faq-answer-content" class="faq-answer-content"  style="display: none;">
-                                                            <%- faqs.faq[j].content %>
+                                                        <div id="faq-answer-content" class="faq-answer-content" <% if(j === 0){%> style="display: block"<%}
+                                                            else{%>style="display: none"<%}%>>
+                                                            <%- faqs.faq[j].content %> 
                                                         </div>
                                                     </div>
                                                 <% } %>
@@ -107,14 +96,18 @@
             else{ %>
                 <div class="faq-dont-category">
                     <div style="display: flex; flex-direction: column">
-                        <% for(var j=0; j < faqs.faq.length; j++) { %>
+                        <% for(var j = 0; j < faqs.faq.length; j++) { %>
                             <div class="faq-main-content">
                                 <div class="faq-question-title" onclick="showHideContent(this)">
-                                <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                    <i class="faq-icon fa-solid fa-plus" class="fa-solid fa-plus" <% if(j === 0){%> style="opacity: 0"<%}
+                                        else{%>style="opacity: 1"<%}%>></i>
+                                    <i class="fa-solid fa-minus faq-icon" <% if(j === 0){%> style="opacity: 1"<%}
+                                        else{%>style="opacity: 0"<%}%>></i>
+                                    <span class="listed-faq"><%= faqs.faq[j].title %> </span>
                                 </div>
-                                <div class="faq-answer-content" style="display: none;">
-                                    <%- faqs.faq[j].content %>
+                                <div class="faq-answer-content" <% if(j === 0){%> style="display: block"<%}
+                                    else{%>style="display: none"<%}%>>
+                                    <%- faqs.faq[j].content %> 
                                 </div>
                             </div>
                         <%}%>
@@ -129,7 +122,8 @@
                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                     <div class="faq-main-content">
                                         <div class="faq-question-title" onclick="showHideContent(this)">
-                                            <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                                            <i class="faq-icon fa-solid fa-plus" class="fa-solid fa-plus" style="opacity: 1"></i>
+                                            <i class="fa-solid fa-minus faq-icon" style="opacity: 0;"></i>
                                             <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                         </div>
                                         <div class="faq-answer-content faq-answer-search" style="display: none;">
@@ -161,66 +155,79 @@
             </div>
         <% } %>
     </div>
-  </div>
-  <script>
-    var categoryName = []
-    function changeCategory(id, category_bar_color, category_bar_background){
-        if(!categoryName.some(item => {
+</div>
+<script>
+    var categoryId = []
+    function changeCategory(id, faq_hover_color, category_bar_background){
+        if(!categoryId.some(item => {
             return item === id
         })){            
-            categoryName.push(id)
+            categoryId.push(id)
         }
-        var categoryShow = categoryName.filter(item => {
+        var categoryShow = categoryId.filter(item => {
             return item === id
         })
-        var categoryHide = categoryName.filter(item => {
+        var categoryHide = categoryId.filter(item => {
             return item !== id
         })
-        for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
-            document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
-            document.getElementsByClassName('svg-icon')[i].style.opacity = '1'
-            document.getElementsByClassName('svg-icon')[i].style.transform = "rotate(0deg)";
-            document.getElementsByClassName('svg-icon')[i].style.transition  = "all .7s";
+        if(id != '0'){
+            document.getElementById('faq-category0').style.backgroundColor = `${faq_hover_color}`
+            document.getElementById(`category0`).style.display = 'none'
         }
-        for(let i = 0; i < categoryName.length; i++){
-            if(categoryName[i] == id){
-            document.getElementById(`category${id}`).style.display = 'block'
-            document.getElementById(`faq-category${categoryName[i]}`).style.borderBottom = `1px solid ${category_bar_background}`
-            document.getElementById(`faq-category${categoryName[i]}`).style.color = `${category_bar_background}`
+        else{
+            document.getElementById('faq-category0').style.backgroundColor = `${category_bar_background}`
+        }
+        if(categoryId.length === 1){
+            document.getElementById(`faq-category0`).style.backgroundColor = `${faq_hover_color}`
+        }
+        for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
+            if(i === 0){
+                document.getElementsByClassName('faq-answer-content')[0].style.display = 'block'
+                document.getElementsByClassName('fa-plus')[0].style.opacity = '0'
+                document.getElementsByClassName('fa-minus')[0].style.opacity = '1'
             }
             else{
-            document.getElementById(`category${categoryName[i]}`).style.display = 'none'
-            document.getElementById(`faq-category${categoryName[i]}`).style.borderBottom = 'none'
-            document.getElementById(`faq-category${categoryName[i]}`).style.color = `${category_bar_color}`
+                document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
+                document.getElementsByClassName('fa-plus')[i].style.opacity = '1'
+                document.getElementsByClassName('fa-minus')[i].style.opacity = '0'
             }
         }
-        if(id != '0'){
-            document.getElementById(`faq-category0`).style.borderBottom = 'none'
-            document.getElementById(`faq-category0`).style.color = `${category_bar_color}`
-        }
-        if(categoryName.length > 0){
-            document.getElementById('dung').style.display= "none"
-        }
-        if(categoryName.length === 1){
-            document.getElementsByClassName('category-bar-item')[0].style.borderBottom = 'none'
+        for(let i = 0; i < categoryId.length; i++){
+            if(categoryId[i] == id){
+                document.getElementById(`category${id}`).style.display = 'block'
+                document.getElementById(`faq-category${categoryId[i]}`).style.backgroundColor = `${category_bar_background}`
+            }
+            else{
+                document.getElementById(`category${categoryId[i]}`).style.display = 'none'
+                document.getElementById(`faq-category${categoryId[i]}`).style.backgroundColor = `${faq_hover_color}`
+            }
         }
     }
     function showHideContent(el) {
         var content = el.nextElementSibling;
-        var svgRight = el.getElementsByClassName('svg-icon')
+        var iconPlus = el.getElementsByClassName('fa-plus')
+        var iconMinus = el.getElementsByClassName('fa-minus')
         if (content.style.display == "none") {
             content.style.display = "block";
         } 
         else {
             content.style.display = "none";
         }
-        if (svgRight[0].style.transform === "rotate(90deg)") {
-            svgRight[0].style.transform = "rotate(0deg)";
-            svgRight[0].style.transition  = "all .1s ease-in-out";
+        if (iconPlus[0].style.opacity === "0") {
+            iconMinus[0].style.transform = "rotate(0deg)";
+            iconMinus[0].style.transition  = "all 0s";
+            iconMinus[0].style.opacity = "0";
+            iconPlus[0].style.transform = "rotate(180deg)";
+            iconPlus[0].style.opacity = "1";
+            iconPlus[0].style.transition  = "all .7s";
         } 
         else {
-            svgRight[0].style.transform = "rotate(90deg)";
-            svgRight[0].style.transition  = "all .1s ease-in-out";
+            iconPlus[0].style.transform = "rotate(360deg)";
+            iconPlus[0].style.transition  = "all 0s";
+            iconPlus[0].style.opacity = "0";
+            iconMinus[0].style.transform = "rotate(180deg)";
+            iconMinus[0].style.transition  = "ease-in .3s";
+            iconMinus[0].style.opacity = "1";
         }
     }
     function simpleSearch() {
@@ -234,7 +241,6 @@
                 document.getElementsByClassName("faq-main")[0].style.alignItems = "unset"
                 document.getElementsByClassName("category-faq-container")[0].style.display = "block"
                 document.getElementsByClassName('category-bar')[0].style.display = "flex"
-                document.getElementsByClassName('faq-container')[0].style.width = "70%"
                 nodeCategory[0].style.display = "none"
                 for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
                     document.getElementsByClassName("faq-category-search")[i].style.display = "block"
@@ -244,7 +250,6 @@
                 document.getElementsByClassName("faq-main")[0].style.alignItems = "center"
                 document.getElementsByClassName("category-faq-container")[0].style.display = "none"
                 document.getElementsByClassName('category-bar')[0].style.display = "none"
-                document.getElementsByClassName('faq-container')[0].style.width = "100%"
                 nodeCategory[0].style.display = "flex"
                 for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
                     document.getElementsByClassName("faq-category-search")[i].style.display = "none"
@@ -278,7 +283,7 @@
         else{
             if(document.getElementById('search-text').value == ''){
                 document.getElementsByClassName('faq-dont-category')[0].style.display = "flex"
-  
+
                 nodeCategory[0].style.display = "none"
                 for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
                     document.getElementsByClassName("faq-category-search")[i].style.display = "block"
@@ -286,9 +291,8 @@
             }
             else{
                 document.getElementsByClassName('faq-dont-category')[0].style.display = "none"
-  
+
                 nodeCategory[0].style.display = "flex"
-                nodeCategory[0].style.justifyContent = "center"
                 for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
                     document.getElementsByClassName("faq-category-search")[i].style.display = "none"
                 }
@@ -319,8 +323,8 @@
             }        
         }
     }
-  </script>
-  <style scoped>
+</script>
+<style scoped>
     <% if(setting.templateSetting.width_faqs_accordian) { %>
     .faq-main {
         padding: 0 20px;
@@ -336,13 +340,20 @@
         justify-content: space-between;
         min-height: <%- setting.templateSetting.banner_height%>px;
         max-width: 100vw;
-        <% if (setting.templateSetting.image_banner) { %>
-            background-image: url('<%- setting.templateSetting.image_banner%>');
-        <% }
+        <% if (setting.templateSetting.banner_visible) { %>
+            <% if (setting.templateSetting.image_banner) { %>
+                background-image: url('<%- setting.templateSetting.image_banner%>');
+            <% }
+            else {%> 
+                background-image: url('<%- setting.templateSetting.banner_default%>');
+                <%} 
+            %>;        
+        <% } 
         else {%> 
-            background-image: url('<%- setting.templateSetting.banner_default%>');
+            background-color: <%- setting.templateSetting.faq_hover_color%>;
             <%} 
         %>;        
+
         background-repeat: no-repeat;
         background-size: cover;
         background-position-y: center;
@@ -353,7 +364,7 @@
         display: none; 
         margin-top: 60px;
         margin-bottom: 30px;
-        width: 77%;
+        width: 100%;
     }
     .faq-search-input{
         line-height: 1 !important;
@@ -379,6 +390,7 @@
     }
     .faq-question-title {
         display: flex; 
+        position: relative;
         align-items: start;
         justify-content: space-between;
         width: 100%; 
@@ -393,21 +405,29 @@
             font-family: <%=  setting.templateSetting.faq_font_family %>;
         <% } %>
     }
-    .svg-icon{
-        margin-top: calc(<%- setting.templateSetting.faq_font_size%>px * 0.4);
-        width: <%- setting.templateSetting.faq_font_size%>px; 
-        height: <%- setting.templateSetting.faq_font_size%>px;
+    <% if (setting.templateSetting.page_background_color) { %>
+        .faq-question-title:hover {
+            background-color: <%=  setting.templateSetting.page_background_color %> !important;
+        }
+    <% } %>
+    .category-bar-item{
+        border-radius: 4px 4px 0  0;
+        word-break: break-word; 
+        text-align: left; 
+        cursor: pointer;
+        font-size: 16px !important; 
+        user-select: none; 
+        padding: 10px 16px
     }
-    .svg-minus{
-        opacity: 0;
-        height: 14px;
-        width: 14px;
+    .faq-icon{
+        margin-top: calc(<%- setting.templateSetting.faq_font_size%>px * 0.65);
+        font-size: calc(<%- setting.templateSetting.faq_font_size%>px * 0.65);
+        color: <%= setting.templateSetting.faq_font_color %>;
     }
     .category-bar{
         display: flex; 
-        flex-direction: column;
+        justify-content: center;
         flex-wrap: wrap; 
-        margin: calc(<%=  setting.templateSetting.category_font_size %>px*1.8 + 70px + (<%=  setting.templateSetting.faq_font_size %>px*.4 - 16px*.4 + 1px)) 0 30px 0; 
         <% if (setting.templateSetting.category_font_family) { %>
             font-family: <%=  setting.templateSetting.category_font_family %>;
         <% } %>
@@ -443,18 +463,20 @@
         <% } %>
     }
     .faq-main-content{
-        margin-bottom: 20px
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
     }
-        #micro-scope{
-            <% if (setting.templateSetting.micro_scope_color) { %>
-                fill: <%=  setting.templateSetting.micro_scope_color %>;
-            <% } %>    
-        }
-        <% if (setting.templateSetting.placeholder_color) { %>
-            ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-            :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-            ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-        <% } %>
+    #micro-scope{
+        <% if (setting.templateSetting.micro_scope_color) { %>
+            fill: <%=  setting.templateSetting.micro_scope_color %>;
+        <% } %>    
+    }
+    <% if (setting.templateSetting.placeholder_color) { %>
+        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+    <% } %>
     .faq-main-container{
         padding-bottom: 30px;
     }
@@ -463,8 +485,8 @@
         margin-top: 60px; 
         padding-bottom: 30px;
     }
-    .faq-category-menu{
-        width: 33%;
+    .fa-minus{
+        position: absolute;
     }
     .faq-search{
         width: 60%;
@@ -516,12 +538,11 @@
         font-size:36px; 
         margin-top: 30px;
         padding-bottom: 30px;
-        <% if (setting.templateSetting.search_placeholder_font) { %>
-            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+        <% if (setting.templateSetting.footer_text_font) { %>
+          font-family: <%=  setting.templateSetting.footer_text_font %>;
+        <% } if (setting.templateSetting.footer_text_color) { %>
+            color: <%=  setting.templateSetting.footer_text_color %>;
         <% } %>
-    }
-    .faq-container{
-        width: 77%;
     }
     .page-under-contruction{
         text-align: center;
@@ -538,13 +559,6 @@
         width: 100%;
     }
     .faq-footer-text{
-        <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
-            color: #fff;
-        <% }
-        else {%> 
-            color: inherit;
-            <%} 
-        %>; 
         padding: 10px 0; 
         font-size: 18px;
         text-align: center;
@@ -567,12 +581,14 @@
         word-wrap: break-word;
         word-break: break-word;
         padding-right: <%- setting.templateSetting.faq_font_size%>px;
-        margin-left: 20px
+        margin-left: 16px
+    }
+    .faq-container{
+        width: 100%;
     }
     .faq-answer-content{
         margin:0; 
-        padding: 0px 10px 0px calc(<%- setting.templateSetting.faq_font_size%>px + 20px);
-        // position: relative;
+        padding: 4px 10px 4px calc(<%- setting.templateSetting.faq_font_size%>px* 0.65 + 16px);
         word-wrap: break-word;
     }
     svg:not(:root) {
@@ -582,21 +598,6 @@
         .faq-category-container{
             flex-direction: column;
         }
-        .category-bar{
-            flex-direction: row;
-            justify-content: center;
-            margin: 0 !important;
-            margin-top: 40px !important;
-            <% if (setting.templateSetting.category_font_family) { %>
-                font-family: <%=  setting.templateSetting.category_font_family %>;
-            <% } %>    
-        }
-        .faq-category-menu{
-            width: 100%;
-        }
-        .faq-container{
-            width: 100%;
-        }
     }
     @media only screen and (max-width: 700px) {
         .faq-search {
@@ -604,8 +605,8 @@
             margin: auto;
             padding: 0;
             overflow: hidden !important;
-          border: none !important;
-          background-color: unset !important;
+            border: none !important;
+            background-color: unset !important;
         }
         .faq-search-no-title{
             width: 90% !;
@@ -621,4 +622,4 @@
             <%= setting.templateSetting.custom_css%>
         <%}
     %>
-  </style>
+</style>

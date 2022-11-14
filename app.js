@@ -263,14 +263,6 @@ app.set("views","./views");
 const defaultPage = require('./controller/defaultPage');
 
 app.get('/faq-page', async (req, res) => {
-    
-    // const query_signature = req.query.signature;
-    // const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;
-    // const generateHash = crypto.createHmac('sha256', apiSecret)
-    //     .update(sorted_params)
-    //     .digest('hex');
-    // if (query_signature === generateHash) {
-        // const shop = req.query.shop;
         let shop = req.query.shop;
         let userData = await User.findOne({
             attributes: ['id'],
@@ -298,10 +290,6 @@ app.get('/faq-page', async (req, res) => {
         } else {
             return res.status(400).send('Required parameters missing');
         }
-    // } 
-    // else {
-    //     res.sendStatus(403);
-    // }
     res.end();
 });
 
