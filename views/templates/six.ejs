@@ -44,7 +44,7 @@
             <% if(!setting.data.dont_category_faq) {%>
                 <div class="category-bar">
                     <% for(var i = 0; i < faqs.categories.length; i++) { %>
-                        <div class="category-bar-item" id="faq-category<%- i %>" onclick="changeCategory('<%- i %>', '<%= setting.templateSetting.faq_hover_color%>', '<%= setting.templateSetting.category_bar_background %>')"
+                        <div class="category-bar-item" id="faq-category<%- i %>" onclick="changeCategory('<%- i %>', '<%= setting.templateSetting.faq_hover_color%>', '<%= setting.templateSetting.category_bar_background %>', '<%= setting.templateSetting.banner_visible %>')"
                         <% if(i === 0){%> style="color: <%= setting.templateSetting.category_bar_color %>;background-color: <%= setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}
                         else{%>style="font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>; color: <%=  setting.templateSetting.category_bar_color %>"<%}%>>
                             <span class="category-bar-title">
@@ -158,7 +158,7 @@
 </div>
 <script>
     var categoryId = []
-    function changeCategory(id, faq_hover_color, category_bar_background){
+    function changeCategory(id, faq_hover_color, category_bar_background, banner_visible){
         if(!categoryId.some(item => {
             return item === id
         })){            
@@ -171,14 +171,24 @@
             return item !== id
         })
         if(id != '0'){
-            document.getElementById('faq-category0').style.backgroundColor = `${faq_hover_color}`
+            if(banner_visible){
+                document.getElementById('faq-category0').style.backgroundColor = 'unset'
+            }
+            else{
+                document.getElementById('faq-category0').style.backgroundColor = `${faq_hover_color}`
+            }
             document.getElementById(`category0`).style.display = 'none'
         }
         else{
             document.getElementById('faq-category0').style.backgroundColor = `${category_bar_background}`
         }
         if(categoryId.length === 1){
-            document.getElementById(`faq-category0`).style.backgroundColor = `${faq_hover_color}`
+            if(banner_visible){
+                document.getElementById('faq-category0').style.backgroundColor = 'unset'
+            }
+            else{
+                document.getElementById('faq-category0').style.backgroundColor = `${faq_hover_color}`
+            }
         }
         for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
             if(i === 0){
@@ -199,7 +209,12 @@
             }
             else{
                 document.getElementById(`category${categoryId[i]}`).style.display = 'none'
-                document.getElementById(`faq-category${categoryId[i]}`).style.backgroundColor = `${faq_hover_color}`
+                if(banner_visible){
+                    document.getElementById(`faq-category${categoryId[i]}`).style.backgroundColor = 'unset'
+                }
+                else{
+                    document.getElementById(`faq-category${categoryId[i]}`).style.backgroundColor = `${faq_hover_color}`
+                }
             }
         }
     }
@@ -417,7 +432,8 @@
         cursor: pointer;
         font-size: 16px !important; 
         user-select: none; 
-        padding: 10px 16px
+        padding: 10px 16px;
+
     }
     .faq-icon{
         margin-top: calc(<%- setting.templateSetting.faq_font_size%>px * 0.65);
