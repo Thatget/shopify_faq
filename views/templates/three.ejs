@@ -1,7 +1,4 @@
 <div class="root-faq-template">
-    <button onclick="topFunction()" id="back-to-top" title="Go to top">
-        <i class="fa-solid fa-angles-up"></i>
-    </button>
     <div class="faq-header-3">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -162,20 +159,19 @@
         <% } %>
     </div>
 </div>
-<script type="text/javascript"> 
+<script> 
     let mybutton = document.getElementById("back-to-top");
     window.onscroll = function() {scrollFunction()};
     function scrollFunction() {
-        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
             mybutton.style.display = "flex";
         } 
         else {
             mybutton.style.display = "none";
         }
     }
-
     function topFunction() {
-        document.body.scrollIntoView({
+        document.body.scrollIntoView({  
             behavior: "smooth"
         });    
     }
@@ -407,6 +403,7 @@
         display: flex; 
         align-items: center;
         justify-content: space-between;
+        position: relative;
         width: 100%; 
         cursor: pointer;
         <% if (setting.templateSetting.faq_font_weight) { %>
@@ -420,13 +417,13 @@
         <% } %>
     }
     .svg-plus{
-        position: relative;
-        left: 11.2px;
         opacity: 1;
         height: 14px;
         width: 14px;
     }
     .svg-minus{
+        position: absolute;
+        right: 10px;
         opacity: 0;
         height: 14px;
         width: 14px;
