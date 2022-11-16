@@ -122,10 +122,31 @@
                 <% } %>
             </div>
         <% } %>
+        <% if(setting.templateSetting.btn_top_visible) {%>
+            <div class="btn-back-to-top" onclick="topFunction()" id="back-to-top" title="Go to top">
+                <i class="fa-solid fa-angles-up" style="color: #ffffff"></i>
+            </div>
+        <% } %>
     </div>
     <div></div>
 </div>
 <script>
+    let mybutton = document.getElementById("back-to-top");
+    window.onscroll = function() {scrollFunction()};
+    function scrollFunction() {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
+            mybutton.style.display = "flex";
+        } 
+        else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    function topFunction() {
+        document.body.scrollIntoView({
+            behavior: "smooth"
+        });    
+    }
     function showHideContent(el) {
         var content = el.nextElementSibling;
         var svgRight = el.getElementsByClassName('svg-right')

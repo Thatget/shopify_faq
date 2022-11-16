@@ -87,5 +87,25 @@
                 background-color: <%=  setting.templateSetting.page_background_color %>;
             <% } %>    
         }
+        svg{
+            height: 22px !important;
+            width: 22px !important;
+        }
+        .btn-back-to-top{
+            display: none;
+            align-items: center;
+            justify-content: center;
+            height: 50px; 
+            width: 50px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            position: fixed;
+            bottom: 30px;
+            right: 30px;        
+            background-color: <%= setting.templateSetting.btn_top_background%>
+        }
+        .btn-back-to-top:hover{
+            background-color: <%= setting.templateSetting.btn_top_hover%>
+        }
     </style>
 <% } %>

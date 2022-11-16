@@ -1,4 +1,7 @@
 <div class="root-faq-template">
+    <button onclick="topFunction()" id="back-to-top" title="Go to top">
+        <i class="fa-solid fa-angles-up"></i>
+    </button>
     <div class="faq-header-3">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -47,11 +50,9 @@
                 <div class="faq-main-container">
                     <div class="faq-category-container">
                         <% if(faqs.categories.length){%>
-                            <div class="category-bar">
+                            <div class="category-bar" style="color: <%=  setting.templateSetting.category_bar_color %>">
                                 <% for(var i = 0; i < faqs.categories.length; i++) { %>
-                                    <a href="#faq-main" style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>;">
-                                        <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
-                                    </a>
+                                    <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
                                 <% } %>
                             </div>
                             <div class="faq-container">
@@ -154,11 +155,34 @@
                 <% } %>
             </div>
         <% } %>
+        <% if(setting.templateSetting.btn_top_visible) {%>
+            <div class="btn-back-to-top" onclick="topFunction()" id="back-to-top" title="Go to top">
+                <i class="fa-solid fa-angles-up" style="color: #ffffff"></i>
+            </div>
+        <% } %>
     </div>
 </div>
-<script>
+<script type="text/javascript"> 
+    let mybutton = document.getElementById("back-to-top");
+    window.onscroll = function() {scrollFunction()};
+    function scrollFunction() {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.display = "flex";
+        } 
+        else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    function topFunction() {
+        document.body.scrollIntoView({
+            behavior: "smooth"
+        });    
+    }
     var categoryName = []
     function changeCategory(id, category_bar_background){
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
         if(!categoryName.some(item => {
             return item === id
         })){            

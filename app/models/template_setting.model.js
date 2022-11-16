@@ -158,6 +158,15 @@ module.exports = (sequelize, Sequelize) => {
             },
             category_bar_color: {
                 type: Sequelize.STRING
+            },
+            btn_top_background: {
+                type: Sequelize.STRING
+            },
+            btn_top_hover: {
+                type: Sequelize.STRING
+            },
+            btn_top_visible: {
+                type: Sequelize.BOOLEAN
             }
         },
         {
