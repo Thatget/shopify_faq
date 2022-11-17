@@ -72,6 +72,25 @@ app.get('/storeFAQs', async (req, res) => {
     return res.redirect(app_link+txt);
 });
 
+app.get('/admin', async (req, res) => {
+    let tokenData = await getTokenAdmin(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link + '/admin' + txt ); 
+});
+
+app.get('/merchant', async (req, res) => {
+    console.log(req.query.shop)
+    let tokenData = await getTokenMerchant(req.query.shop);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link + txt ); 
+});
+
 app.get('/categories', async (req, res) => {
     let tokenData = await getToken(req.query);
     let txt = "";
@@ -345,5 +364,31 @@ async function getToken(query) {
             }
         }
     }
+    return {accessToken, refreshToken};
+}
+async function getTokenAdmin() {
+    let accessToken = '';
+    let refreshToken = '';
+    let jwtHelper = require("./app/helpers/jwt.helper");
+    let userData = await User.findOne({
+        attributes: [['id', 'user_id'],'email','shopify_domain'],
+        where: { shopify_domain: 'shoptestdungpham93.myshopify.com' }
+    });
+    accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
+    refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
+    console.log(accessToken)
+    return {accessToken, refreshToken};
+}
+async function getTokenMerchant(shop) {
+    let accessToken = '';
+    let refreshToken = '';
+    let jwtHelper = require("./app/helpers/jwt.helper");
+    let userData = await User.findOne({
+        attributes: [['id', 'user_id'],'email','shopify_domain'],
+        where: { shopify_domain: shop }
+    });
+    accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
+    refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
+    console.log(accessToken)
     return {accessToken, refreshToken};
 }
