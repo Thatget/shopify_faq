@@ -1,4 +1,4 @@
-<div class="root-faq-template" id="faq-main">
+<div class="root-faq-template">
     <div class="faq-header-3">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -41,13 +41,13 @@
             <% } %>    
         </div>
     </div>
-    <div class="faq-main">
+    <div class="faq-main" id="faq-main">
         <% if(!setting.data.show_page_construction){%>
             <% if(faqs && !setting.data.dont_category_faq){ %>
                 <div class="faq-main-container">
                     <div class="faq-category-container">
                         <% if(faqs.categories.length){%>
-                                <div class="d-flex col-md-4 col-12">
+                                <div class="faq-category-menu">
                                     <div class="category-bar">
                                         <% for(var i = 0; i < faqs.categories.length; i++) { %>
                                             <div class="category-bar-item" style="padding: 0 20px; margin-bottom: 16px">
@@ -58,13 +58,13 @@
                                         <% } %>                                
                                     </div>
                                 </div>
-                            <div class="faq-container col-12 col-md-8">
+                            <div class="faq-container">
                                 <div class="category-faq-container">
                                     <% for(var i=0; i < faqs.categories.length; i++) { %>
                                         <% if(i === 0) {%>
                                             <div id="dung">
                                                   <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
-                                                  <div class="d-flex flex-column justify-content-center">
+                                                  <div style="display: flex; justify-content: center; flex-direction: column">
                                                       <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                           <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                               <div class="faq-main-content">
@@ -106,7 +106,7 @@
             <% }
             else{ %>
                 <div class="faq-dont-category">
-                    <div class="d-flex flex-column">
+                    <div style="display: flex; flex-direction: column">
                         <% for(var j=0; j < faqs.faq.length; j++) { %>
                             <div class="faq-main-content">
                                 <div class="faq-question-title" onclick="showHideContent(this)">
@@ -122,7 +122,7 @@
                 </div>
             <% } %>
             <div class="category-faq-search">
-                <div class="d-flex flex-column">
+                <div style="display: flex; flex-direction: column">
                     <% for(var i=0; i < faqs.categories.length; i++) { %>
                         <div>
                             <% for(var j=0; j < faqs.faq.length; j++) { %>
@@ -160,11 +160,34 @@
                 <% } %>
             </div>
         <% } %>
+        <% if(setting.templateSetting.btn_top_visible) {%>
+            <div class="btn-back-to-top" onclick="topFunction()" id="back-to-top" title="Go to top">
+                <i class="fa-solid fa-angles-up" style="color: #ffffff"></i>
+            </div>
+        <% } %>
     </div>
   </div>
   <script>
+    let mybutton = document.getElementById("back-to-top");
+    window.onscroll = function() {scrollFunction()};
+    function scrollFunction() {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
+            mybutton.style.display = "flex";
+        } 
+        else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    function topFunction() {
+        document.body.scrollIntoView({
+            behavior: "smooth"
+        });    
+    }
     var categoryName = []
     function changeCategory(id, category_bar_color, category_bar_background){
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
         if(!categoryName.some(item => {
             return item === id
         })){            
@@ -246,7 +269,6 @@
                 document.getElementsByClassName('category-bar')[0].style.display = "none"
                 document.getElementsByClassName('faq-container')[0].style.width = "100%"
                 nodeCategory[0].style.display = "flex"
-                nodeCategory[0].style.justifyContent = "center"
                 for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
                     document.getElementsByClassName("faq-category-search")[i].style.display = "none"
                 }
@@ -354,6 +376,7 @@
         display: none; 
         margin-top: 60px;
         margin-bottom: 30px;
+        width: 77%;
     }
     .faq-search-input{
         line-height: 1 !important;
@@ -428,7 +451,7 @@
         %>; 
         margin:0; 
         padding: 20px 30px; 
-        font-weight: 600;
+        font-weight: 900;
         font-size:36px;
         <% if (setting.templateSetting.page_title_font) { %>
             font-family: <%=  setting.templateSetting.page_title_font %>;
@@ -462,7 +485,9 @@
         display: flex;
         margin-top: 60px; 
         padding-bottom: 30px;
-        justify-content: center;
+    }
+    .faq-category-menu{
+        width: 33%;
     }
     .faq-search{
         width: 60%;
@@ -518,12 +543,17 @@
             font-family: <%=  setting.templateSetting.search_placeholder_font %>;
         <% } %>
     }
+    .faq-container{
+        width: 77%;
+    }
     .page-under-contruction{
         text-align: center;
         font-size: 36px;
         margin: 60px 0;
-        <% if (setting.templateSetting.search_placeholder_font) { %>
-            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+        <% if (setting.templateSetting.footer_text_font) { %>
+            font-family: <%=  setting.templateSetting.footer_text_font %>;
+        <% } if (setting.templateSetting.footer_text_color) { %>
+            color: <%=  setting.templateSetting.footer_text_color %>;
         <% } %>
     }
     .faq-category-container{
@@ -583,6 +613,12 @@
             <% if (setting.templateSetting.category_font_family) { %>
                 font-family: <%=  setting.templateSetting.category_font_family %>;
             <% } %>    
+        }
+        .faq-category-menu{
+            width: 100%;
+        }
+        .faq-container{
+            width: 100%;
         }
     }
     @media only screen and (max-width: 700px) {

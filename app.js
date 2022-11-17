@@ -56,7 +56,7 @@ app.get('/', async (req, res) => {
             apiKey: apiKey,
             scopes: scopes,
             forwardingAddress: forwardingAddress
-        });
+        });  
     }
     else{
         return res.redirect(app_link);
@@ -70,6 +70,25 @@ app.get('/storeFAQs', async (req, res) => {
         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
     }
     return res.redirect(app_link+txt);
+});
+
+app.get('/admin', async (req, res) => {
+    let tokenData = await getTokenAdmin(req.query);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link + '/admin' + txt ); 
+});
+
+app.get('/merchant', async (req, res) => {
+    console.log(req.query.shop)
+    let tokenData = await getTokenMerchant(req.query.shop);
+    let txt = "";
+    if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    }
+    return res.redirect(app_link + txt ); 
 });
 
 app.get('/categories', async (req, res) => {
@@ -110,7 +129,6 @@ app.get('/products-faqs', async (req, res) => {
 
 app.get('/shopify/callback', async (req, res) => {
     const {shop, hmac, code} = req.query;
-
     if (shop && hmac && code) {
         const map = Object.assign({}, req.query);
         delete map['signature'];
@@ -171,35 +189,52 @@ app.get('/shopify/callback', async (req, res) => {
                             shopLocales: shopLocales,
                         };
                         await User.findOne({where: {shopify_domain: user.shopify_domain }}).
-                        then( async data =>{
-                            if (data) {
-                                await User.update(user, {
-                                    where: { shopify_domain: user.shopify_domain, }
-                                }).then(data => {
-                                }).catch(err => {
-                                    errorLog.error(`user update error ${err.message}`)
-                                });                         
-                            } else {
-                                await User.create(user).then(data => {
-                                }).catch(err => {
-                                    errorLog.error(`user created error: ${err.message}`);
-                                });
-                                const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
-                                const webhook = {
-                                    webhook : {
-                                        topic: "app/uninstalled",
-                                        address: `${forwardingAddress}/uninstall?shop=${shop}`,
-                                        format: "json",
-                                    }
-                                };
-                                await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
-                                    .then((data) => {
+                            then( async data =>{
+                                if (data) {
+                                    await User.update(user, {
+                                        where: { shopify_domain: user.shopify_domain }
+                                    }).then(data => {
+                                    }).catch(err => {
+                                        errorLog.error(`user update error ${err.message}`)
+                                    });                         
+                                } 
+                                else {
+                                    await User.findOne({ where: { shopify_domain: shopResonse.shop.domain }})
+                                    .then(async data => {
+                                        if(data){
+                                            await User.update(user, {
+                                                where: { shopify_domain: shopResonse.shop.domain }
+                                            }).then(data => {
+                                            }).catch(err => {
+                                                errorLog.error(`user update error ${err.message}`)
+                                            }); 
+                                        }
+                                        else{
+                                            await User.create(user).then(data => {
+                                            }).catch(err => {
+                                                errorLog.error(`user created error: ${err.message}`);
+                                            });
+                                            const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
+                                            const webhook = {
+                                                webhook : {
+                                                    topic: "app/uninstalled",
+                                                    address: `${forwardingAddress}/uninstall?shop=${shop}`,
+                                                    format: "json",
+                                                }
+                                            };
+                                            await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
+                                                .then((data) => {
+                                                })
+                                                .catch((error) => {
+                                                    errorLog.error(`webhook create: ${error.message}`)
+                                                });
+                                        }
                                     })
-                                    .catch((error) => {
-                                        errorLog.error(`webhook create: ${error.message}`)
+                                    .catch(err => {
+                                        errorLog.error(`user update error ${err.message}`)
                                     });
-                            }
-                        });
+                                }
+                            });
                     })
                     .catch((error) => {
                         errorLog.error(`user get shop data: error ${error.message}`)
@@ -247,14 +282,6 @@ app.set("views","./views");
 const defaultPage = require('./controller/defaultPage');
 
 app.get('/faq-page', async (req, res) => {
-    
-    // const query_signature = req.query.signature;
-    // const sorted_params = "path_prefix="+req.query.path_prefix+"shop="+req.query.shop+"timestamp="+req.query.timestamp;
-    // const generateHash = crypto.createHmac('sha256', apiSecret)
-    //     .update(sorted_params)
-    //     .digest('hex');
-    // if (query_signature === generateHash) {
-        // const shop = req.query.shop;
         let shop = req.query.shop;
         let userData = await User.findOne({
             attributes: ['id'],
@@ -282,10 +309,6 @@ app.get('/faq-page', async (req, res) => {
         } else {
             return res.status(400).send('Required parameters missing');
         }
-    // } 
-    // else {
-    //     res.sendStatus(403);
-    // }
     res.end();
 });
 
@@ -341,5 +364,31 @@ async function getToken(query) {
             }
         }
     }
+    return {accessToken, refreshToken};
+}
+async function getTokenAdmin() {
+    let accessToken = '';
+    let refreshToken = '';
+    let jwtHelper = require("./app/helpers/jwt.helper");
+    let userData = await User.findOne({
+        attributes: [['id', 'user_id'],'email','shopify_domain'],
+        where: { shopify_domain: 'shoptestdungpham93.myshopify.com' }
+    });
+    accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
+    refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
+    console.log(accessToken)
+    return {accessToken, refreshToken};
+}
+async function getTokenMerchant(shop) {
+    let accessToken = '';
+    let refreshToken = '';
+    let jwtHelper = require("./app/helpers/jwt.helper");
+    let userData = await User.findOne({
+        attributes: [['id', 'user_id'],'email','shopify_domain'],
+        where: { shopify_domain: shop }
+    });
+    accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
+    refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
+    console.log(accessToken)
     return {accessToken, refreshToken};
 }

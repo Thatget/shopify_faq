@@ -68,7 +68,7 @@
                                     <div class="category-faq-container">
                                         <div id="<%- faqs.categories[i].title %>" class="faq-category-width">
                                             <div class="faq-category-title">
-                                                <span class=" faq-category-border"><%- faqs.categories[i].title %></span>
+                                                <span class="faq-category-border"><%- faqs.categories[i].title %></span>
                                             </div>
                                         </div>
                                         <% for(var j=0; j < faqs.faq.length; j++) { %>
@@ -122,9 +122,30 @@
                 <% } %>
             </div>
         <% } %>
+        <% if(setting.templateSetting.btn_top_visible) {%>
+            <div class="btn-back-to-top" onclick="topFunction()" id="back-to-top" title="Go to top">
+                <i class="fa-solid fa-angles-up" style="color: #ffffff"></i>
+            </div>
+        <% } %>
     </div>
 </div>
 <script>
+    let mybutton = document.getElementById("back-to-top");
+    window.onscroll = function() {scrollFunction()};
+    function scrollFunction() {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
+            mybutton.style.display = "flex";
+        } 
+        else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    function topFunction() {
+        document.body.scrollIntoView({
+            behavior: "smooth"
+        });    
+    }
     function simpleSearch() {
         var input = document.getElementById("search-text");
         var filter = input.value.toLowerCase();
@@ -368,12 +389,7 @@
             font-family: <%=  setting.templateSetting.footer_text_font %>;
         <% } if (setting.templateSetting.footer_text_color) { %>
             color: <%=  setting.templateSetting.footer_text_color %>;
-        <% } if (setting.templateSetting.footer_text_paddingtop) { %>
-            padding-top: <%=  setting.templateSetting.footer_text_paddingtop %>px;
-        <% } if (setting.templateSetting.footer_text_paddingbottom) { %>
-            padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
         <% } %>
-
     }
     .faq-category-link{
         padding: 4px 8px; 
