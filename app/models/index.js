@@ -25,4 +25,5 @@ db.faq_more_page_setting = require("./faq_more_page_setting.model.js")(sequelize
 db.faq_category = require("./faq_category.model.js")(sequelize, Sequelize);
 db.setting = require("./setting.model.js")(sequelize, Sequelize);
 db.template_setting = require("./template_setting.model.js")(sequelize, Sequelize);
+db.merchants_rating = require("./merchants_rating.model.js")(sequelize, Sequelize);
 module.exports = db;

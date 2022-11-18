@@ -58,6 +58,9 @@ module.exports = (sequelize, Sequelize) => {
     faq_messages_visible: {
       type: Sequelize.BOOLEAN
     },
+    yanet_logo_visible:{
+      type: Sequelize.BOOLEAN
+    }  
   },
   {
     freezeTableName: true

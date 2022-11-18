@@ -12,6 +12,7 @@ const block_faq_more_page = require("../controllers/block_more_page.controller")
 const user = require("../controllers/user.controller");
 const setting = require("../controllers/setting.controller");
 const template_setting = require("../controllers/template_setting.controller");
+const merchants_rating = require("../controllers/merchants_rating.controller");
 const messages = require("../controllers/faq_messages.controller.js");
 const messages_setting = require("../controllers/faq_messages_setting.controller.js");
 const category = require("../controllers/faq_category.controller.js");
@@ -70,8 +71,13 @@ let initAPIs = (app) => {
     router.get("/api/setting", setting.findOne);
     router.get("/api/setting-all", setting.getAll);
     router.put("/api/setting", setting.update);
+    router.put("/api/setting/:user_id", setting.updateActiveFeature);
     router.delete("/api/setting", setting.delete);
     router.get("/api/template/:faq_template_number", setting.findTemplateSetting);
+
+    //Merchant router
+    router.post("/api/rating", merchants_rating.create);
+    router.get("/api/rating", merchants_rating.findOne);
 
     //Template_setting
     router.post("/api/template_setting", template_setting.create);

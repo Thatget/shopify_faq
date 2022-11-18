@@ -154,6 +154,26 @@ exports.update = async (req, res) => {
   res.send(returnData.data)
 };
 
+
+exports.updateActiveFeature = async(req, res) => {
+    const user_id = req.params.user_id
+    console.log(user_id)
+    const yanet_logo_visible = req.body
+    await Setting.update(yanet_logo_visible, {
+        where: { user_id: user_id }
+    }).then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "Setting was update successfully!"
+                });
+            } else {
+                errorLog.error('error update setting')
+            }
+    }).catch(err => {
+        errorLog.error('error update setting 500 status'+err.message)
+    });
+}
+
 // Delete a Setting with the specified id in the request
 exports.delete = (req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
