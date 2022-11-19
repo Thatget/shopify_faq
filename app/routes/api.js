@@ -70,6 +70,7 @@ let initAPIs = (app) => {
     router.get("/api/setting", setting.findOne);
     router.get("/api/setting-all", setting.getAll);
     router.put("/api/setting", setting.update);
+    router.put("/api/setting/:user_id", setting.updateActiveFeature);
     router.delete("/api/setting", setting.delete);
     router.get("/api/template/:faq_template_number", setting.findTemplateSetting);
 
