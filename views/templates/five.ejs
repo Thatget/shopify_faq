@@ -67,18 +67,16 @@
                                 <% for(var i= 0; i < faqs.categories.length; i++) { %>
                                     <div class="category-faq-container">
                                         <div id="<%- faqs.categories[i].title %>" class="faq-category-title faq-category-width"><%- faqs.categories[i].title %></div>
-                                        <% for(var j = 0; j < faqs.faq.length; j++) { %>
-                                            <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                <div class="faq-main-content">
-                                                    <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
-                                                        <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
-                                                        <i <% if(j % 2 === 0){%> class="fa-solid fa-caret-right question-title-right"<%}else{%>class="fa-solid fa-caret-left question-title-left"<%}%> :style="`color: ${settings.faq_bg_color}`"></i>
-                                                    </div>
-                                                    <div class="faq-answer-content faq-answer-search">
-                                                        <%- faqs.faq[j].content %>
-                                                    </div>
+                                        <% for(var j = 0; j < faqs.categories[i].faqs.length; j++) { %>
+                                            <div class="faq-main-content">
+                                                <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
+                                                    <span class="listed-faq faq-question-search"><%= faqs.categories[i].faqs[j].title %></span>
+                                                    <i <% if(j % 2 === 0){%> class="fa-solid fa-caret-right question-title-right"<%}else{%>class="fa-solid fa-caret-left question-title-left"<%}%> :style="`color: ${settings.faq_bg_color}`"></i>
                                                 </div>
-                                            <%}%>
+                                                <div class="faq-answer-content faq-answer-search">
+                                                    <%- faqs.categories[i].faqs[j].content %>
+                                                </div>
+                                            </div>
                                         <%}%>
                                     </div>
                                 <% } %>
@@ -351,7 +349,7 @@ svg:not(:root) {
     overflow:unset !important;
 }
 .listed-faq{
-    user-select: none;
+    user-select: auto;
     word-wrap: break-word;
     padding:0 <%- setting.templateSetting.faq_font_size%>px;
     word-break: break-word;

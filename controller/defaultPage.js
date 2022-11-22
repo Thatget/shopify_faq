@@ -106,7 +106,6 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
 							}
 						})
 					}
-                    
                     dataFaqs.forEach(item => {
                         if(item.locale === locale){
                             listFaq.push(item)
@@ -134,6 +133,17 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
                             }
                         }
                     }
+                    console.log(listFaq)
+                    listCategory.forEach(item => {
+                        let faqInCategory = []
+                        listFaq.forEach(element => {
+                            if(item.identify === element.category_identify){
+                                faqInCategory.push(element)
+                            }
+                        })
+                        item.faqs = faqInCategory
+                    })
+                    console.log(listCategory)
                     send_data = {
                         faq: listFaq,
                         categories: listCategory
