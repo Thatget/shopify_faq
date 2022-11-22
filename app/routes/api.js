@@ -75,9 +75,10 @@ let initAPIs = (app) => {
     router.delete("/api/setting", setting.delete);
     router.get("/api/template/:faq_template_number", setting.findTemplateSetting);
 
-    //Merchant router
+    //Merchant Rating router
     router.post("/api/rating", merchants_rating.create);
-    router.get("/api/rating", merchants_rating.findOne);
+    router.get("/api/get/rating", merchants_rating.findAll);
+    router.put("/api/update/rating", merchants_rating.update);
 
     //Template_setting
     router.post("/api/template_setting", template_setting.create);

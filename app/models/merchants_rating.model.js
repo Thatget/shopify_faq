@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
   const User = require("./user.model.js")(sequelize, Sequelize);
-  const MerchantRating = sequelize.define("merchants_setting",
+  const MerchantRating = sequelize.define("merchants_rating",
     {
       user_id: {
           type: Sequelize.INTEGER,
