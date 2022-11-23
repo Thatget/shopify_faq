@@ -140,7 +140,7 @@
                 block_container += `<div class="category-container" style="color: ${template_setting.category_font_color}; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}; text-align: ${template_setting.category_text_align}; text-transform: ${template_setting.category_text_style}">`+ `<div style="line-height: normal; border-bottom: 1px solid #ccc; padding: 12px 0">`+ category_title +`</div>` + content_block +`</div>`
                 break;
               case 7: 
-                block_container += `<div class="category-container" style="color: ${template_setting.category_font_color}; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}; text-align: ${template_setting.category_text_align}; text-transform: ${template_setting.category_text_style}">`+ `<div style="line-height: normal;"><span>`+ category_title +`</span></div>` + content_block +`</div>`
+                block_container += `<div class="category-container" style="color: ${template_setting.category_font_color}; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}; text-transform: ${template_setting.category_text_style}">`+ `<div style="line-height: normal; text-align: ${template_setting.category_text_align};"><span>`+ category_title +`</span></div>` + content_block +`</div>`
                 break;
             }
           }

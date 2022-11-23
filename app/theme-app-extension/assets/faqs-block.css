@@ -1,12 +1,12 @@
 .category-container{
   margin-bottom: 20px;
 }
-.faq-content-1{
+.faq-content-1, .faq-content-7{
   line-height: normal;
   text-align: start;
   word-wrap: break-word;
 }
-.faq-title-1{
+.faq-title-1, .faq-title-7{
   word-wrap:break-word;
   word-break: break-word;
   text-align: start;
@@ -60,7 +60,6 @@
   line-height: normal;
   padding: 12px;
   border-radius: 4px 4px 0 0; 
-  margin-top: 6px;
 }
 .faq-title-3{
   word-wrap:break-word;

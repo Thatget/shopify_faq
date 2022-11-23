@@ -368,7 +368,6 @@
     }
     .faq-main-content{
         margin-bottom: 12px;
-        border: 1px solid #ccc;
         border-radius: 4px;
         overflow: hidden;
     }
@@ -430,7 +429,7 @@
     }
     #micro-scope{
         <% if (setting.templateSetting.micro_scope_color) { %>
-            fill: <%=  setting.templateSetting.micro_scope_color %>;
+            fill: <%=  setting.templateSetting.micro_scope_color %> !important;
         <% } %>    
     }
     <% if (setting.templateSetting.placeholder_color) { %>
@@ -473,6 +472,9 @@
             border: none;
             background-color: unset;
         }
+    }
+    svg{
+        fill: <%=  setting.templateSetting.faq_font_color %> !important
     }
     <%
         if(setting.templateSetting.custom_css) { %>
