@@ -133,7 +133,6 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
                             }
                         }
                     }
-                    console.log(listFaq)
                     listCategory.forEach(item => {
                         let faqInCategory = []
                         listFaq.forEach(element => {
@@ -143,7 +142,6 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
                         })
                         item.faqs = faqInCategory
                     })
-                    console.log(listCategory)
                     send_data = {
                         faq: listFaq,
                         categories: listCategory

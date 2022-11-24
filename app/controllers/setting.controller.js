@@ -35,11 +35,11 @@ exports.create = async (req, res) => {
 
 // Find a single Setting with an id
 exports.findOne = async (req, res) => {
-  const user_id = req.jwtDecoded.data.user_id;
-  let return_setting_data = {};
-  let template_setting = {};
-  let setting_data = {};
-  await Setting.findOne({ where: { user_id : user_id}})
+    const user_id = req.jwtDecoded.data.user_id;
+    let return_setting_data = {};
+    let template_setting = {};
+    let setting_data = {};
+    await Setting.findOne({ where: { user_id : user_id}})
     .then(async data => {
       if (data) {
           setting_data = data.dataValues;
@@ -61,11 +61,11 @@ exports.findOne = async (req, res) => {
       }
     })
     .catch(err => {
-      res.status(500).send({
-        message: "Error retrieving setting with user_id=" + user_id
-      });
+        res.status(500).send({
+            message: "Error retrieving setting with user_id=" + user_id
+        });
     });
-  };
+};
 
 // Update a Setting by the id in the request
 exports.update = async (req, res) => {

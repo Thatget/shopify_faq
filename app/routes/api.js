@@ -77,7 +77,8 @@ let initAPIs = (app) => {
 
     //Merchant Rating router
     router.post("/api/rating", merchants_rating.create);
-    router.get("/api/get/rating", merchants_rating.findAll);
+    router.get("/api/getAll/rating", merchants_rating.findAll);
+    router.get("/api/get/rating", merchants_rating.findOne);
     router.put("/api/update/rating", merchants_rating.update);
 
     //Template_setting
@@ -111,6 +112,7 @@ let initAPIs = (app) => {
     // router.post("/api/user", user.create);
     router.get("/api/user", user.findOne);
     router.get("/api/all-user", user.findAll);
+    router.get("/api/data-user", user.findAllData);
     // router.put("/api/user", user.update);
     // router.delete("/api/user", user.delete);
     // router.delete("/api/user", user.deleteAll);
