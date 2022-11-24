@@ -10,6 +10,7 @@ const faq_more_page = require("../controllers/faq_more_page.controller");
 const faq_more_page_setting = require("../controllers/faq_more_page_setting.controller");
 const block_faq_more_page = require("../controllers/block_more_page.controller");
 const user = require("../controllers/user.controller");
+const admin = require("../controllers/admin.controller");
 const setting = require("../controllers/setting.controller");
 const template_setting = require("../controllers/template_setting.controller");
 const merchants_rating = require("../controllers/merchants_rating.controller");
@@ -53,6 +54,9 @@ let initAPIs = (app) => {
     router.get("/api/gdpr/shop-redact", ensureEnpoint.shopRedact);
     // Sử dụng authMiddleware.isAuth trước những api cần xác thực
     router.use(AuthMiddleWare.isAuth);
+
+    //admin router
+    router.get("/api/data/admin", admin.findAllData)
 
     //Faq router
     router.post("/api/faq", faq.create);
