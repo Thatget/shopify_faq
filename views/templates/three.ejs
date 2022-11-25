@@ -596,16 +596,6 @@
         position: relative;
         word-wrap: break-word;
     }
-    #micro-scope{
-        <% if (setting.templateSetting.micro_scope_color) { %>
-            fill: <%=  setting.templateSetting.micro_scope_color %>;
-        <% } %>    
-    }
-    <% if (setting.templateSetting.placeholder_color) { %>
-        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-    <% } %>
 
     svg:not(:root) {
         overflow:unset !important;
@@ -642,6 +632,16 @@
         }
     
     }
+    #micro-scope{
+        <% if (setting.templateSetting.micro_scope_color) { %>
+            fill: <%=  setting.templateSetting.micro_scope_color %>;
+        <% } %>    
+    }
+    <% if (setting.templateSetting.placeholder_color) { %>
+        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+    <% } %>
     <%
         if(setting.templateSetting.custom_css) { %>
             <%- setting.templateSetting.custom_css%>

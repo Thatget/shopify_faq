@@ -427,16 +427,6 @@
             padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
         <% } %>
     }
-    #micro-scope{
-        <% if (setting.templateSetting.micro_scope_color) { %>
-            fill: <%=  setting.templateSetting.micro_scope_color %> !important;
-        <% } %>    
-    }
-    <% if (setting.templateSetting.placeholder_color) { %>
-        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-    <% } %>
     
     .faq-answer-content{
         display: none; 
@@ -476,6 +466,16 @@
     svg{
         fill: <%=  setting.templateSetting.faq_font_color %> !important
     }
+        #micro-scope{
+        <% if (setting.templateSetting.micro_scope_color) { %>
+            fill: <%=  setting.templateSetting.micro_scope_color %> !important;
+        <% } %>    
+    }
+    <% if (setting.templateSetting.placeholder_color) { %>
+        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+    <% } %>
     <%
         if(setting.templateSetting.custom_css) { %>
             <%- setting.templateSetting.custom_css%>
