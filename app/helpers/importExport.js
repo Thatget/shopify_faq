@@ -12,124 +12,169 @@ exports.import = async (req, res) => {
     const sheets = wb.SheetNames;
     const user_id = req.jwtDecoded.data.user_id;
     let allCategory = []
+    let categoryCreate = []
+    let faqCreate = []
     let allFaq = []
-    // var responseResult = {}
+    let category = []
+    let faqs = []
+    let checkTypeOfFile = false
+
     if(sheets.length > 0) {
-        let categoryCreate = []
-        let categoryOrigin = []
-        let faqCreate = []
         const data = XLSX.utils.sheet_to_json(wb.Sheets[sheets[0]]);
-        // console.log(data)
-            // Prepare for category data
+        console.log(data)
         allCategory = await getAllCategory(user_id)
         allFaq = await getAllFaq(user_id)
-        // console.log(allFaq)
-        let category = []
-        let faqs = []
         var checkExitsCategory
         data.forEach(item => {
-            item.user_id = user_id
-            item.category_identify = localeDefault + user_id
-        })
-        data.forEach(item => {
-            checkExitsCategory = true
-            let dataFaqPush = {
-                user_id : item.user_id,
-                title: item.Question,
-                content: item.Answer,
-                locale: localeDefault,
-                category_name: item.Category
-            }
-            faqs.push(dataFaqPush)
-            if(category.length === 0) {
-                checkExitsCategory = false
-                let dataPush = {
-                    user_id : item.user_id,
-                    title: item.Category,
-                    is_visible: item.Category_visible,
-                    locale: localeDefault,
-                    identify: item.category_identify,
+            if(item.Question && item.Answer && item.Category && item.Category_visible && item.Faq_visible){
+                item.user_id = user_id
+                item.category_identify = localeDefault + user_id
+                checkTypeOfFile = true
+                if(item.Question == '' || item.Answer == '' || item.Category == ''){
+                    checkTypeOfFile = false
+                    return res.send({
+                        message: `Question, Answer and Category is requied !`
+                    });                
                 }
-                category.push(dataPush)
-                return
             }
             else{
-                category.forEach(element => {
-                    if(element.title === item.Category){
-                        checkExitsCategory = false
-                    }
-                })
-            }
-            if(checkExitsCategory === true){
-                let dataPush = {
-                    user_id : item.user_id,
-                    title: item.Category,
-                    is_visible: item.Category_visible,
-                    locale: localeDefault,
-                    identify: item.category_identify
-                }
-                category.push(dataPush)
+                checkTypeOfFile = false
+                return res.send({
+                    message: `File type is invalid !`
+                });            
             }
         })
-        categoryCreate = checkCategory(allCategory, category)
-        categoryCreate = generateCategoryIdentify(categoryCreate, allCategory)
-        // for(let i = 0; i < categoryCreate.length; i++){
-        //     let category_identify = localeDefault + user_id
-        //     categoryCreate[i].user_id = user_id
-        //     categoryCreate[i].identify = category_identify
-        // }
-        await createCategory(categoryCreate)
-        allCategory = await getAllCategory(user_id)
-        // Prepare for Faqs data
-        faqCreate = checkFaq(allFaq, faqs)
-        console.log(faqCreate)
-        for(let i = 0; i < faqCreate.length; i++){
-            for(let j = 0; j < allCategory.length; j++){
-                if(allCategory[j].title === faqCreate[i].category_name){
-                    // console.log(faqCreate[i].title)
-                    faqCreate[i].category_identify = allCategory[j].identify
-                    let identify = localeDefault + user_id + allCategory[j].identify
-                    identify = await generateFaqIdentify(faqCreate[i], identify)
-                    faqCreate[i].identify = identify
+        if(checkTypeOfFile){
+            data.forEach(item => {
+                checkExitsCategory = true
+                let dataFaqPush = {
+                    user_id : item.user_id,
+                    title: item.Question,
+                    content: item.Answer,
+                    locale: localeDefault,
+                    category_name: item.Category,
+                    is_visible: item.Faq_visible
+                }
+                faqs.push(dataFaqPush)
+                if(category.length === 0) {
+                    checkExitsCategory = false
+                    let dataPush = {
+                        user_id : item.user_id,
+                        title: item.Category,
+                        is_visible: item.Category_visible,
+                        locale: localeDefault,
+                        identify: item.category_identify,
+                        is_visible: item.Category_visible
+                    }
+                    category.push(dataPush)
+                    return
+                }
+                else{
+                    category.forEach(element => {
+                        if(element.title === item.Category){
+                            checkExitsCategory = false
+                        }
+                    })
+                }
+                if(checkExitsCategory === true){
+                    let dataPush = {
+                        user_id : item.user_id,
+                        title: item.Category,
+                        is_visible: item.Category_visible,
+                        locale: localeDefault,
+                        identify: item.category_identify,
+                        is_visible: item.Category_visible
+                    }
+                    category.push(dataPush)
+                }
+            })
+            categoryCreate = checkCategory(allCategory, category)
+            for(let i = 0; i < categoryCreate.length; i++){
+                let identify = categoryCreate[i].identify
+                identify = await generateCategoryIdentify(identify, allCategory)
+                categoryCreate[i].identify = identify
+                allCategory.push(categoryCreate[i])
+            }
+            // categoryCreate = generateCategoryIdentify(categoryCreate, allCategory)
+            await createCategory(categoryCreate)
+            allCategory = await getAllCategory(user_id)
+            // Prepare for Faqs data
+            if(allFaq.length > 0){
+                faqCreate = checkFaq(allFaq, faqs)
+                for(let i = 0; i < faqCreate.length; i++){
+                    for(let j = 0; j < allCategory.length; j++){
+                        if(allCategory[j].title === faqCreate[i].category_name){
+                            faqCreate[i].category_identify = allCategory[j].identify
+                            let identify = localeDefault + user_id + allCategory[j].identify
+                            identify = await generateFaqIdentify(identify, allFaq)
+                            faqCreate[i].identify = identify
+                            allFaq.push(faqCreate[i])
+                        }
+                    }
                 }
             }
+            else{
+                faqCreate = faqs
+                for(let i = 0; i < faqCreate.length; i++){
+                    for(let j = 0; j < allCategory.length; j++){
+                        if(allCategory[j].title === faqCreate[i].category_name){
+                            faqCreate[i].category_identify = allCategory[j].identify
+                            let identify = localeDefault + user_id + allCategory[j].identify
+                            identify = await generateFaqIdentify(identify, faqs)
+                            faqCreate[i].identify = identify
+                            allFaq.push(faqCreate[i])
+                        }
+                    }
+                }
+            }
+            if(faqCreate.length === 0){
+                return res.send({
+                    message: `No faq added !`
+                });
+            }
+            else{
+                await createFaq(faqCreate)
+                return res.send({
+                    message: `Import successful ${faqCreate.length} FAQ!`
+                });
+            }
         }
-        console.log(faqCreate)
-        // await createFaq(faqCreate)
-        // await importFaqs(categoryCreate, faqCreate)
-        // Import faqs to database !
-        // console.log(faqCreate)
-        // responseResult = await importFaqs(category, faqs);
     }
-    // if (responseResult && !responseResult.status){
-    //     return res.status(responseResult.statusCode).send({
-    //         message:
-    //             responseResult.message || "Some error occurred while import Faqs."
-    //     });
-    // }
-    return res.send({
-        message: `Import data import successful !`
-    });
 }
 
-async function generateFaqIdentify(faq, identify){
+async function generateFaqIdentify(identify, allFaq){
     let count = 0;
     let checked = false;
     let newIdentify = identify;
     do {
         checked = false;
         if (count) {
-            newIdentify = faq.identify + count;
+            newIdentify = identify + count;
         }
-        await Faq.findOne({ where: { user_id: faq.user_id, identify: newIdentify, locale: localeDefault, category_identify: faq.category_identify}})
-        .then( async data => {
-            if (data) {
-                checked = true;
+        allFaq.forEach(element => {
+            if(newIdentify === element.identify){
+                checked = true
             }
         })
-        .catch(err => {
-            errorLog.error(`faq generate identify error ${err.message}`)
-        });
+        count++;
+    } while (checked);
+    return newIdentify;
+}
+
+function generateCategoryIdentify(identify, allCategory) {
+    let count = 0;
+    let checked = false;
+    let newIdentify = identify;
+    do {
+        checked = false;
+        if (count) {
+            newIdentify = identify + count;
+        }
+        allCategory.forEach(element => {
+            if(newIdentify === element.identify){
+                checked = true
+            }
+        })
         count++;
     } while (checked);
     return newIdentify;
@@ -139,7 +184,7 @@ exports.export = async (req, res) => {
     const user_id = req.jwtDecoded.data.user_id;
 
     let selectQuery = "SELECT `faq`.`title`, `faq`.`content`, `faq_category`.`title` as `category_title`," +
-        " `faq`.`locale`, `faq`.`is_visible`, `faq_category`.`is_visible` as `category_visible`"+
+        " `faq`.`is_visible`, `faq_category`.`is_visible` as `category_visible`"+
         " FROM `faq` join `faq_category` on `faq`.`category_identify` = `faq_category`.`identify`" +
         " and `faq`.`user_id` = `faq_category`.`user_id`" +
         " where `faq`.`user_id` = ? " ;
@@ -155,8 +200,9 @@ exports.export = async (req, res) => {
             replacements: [user_id, req.query.locale],
             type: QueryTypes.SELECT
         });
+    console.log(data)
     const headings = [
-        [ 'title', 'content', 'category name', 'locale', 'Faq Visible', 'Category Visible']
+        [ 'Question', 'Answer', 'Category', 'Faq_visible', 'Category_visible']
     ];
 
     const wb = XLSX.utils.book_new();
@@ -165,14 +211,39 @@ exports.export = async (req, res) => {
         skipHeader: true
     });
     XLSX.utils.sheet_add_aoa(ws, headings);
-    XLSX.utils.book_append_sheet(wb, ws, 'Faqs');
+    XLSX.utils.book_append_sheet(wb, ws, 'Professional-FAQs');
 
     const buffer = XLSX.write(wb, { bookType: 'csv', type: 'buffer' });
-    res.attachment('faqs.csv');
+    res.attachment('Professional-FAQs.csv');
 
     return res.send(buffer);
 }
 
+exports.downSampleFile = async (req, res) => {
+    let data = [{
+        question: 'How do I redeem my One 4 All card?',
+        answer: 'We are currently accepting One 4 All cards instore only. Please retain your card after making your purchase, as should you wish to return any items bought using a One 4 All card, we will use this payment method to refund you.',
+        category: 'Plancing an Order',
+        faq_visible: 1,
+        category_visible: 1
+    }]
+    const headings = [
+        [ 'Question', 'Answer', 'Category', 'Faq_visible', 'Category_visible']
+    ];
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(data, {
+        origin: 'A2',
+        skipHeader: true
+    });
+    XLSX.utils.sheet_add_aoa(ws, headings);
+    XLSX.utils.book_append_sheet(wb, ws, 'Professional-FAQ-Import');
+
+    const buffer = XLSX.write(wb, { bookType: 'csv', type: 'buffer' });
+    res.attachment('Professional-FAQ-Import.csv');
+
+    return res.send(buffer);
+}
 
 async function createCategory(category){
     await Category.bulkCreate(category,{
@@ -188,7 +259,6 @@ async function createCategory(category){
 }
 
 async function createFaq(faqs){
-    // console.log(faqs)
     await Faq.bulkCreate(faqs,
     {
         fields: ['user_id', 'identify', 'title', 'content', 'locale', 'category_identify', 'is_visible'],
@@ -216,41 +286,6 @@ async function getAllCategory(user_id){
     });    
     return allCategory
 }
-
-function generateCategoryIdentify(categoryCreate, allCategory) {
-    // let newCategoryCreate = []
-    let count = 1;
-    // let newIdentify = identify;
-    categoryCreate.forEach(item => {
-        let checked = false;
-        allCategory.forEach(element => {
-            if(item.identify === element.identify){
-                checked = true
-            }
-        })
-        if(checked){
-            item.identify += count
-        }
-        else{
-            return
-        }
-        count++
-    })
-    return categoryCreate;
-}
-
-// async function checkCategoryIdentify(user_id, identify) {
-//     let checkedIdentify = false;
-//     await Category.findOne({ where: { user_id: user_id, identify: identify, locale: localeDefault}})
-//         .then( async data => {
-//             if (data) {
-//                 checkedIdentify = true;
-//             }
-//         }).catch(err => {
-//             errorLog.error(`category generate identify error ${err.message}`)
-//         });
-//     return checkedIdentify;
-// }
 
 async function getAllFaq(user_id){
     let allFaq = []

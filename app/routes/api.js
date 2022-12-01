@@ -178,6 +178,8 @@ let initAPIs = (app) => {
     router.post("/api/import-faq", upload.single('faq-list'), importExport.import);
     // Export Faqs
     router.get("/api/export-faq",importExport.export);
+    // Down CSV sample file
+    router.get("/api/down-csv-file",importExport.downSampleFile);
 
     //Router using
     return app.use("/", router);
