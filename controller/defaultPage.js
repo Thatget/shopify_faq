@@ -88,7 +88,8 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
 								replacements: [userID, listCategoryIdentify, locale],
 								type: QueryTypes.SELECT
 							}
-						);
+						)
+                        
 						dataCategories.forEach(item => {
 							if(item.locale === locale){
 								listCategory.push(item)
@@ -106,6 +107,7 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
 							}
 						})
 					}
+
                     dataFaqs.forEach(item => {
                         if(item.locale === locale){
                             listFaq.push(item)
@@ -114,8 +116,9 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
                             listFaqDefault.push(item)
                         }
                     })
-                    for(let i = 0; i < listFaqDefault.length; i++){
-                        for(let j = 0; j < listFaq.length; j++){
+
+                    for(let j = 0; j < listFaq.length; j++){
+                        for(let i = 0; i < listFaqDefault.length; i++){
                             if((listFaqDefault[i].identify === listFaq[j].identify && listFaqDefault[i].category_identify === listFaq[j].category_identify)){
                                 listFaqDefault.splice(i,1)
                             }
@@ -126,6 +129,7 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
                             listFaq.push(item)
                         })
                     }
+
                     for(let i = 0; i < listFaq.length; i++){
                         for(let j = 0; j < listCategory.length; j++){
                             if(listFaq[i].category_categry === listCategory[j].category){
