@@ -21,12 +21,11 @@ exports.import = async (req, res) => {
 
     if(sheets.length > 0) {
         const data = XLSX.utils.sheet_to_json(wb.Sheets[sheets[0]]);
-        console.log(data)
         allCategory = await getAllCategory(user_id)
         allFaq = await getAllFaq(user_id)
         var checkExitsCategory
         data.forEach(item => {
-            if(item.Question && item.Answer && item.Category && item.Category_visible && item.Faq_visible){
+            if(item.Question && item.Answer && item.Category){
                 item.user_id = user_id
                 item.category_identify = localeDefault + user_id
                 checkTypeOfFile = true
@@ -200,7 +199,6 @@ exports.export = async (req, res) => {
             replacements: [user_id, req.query.locale],
             type: QueryTypes.SELECT
         });
-    console.log(data)
     const headings = [
         [ 'Question', 'Answer', 'Category', 'Faq_visible', 'Category_visible']
     ];
