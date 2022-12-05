@@ -48,10 +48,10 @@ exports.import = async (req, res) => {
                 checkExitsCategory = true
                 let dataFaqPush = {
                     user_id : item.user_id,
-                    title: item.Question,
-                    content: item.Answer,
+                    title: item.Question.trim(),
+                    content: item.Answer.trim(),
                     locale: localeDefault,
-                    category_name: item.Category,
+                    category_name: item.Category.trim(),
                     is_visible: item.Faq_visible
                 }
                 faqs.push(dataFaqPush)
@@ -59,7 +59,7 @@ exports.import = async (req, res) => {
                     checkExitsCategory = false
                     let dataPush = {
                         user_id : item.user_id,
-                        title: item.Category,
+                        title: item.Category.trim(),
                         is_visible: item.Category_visible,
                         locale: localeDefault,
                         identify: item.category_identify,
@@ -78,7 +78,7 @@ exports.import = async (req, res) => {
                 if(checkExitsCategory === true){
                     let dataPush = {
                         user_id : item.user_id,
-                        title: item.Category,
+                        title: item.Category.trim(),
                         is_visible: item.Category_visible,
                         locale: localeDefault,
                         identify: item.category_identify,
