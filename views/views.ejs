@@ -29,6 +29,9 @@
         case 7 : %>
             <%- include('./templates/seven.ejs') %>
         <% break;
+        case 8 : %>
+            <%- include('./templates/eight.ejs') %>
+        <% break;
         default: %>
         <%- include('./templates/one.ejs') %>
         <% break; }
@@ -86,6 +89,7 @@
         <% } %>
         .root-faq-template{
             line-height: 1.8;
+            scroll-behavior: smooth;
             <% if (setting.templateSetting.page_background_color) { %>
                 background-color: <%=  setting.templateSetting.page_background_color %>;
             <% } %>    
@@ -102,6 +106,9 @@
             bottom: 20px;
             right: 90px;        
             background-color: <%= setting.templateSetting.btn_top_background%>
+        }
+        html {
+	        scroll-behavior: smooth;
         }
         .btn-back-to-top:hover{
             background-color: <%= setting.templateSetting.btn_top_hover%>

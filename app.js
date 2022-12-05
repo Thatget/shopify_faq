@@ -300,7 +300,7 @@ app.get('/faq-page', async (req, res) => {
                 const faqs = await defaultPage.findFaqs(shop, locale, path_prefix);
                 const setting = await defaultPage.findSetting(shop, locale);
                 const messagesSetting = await defaultPage.findMessagesSetting(shop);
-                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting});
+                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting, locale: locale});
             } catch (e) {
                 errorLog.error(e.message);
                 res.status(400).send('unexpected error occurred');
