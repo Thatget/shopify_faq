@@ -51,13 +51,11 @@ exports.findAllProduct = async (req, res) => {
                     }
                 })
                 .catch(e =>{
-                    errorLog.error(e, 'block_product')
-                    console.log(e)
+                    errorLog.error(e)
                 })
             })
             .catch(e =>{
-                errorLog.error(e, 'block_product')
-                console.log(e)
+                errorLog.error(e)
             })
             await getProduct(userID, product_id, locale, Faqs, templateSetting)
             await getCategory(locale, userID, Categories, templateSetting)
@@ -69,7 +67,7 @@ exports.findAllProduct = async (req, res) => {
         }
     })
     .catch(error => {
-        errorLog.error(error, 'block_product')
+        errorLog.error(error)
         return res.status(500).send("some error");
     })
     // const result = await User.findOne({ where: { shopify_domain: shop}}).catch(error => {

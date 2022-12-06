@@ -69,8 +69,8 @@
                                                           <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                               <div class="faq-main-content">
                                                                   <div class="faq-question-title" onclick="showHideContent(this)">
-                                                                  <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                                                  <span class="listed-faq" value><%= faqs.faq[j].title %></span>
+                                                                    <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                                                                    <span class="listed-faq" value><%= faqs.faq[j].title %></span>
                                                                   </div>
                                                                   <div class="faq-answer-content" style="display: none;">
                                                                       <%- faqs.faq[j].content %>
@@ -384,26 +384,27 @@
         width: 77%;
     }
     .faq-search-input{
+        min-height: 50px !important;
         line-height: 1 !important;
         width: 100% !important; 
         max-width: 100% !important;
-        outline: none; 
-        border: 1px solid #ccc; 
-        font-size: 16px;
+        outline: none !important; 
+        border: 1px solid #ccc !important; 
+        font-size: 16px !important;
         margin: 0 !important;
         background-color: white !important;
-        box-shadow: none;
+        box-shadow: none !important;
         <% if (setting.templateSetting.search_placeholder_font) { %>
-            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+            font-family: <%=  setting.templateSetting.search_placeholder_font %> !important;
         <% } %>
     }
     .faq-search-input-style1{
-        border-radius: 4px; 
+        border-radius: 4px !important; 
         padding: 16px !important; 
     }
     .faq-search-input-style2{
-        border-radius: 30px; 
-        padding: 16px 16px 16px 50px
+        border-radius: 30px !important; 
+        padding: 16px 16px 16px 50px !important
     }
     .faq-question-title {
         display: flex; 
@@ -473,16 +474,6 @@
     .faq-main-content{
         margin-bottom: 20px
     }
-        #micro-scope{
-            <% if (setting.templateSetting.micro_scope_color) { %>
-                fill: <%=  setting.templateSetting.micro_scope_color %>;
-            <% } %>    
-        }
-        <% if (setting.templateSetting.placeholder_color) { %>
-            ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-            :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-            ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-        <% } %>
     .faq-main-container{
         padding-bottom: 30px;
     }
@@ -643,9 +634,18 @@
             overflow: hidden;
         }
     }
+    #micro-scope{
+    <% if (setting.templateSetting.micro_scope_color) { %>
+        fill: <%=  setting.templateSetting.micro_scope_color %>;
+    <% } %>    
+    }
+    <% if (setting.templateSetting.placeholder_color) { %>
+        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important;
+        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important;
+        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important;
+    <% } %>
     <%
         if(setting.templateSetting.custom_css) { %>
-            <%- setting.templateSetting.custom_css%>
             <%= setting.templateSetting.custom_css%>
         <%}
     %>

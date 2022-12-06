@@ -51,14 +51,14 @@
                                 <% if(setting.templateSetting.category_bar_number === 1){%>
                                     <div class="category-bar">
                                         <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                            <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
+                                            <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
                                         <% } %>
                                     </div>
                                 <% } %>
                                 <% if(setting.templateSetting.category_bar_number === 2){%>
                                     <div class="category-bar">
                                         <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                            <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
+                                            <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
                                         <% } %>
                                     </div>
                                 <% } %>
@@ -66,13 +66,13 @@
                             <div style="margin-top: 20px">
                                 <% for(var i=0; i < faqs.categories.length; i++) { %>
                                     <div class="category-faq-container">
-                                        <div id="<%- faqs.categories[i].title %>" class="faq-category-title faq-category-width"><%- faqs.categories[i].title %></div>
+                                        <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-width"><%- faqs.categories[i].title %></div>
                                         <% for(var j=0; j < faqs.faq.length; j++) { %>
                                             <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                 <div class="faq-main-content">
                                                     <div class="faq-question-title" onclick="showHideContent(this)">
                                                         <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
-                                                        <svg class="svg-right" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
+                                                        <svg class="svg-right svg-style" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                                                     </div>
                                                     <div class="faq-answer-content faq-answer-search">
                                                         <%- faqs.faq[j].content %>
@@ -94,7 +94,7 @@
                             <div class="faq-main-content">
                                 <div class="faq-question-title" onclick="showHideContent(this)">
                                     <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
-                                    <svg class="svg-right" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
+                                    <svg class="svg-right svg-style" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                                 </div>
                                 <div class="faq-answer-content faq-answer-search">
                                     <%- faqs.faq[j].content %>
@@ -314,14 +314,15 @@
         line-height: 1 !important;
         width: 100% !important; 
         outline: none !important; 
-        border: 1px solid #ccc ; 
+        border: 1px solid #ccc !important; 
         font-size: 16px !important;
         margin: 0 !important;
         max-width: 100% !important;
         background-color: white !important;
-        box-shadow: none;
+        box-shadow: none !important;
+        min-height: 50px !important;
         <% if (setting.templateSetting.search_placeholder_font) { %>
-            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+            font-family: <%=  setting.templateSetting.search_placeholder_font %> !important;
         <% } %>
     }
     .faq-search-input-style1{
@@ -427,16 +428,6 @@
             padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
         <% } %>
     }
-    #micro-scope{
-        <% if (setting.templateSetting.micro_scope_color) { %>
-            fill: <%=  setting.templateSetting.micro_scope_color %> !important;
-        <% } %>    
-    }
-    <% if (setting.templateSetting.placeholder_color) { %>
-        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-    <% } %>
     
     .faq-answer-content{
         display: none; 
@@ -473,12 +464,21 @@
             background-color: unset;
         }
     }
-    svg{
+    .svg-style{
         fill: <%=  setting.templateSetting.faq_font_color %> !important
     }
+    #micro-scope{
+    <% if (setting.templateSetting.micro_scope_color) { %>
+        fill: <%=  setting.templateSetting.micro_scope_color %> !important;
+    <% } %>    
+    }
+    <% if (setting.templateSetting.placeholder_color) { %>
+        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+    <% } %>
     <%
         if(setting.templateSetting.custom_css) { %>
-            <%- setting.templateSetting.custom_css%>
             <%= setting.templateSetting.custom_css%>
         <%}
     %>

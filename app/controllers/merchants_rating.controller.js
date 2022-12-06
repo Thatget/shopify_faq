@@ -34,6 +34,23 @@ exports.findAll = async (req, res) => {
     });
 };
 
+exports.findOne = async (req, res) => {
+  const user_id = req.jwtDecoded.data.user_id;
+  await Rating.findOne({
+    where: {user_id : user_id}
+  })
+    .then(data => {
+      res.send(data);
+      return;
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving rating."
+      });
+      return;
+    });
+};
+
 exports.update = async (req, res) => {
   const rating = req.body;
   const user_id = req.jwtDecoded.data.user_id;

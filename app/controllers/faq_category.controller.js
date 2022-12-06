@@ -3,6 +3,7 @@ const FaqCategory = db.faq_category;
 const User = db.user;
 const Op = db.Sequelize.Op;
 const Setting = db.setting
+const errorLog = require('../helpers/log.helper');
 
 exports.create = async (req, res) => {
     // Validate request
@@ -106,7 +107,7 @@ exports.findAll = (req, res) => {
         }
     })
     .catch(e =>{
-        console.log(e)
+        errorLog.error(e)
     })
 
 };
@@ -132,15 +133,15 @@ exports.findOne = async (req, res) => {
     const id = req.params.id;
     if (req.query.identify && req.query.locale) {
         await FaqCategory.findOne({where: {identify: req.query.identify, locale: req.query.locale, user_id: user_id }})
-            .then(data =>{
-                if (data) {
-                    res.send(data);
-                } else {
-                    res.status(404).send({
-                        message: `Cannot find category with identify=${req.query.identify} in locale ${req.query.locale}.`
-                    });
-                }
-            }).catch(err => {
+        .then(data =>{
+            if (data) {
+                res.send(data);
+            } else {
+                res.status(404).send({
+                    message: `Cannot find category with identify=${req.query.identify} in locale ${req.query.locale}.`
+                });
+            }
+        }).catch(err => {
             res.status(500).send({
                 message: "Error retrieving category with identify=" + req.query.identify + ` in locale ${req.query.locale}`
             });
@@ -383,7 +384,7 @@ exports.findAllInFaqPage = async (req, res) => {
                 return;
             }
         }).catch(error => {
-            console.log(error)
+            errorLog.error(error)
             return;
     });
 };

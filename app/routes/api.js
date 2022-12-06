@@ -10,6 +10,7 @@ const faq_more_page = require("../controllers/faq_more_page.controller");
 const faq_more_page_setting = require("../controllers/faq_more_page_setting.controller");
 const block_faq_more_page = require("../controllers/block_more_page.controller");
 const user = require("../controllers/user.controller");
+const admin = require("../controllers/admin.controller");
 const setting = require("../controllers/setting.controller");
 const template_setting = require("../controllers/template_setting.controller");
 const merchants_rating = require("../controllers/merchants_rating.controller");
@@ -54,6 +55,9 @@ let initAPIs = (app) => {
     // Sử dụng authMiddleware.isAuth trước những api cần xác thực
     router.use(AuthMiddleWare.isAuth);
 
+    //admin router
+    router.get("/api/data/admin", admin.findAllData)
+
     //Faq router
     router.post("/api/faq", faq.create);
     router.get("/api/faq", faq.findAll);
@@ -77,7 +81,8 @@ let initAPIs = (app) => {
 
     //Merchant Rating router
     router.post("/api/rating", merchants_rating.create);
-    router.get("/api/get/rating", merchants_rating.findAll);
+    router.get("/api/getAll/rating", merchants_rating.findAll);
+    router.get("/api/get/rating", merchants_rating.findOne);
     router.put("/api/update/rating", merchants_rating.update);
 
     //Template_setting
@@ -111,6 +116,7 @@ let initAPIs = (app) => {
     // router.post("/api/user", user.create);
     router.get("/api/user", user.findOne);
     router.get("/api/all-user", user.findAll);
+    router.get("/api/data-user", user.findAllData);
     // router.put("/api/user", user.update);
     // router.delete("/api/user", user.delete);
     // router.delete("/api/user", user.deleteAll);
@@ -172,6 +178,8 @@ let initAPIs = (app) => {
     router.post("/api/import-faq", upload.single('faq-list'), importExport.import);
     // Export Faqs
     router.get("/api/export-faq",importExport.export);
+    // Down CSV sample file
+    router.get("/api/down-csv-file",importExport.downSampleFile);
 
     //Router using
     return app.use("/", router);

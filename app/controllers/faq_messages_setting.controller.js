@@ -55,7 +55,7 @@ exports.findAllEmbedApp = async (req, res) => {
     return res.send({message_setting: messagesSetting}) 
   })
   .catch(e => {
-    console.log(e)
+    errorLog.error(error)
   })
 
 };
@@ -69,13 +69,13 @@ exports.findOne = (req, res) => {
     }
   })
   .then(data => {
-      if (data) {
-          res.send(data);
-      } else {
-          res.status(404).send({
-              message: `Cannot find messages with user_id=${user_id}.`
-          });
-      }
+    if (data) {
+        res.send(data);
+    } else {
+      res.status(404).send({
+          message: `Cannot find messages with user_id=${user_id}.`
+      });
+    }
   })
   .catch(err => {
       res.status(500).send({

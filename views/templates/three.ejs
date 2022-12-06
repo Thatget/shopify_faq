@@ -182,8 +182,6 @@
     }
     var categoryName = []
     function changeCategory(id, category_bar_background){
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
         if(!categoryName.some(item => {
             return item === id
         })){            
@@ -385,14 +383,15 @@
         line-height: 1 !important;
         width: 100% !important; 
         max-width: 100% !important;
-        outline: none; 
-        border: 1px solid #ccc; 
-        font-size: 16px;
+        outline: none !important; 
+        border: 1px solid #ccc !important; 
+        font-size: 16px !important;
         margin: 0 !important;
         background-color: white !important;
-        box-shadow: none;
+        box-shadow: none !important;
+        min-height: 50px !important;
         <% if (setting.templateSetting.search_placeholder_font) { %>
-            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+            font-family: <%=  setting.templateSetting.search_placeholder_font %> !important;
         <% } %>
     }
     .faq-search-input-style1{
@@ -596,16 +595,6 @@
         position: relative;
         word-wrap: break-word;
     }
-    #micro-scope{
-        <% if (setting.templateSetting.micro_scope_color) { %>
-            fill: <%=  setting.templateSetting.micro_scope_color %>;
-        <% } %>    
-    }
-    <% if (setting.templateSetting.placeholder_color) { %>
-        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-    <% } %>
 
     svg:not(:root) {
         overflow:unset !important;
@@ -642,9 +631,18 @@
         }
     
     }
+    #micro-scope{
+        <% if (setting.templateSetting.micro_scope_color) { %>
+            fill: <%=  setting.templateSetting.micro_scope_color %>;
+        <% } %>    
+    }
+    <% if (setting.templateSetting.placeholder_color) { %>
+        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+    <% } %>
     <%
         if(setting.templateSetting.custom_css) { %>
-            <%- setting.templateSetting.custom_css%>
             <%= setting.templateSetting.custom_css%>
         <%}
     %>

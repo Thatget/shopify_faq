@@ -61,13 +61,6 @@ app.get('/', async (req, res) => {
     else{
         return res.redirect(app_link);
     }
-    // let tokenData = await getToken(req.query);
-    // let txt = "";
-    // if (tokenData.accessToken) {
-    //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-    // }
-    // return res.redirect(app_link+txt);
-
 });
 
 app.get('/storeFAQs', async (req, res) => {
@@ -89,7 +82,6 @@ app.get('/admin', async (req, res) => {
 });
 
 app.get('/merchant', async (req, res) => {
-    console.log(req.query.shop)
     let tokenData = await getTokenMerchant(req.query.shop);
     let txt = "";
     if (tokenData.accessToken) {
@@ -307,7 +299,7 @@ app.get('/faq-page', async (req, res) => {
                 const faqs = await defaultPage.findFaqs(shop, locale, path_prefix);
                 const setting = await defaultPage.findSetting(shop, locale);
                 const messagesSetting = await defaultPage.findMessagesSetting(shop);
-                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting});
+                return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting, locale: locale});
             } catch (e) {
                 errorLog.error(e.message);
                 res.status(400).send('unexpected error occurred');
@@ -383,7 +375,6 @@ async function getTokenAdmin() {
     });
     accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
     refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
-    console.log(accessToken)
     return {accessToken, refreshToken};
 }
 async function getTokenMerchant(shop) {
@@ -396,6 +387,5 @@ async function getTokenMerchant(shop) {
     });
     accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
     refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
-    console.log(accessToken)
     return {accessToken, refreshToken};
 }

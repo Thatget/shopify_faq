@@ -15,8 +15,6 @@ exports.create = async (req, res) => {
     }
     else{
         product.forEach(async element => {
-            // await checkProductId(user_id, element.product_id)
-            // console.log(checkProductId(user_id, element.product_id))
             element.user_id = user_id;
         }) 
         await Product.bulkCreate(product)
@@ -35,25 +33,6 @@ exports.create = async (req, res) => {
     }
 };
 
-//Check product
-// async function checkProductId(user_id, product_id){
-//     let checkedProductId = false;
-//     Product.findOne({
-//         where: {
-//             user_id: user_id,
-//             product_id: product_id
-//         }
-//     })
-//     .then(data => {
-//         if(data){
-//             checkedProductId = true
-//         }
-//     })
-//     .catch(err => {
-//         errorLog.error(`faq generate identify error ${err.message}`)
-//     })
-//     return checkedProductId
-// }
 
 // Retrieve all Product of a category from the database.
 exports.findAll = (req, res) => {

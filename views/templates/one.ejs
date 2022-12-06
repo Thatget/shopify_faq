@@ -51,14 +51,14 @@
                                 <% if(setting.templateSetting.category_bar_number === 1){%>
                                     <div class="category-bar">
                                         <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                            <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
+                                            <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
                                         <% } %>
                                     </div>
                                 <% } %>
                                 <% if(setting.templateSetting.category_bar_number === 2){%>
                                     <div class="category-bar">
                                         <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                            <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
+                                            <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
                                         <% } %>
                                     </div>
                                 <% } %>
@@ -66,7 +66,7 @@
                             <div class="category-faq-main-1">
                                 <% for(var i=0; i < faqs.categories.length; i++) { %>
                                     <div class="category-faq-container">
-                                        <div id="<%- faqs.categories[i].title %>" class="faq-category-width">
+                                        <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-width">
                                             <div class="faq-category-title">
                                                 <span class="faq-category-border"><%- faqs.categories[i].title %></span>
                                             </div>
@@ -306,17 +306,18 @@
         padding: 30px 0;
     }
     .search-input{
+        min-height: 50px !important;
         line-height: 1 !important;
         width: 100% !important; 
         max-width: 100% !important;
-        outline: none; 
-        border: 1px solid #ccc; 
-        font-size: 1.6rem;
+        outline: none !important; 
+        border: 1px solid #ccc !important; 
+        font-size: 16px !important;
         margin: 0 !important;
         background-color: white !important;
-        box-shadow: none;
+        box-shadow: none !important;
         <% if (setting.templateSetting.search_placeholder_font) { %>
-            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+            font-family: <%=  setting.templateSetting.search_placeholder_font %> !important;
         <% } %>
     }
     .faq-search-input-style1{
@@ -428,16 +429,6 @@
     .faq-category-border{
         border-bottom: 1px solid #ccc;
     }
-    #micro-scope{
-        <% if (setting.templateSetting.micro_scope_color) { %>
-            fill: <%=  setting.templateSetting.micro_scope_color %>;
-        <% } %>    
-    }
-    <% if (setting.templateSetting.placeholder_color) { %>
-        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>}
-    <% } %>
 
     .faq-footer-text{
         text-align: center; 
@@ -464,9 +455,19 @@
             overflow: hidden;
         }
     }
+    #micro-scope{
+        <% if (setting.templateSetting.micro_scope_color) { %>
+            fill: <%=  setting.templateSetting.micro_scope_color %>;
+        <% } %>    
+    }
+    <% if (setting.templateSetting.placeholder_color) { %>
+        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+    <% } %>
+
     <%
         if(setting.templateSetting.custom_css) { %>
-            <%- setting.templateSetting.custom_css%>
             <%= setting.templateSetting.custom_css%>
         <%}
     %>
