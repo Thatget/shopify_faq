@@ -41,33 +41,26 @@ db.sequelize.sync({ force: false }).then(() => {
 });
 
 app.get('/', async (req, res) => {
-    // if (req.query.shop) {
-    //     if(!req.query.host){
-    //         const state = nonce();
-    //         const redirectUri = forwardingAddress + '/shopify/callback';
-    //         const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
-    //             '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
-    //         res.cookie('state',state);
-    //         res.redirect(pageUri);
-    //     }
-    //     return  res.render('index', {
-    //         shop: req.query.shop,
-    //         host: req.query.host,
-    //         apiKey: apiKey,
-    //         scopes: scopes,
-    //         forwardingAddress: forwardingAddress
-    //     });  
-    // }
-    // else{
-    //     return res.redirect(app_link);
-    // }
-    let tokenData = await getToken(req.query);
-    let txt = "";
-    if (tokenData.accessToken) {
-        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+    if (req.query.shop) {
+        if(!req.query.host){
+            const state = nonce();
+            const redirectUri = forwardingAddress + '/shopify/callback';
+            const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+                '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
+            res.cookie('state',state);
+            res.redirect(pageUri);
+        }
+        return  res.render('index', {
+            shop: req.query.shop,
+            host: req.query.host,
+            apiKey: apiKey,
+            scopes: scopes,
+            forwardingAddress: forwardingAddress
+        });  
     }
-    return res.redirect(app_link+txt);
-
+    else{
+        return res.redirect(app_link);
+    }
 });
 
 app.get('/storeFAQs', async (req, res) => {
@@ -252,7 +245,7 @@ app.get('/shopify/callback', async (req, res) => {
         errorLog.error("app.js callback misssing data")
         return res.redirect(app_link);
     }
-    let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
+    let pageUri = 'https://' + req.query.shop + '/admin/apps/' + 'yanet-professional-faq-page' + '/storeFAQs';
     res.redirect(pageUri);
 });
 
