@@ -10,6 +10,7 @@ const Product = db.product;
 const FaqMorePage = db.faq_more_page;
 const FaqMorePageSetting = db.faq_more_page_setting;
 const Rating = db.merchants_rating;
+const errorLog = require('../helpers/log.helper');
 
 exports.create = (req, res) => {
     // Validate request
@@ -132,7 +133,7 @@ exports.findAllData = async(req, res) => {
     }
   })
   .catch(err => {
-    console.log(err)
+    errorLog.error(err)
   });
   let data = {
     user: userInfo,
@@ -170,13 +171,12 @@ async function findSetting(user_id){
       settingData.push(return_setting_data)
     } 
     else {
-      console.log(`Cannot find Setting with user_id=${user_id}.`)
+      errorLog.error(`Cannot find Setting with user_id=${user_id}.`)
     }
   })
   .catch(err => {
-    console.log(err)
+    errorLog.error(err)
   });
-  console.log(settingData)
   return settingData
 }
 
@@ -191,7 +191,6 @@ async function findAllCategory(user_id, settingData, locale){
         data.forEach(item => {
           categoryData.push(item.dataValues)
         })
-        console.log(categoryData)
         categoryDatas.categoryData = categoryData
         await FaqCategory.findAll({
           where: {user_id: user_id}
@@ -204,7 +203,7 @@ async function findAllCategory(user_id, settingData, locale){
         })
       })
       .catch(err => {
-        console.log(err)      
+        errorLog.error(err)
       });
   }
   else{
@@ -214,7 +213,6 @@ async function findAllCategory(user_id, settingData, locale){
           categoryData.push(item.dataValues)
         })
         categoryDatas.categoryData = categoryData
-        console.log(categoryData)
         await FaqCategory.findAll({
           where: {user_id: user_id}
         })
@@ -226,7 +224,7 @@ async function findAllCategory(user_id, settingData, locale){
         })
       })
       .catch(err => {
-        console.log(err)      
+        errorLog.error(err)
       });  
   }
   return categoryDatas
@@ -255,7 +253,7 @@ async function findFaq(user_id, settingData, locale){
       })
     })
     .catch(err => {
-      console.log(err)      
+      errorLog.error(err)
     });  }
   else{
     await Faq.findAll({ where: condition, order:['position']})
@@ -275,7 +273,7 @@ async function findFaq(user_id, settingData, locale){
       })
     })
     .catch(err => {
-      console.log(err)      
+      errorLog.error(err)
     });  
   }
   return faqDatas
@@ -292,7 +290,7 @@ async function findProduct(user_id){
     })
   })
   .catch(err => {
-    console.log(err)      
+    errorLog.error(err)
   });
   return productData
 }
@@ -310,7 +308,7 @@ async function findFaqMorePage(user_id){
     })
   })
   .catch(err => {
-    console.log(err)      
+    errorLog.error(err)
   });
   return faqMorePageData
 }
@@ -328,7 +326,7 @@ async function findFaqMorePageSetting(user_id){
     })
   })
   .catch(err => {
-    console.log(err)      
+    errorLog.error(err)
   });
   return faqMorePageSettingData
 }
@@ -342,7 +340,7 @@ async function findRating(user_id){
     ratingData = data  
   })
   .catch(err => {
-    console.log(err)      
+    errorLog.error(err)
   });
   return ratingData
 }

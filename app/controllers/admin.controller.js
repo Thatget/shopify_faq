@@ -4,6 +4,7 @@ const Op = db.Sequelize.Op;
 const Setting = db.setting;
 const FaqMorePageSetting = db.faq_more_page_setting;
 const Rating = db.merchants_rating;
+const errorLog = require('../helpers/log.helper');
 
 exports.findAllData = async(req, res) => {
   let userInfo = []
@@ -41,31 +42,37 @@ async function findUser(){
     }
   })
   .catch(err => {
-   console.log(err)
+    errorLog.error(err)
   });
   return userInfo
 }
 
 async function findSetting(){
   let settingData = []
-  await Setting.findAll()
+  await Setting.findAll({
+    attributes:['user_id','id', 'yanet_logo_visible']
+  })
   .then(data => {
     settingData = data
   })
   .catch(err => {
-    console.log(err)
+    errorLog.error(err)
   });
   return settingData
 }
 
 async function findFaqMorePageSetting(){
   let faqMorePageSettingData = []
-  await FaqMorePageSetting.findAll()
+  await FaqMorePageSetting.findAll(
+    {
+      attributes:['user_id','id', 'active_feature', 'active_template']
+    }
+  )
   .then(data => {
     faqMorePageSettingData = data
   })
   .catch(err => {
-    console.log(err)
+    errorLog.error(err)
   });
   return faqMorePageSettingData
 }
@@ -77,7 +84,7 @@ async function findRating(){
     rattingData = data
   })
   .catch(err => {
-    console.log(err)
+    errorLog.error(err)
   });
   return rattingData
 }

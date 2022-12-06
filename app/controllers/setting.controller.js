@@ -157,7 +157,6 @@ exports.update = async (req, res) => {
 
 exports.updateActiveFeature = async(req, res) => {
     const user_id = req.params.user_id
-    console.log(user_id)
     const yanet_logo_visible = req.body
     await Setting.update(yanet_logo_visible, {
         where: { user_id: user_id }

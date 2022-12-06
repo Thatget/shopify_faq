@@ -282,7 +282,7 @@ exports.findAll = (req, res) => {
         }
     })
     .catch(e =>{
-        console.log(e)
+        errorLog.error(e)
     })
 
 };
@@ -479,9 +479,7 @@ exports.update = async (req, res) => {
                             } 
                         })
                         .then(num => {
-                            if(num == 0){
-                                console.log(num)
-                            }
+                            errorLog.error(num)
                         })
                         // .catch(e => {
                         //     console.log(e)
@@ -564,7 +562,7 @@ exports.updateWhenDeleteCategory = async (req, res) => {
             })
         })
         .catch(e => {
-            console.log(e)
+            errorLog.error(e)
         })
         dataUpdate.forEach(item => {
             Faq.update({

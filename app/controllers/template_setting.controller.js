@@ -48,6 +48,7 @@ exports.findAll = (req, res) => {
 };
 exports.getAll = (req, res) => {
   TemplateSetting.findAll({
+    attributes:['id', 'custom_css', 'setting_id']
   })
   .then(data => {
     res.send(data);

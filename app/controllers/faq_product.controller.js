@@ -7,8 +7,6 @@ exports.create = async (req, res) => {
     const faq_product = req.body;
     const user_id = req.jwtDecoded.data.user_id;
     faq_product.forEach(async element => {
-        // await checkProductId(user_id, element.product_id)
-        // console.log(checkProductId(user_id, element.product_id))
         element.user_id = user_id;
     }) 
     if (!req.body) {
@@ -53,41 +51,6 @@ exports.findAll = (req, res) => {
         })
     });
 };
-
-// exports.findAllProduct = async (req, res) => {
-//     let userID = null;
-//     const shop = req.params.shop;
-//     await User.findOne({ where: { shopify_domain: shop}})
-//     .then( async userData => {
-//         if (userData) {
-//             userID = userData.dataValues.id;
-//             console.log(userID)
-//             await FaqProduct.findAll({
-//                 where: {
-//                     user_id: userID
-//                 },
-//             })
-//                 .then(data => {
-//                     console.log(data)
-//                     return  res.send(data);
-//                 })
-//                 .catch(err => {
-//                     return res.status(500).send({
-//                         message:
-//                             err.message || "Some error occurred while retrieving FaqProduct."
-//                     })
-//                 });
-//         } else {
-//             return res.status(400).send({
-//                 message: "Shop name is not found !"
-//             });
-//             return false;
-//         }
-//     }).catch(error => {
-//     return res.status(500).send("some error");
-// })
-
-// };
 
 // Find a single FaqProduct with an id
 

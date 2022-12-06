@@ -82,7 +82,6 @@ app.get('/admin', async (req, res) => {
 });
 
 app.get('/merchant', async (req, res) => {
-    console.log(req.query.shop)
     let tokenData = await getTokenMerchant(req.query.shop);
     let txt = "";
     if (tokenData.accessToken) {
@@ -376,7 +375,6 @@ async function getTokenAdmin() {
     });
     accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
     refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
-    console.log(accessToken)
     return {accessToken, refreshToken};
 }
 async function getTokenMerchant(shop) {
@@ -389,6 +387,5 @@ async function getTokenMerchant(shop) {
     });
     accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
     refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
-    console.log(accessToken)
     return {accessToken, refreshToken};
 }

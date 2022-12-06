@@ -64,16 +64,16 @@
                                         <div id="category<%- i %>">
                                             <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                             <% for(var j=0; j < faqs.faq.length; j++) { %>
-                                              <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                <div class="faq-main-content">
-                                                    <div class="faq-question-title">
-                                                        <span class="listed-faq" value><%= faqs.faq[j].title %></span>
-                                                    </div>
-                                                    <div id="faq-answer-content" class="faq-answer-content">
-                                                        <%- faqs.faq[j].content %>
-                                                    </div>
-                                                </div> 
-                                              <% } %>                                           
+                                                <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                                  <div class="faq-main-content">
+                                                      <div class="faq-question-title">
+                                                          <span class="listed-faq" value><%= faqs.faq[j].title %></span>
+                                                      </div>
+                                                      <div id="faq-answer-content" class="faq-answer-content">
+                                                          <%- faqs.faq[j].content %>
+                                                      </div>
+                                                  </div> 
+                                                <% } %>                                           
                                             <%}%>
                                         </div>
                                     <% } %>

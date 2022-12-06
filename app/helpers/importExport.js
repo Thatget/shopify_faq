@@ -249,10 +249,10 @@ async function createCategory(category){
         updateOnDuplicate: ["identify", "user_id", "locale"]
     })
     .then( async () => {
-        console.log('create success')
+        errorLog.error('create success')
     })
-    .catch(e=>{
-        console.log(e)
+    .catch(e => {
+        errorLog.error(e)
     })
 }
 
@@ -263,10 +263,10 @@ async function createFaq(faqs){
         updateOnDuplicate: ["identify", "user_id", "category_identify", "locale"]            
     }
     ).then( async () => {
-        console.log('create success')
+        errorLog.error('create success')
     })
     .catch(e=>{
-        console.log(e)
+        errorLog.error(e)
     })
 }
 
@@ -280,7 +280,7 @@ async function getAllCategory(user_id){
         })
     })
     .catch(err => {
-        console.log(err)
+        errorLog.error(err)
     });    
     return allCategory
 }
@@ -295,7 +295,7 @@ async function getAllFaq(user_id){
         })
     })
     .catch(err => {
-        console.log(err)
+        errorLog.error(err)
     });    
     return allFaq
 }

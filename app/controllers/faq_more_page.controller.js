@@ -7,8 +7,6 @@ exports.create = async (req, res) => {
     const faq_more_page = req.body;
     const user_id = req.jwtDecoded.data.user_id;
     faq_more_page.forEach(async element => {
-        // await checkProductId(user_id, element.product_id)
-        // console.log(checkProductId(user_id, element.product_id))
         element.user_id = user_id;
     }) 
     if (!req.body) {

@@ -7,6 +7,7 @@ const TemplateSetting = db.template_setting
 let listFaqId = []
 const FaqMorePageSetting = db.faq_more_page_setting;
 const FaqMorePage = db.faq_more_page;
+const errorLog = require('../helpers/log.helper');
 
 exports.findFaqOnPage = async (req, res) => {
     let Faqs = [];
@@ -66,18 +67,18 @@ exports.findFaqOnPage = async (req, res) => {
                             }
                         })
                         .catch(e =>{
-                            console.log(e)
+                            errorLog.error(e)
                         })
                     })
                     .catch(e =>{
-                        console.log(e)
+                        errorLog.error(e)
                     })
                     await getFaqsId(userID, page_name, locale, Faqs)
                     await getCategory(locale, userID, Categories,templateSetting)
                 }
             })
             .catch(e => {
-                console.log(e)
+                errorLog.error(e)
             })
 
         }

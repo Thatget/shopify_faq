@@ -75,7 +75,7 @@ const productList = async (req, res) => {
             countProduct = JSON.parse(data)
         })
         .catch(e => {
-            console.log(e)
+            errorLog.error(e)
         })
     } catch (e) {
         return res.status(e.statusCode || 500).json(e.message);
