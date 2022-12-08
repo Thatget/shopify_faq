@@ -4,12 +4,12 @@
 .category-container{
   margin-bottom: 20px;
 }
-.faq-content-1, .faq-content-7{
+.faq-content-1, .faq-content-7, .faq-content-8{
   line-height: 1.8 !important;
   text-align: start;
   word-wrap: break-word;
 }
-.faq-title-1, .faq-title-7{
+.faq-title-1, .faq-title-7, .faq-title-8{
   word-wrap:break-word;
   word-break: break-word;
   text-align: start;
@@ -111,7 +111,7 @@
 }
 .faq-list-6{
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: start;
   position: relative;
 }
@@ -158,10 +158,12 @@ svg:not(:root) {
 }
 .faq-container-6{
   margin-bottom: 20px;
+  cursor: pointer;
 }
 .faq-list-4{
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 .faq-title-4{
   text-align: start;
@@ -173,4 +175,9 @@ svg:not(:root) {
 }
 .faq-container-4{
   margin-bottom: 20px;
+}
+.category-title-8{
+  margin-top: 45px;
+  padding-bottom: 15px;
+  line-height: 1.8 !important;
 }
