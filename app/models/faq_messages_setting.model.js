@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize) => {
+  module.exports = (sequelize, Sequelize) => {
   const User = require("./user.model.js")(sequelize, Sequelize);
   const MessageSetting = sequelize.define("faq_messages_setting", {
       user_id: {
