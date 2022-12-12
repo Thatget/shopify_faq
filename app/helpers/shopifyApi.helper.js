@@ -3,6 +3,9 @@ const db = require("../models/index");
 const errorLog = require('./log.helper');
 const User = db.user;
 
+const apiKey = process.env.SHOPIFY_API_KEY;
+const forwardingAddress = process.env.HOST;
+
 const productList = async (req, res) => {
     var page = {};
     var products = null;
@@ -54,6 +57,7 @@ const productList = async (req, res) => {
             },
         }
         await request(options).then(function(response) {
+            console.log("X2Q")
             if(response.headers.link){
                 var headerLink = response.headers.link;
                 var strArray = headerLink.split(',');
@@ -68,22 +72,36 @@ const productList = async (req, res) => {
                 }
             }
             products = response.body
+        }).catch(e => {
+            console.log("GGx")
+            const state = nonce();
+            const redirectUri = forwardingAddress + '/shopify/re-authorize';
+            const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+            '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
+            console.log("GG1")
+            res.cookie('state',state);
+            res.redirect(pageUri);
+            console.log("GG2")
+            errorLog.error(e.messages)
         });
 
         await request(optionsCount)
         .then(data => {
+            console.log("X2Q2")
             countProduct = JSON.parse(data)
         })
         .catch(e => {
+            console.log("x12")
+                console.log(e)
             errorLog.error(e)
         })
     } catch (e) {
-        return res.status(e.statusCode || 500).json(e.message);
+        // return res.status(e.statusCode || 500).json(e.message);
     }
     page.products = products;
     page.paginate = pagination;
     page.count = countProduct;
-    return res.status(200).json(page);
+    // return res.status(200).json(page);
 }
 
 const searchProductByTitle = async (req, res) => {
@@ -158,6 +176,7 @@ const searchProductByTitle = async (req, res) => {
         const shopRequestUrlLocale = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-01/graphql.json';
         await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
             .then(data => {
+                console.log("X2Q3")
                 if(data.data.products){
                     products = data.data.products
                 }
@@ -165,6 +184,8 @@ const searchProductByTitle = async (req, res) => {
                     products = []
                 }
             }).catch(e => {
+                console.log("x13")
+                console.log(e)
                 errorLog.error(e.messages)
             });
 
