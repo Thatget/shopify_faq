@@ -1,6 +1,11 @@
 .professional-faqs{
   padding: 30px 0;
 }
+.faq-block-title{
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+}
 .category-container{
   margin-bottom: 20px;
 }
