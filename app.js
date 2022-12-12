@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const errorLog = require('./app/helpers/log.helper');
+const authorize = require('./app/helpers/authorizeScope');
 
 const app = express();
 // for parsing application/json
@@ -41,7 +42,7 @@ db.sequelize.sync({ force: false }).then(() => {
 });
 
 app.get('/', async (req, res) => {
-    if (req.query.shop) {
+  if (!req.query.session) {
         if(!req.query.host){
             const state = nonce();
             const redirectUri = forwardingAddress + '/shopify/callback';
@@ -56,12 +57,17 @@ app.get('/', async (req, res) => {
             apiKey: apiKey,
             scopes: scopes,
             forwardingAddress: forwardingAddress
-        });  
+        });
     }
-    else{
-        return res.redirect(app_link);
-    }
+  let tokenData = await getToken(req.query);
+  let txt = "";
+  if (tokenData.accessToken) {
+    txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+  }
+  return res.redirect(app_link+txt);
 });
+
+app.use('/shopify', authorize);
 
 app.get('/storeFAQs', async (req, res) => {
     let tokenData = await getToken(req.query);
@@ -124,129 +130,6 @@ app.get('/products-faqs', async (req, res) => {
         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
     }
     return res.redirect(app_link+'/products-faqs'+txt);
-});
-
-app.get('/shopify/callback', async (req, res) => {
-    const {shop, hmac, code} = req.query;
-    if (shop && hmac && code) {
-        const map = Object.assign({}, req.query);
-        delete map['signature'];
-        delete map['hmac'];
-        const message = querystring.stringify(map);
-        const generateHash = crypto.createHmac('sha256', apiSecret)
-            .update(message)
-            .digest('hex');
-
-        if (generateHash !== hmac) {
-            return res.status(400).send('HMAC validation failed');
-        }
-
-        const accessTokendRequestUrl = 'https://' + shop +
-            '/admin/oauth/access_token';
-        const accessTokenPayload = {
-            client_id: apiKey,
-            client_secret: apiSecret,
-            code
-        };
-
-        await request.post(accessTokendRequestUrl, { json: accessTokenPayload })
-            .then( async (accessTokenResponse) => {
-                const accessToken = accessTokenResponse.access_token;
-                global.accessToken = accessToken;
-                const shopRequestUrl = 'https://' + shop + '/admin/shop.json';
-                const shopRequestHeaders = {
-                    'X-Shopify-Access-Token': accessToken
-                };
-                await request.get(shopRequestUrl, {headers: shopRequestHeaders})
-                    .then( async (shopResonse) => {
-                        let shopLocales = '';
-                        const body = {
-                            query: `
-                            query {
-                              shopLocales {
-                                locale
-                                primary
-                                published
-                              }
-                            }`
-                        };
-                        const shopRequestUrlLocale = 'https://' + shop + process.env.API_GRAPHQL;
-                        await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
-                            .then(data => {
-                                shopLocales = JSON.stringify(data.data);
-                            }).catch(e => {
-                                errorLog.error(`get shop locale: ${error.message}`)
-                            });
-                            
-                        shopResonse = JSON.parse(shopResonse);
-                        const user = {
-                            store_name: shopResonse.shop.name,
-                            shopify_domain: shopResonse.shop.myshopify_domain,
-                            shopify_access_token: accessToken,
-                            email: shopResonse.shop.email,
-                            phone: shopResonse.shop.phone,
-                            shopLocales: shopLocales,
-                        };
-                        await User.findOne({where: {shopify_domain: user.shopify_domain }}).
-                            then( async data =>{
-                                if (data) {
-                                    await User.update(user, {
-                                        where: { shopify_domain: user.shopify_domain }
-                                    }).then(data => {
-                                    }).catch(err => {
-                                        errorLog.error(`user update error ${err.message}`)
-                                    });                         
-                                } 
-                                else {
-                                    await User.findOne({ where: { shopify_domain: shopResonse.shop.domain }})
-                                    .then(async data => {
-                                        if(data){
-                                            await User.update(user, {
-                                                where: { shopify_domain: shopResonse.shop.domain }
-                                            }).then(data => {
-                                            }).catch(err => {
-                                                errorLog.error(`user update error ${err.message}`)
-                                            }); 
-                                        }
-                                        else{
-                                            await User.create(user).then(data => {
-                                            }).catch(err => {
-                                                errorLog.error(`user created error: ${err.message}`);
-                                            });
-                                            const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
-                                            const webhook = {
-                                                webhook : {
-                                                    topic: "app/uninstalled",
-                                                    address: `${forwardingAddress}/uninstall?shop=${shop}`,
-                                                    format: "json",
-                                                }
-                                            };
-                                            await request.post(shopRequestUrlWebhook, {headers: shopRequestHeaders, json: webhook})
-                                                .then((data) => {
-                                                })
-                                                .catch((error) => {
-                                                    errorLog.error(`webhook create: ${error.message}`)
-                                                });
-                                        }
-                                    })
-                                    .catch(err => {
-                                        errorLog.error(`user update error ${err.message}`)
-                                    });
-                                }
-                            });
-                    })
-                    .catch((error) => {
-                        errorLog.error(`user get shop data: error ${error.message}`)
-                    });
-            }).catch((error) => {
-                errorLog.error(`get data api error: ${error.message}`)
-            });
-    } else {
-        errorLog.error("app.js callback misssing data")
-        return res.redirect(app_link);
-    }
-    let pageUri = 'https://' + req.query.shop + '/admin/apps/' + apiKey + '/storeFAQs';
-    res.redirect(pageUri);
 });
 
 app.post('/uninstall', async (req, res) => {

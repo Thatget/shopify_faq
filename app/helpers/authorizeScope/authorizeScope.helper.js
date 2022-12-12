@@ -3,15 +3,13 @@ const { updateUserTable } = require('./shopinfo');
 const { uninstallApp } = require('./webhook');
 
 const appName = process.env.SHOPIFY_APP_NAME;
-const apiGraphql = process.env.API_GRAPHQL;
 
 const authorizeScope = async (req, res) => {
-  console.log("X2");
   console.log(req.query)
   const { shop } = req.query;
   const accessToken = req.accessToken;
   try {
-    Promise.allSettled([updateUserTable(shop, accessToken),uninstallApp(shop, accessToken)]);
+    await Promise.allSettled([updateUserTable(shop, accessToken),uninstallApp(shop, accessToken)]);
   } catch (error) {
     errorLog.error(`Authorize scope failed: ${error.message}`)
   }
