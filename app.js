@@ -3,8 +3,6 @@ const dotenv = require('dotenv').config();
 const crypto = require('crypto');
 const nonce = require('nonce')();
 const querystring = require('querystring');
-const request = require('request-promise');
-const cookie = require('cookie');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
@@ -58,16 +56,19 @@ app.get('/', async (req, res) => {
             scopes: scopes,
             forwardingAddress: forwardingAddress
         });
-    }
-  let tokenData = await getToken(req.query);
-  let txt = "";
-  if (tokenData.accessToken) {
-    txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-  }
-  return res.redirect(app_link+txt);
+  } else {
+		let txt = "";
+		try {
+			let tokenData = await getToken(req.query);
+			if (tokenData.accessToken) {
+				txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+			}
+		} catch (e) {}
+		return res.redirect(app_link+txt);
+	}
 });
 
-app.use('/shopify', authorize);
+app.use(authorize);
 
 app.get('/storeFAQs', async (req, res) => {
     let tokenData = await getToken(req.query);
