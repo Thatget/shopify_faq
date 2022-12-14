@@ -21,7 +21,7 @@ const uploadBanner = require("../controllers/uploadTemplateBanner");
 const importExport = require("../helpers/importExport");
 const shopifyApi = require("../helpers/shopifyApi.helper");
 const ensureEnpoint = require("../helpers/ensureEnpoint.helper");
-
+const tutorial = require("../controllers/tutorial.controller.js");
 /**
  * Init all APIs
  * @param {*} app from express
@@ -57,6 +57,9 @@ let initAPIs = (app) => {
 
     //admin router
     router.get("/api/data/admin", admin.findAllData)
+
+    //Tutorial Create
+    router.post("/api/tutorial/create", tutorial.create);
 
     //Faq router
     router.post("/api/faq", faq.create);

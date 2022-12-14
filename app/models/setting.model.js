@@ -60,6 +60,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     yanet_logo_visible:{
       type: Sequelize.BOOLEAN
+    },  
+    tutorial_active:{
+      type: Sequelize.BOOLEAN
     }  
   },
   {
