@@ -68,6 +68,8 @@ const productList = async (req, res) => {
                 }
             }
             products = response.body
+        }).catch(e => {
+            errorLog.error(e.messages)
         });
 
         await request(optionsCount)
@@ -78,12 +80,12 @@ const productList = async (req, res) => {
             errorLog.error(e)
         })
     } catch (e) {
-        return res.status(e.statusCode || 500).json(e.message);
+        // return res.status(e.statusCode || 500).json(e.message);
     }
     page.products = products;
     page.paginate = pagination;
     page.count = countProduct;
-    return res.status(200).json(page);
+    // return res.status(200).json(page);
 }
 
 const searchProductByTitle = async (req, res) => {
