@@ -85,7 +85,7 @@ const productList = async (req, res) => {
     page.products = products;
     page.paginate = pagination;
     page.count = countProduct;
-    // return res.status(200).json(page);
+    return res.status(200).json(page);
 }
 
 const searchProductByTitle = async (req, res) => {
