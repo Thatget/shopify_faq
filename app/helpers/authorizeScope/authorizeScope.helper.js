@@ -12,11 +12,10 @@ const authorizeScope = async (req, res) => {
   const accessToken = req.accessToken;
   try {
 		if (authorize) {
-			console.log("X!1")
 			await updateUserTable(shop, accessToken)
 		} else {
-			console.log("X!2")
-    	await Promise.allSettled([updateUserTable(shop, accessToken),uninstallApp(shop, accessToken)]);
+      await updateUserTable(shop, accessToken),
+      await uninstallApp(shop, accessToken)
 		}
   } catch (error) {
     errorLog.error(`Authorize scope failed: ${error.message}`)

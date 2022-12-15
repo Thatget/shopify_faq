@@ -184,6 +184,7 @@ exports.findSetting = async (shop, locale) => {
                     data = settingData.dataValues;
                     if (settingData.search_not_found) {
                         try {
+                            console.log(locale)
                             JSON.parse(settingData.search_not_found).forEach(item => {
                                 if(item.locale === locale) {
                                     data.search_not_found = item.content;
