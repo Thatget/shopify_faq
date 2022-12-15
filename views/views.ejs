@@ -89,10 +89,7 @@
         <% } %>
         .root-faq-template{
             line-height: 1.8;
-<<<<<<< HEAD
-=======
             scroll-behavior: smooth;
->>>>>>> 896ef55e0331c081a260c867665347bc05e617fe
             <% if (setting.templateSetting.page_background_color) { %>
                 background-color: <%=  setting.templateSetting.page_background_color %>;
             <% } %>    
@@ -106,16 +103,19 @@
             border-radius: 4px; 
             cursor: pointer; 
             position: fixed;
-            bottom: 30px;
-            right: 30px;        
+            bottom: 20px;
+            right: 90px;        
             background-color: <%= setting.templateSetting.btn_top_background%>
+        }
+        html {
+	        scroll-behavior: smooth;
         }
         .btn-back-to-top:hover{
             background-color: <%= setting.templateSetting.btn_top_hover%>
         }
         .yanet-logo{
             color: #4b4b4b; 
-            font-size: 15px;            
+            font-size: 15px; 
             text-decoration: none; 
             text-decoration: none;
             font-family: 'Times New Roman', Times, serif;
