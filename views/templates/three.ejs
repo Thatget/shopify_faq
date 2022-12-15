@@ -49,11 +49,13 @@
                         <% if(faqs.categories.length){%>
                             <div class="category-bar" style="color: <%=  setting.templateSetting.category_bar_color %>">
                                 <% for(var i = 0; i < faqs.categories.length; i++) { %>
-                                    <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; font-size: 16px !important; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
+                                    <label for="category-container">
+                                        <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
+                                    </label>
                                 <% } %>
                             </div>
                             <div class="faq-container">
-                                <div class="category-faq-container">
+                                <div class="category-faq-container" id="category-container">
                                     <% for(var i=0; i < faqs.categories.length; i++) { %>
                                         <% if(i === 0) {%>
                                             <div id="dung">
@@ -350,7 +352,7 @@
     <% if(setting.templateSetting.width_faqs_accordian) { %>
     .faq-main {
         padding: 0 20px;
-        max-width: <%- setting.templateSetting.width_faqs_accordian%>px;
+        max-width: <%- setting.templateSetting.width_faqs_accordian%>px !important;
         margin: auto;
     }
     <% } %>
@@ -358,13 +360,13 @@
         display: flex; 
         flex-direction: column; 
         justify-content: space-between;
-        min-height: <%- setting.templateSetting.banner_height%>px;
+        min-height: <%- setting.templateSetting.banner_height%>px !important;
         max-width: 100vw;
         <% if (setting.templateSetting.image_banner) { %>
-            background-image: url('<%- setting.templateSetting.image_banner%>');
+            background-image: url('<%- setting.templateSetting.image_banner%>') !important;
         <% }
         else {%> 
-            background-image: url('<%- setting.templateSetting.banner_default%>');
+            background-image: url('<%- setting.templateSetting.banner_default%>') !important;
             <%} 
         %>;        
         background-repeat: no-repeat;
@@ -411,13 +413,13 @@
         width: 100%; 
         cursor: pointer;
         <% if (setting.templateSetting.faq_font_weight) { %>
-            font-weight: <%=  setting.templateSetting.faq_font_weight %>;
+            font-weight: <%=  setting.templateSetting.faq_font_weight %> !important;
         <% } if (setting.templateSetting.faq_font_color) { %>
-            color: <%=  setting.templateSetting.faq_font_color %>;
+            color: <%=  setting.templateSetting.faq_font_color %> !important;
         <% } if (setting.templateSetting.faq_font_size) { %>
-            font-size: <%=  setting.templateSetting.faq_font_size %>px;
+            font-size: <%=  setting.templateSetting.faq_font_size %>px !important;
         <% } if (setting.templateSetting.faq_font_family) { %>
-            font-family: <%=  setting.templateSetting.faq_font_family %>;
+            font-family: <%=  setting.templateSetting.faq_font_family %> !important;
         <% } %>
     }
     .svg-plus{
@@ -596,6 +598,9 @@
         word-wrap: break-word;
     }
 
+    .category-bar-item{
+        font-size: 16px !important;
+    }
     svg:not(:root) {
         overflow:unset !important;
     }
@@ -637,9 +642,9 @@
         <% } %>    
     }
     <% if (setting.templateSetting.placeholder_color) { %>
-        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
-        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %>} !important
+        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important};
+        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important};
+        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important};
     <% } %>
     <%
         if(setting.templateSetting.custom_css) { %>

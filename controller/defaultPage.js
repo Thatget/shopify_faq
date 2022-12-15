@@ -159,6 +159,7 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
     return send_data;
 };
 exports.findSetting = async (shop, locale) => {
+    errorLog.error(locale, 'aaa')
     let returnData = {};
     let data = {};
     let templateSetting = {};
@@ -183,15 +184,21 @@ exports.findSetting = async (shop, locale) => {
                     data = settingData.dataValues;
                     if (settingData.search_not_found) {
                         try {
-                            JSON.parse(settingData.search_not_found).every(v => {
-                                if (v.locale === locale) {
-                                    data.search_not_found = v.content;
-                                    return false;
-                                } else if(v.locale === 'default'){
-                                    data.search_not_found = v.content;
+                            JSON.parse(settingData.search_not_found).forEach(item => {
+                                if(item.locale === locale) {
+                                    data.search_not_found = item.content;
+                                    return;
                                 }
-                                return true;
-                            });
+                            })
+                            // JSON.parse(settingData.search_not_found).every(v => {
+                            //     if (v.locale === locale) {
+                            //         data.search_not_found = v.content;
+                            //         return false;
+                            //     } else if(v.locale === 'default'){
+                            //         data.search_not_found = v.content;
+                            //     }
+                            //     return true;
+                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -199,74 +206,106 @@ exports.findSetting = async (shop, locale) => {
 
                     if (settingData.intro_text_content) {
                         try {
-                            JSON.parse(settingData.intro_text_content).every(v => {
-                                if (v.locale === locale) {
-                                    data.intro_text_content = v.content;
-                                    return false;
-                                } else if(v.locale === 'default') {
-                                    data.intro_text_content = v.content;
+                            JSON.parse(settingData.intro_text_content).forEach(item => {
+                                if(item.locale === locale) {
+                                    data.intro_text_content = item.content;
+                                    return;
                                 }
-                                return true;
-                            });
+                            })
+                            // JSON.parse(settingData.intro_text_content).every(v => {
+                            //     if (v.locale === locale) {
+                            //         data.intro_text_content = v.content;
+                            //         return false;
+                            //     } else if(v.locale === 'default') {
+                            //         data.intro_text_content = v.content;
+                            //     }
+                            //     return true;
+                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
                     if (settingData.page_under_contruction) {
                         try {
-                            JSON.parse(settingData.page_under_contruction).every(v => {
-                                if (v.locale === locale) {
-                                    data.page_under_contruction = v.content;
-                                    return false;
-                                } else if(v.locale === 'default') {
-                                    data.page_under_contruction = v.content;
+                            JSON.parse(settingData.page_under_contruction).forEach(item => {
+                                if(item.locale === locale) {
+                                    data.page_under_contruction = item.content;
+                                    return;
                                 }
-                                return true;
-                            });
+                            })
+                            // JSON.parse(settingData.page_under_contruction).every(v => {
+                            //     if (v.locale === locale) {
+                            //         data.page_under_contruction = v.content;
+                            //         return false;
+                            //     } else if(v.locale === 'default') {
+                            //         data.page_under_contruction = v.content;
+                            //     }
+                            //     return true;
+                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
                     if (settingData.search_placehoder) {
                         try {
-                            JSON.parse(settingData.search_placehoder).every(v => {
-                                if (v.locale === locale) {
-                                    data.search_placehoder = v.content;
-                                    return false;
-                                } else if(v.locale === 'default') {
-                                    data.search_placehoder = v.content;
+                            JSON.parse(settingData.search_placehoder).forEach(item => {
+                                if(item.locale === locale) {
+                                    data.search_placehoder = item.content;
+                                    return;
                                 }
-                                return true;
-                            });
+                            })
+                            // JSON.parse(settingData.search_placehoder).every(v => {
+                            //     if (v.locale === locale) {
+                            //         data.search_placehoder = v.content;
+                            //         return false;
+                            //     } else if(v.locale === 'default') {
+                            //         data.search_placehoder = v.content;
+                            //     }
+                            //     return true;
+                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
                     if (settingData.page_title_content) {
                         try {
-                            JSON.parse(settingData.page_title_content).every(v => {
-                                if (v.locale === locale) {
-                                    data.page_title_content = v.content;
-                                    return false;
-                                } else if(v.locale === 'default') {
-                                    data.page_title_content = v.content;
+                            JSON.parse(settingData.page_title_content).forEach(item => {
+                                if(item.locale === locale) {
+                                    data.page_title_content = item.content;
+                                    return;
                                 }
-                            });
+                            })
+                            // JSON.parse(settingData.page_title_content).every(v => {
+                            //     if (v.locale === locale) {
+                            //         data.page_title_content = v.content;
+                            //         return;
+                            //     } else {
+                            //         data.page_title_content = v.content;
+                            //         return ;
+                            //     }
+                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
                     if (settingData.footer_text_content) {
                         try {
-                            JSON.parse(settingData.footer_text_content).every(v => {
-                                if (v.locale === locale) {
-                                    data.footer_text_content = v.content;
-                                    return false;
-                                } else if(v.locale === 'default') {
-                                    data.footer_text_content = v.content;
+                            JSON.parse(settingData.footer_text_content).forEach(item => {
+                                if(item.locale === locale) {
+                                    data.footer_text_content = item.content;
+                                    return;
                                 }
-                                return true;
-                            });
+                            })
+
+                            // JSON.parse(settingData.footer_text_content).every(v => {
+                            //     if (v.locale === locale) {
+                            //         data.footer_text_content = v.content;
+                            //         return false;
+                            //     } else if(v.locale === 'default') {
+                            //         data.footer_text_content = v.content;
+                            //     }
+                            //     return true;
+                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }

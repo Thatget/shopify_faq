@@ -70,20 +70,8 @@
   cursor: pointer; 
   line-height: 1.8 !important;
   padding: 12px;
-  border-radius: 4px; 
-  margin-top: 6px;
-}
-.faq-list-5{
-  display: flex; 
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  cursor: pointer; 
-  line-height: 1.8 !important;
-  border-radius: 4px; 
-  position: relative;
-  padding: 20px 30px;
-  line-height: 1.8 !important;
+  border-radius: 4px 4px 0 0; 
+  margin-top: 12px;
 }
 .faq-title-2{
   word-wrap:break-word;
