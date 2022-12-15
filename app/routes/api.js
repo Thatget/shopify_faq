@@ -60,6 +60,7 @@ let initAPIs = (app) => {
 
     //Tutorial Create
     router.post("/api/tutorial/create", tutorial.create);
+    router.put("/api/tutorial/update", tutorial.update);
 
     //Faq router
     router.post("/api/faq", faq.create);

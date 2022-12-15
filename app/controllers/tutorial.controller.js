@@ -24,6 +24,23 @@ exports.create = async (req, res) => {
   });
 };
 
+exports.update = async (req, res) => {
+  const user_id = req.jwtDecoded.data.user_id;
+  await Setting.update({
+    tutorial_active : false,
+  }, {
+    where: { user_id: user_id }
+  })
+  .then(() => {
+    res.send({
+      message: "Tutorial skip Complete !"
+    });
+  })
+  .catch(err => {
+      errorLog.error('error update setting 500 status'+err.message)
+  });
+};
+
 async function createCategoryData(category, faq) {
   await FaqCategory.create(category)
   .then(async () => {
@@ -48,9 +65,11 @@ async function updateSetting(setting) {
     tutorial_active
   }, {
       where: { user_id: setting.user_id }
-  }).then(() => {
+  })
+  .then(() => {
     errorLog.error('update setting success !')
-  }).catch(err => {
+  })
+  .catch(err => {
       errorLog.error('error update setting 500 status'+err.message)
   });
 }
