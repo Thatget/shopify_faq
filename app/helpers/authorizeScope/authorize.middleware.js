@@ -6,7 +6,7 @@ const errorLog = require('../log.helper');
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
 
-
+let fileName = 'autheorize.middleware'
 exports.authorizeMiddleware = async (req, res, next) => {
   const {shop, hmac, code} = req.query;
   if (shop && hmac && code) {
@@ -33,7 +33,7 @@ exports.authorizeMiddleware = async (req, res, next) => {
       const accessTokenResponse = await request.post(accessTokendRequestUrl, { json: accessTokenPayload });
       req.accessToken = accessTokenResponse.access_token;
     } catch (eror) {
-      errorLog.error("Failed to get shopify access token")
+      errorLog.error(`Failed to get shopify access token ${eror.message} in ${fileName}`)
       return res.status(401).json({
         message: "Failed to get shopify access token."
       });

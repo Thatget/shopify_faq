@@ -159,7 +159,7 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
     return send_data;
 };
 exports.findSetting = async (shop, locale) => {
-    errorLog.error(locale, 'aaa')
+    let locale_origin = locale
     let returnData = {};
     let data = {};
     let templateSetting = {};
@@ -183,22 +183,31 @@ exports.findSetting = async (shop, locale) => {
                 }).then(async settingData => {
                     data = settingData.dataValues;
                     if (settingData.search_not_found) {
+                        let check_locale = false
                         try {
-                            console.log(locale)
                             JSON.parse(settingData.search_not_found).forEach(item => {
                                 if(item.locale === locale) {
+                                    check_locale = true
                                     data.search_not_found = item.content;
                                     return;
                                 }
                             })
+                            if(check_locale === false){
+                                JSON.parse(settingData.search_not_found).forEach(item => {
+                                    if(item.locale === 'default') {
+                                        data.search_not_found = item.content;
+                                        return;
+                                    }
+                                })
+                            }
                             // JSON.parse(settingData.search_not_found).every(v => {
                             //     if (v.locale === locale) {
                             //         data.search_not_found = v.content;
-                            //         return false;
-                            //     } else if(v.locale === 'default'){
+                            //         return;
+                            //     } else {
                             //         data.search_not_found = v.content;
+                            //         return ;
                             //     }
-                            //     return true;
                             // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
@@ -206,76 +215,116 @@ exports.findSetting = async (shop, locale) => {
                     }
 
                     if (settingData.intro_text_content) {
+                        let check_locale = false
                         try {
                             JSON.parse(settingData.intro_text_content).forEach(item => {
                                 if(item.locale === locale) {
+                                    check_locale = true
                                     data.intro_text_content = item.content;
                                     return;
                                 }
                             })
+                            if(check_locale === false){
+                                JSON.parse(settingData.intro_text_content).forEach(item => {
+                                    if(item.locale === 'default') {
+                                        data.intro_text_content = item.content;
+                                        return;
+                                    }
+                                })
+                            }
                             // JSON.parse(settingData.intro_text_content).every(v => {
                             //     if (v.locale === locale) {
                             //         data.intro_text_content = v.content;
-                            //         return false;
-                            //     } else if(v.locale === 'default') {
+                            //         return;
+                            //     } else {
                             //         data.intro_text_content = v.content;
+                            //         return ;
                             //     }
-                            //     return true;
                             // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
                     if (settingData.page_under_contruction) {
+                        let check_locale = false
                         try {
                             JSON.parse(settingData.page_under_contruction).forEach(item => {
                                 if(item.locale === locale) {
+                                    check_locale = true
                                     data.page_under_contruction = item.content;
                                     return;
                                 }
                             })
+                            if(check_locale === false){
+                                JSON.parse(settingData.page_under_contruction).forEach(item => {
+                                    if(item.locale === 'default') {
+                                        data.page_under_contruction = item.content;
+                                        return;
+                                    }
+                                })
+                            }
                             // JSON.parse(settingData.page_under_contruction).every(v => {
                             //     if (v.locale === locale) {
                             //         data.page_under_contruction = v.content;
-                            //         return false;
-                            //     } else if(v.locale === 'default') {
+                            //         return;
+                            //     } else {
                             //         data.page_under_contruction = v.content;
+                            //         return ;
                             //     }
-                            //     return true;
                             // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
                     if (settingData.search_placehoder) {
+                        let check_locale = false
                         try {
                             JSON.parse(settingData.search_placehoder).forEach(item => {
                                 if(item.locale === locale) {
+                                    check_locale = true
                                     data.search_placehoder = item.content;
                                     return;
                                 }
                             })
+                            if(check_locale === false){
+                                JSON.parse(settingData.search_placehoder).forEach(item => {
+                                    if(item.locale === 'default') {
+                                        data.search_placehoder = item.content;
+                                        return;
+                                    }
+                                })
+                            }
                             // JSON.parse(settingData.search_placehoder).every(v => {
                             //     if (v.locale === locale) {
                             //         data.search_placehoder = v.content;
-                            //         return false;
-                            //     } else if(v.locale === 'default') {
+                            //         return;
+                            //     } else {
                             //         data.search_placehoder = v.content;
+                            //         return ;
                             //     }
-                            //     return true;
                             // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
                     if (settingData.page_title_content) {
+                        let check_locale = false
                         try {
                             JSON.parse(settingData.page_title_content).forEach(item => {
                                 if(item.locale === locale) {
+                                    check_locale = true
                                     data.page_title_content = item.content;
                                     return;
                                 }
                             })
+                            if(check_locale === false){
+                                JSON.parse(settingData.page_title_content).forEach(item => {
+                                    if(item.locale === 'default') {
+                                        data.page_title_content = item.content;
+                                        return;
+                                    }
+                                })
+                            }
                             // JSON.parse(settingData.page_title_content).every(v => {
                             //     if (v.locale === locale) {
                             //         data.page_title_content = v.content;
@@ -290,27 +339,37 @@ exports.findSetting = async (shop, locale) => {
                         }
                     }
                     if (settingData.footer_text_content) {
+                        let check_locale = false
                         try {
                             JSON.parse(settingData.footer_text_content).forEach(item => {
                                 if(item.locale === locale) {
+                                    check_locale = true
                                     data.footer_text_content = item.content;
                                     return;
                                 }
                             })
-
+                            if(check_locale === false){
+                                JSON.parse(settingData.footer_text_content).forEach(item => {
+                                    if(item.locale === 'default') {
+                                        data.footer_text_content = item.content;
+                                        return;
+                                    }
+                                })
+                            }
                             // JSON.parse(settingData.footer_text_content).every(v => {
                             //     if (v.locale === locale) {
                             //         data.footer_text_content = v.content;
-                            //         return false;
-                            //     } else if(v.locale === 'default') {
+                            //         return;
+                            //     } else {
                             //         data.footer_text_content = v.content;
+                            //         return ;
                             //     }
-                            //     return true;
                             // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
+                    console.log(data)
                     templateSetting = await getTemplateSetting(settingData.id, settingData.faq_template_number);
                     returnData = {data, templateSetting}
                 }).catch(error => {
