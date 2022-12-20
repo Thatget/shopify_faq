@@ -4,7 +4,6 @@ const errorLog = require('../log.helper');
 const forwardingAddress = process.env.HOST;
 
 const uninstallApp = async (shop, accessToken) => {
-
   try {
     const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
 

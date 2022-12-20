@@ -1,6 +1,32 @@
 <div class="root-faq-template">
   <div class="demo-container">
     <div class="demo-main">
+      <div class="demo-navigation" style="">
+        <div onclick="changeTemplate(0)" class="demo-navigation-item template-01">
+          <div>Template One</div>
+        </div>
+        <div onclick="changeTemplate(1)" class="demo-navigation-item template-02">
+          <div>Template Two</div>
+        </div>
+        <div onclick="changeTemplate(2)" class="demo-navigation-item template-03">
+          <div>Template Three</div>
+        </div>
+        <div onclick="changeTemplate(3)" class="demo-navigation-item template-04">
+          <div>Template Four</div>
+        </div>
+        <div onclick="changeTemplate(4)" class="demo-navigation-item template-05">
+          <div>Template Five</div>
+        </div>
+        <div onclick="changeTemplate(5)" class="demo-navigation-item template-06">
+          <div>Template Six</div>
+        </div>
+        <div onclick="changeTemplate(6)" class="demo-navigation-item template-07">
+          <div>Template Seven</div>
+        </div>
+        <div onclick="changeTemplate(7)" class="demo-navigation-item template-08">
+          <div>Template Eight</div>
+        </div>
+      </div>
       <div class="demo-header">                
         <div class="">
           <div class="faq-page-title-demo">Frequently Asked Questions</div>
@@ -15,36 +41,36 @@
           <span>Check most frequently asked questions here</span>
         </div>
       </div>
-      <div class="demo-body">
-        <div class="demo-navigation" style="">
-          <div onclick="changeTemplate(0)" class="demo-navigation-item template-01">
-            <div>Template One</div>
+      <div class="demo-header-06">                
+        <div class="">
+          <div class="faq-page-title-demo">Frequently Asked Questions</div>
+          <div class="faq-search" style="box-shadow: none;">
+            <div style="position:relative;">
+              <svg id="micro-scope" style="position: absolute; left: 0; top: 50%; transform:translateY(-50%); margin-left: 18px" height="22" width="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+              <input class="faq-search-input faq-search-input-style2" id="search-text" onkeyup="simpleSearch()" type="text" placeholder="What can we help you with?" name="search">
+            </div>
           </div>
-          <div onclick="changeTemplate(1)" class="demo-navigation-item template-02">
-            <div>Template Two</div>
-          </div>
-          <div onclick="changeTemplate(2)" class="demo-navigation-item template-03">
-            <div>Template Three</div>
-          </div>
-          <div onclick="changeTemplate(3)" class="demo-navigation-item template-04">
-            <div>Template Four</div>
-          </div>
-          <div onclick="changeTemplate(4)" class="demo-navigation-item template-05">
-            <div>Template Five</div>
-          </div>
-          <div onclick="changeTemplate(5)" class="demo-navigation-item template-06">
-            <div>Template Six</div>
-          </div>
-          <div onclick="changeTemplate(6)" class="demo-navigation-item template-07">
-            <div>Template Seven</div>
-          </div>
-          <div onclick="changeTemplate(7)" class="demo-navigation-item template-08">
-            <div>Template Eight</div>
-          </div>
-
         </div>
+        <div>
+          <div class="faq-intro-text-demo" style="padding-bottom: 20px">
+            <span>Check most frequently asked questions here</span>
+          </div>
+          <div class="category-bar-06">
+            <% for(var i = 0; i < faqs.categories.length; i++) { %>
+              <div class="category-bar-item-06" id="faq-category-06<%- i %>" onclick="changeCategory06('<%- i %>', '#000000', '#ffffff', 'false')"
+              <% if(i === 0){%> style="color: #000000;background-color: #ffffff; font-weight: bold"<%}
+                else{%>style="font-size: 16px !important; user-select: none; font-weight: bold; color: #000000"<%}%>>
+                <span class="category-bar-title">
+                  <%- faqs.categories[i].title %>                                                  
+                </span>
+              </div>
+            <% } %>                                
+          </div>
+        </div>
+      </div>
+      <div class="demo-body">
         <div class="faq-main" id="faq-main">
-					<div class="template-demo template-demo-01" id="template-demo-01" style="margin-top: 20px">
+					<div class="template-demo template-demo-01" id="template-demo-01" style="margin-top: 30px">
 						<h2 class="template-title">
 							TEMPLATE ONE
 						</h2>
@@ -126,7 +152,7 @@
 								<% if(faqs.categories.length){%>
 									<div class="category-bar-03">
 										<% for(var i = 0; i < faqs.categories.length; i++) { %>
-											<div onclick="changeCategory03('<%- i %>','#cccccc')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; border-top: 1px solid #ccc; text-decoration: none; user-select: none; background-color: #cccccc"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none"<%}%>><%- faqs.categories[i].title %></div>                                        
+											<div onclick="changeCategory03('<%- i %>','#cccccc')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; border-top: 1px solid #ccc; text-decoration: none; user-select: none; background-color: #cccccc; font-weight: bold"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none;font-weight: bold"<%}%>><%- faqs.categories[i].title %></div>                                        
 										<% } %>
 									</div>
 									<div class="faq-container-03">
@@ -187,7 +213,7 @@
 													<% for(var i = 0; i < faqs.categories.length; i++) { %>
 														<div class="category-bar-item" style="padding: 0 20px; margin-bottom: 16px">
 															<div style="text-decoration: none; color: #195f71;">
-																<span onclick="changeCategory04('<%- i %>', '#195f71', '#195f71')" class="category-bar-title" id="faq-category-04<%- i %>"<% if(i === 0){%> style="word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; border-bottom: 1px solid #195f71; text-decoration: none; font-size: 16px !important; user-select: none;  text-transform: uppercase"<%}else{%>style="word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; text-decoration: none; font-size: 16px !important; user-select: none; text-transform: uppercase"<%}%>><%- faqs.categories[i].title %></span>                                                  
+																<span onclick="changeCategory04('<%- i %>', '#195f71', '#195f71')" class="category-bar-title" id="faq-category-04<%- i %>"<% if(i === 0){%> style="word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; border-bottom: 1px solid #195f71; text-decoration: none; font-size: 20px !important; user-select: none"<%}else{%>style="word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; text-decoration: none; font-size: 20px !important; user-select: none"<%}%>><%- faqs.categories[i].title %></span>                                                  
 															</div>
 														</div>
 													<% } %>                                
@@ -282,7 +308,7 @@
 														<div class="category-faq-container">
 																<% for(var i=0; i < faqs.categories.length; i++) { %>
 																		<div <% if(i === 0){%> style="display: block"<%}
-																				else{%>style="display: none"<%}%> id="category<%- i %>">
+																				else{%>style="display: none"<%}%> id="category-06<%- i %>">
 																				<div id="<%- faqs.categories[i].title %>" class="faq-category-title-06"><%- faqs.categories[i].title %></div>
 																				<% for(var j = 0; j < faqs.faq.length; j++) { %>
 																						<% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
@@ -430,6 +456,8 @@
 	</div>
 </div>
   <script>
+  var myString = "Frequently Asked Questions";
+  console.log(myString.slice(1, 12, 18))
     let mybutton = document.getElementById("back-to-top");
     window.onscroll = function() {scrollFunction()};
     function scrollFunction() {
@@ -471,6 +499,7 @@
             document.getElementById(`faq-category-080`).style.color = `${category_bar_color}`
         }
     }
+
 		function showHideContent06(el) {
 			var content = el.nextElementSibling;
 			var iconPlus = el.getElementsByClassName('fa-plus')
@@ -656,20 +685,125 @@
     }
   document.getElementsByClassName('faq-category-title-8')[0].style.margin = "0px"
   document.getElementsByClassName('template-demo')[0].style.display = "block"
-  document.getElementsByClassName('demo-navigation-item')[0].style.color = "#ffffff"
-  document.getElementsByClassName('demo-navigation-item')[0].style.backgroundColor = "#000000"
+  document.getElementsByClassName('demo-navigation-item')[0].style.borderBottom = "1px solid #ff8200"
+  document.getElementsByClassName('demo-navigation-item')[0].style.color = "#ff8200"
+  // document.getElementsByClassName('demo-navigation-item')[0].style.backgroundColor = "#000000"
   function changeTemplate(number){
     for(let i = 0; i < 8 ; i++){
       if(i === number){
         document.getElementsByClassName('template-demo')[i].style.display = "block"
-        document.getElementsByClassName('demo-navigation-item')[i].style.color = "#ffffff"
-        document.getElementsByClassName('demo-navigation-item')[i].style.backgroundColor = "#000000"
+        document.getElementsByClassName('demo-navigation-item')[i].style.color = "#ff8200"
+        document.getElementsByClassName('demo-navigation-item')[i].style.borderBottom = "1px solid #ff8200"
+        // document.getElementsByClassName('demo-navigation-item')[i].style.backgroundColor = "#000000"
       }
       else{
         document.getElementsByClassName('template-demo')[i].style.display = "none"
         document.getElementsByClassName('demo-navigation-item')[i].style.color = "#000000"
-        document.getElementsByClassName('demo-navigation-item')[i].style.backgroundColor = "#ffffff"
+        document.getElementsByClassName('demo-navigation-item')[i].style.borderBottom = "none"
+        // document.getElementsByClassName('demo-navigation-item')[i].style.backgroundColor = "#ffffff"
       }
+    }
+    if(number === 0){
+      document.getElementsByClassName("demo-header")[0].style.backgroundImage = "url('https://backend-faq.yanet.io/var/images/banner/banner-default-1.png')"
+    }
+    if(number === 1){
+      document.getElementsByClassName("demo-header")[0].style.backgroundImage = "url('https://backend-faq.yanet.io/var/images/banner/banner-default-2.png')"
+    }
+    if(number === 2){
+      document.getElementsByClassName("demo-header")[0].style.backgroundImage = "url('https://backend-faq.yanet.io/var/images/banner/banner-default-3.png')"
+    }
+    if(number === 1 || number === 2 || number === 0){
+      document.getElementsByClassName("faq-page-title-demo")[0].style.color = "#ffffff"
+      document.getElementsByClassName("faq-intro-text-demo")[0].style.color = "#ffffff"
+      document.getElementsByClassName("faq-footer-text-demo")[0].style.color = "#ffffff"
+    }
+    if(number === 3){
+      document.getElementsByClassName("faq-page-title-demo")[0].style.color = "#195f71"
+      document.getElementsByClassName("faq-intro-text-demo")[0].style.color = "#195f71"
+      document.getElementsByClassName("faq-footer-text-demo")[0].style.color = "#195f71"
+      document.getElementsByClassName("demo-header")[0].style.backgroundImage = "none"
+    }
+    if(number === 4){
+      document.getElementsByClassName("faq-page-title-demo")[0].style.color = "#000000"
+      document.getElementsByClassName("faq-intro-text-demo")[0].style.color = "#000000"
+      document.getElementsByClassName("faq-footer-text-demo")[0].style.color = "#000000"
+      document.getElementsByClassName("demo-header")[0].style.backgroundImage = "none"
+    }
+    if(number === 6 || number === 7){
+      document.getElementsByClassName("faq-page-title-demo")[0].style.color = "#000000"
+      document.getElementsByClassName("faq-intro-text-demo")[0].style.color = "#000000"
+      document.getElementsByClassName("faq-footer-text-demo")[0].style.color = "#000000"
+      document.getElementsByClassName("demo-header")[0].style.backgroundImage = "none"
+    }
+    if(number === 5){
+      document.getElementsByClassName("demo-header")[0].style.display = "none"
+      document.getElementsByClassName("demo-header-06")[0].style.display = "flex"
+    }
+    else{
+      document.getElementsByClassName("demo-header")[0].style.display = "flex"
+      document.getElementsByClassName("demo-header-06")[0].style.display = "none"
+    }
+  }
+
+  var categoryId = []
+  function changeCategory06(id, faq_hover_color, category_bar_background, banner_visible){
+    if(!categoryId.some(item => {
+        return item === id
+    })){            
+        categoryId.push(id)
+    }
+    var categoryShow = categoryId.filter(item => {
+        return item === id
+    })
+    var categoryHide = categoryId.filter(item => {
+        return item !== id
+    })
+    if(id != '0'){
+        if(banner_visible){
+          document.getElementById('faq-category-060').style.backgroundColor = 'unset'
+        }
+        else{
+          document.getElementById('faq-category-060').style.backgroundColor = `${faq_hover_color}`
+        }
+        document.getElementById(`category-060`).style.display = 'none'
+    }
+    else{
+        document.getElementById('faq-category-060').style.backgroundColor = `${category_bar_background}`
+    }
+    if(categoryId.length === 1){
+        if(banner_visible){
+            document.getElementById('faq-category-060').style.backgroundColor = 'unset'
+        }
+        else{
+            document.getElementById('faq-category-060').style.backgroundColor = `${faq_hover_color}`
+        }
+    }
+    for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
+        if(i === 0){
+            document.getElementsByClassName('faq-answer-content')[0].style.display = 'block'
+            document.getElementsByClassName('fa-plus')[0].style.opacity = '0'
+            document.getElementsByClassName('fa-minus')[0].style.opacity = '1'
+        }
+        else{
+            document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
+            document.getElementsByClassName('fa-plus')[i].style.opacity = '1'
+            document.getElementsByClassName('fa-minus')[i].style.opacity = '0'
+        }
+    }
+    for(let i = 0; i < categoryId.length; i++){
+        if(categoryId[i] == id){
+            document.getElementById(`category-06${id}`).style.display = 'block'
+            document.getElementById(`faq-category-06${categoryId[i]}`).style.backgroundColor = `${category_bar_background}`
+        }
+        else{
+            document.getElementById(`category-06${categoryId[i]}`).style.display = 'none'
+            if(banner_visible){
+                document.getElementById(`faq-category-06${categoryId[i]}`).style.backgroundColor = 'unset'
+            }
+            else{
+                document.getElementById(`faq-category-06${categoryId[i]}`).style.backgroundColor = `${faq_hover_color}`
+            }
+        }
     }
   }
 </script>
@@ -679,21 +813,17 @@
   }
   .demo-navigation-item{
     cursor: pointer;
-    padding: 10px 20px;
-    border: 1px solid #ccc;
+    padding: 0px 10px 2px 10px;
     margin: 10px;
-    border-radius: 100px;
     font-weight: bold
   }
   .demo-navigation{
     display: flex;
-    position: sticky;
-    max-width: 1080px;
     margin: auto;
     flex-wrap: wrap;
     justify-content: center;
-    border-bottom: 1px solid #ccc;
-    padding: 20px 0;  }
+    padding: 20px 30px;  
+  }
 	.faq-answer-content-06{
 		margin-left: 33px
 	}
@@ -721,6 +851,11 @@
     width: 30%;
     font-family: unset;
 	}
+  .category-bar-06{
+    display: flex; 
+    justify-content: center;
+    flex-wrap: wrap; 
+  }
 	.faq-category-link-07{
 		padding: 8px 16px;
 		margin: 6px;
@@ -760,9 +895,8 @@
 	.faq-category-title-04 {
     font-weight: bold;
     color: #195f71;
-    font-size: 24px;
+    font-size: 28px;
     font-family: unset;
-    text-transform: uppercase;
     text-align: center;
     width: 100%;
     padding-bottom: 40px;
@@ -775,19 +909,37 @@
 			display: flex;
 			flex-direction: column;
 	}
+  .category-bar-item-06{
+    border-radius: 4px 4px 0 0;
+    word-break: break-word;
+    text-align: left;
+    cursor: pointer;
+    font-size: 16px !important;
+    user-select: none;
+    padding: 10px 16px;
+  }
 	.demo-header {
-			display: flex; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between;
+    min-height: 300px;
+    max-width: 100vw;
+    background-image: url('https://backend-faq.yanet.io/var/images/banner/banner-default-1.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    background-position-x: center;
+    text-align: center; 
+	}
+  	.demo-header-06 {
+			display: none; 
 			flex-direction: column; 
 			justify-content: space-between;
 			min-height: 300px;
 			max-width: 100vw;
-			background-image: url('https://cdn.shopify.com/s/files/1/0658/0128/9981/files/multitasking-at-desk.jpg?v=1661149687&width=1500');
-			background-repeat: no-repeat;
-			background-size: cover;
-			background-position-y: center;
-			background-position-x: center;
+			background-color: #b8b8b8;
 			text-align: center; 
-	}
+	  }
 	.template-demo{
 		margin-top: 30px;
     display: none
@@ -873,16 +1025,16 @@
     justify-content: space-between;
     width: 100%;
     cursor: pointer;
-		font-weight: normal;
+		font-weight: bold;
     color: #195f71;
     font-size: 20px;
     font-family: unset;
 	}
 	.faq-question-title-05{
-		font-weight: normal;
+		font-weight: bold;
     color: #000000;
     background-color: #e9f3f6;
-    font-size: 20px;
+    font-size: 18px;
     font-family: unset;
 		cursor: pointer;
 	}
@@ -1055,9 +1207,8 @@
 		word-wrap: break-word;
 		font-weight: bold;
     color: #000000;
-    font-size: 24px;
+    font-size: 28px;
     font-family: unset;
-    text-transform: uppercase;
     text-align: center;
   }
 	.faq-category-title {

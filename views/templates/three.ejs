@@ -49,11 +49,9 @@
                         <% if(faqs.categories.length){%>
                             <div class="category-bar" style="color: <%=  setting.templateSetting.category_bar_color %>">
                                 <% for(var i = 0; i < faqs.categories.length; i++) { %>
-                                  <label for="category-container">
                                     <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" style="text-decoration: none; color: <%=  setting.templateSetting.category_font_color %>">
                                       <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
                                     </a>
-                                  </label>
                                 <% } %>
                             </div>
                             <div class="faq-container">
