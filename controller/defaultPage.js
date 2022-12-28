@@ -200,15 +200,6 @@ exports.findSetting = async (shop, locale) => {
                                     }
                                 })
                             }
-                            // JSON.parse(settingData.search_not_found).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.search_not_found = v.content;
-                            //         return;
-                            //     } else {
-                            //         data.search_not_found = v.content;
-                            //         return ;
-                            //     }
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -232,15 +223,6 @@ exports.findSetting = async (shop, locale) => {
                                     }
                                 })
                             }
-                            // JSON.parse(settingData.intro_text_content).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.intro_text_content = v.content;
-                            //         return;
-                            //     } else {
-                            //         data.intro_text_content = v.content;
-                            //         return ;
-                            //     }
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -263,15 +245,6 @@ exports.findSetting = async (shop, locale) => {
                                     }
                                 })
                             }
-                            // JSON.parse(settingData.page_under_contruction).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.page_under_contruction = v.content;
-                            //         return;
-                            //     } else {
-                            //         data.page_under_contruction = v.content;
-                            //         return ;
-                            //     }
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -294,15 +267,6 @@ exports.findSetting = async (shop, locale) => {
                                     }
                                 })
                             }
-                            // JSON.parse(settingData.search_placehoder).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.search_placehoder = v.content;
-                            //         return;
-                            //     } else {
-                            //         data.search_placehoder = v.content;
-                            //         return ;
-                            //     }
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -325,15 +289,6 @@ exports.findSetting = async (shop, locale) => {
                                     }
                                 })
                             }
-                            // JSON.parse(settingData.page_title_content).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.page_title_content = v.content;
-                            //         return;
-                            //     } else {
-                            //         data.page_title_content = v.content;
-                            //         return ;
-                            //     }
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -356,20 +311,10 @@ exports.findSetting = async (shop, locale) => {
                                     }
                                 })
                             }
-                            // JSON.parse(settingData.footer_text_content).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.footer_text_content = v.content;
-                            //         return;
-                            //     } else {
-                            //         data.footer_text_content = v.content;
-                            //         return ;
-                            //     }
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
-                    console.log(data)
                     templateSetting = await getTemplateSetting(settingData.id, settingData.faq_template_number);
                     returnData = {data, templateSetting}
                 }).catch(error => {
