@@ -169,6 +169,7 @@ let initAPIs = (app) => {
     // get Product list
     router.get("/api/shop/product-list", shopifyApi.getProductList);
     router.get("/api/shop/search-product", shopifyApi.searchProductByTitle);
+    router.get("/api/sync-languages", shopifyApi.syncLanguage);
 
     // Upload image
     const multer = require('multer');
