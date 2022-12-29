@@ -67,6 +67,7 @@ app.get('/', async (req, res) => {
 		} catch (e) {}
 		return res.redirect(app_link+txt);
 	}
+
 });
 
 app.use(authorize);
