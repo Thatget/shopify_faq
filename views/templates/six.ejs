@@ -33,15 +33,15 @@
                 <%} %>
             <% } %>
         </div>
-        <div>
-            <% if(setting.data.show_intro_text && setting.data.intro_text_content) {%>
+        <% if(setting.data.show_intro_text && setting.data.intro_text_content) {%>
+            <div>
                 <div class="faq-intro-text">
                     <span><%- setting.data.intro_text_content %></span>
                 </div>
-            <% } %>    
-        </div>
-        <div>
-            <% if(!setting.data.dont_category_faq) {%>
+            </div>
+        <% } %>    
+        <% if(!setting.data.dont_category_faq) {%>
+            <div>
                 <div class="category-bar">
                     <% for(var i = 0; i < faqs.categories.length; i++) { %>
                         <div class="category-bar-item" id="faq-category<%- i %>" onclick="changeCategory('<%- i %>', '<%= setting.templateSetting.faq_hover_color%>', '<%= setting.templateSetting.category_bar_background %>', '<%= setting.templateSetting.banner_visible %>')"
@@ -53,8 +53,8 @@
                         </div>
                     <% } %>                                
                 </div>
-            <% } %>        
-        </div>
+            </div>
+        <% } %>        
     </div>
     <div class="faq-main">
         <% if(!setting.data.show_page_construction){%>

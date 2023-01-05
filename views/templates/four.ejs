@@ -51,8 +51,8 @@
                                     <div class="category-bar">
                                         <% for(var i = 0; i < faqs.categories.length; i++) { %>
                                             <div class="category-bar-item" style="padding: 0 20px; margin-bottom: 16px">
-                                                <a href="#faq-main" style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>;">
-                                                    <span onclick="changeCategory('<%- i %>', '<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>')" class="category-bar-title" id="faq-category<%- i %>"<% if(i === 0){%> style="word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; border-bottom: 1px solid <%= setting.templateSetting.category_bar_background %>; text-decoration: none; font-size: 16px !important; user-select: none; color: <%= setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="color: <%= setting.templateSetting.category_bar_color %>;word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; text-decoration: none; font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></span>                                                  
+                                                <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>;">
+                                                  <span onclick="changeCategory('<%- i %>', '<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>')" class="category-bar-title" id="faq-category<%- i %>"<% if(i === 0){%> style="word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; border-bottom: 1px solid <%= setting.templateSetting.category_bar_background %>; text-decoration: none; font-size: 16px !important; user-select: none; color: <%= setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="color: <%= setting.templateSetting.category_bar_color %>;word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; text-decoration: none; font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></span>                                                  
                                                 </a>
                                             </div>
                                         <% } %>                                
@@ -82,7 +82,7 @@
                                             </div>
                                         <% } %>
                                         <div style="display: none;" id="category<%- i %>">
-                                            <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
+                                            <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                     <div class="faq-main-content">
@@ -191,8 +191,10 @@
     }
     var categoryName = []
     function changeCategory(id, category_bar_color, category_bar_background){
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
+      document.body.scrollTo({
+        top: 1200,
+        behavior: 'smooth'
+      });
         if(!categoryName.some(item => {
             return item === id
         })){            
@@ -528,6 +530,7 @@
         margin-top: 30px; 
         padding-bottom: 40px;
         word-wrap: break-word;
+        scroll-margin-top: 100px
     }
     #not-found-text{
         display: none; 
@@ -589,7 +592,7 @@
         margin-left: 20px
     }
     .faq-answer-content{
-        margin:0; 
+        margin: 12px 0 0 0 ; 
         padding: 0px 10px 0px calc(<%- setting.templateSetting.faq_font_size%>px + 20px);
         // position: relative;
         word-wrap: break-word;

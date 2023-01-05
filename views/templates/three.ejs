@@ -59,7 +59,7 @@
                                     <% for(var i=0; i < faqs.categories.length; i++) { %>
                                         <% if(i === 0) {%>
                                             <div id="dung">
-                                                <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
+                                                <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                                 <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                     <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                         <div class="faq-main-content">
@@ -220,7 +220,6 @@
         if(categoryName.length === 1){
             document.getElementsByClassName('category-bar-item')[0].style.backgroundColor = 'inherit'
         }
-
     }
     function showHideContent(el) {
         var content = el.nextElementSibling;
@@ -530,6 +529,7 @@
         margin-top: 30px; 
         padding-bottom: 10px;
         word-wrap: break-word;
+        scroll-margin-top: 100px
     }
     #not-found-text{
         display: none; 
