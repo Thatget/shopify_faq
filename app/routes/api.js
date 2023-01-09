@@ -14,6 +14,7 @@ const admin = require("../controllers/admin.controller");
 const setting = require("../controllers/setting.controller");
 const template_setting = require("../controllers/template_setting.controller");
 const merchants_rating = require("../controllers/merchants_rating.controller");
+const merchants_plan = require("../controllers/merchants_plan.controller");
 const messages = require("../controllers/faq_messages.controller.js");
 const messages_setting = require("../controllers/faq_messages_setting.controller.js");
 const category = require("../controllers/faq_category.controller.js");
@@ -89,6 +90,12 @@ let initAPIs = (app) => {
     router.get("/api/get/rating", merchants_rating.findOne);
     router.put("/api/update/rating", merchants_rating.update);
 
+    //Merchant Plan router
+    router.post("/api/plan", merchants_plan.create);
+    router.get("/api/getAll/plan", merchants_plan.findAll);
+    router.get("/api/get/plan", merchants_plan.findOne);
+    router.put("/api/update/plan", merchants_plan.update);
+    
     //Template_setting
     router.post("/api/template_setting", template_setting.create);
     router.get("/api/template_setting/:setting_id", template_setting.findAll);

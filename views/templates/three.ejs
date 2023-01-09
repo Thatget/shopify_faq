@@ -47,13 +47,24 @@
                 <div class="faq-main-container">
                     <div class="faq-category-container">
                         <% if(faqs.categories.length){%>
-                            <div class="category-bar" style="color: <%=  setting.templateSetting.category_bar_color %>">
+                          <% if(faqs.user_id === 1){%>
+                            <div class="category-bar category-bar-2048" style="color: <%=  setting.templateSetting.category_bar_color %>">
                                 <% for(var i = 0; i < faqs.categories.length; i++) { %>
-                                    <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" style="text-decoration: none; color: <%=  setting.templateSetting.category_font_color %>">
-                                      <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
+                                    <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" <% if(i === 0 && faqs.user_id === 1){%> style="text-decoration: none; color: #fff"<%}else{%>style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>"<%}%>>
+                                      <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>', '<%=  setting.templateSetting.category_bar_color %>', '<%=  faqs.user_id %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
                                     </a>
                                 <% } %>
                             </div>
+                          <% }
+                          else{ %>
+                            <div class="category-bar" style="color: <%=  setting.templateSetting.category_bar_color %>">
+                                <% for(var i = 0; i < faqs.categories.length; i++) { %>
+                                    <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>">
+                                      <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>', '<%=  setting.templateSetting.category_bar_color %>', '<%=  faqs.user_id %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
+                                    </a>
+                                <% } %>
+                            </div>
+                          <% } %>
                             <div class="faq-container">
                                 <div class="category-faq-container" id="category-container">
                                     <% for(var i=0; i < faqs.categories.length; i++) { %>
@@ -183,7 +194,7 @@
         });    
     }
     var categoryName = []
-    function changeCategory(id, category_bar_background){
+    function changeCategory(id, category_bar_background, category_bar_color, user_id){
         if(!categoryName.some(item => {
             return item === id
         })){            
@@ -204,15 +215,34 @@
             document.getElementsByClassName('svg-minus')[i].style.transition  = "ease-in .3s";
             document.getElementsByClassName('svg-minus')[i].style.opacity = '0'
         }
-        for(let i = 0; i < categoryName.length; i++){
+        if(user_id == 1){
+          document.querySelector('.faq-category-title').scrollMarginTop = "2000px"
+          for(let i = 0; i < categoryName.length; i++){
+            document.getElementById(`faq-category0`).style.color = `${category_bar_color}`
             if(categoryName[i] == id){
                 document.getElementById(`category${id}`).style.display = 'block'
                 document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = `${category_bar_background}`
+                document.getElementById(`faq-category${categoryName[i]}`).style.color = "#fff"
             }
             else{
                 document.getElementById(`category${categoryName[i]}`).style.display = 'none'
                 document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = 'inherit'
+                document.getElementById(`faq-category${categoryName[i]}`).style.color = `${category_bar_color}`
             }
+          }
+        }
+        else{
+          for(let i = 0; i < categoryName.length; i++){
+              if(categoryName[i] == id){
+                  document.getElementById(`category${id}`).style.display = 'block'
+                  document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = `${category_bar_background}`
+                  document.getElementById(`faq-category${categoryName[i]}`).style.color = `${category_bar_color}`
+              }
+              else{
+                  document.getElementById(`category${categoryName[i]}`).style.display = 'none'
+                  document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = 'inherit'
+              }
+          }
         }
         if(categoryName.length > 0){
             document.getElementById('dung').style.display= "none"
