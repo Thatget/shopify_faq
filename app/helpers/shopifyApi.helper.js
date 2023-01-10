@@ -20,7 +20,6 @@ const productList = async (req, res) => {
       }
       limit = Math.abs(limit)
     }
-    console.log(limit)
     try {
         const userInfo = await User.findByPk(id, {attributes: ['shopify_domain', 'shopify_access_token']});
         const shopRequestUrl = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-01/products.json';

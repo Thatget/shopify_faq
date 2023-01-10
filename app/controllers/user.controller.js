@@ -357,7 +357,6 @@ async function findPlan(user_id){
   })
   .then(data => {
     planData = data
-    console.log(data, 'aaaaaaaaa')
   })
   .catch(err => {
     errorLog.error(err)
