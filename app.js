@@ -33,31 +33,31 @@ const accessTokenLife = process.env.JWT_KEY_LIFE;
 const accessTokenSecret = process.env.JWT_KEY;
 const refreshTokenLife = process.env.REFRESH_JWT_KEY_LIFE;
 const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
-
+const Shopify = require("@shopify/shopify-api");
 // const debug = console.log.bind(console);
 db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.");
 });
 
 app.get('/', async (req, res) => {
+  // console.log(res)
   // if (!req.query.session) {
-  //   if(!req.query.host){
-  //     const state = nonce();
-  //     const redirectUri = forwardingAddress + '/shopify/callback';
-  //     const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
-  //         '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
-  //     res.cookie('state',state);
-  //     res.redirect(pageUri);
-  //   }
-  //   return  res.render('index', {
-  //     shop: req.query.shop,
-  //     host: req.query.host,
-  //     apiKey: apiKey,
-  //     scopes: scopes,
-  //     forwardingAddress: forwardingAddress
-  //   });
-  // } 
-  // else {
+  //       if(!req.query.host){
+  //           const state = nonce();
+  //           const redirectUri = forwardingAddress + '/shopify/callback';
+  //           const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+  //               '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
+  //           res.cookie('state',state);
+  //           res.redirect(pageUri);
+  //       }
+  //       return res.render('index', {
+  //           shop: req.query.shop,
+  //           host: req.query.host,
+  //           apiKey: apiKey,
+  //           scopes: scopes,
+  //           forwardingAddress: forwardingAddress
+  //       });
+  // } else {
 	// 	let txt = "";
 	// 	try {
 	// 		let tokenData = await getToken(req.query);
@@ -74,6 +74,62 @@ app.get('/', async (req, res) => {
   }
   return res.redirect(app_link+txt);
 });
+
+app.get('/select-plan', async (req, res) => {
+  Shopify.Shopify.Context.initialize({
+    API_KEY: apiKey,
+    API_SECRET_KEY: apiSecret,
+    API_VERSION: Shopify.ApiVersion.January22,
+    SCOPES: scopes,
+    HOST_NAME: forwardingAddress,
+    HOST_SCHEME: 'https',
+    IS_EMBEDDED_APP: true,
+    IS_PRIVATE_APP: false,
+    SESSION_STORAGE: new Shopify.Shopify.Session.MemorySessionStorage(),
+  });
+  console.log(Shopify)
+  const client = new Shopify.Shopify.Clients.Graphql(
+    'shoptestdungpham.myshopify.com',
+    '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',
+  )
+  console.log(client)
+  try {
+    const res = await client.query({
+      data: {
+        query: APP_SUBSCRIPTION_CREATE,
+        variables: {
+          lineItems: [
+            {
+              plan: {
+                appRecurringPricingDetails: {
+                  interval: 'EVERY_30_DAYS',
+                  price: {
+                    amount: 4.99,
+                    currencyCode: 'USD',
+                  },
+                },
+              },
+            },
+          ],
+          name: 'Pro',
+          returnUrl:'https://shoptestdungpham.myshopify.com',
+        },
+      },
+    });
+    res.redirect((res.body)?.data?.appSubscriptionCreate?.confirmationUrl);
+  } catch (error) {
+    console.log(
+      {
+        shop: 'shoptestdungpham.myshopify.com',
+        plan: 'Pro',
+        error,
+        errorMessage: error.message,
+      },
+      new Error().stack,
+    );
+  }
+});
+
 
 app.use(authorize);
 

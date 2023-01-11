@@ -3,6 +3,34 @@ const db = require("../models");
 const Shopify = require("@shopify/shopify-api");
 const Plan = db.merchants_plan;
 const errorLog = require('../helpers/log.helper');
+const apiSecret = process.env.SHOPIFY_API_SECRET;
+const apiKey = process.env.SHOPIFY_API_KEY;
+const scopes = process.env.SCOPES;
+const forwardingAddress = process.env.HOST;
+const APP_SUBSCRIPTION_CREATE = `mutation createAppSubscription(
+  $lineItems: [AppSubscriptionLineItemInput!]!
+  $name: String!
+  $returnUrl: URL!
+  $test: Boolean = false
+  $trialDays: Int
+) {
+  appSubscriptionCreate(
+    lineItems: $lineItems
+    name: $name
+    returnUrl: $returnUrl
+    test: $test
+    trialDays: $trialDays
+  ) {
+    appSubscription {
+      id
+    }
+    confirmationUrl
+    userErrors {
+      field
+      message
+    }
+  }
+}`
 
 // Create a plan
 exports.create = async (req, res) => {
@@ -75,13 +103,58 @@ exports.update = async (req, res) => {
 };
 
 exports.select = async (req, res) => {
-  console.log(Shopify)
-  console.log(Shopify.default.Utils.loadCurrentSession(req, res))
-  // const client = Shopify.default.Utils.loadCurrentSession(req, res, true);
-  // console.log(client)
-  // const checkBilling = await billingMiddleware()
-  // console.log(checkBilling)
-  // await shopify()
+  console.log(req.body)
+  Shopify.Shopify.Context.initialize({
+    API_KEY: apiKey,
+    API_SECRET_KEY: apiSecret,
+    API_VERSION: Shopify.ApiVersion.January22,
+    SCOPES: scopes,
+    HOST_NAME: forwardingAddress,
+    HOST_SCHEME: 'https',
+    IS_EMBEDDED_APP: true,
+    IS_PRIVATE_APP: false,
+    SESSION_STORAGE: new Shopify.Shopify.Session.MemorySessionStorage(),
+  });
+  const client = new Shopify.Shopify.Clients.Graphql(
+    req.body.shop,
+    req.body.accessToken,
+  )
+  try {
+    const sestion = await client.query({
+      data: {
+        query: APP_SUBSCRIPTION_CREATE,
+        variables: {
+          lineItems: [
+            {
+              plan: {
+                appRecurringPricingDetails: {
+                  interval: 'EVERY_30_DAYS',
+                  price: {
+                    amount: 4.99,
+                    currencyCode: 'USD',
+                  },
+                },
+              },
+            },
+          ],
+          name: `${req.body.plan} Plan`,
+          returnUrl:`https://${req.body.shop}`,
+        },
+      },
+    });
+    console.log((sestion.body)?.data?.appSubscriptionCreate?.confirmationUrl)
+    return res.redirect((sestion.body)?.data?.appSubscriptionCreate?.confirmationUrl);
+  } catch (error) {
+    console.log(
+      {
+        shop: req.body.shop,
+        plan: req.body.plan,
+        error,
+        errorMessage: error.message,
+      },
+      new Error().stack,
+    );
+  }
 };
 
 // const shopify = shopifyApi({

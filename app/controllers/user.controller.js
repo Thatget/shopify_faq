@@ -105,7 +105,7 @@ exports.findAllData = async(req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
   await User.findByPk(user_id,
     {
-      attributes:['shopify_domain','store_name','shopLocales','phone','email']
+      attributes:['shopify_domain','store_name','shopLocales','phone','email','shopify_access_token']
     })
   .then(async data => {
     if (data) {
