@@ -33,13 +33,14 @@ const accessTokenLife = process.env.JWT_KEY_LIFE;
 const accessTokenSecret = process.env.JWT_KEY;
 const refreshTokenLife = process.env.REFRESH_JWT_KEY_LIFE;
 const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
-
+const Shopify = require("@shopify/shopify-api");
 // const debug = console.log.bind(console);
 db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.");
 });
 
 app.get('/', async (req, res) => {
+  // console.log(res)
   if (!req.query.session) {
         if(!req.query.host){
             const state = nonce();
@@ -49,7 +50,7 @@ app.get('/', async (req, res) => {
             res.cookie('state',state);
             res.redirect(pageUri);
         }
-        return  res.render('index', {
+        return res.render('index', {
             shop: req.query.shop,
             host: req.query.host,
             apiKey: apiKey,
@@ -67,6 +68,7 @@ app.get('/', async (req, res) => {
 		return res.redirect(app_link+txt);
 	}
 });
+
 
 app.use(authorize);
 

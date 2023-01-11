@@ -6,18 +6,19 @@ const { uninstallApp } = require('./webhook');
 const appName = process.env.SHOPIFY_APP_NAME;
 
 const authorizeScope = async (req, res) => {
-	const authorize = cookie.parse(req.headers.cookie).authorize||false;
+	// const authorize = cookie.parse(req.headers.cookie).authorize||false;
 
   const { shop } = req.query;
   const accessToken = req.accessToken;
   try {
-		if (authorize) {
-			console.log("X!1")
-			await updateUserTable(shop, accessToken)
-		} else {
-			console.log("X!2")
-    	await Promise.allSettled([updateUserTable(shop, accessToken),uninstallApp(shop, accessToken)]);
-		}
+		// if (authorize) {
+		// 	await updateUserTable(shop, accessToken)
+		// } else {
+    //   await updateUserTable(shop, accessToken),
+    //   await uninstallApp(shop, accessToken)
+		// }
+    await updateUserTable(shop, accessToken),
+    await uninstallApp(shop, accessToken)
   } catch (error) {
     errorLog.error(`Authorize scope failed: ${error.message}`)
   }

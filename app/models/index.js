@@ -26,4 +26,5 @@ db.faq_category = require("./faq_category.model.js")(sequelize, Sequelize);
 db.setting = require("./setting.model.js")(sequelize, Sequelize);
 db.template_setting = require("./template_setting.model.js")(sequelize, Sequelize);
 db.merchants_rating = require("./merchants_rating.model.js")(sequelize, Sequelize);
+db.merchants_plan = require("./merchants_plan.model.js")(sequelize, Sequelize);
 module.exports = db;
