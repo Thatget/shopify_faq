@@ -3,7 +3,58 @@ const db = require("../models");
 const Shopify = require("@shopify/shopify-api");
 const Plan = db.merchants_plan;
 const errorLog = require('../helpers/log.helper');
+const apiSecret = process.env.SHOPIFY_API_SECRET;
+const apiKey = process.env.SHOPIFY_API_KEY;
+const scopes = process.env.SCOPES;
+const forwardingAddress = process.env.HOST;
+const authorizeLink = require('./authorizeLink.helper');
 
+const APP_SUBSCRIPTION_CREATE = `mutation createAppSubscription(
+  $lineItems: [AppSubscriptionLineItemInput!]!
+  $name: String!
+  $returnUrl: URL!
+  $test: Boolean = false
+  $trialDays: Int
+) {
+  appSubscriptionCreate(
+    lineItems: $lineItems
+    name: $name
+    returnUrl: $returnUrl
+    test: $test
+    trialDays: $trialDays
+  ) {
+    appSubscription {
+      id
+      lineItems {
+        id
+        plan {
+          pricingDetails {
+            __typename
+          }
+        }
+      }
+    }
+    confirmationUrl
+    userErrors {
+      field
+      message
+    }
+  }
+}`
+
+const APP_SUBSCRIPTION_CANCEL = `
+  mutation cancelAppSubscription($id: ID!) {
+    appSubscriptionCancel(id: $id) {
+      appSubscription {
+        id
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
 // Create a plan
 exports.create = async (req, res) => {
   const plan = req.body;
@@ -87,13 +138,12 @@ exports.select = async (req, res) => {
     IS_PRIVATE_APP: false,
     SESSION_STORAGE: new Shopify.Shopify.Session.MemorySessionStorage(),
   });
-  console.log(Shopify)
   const client = new Shopify.Shopify.Clients.Graphql(
-    'shoptestdungpham.myshopify.com',
-    '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',
+    req.body.shop,
+    req.body.accessToken,
   )
   try {
-    const res = await client.query({
+    const session = await client.query({
       data: {
         query: APP_SUBSCRIPTION_CREATE,
         variables: {
@@ -110,24 +160,67 @@ exports.select = async (req, res) => {
               },
             },
           ],
-          name: 'Pro',
-          returnUrl:'https://shoptestdungpham.myshopify.com',
+          name: `${req.body.plan} Plan`,
+          returnUrl:`https://${req.body.shop}`,
         },
       },
     });
-    console.log((res.body)?.data?.appSubscriptionCreate?.confirmationUrl)
-    return (res.body)?.data?.appSubscriptionCreate?.confirmationUrl;
+    console.log((session.body)?.data)
+    res.redirect(`${(session.body)?.data?.appSubscriptionCreate?.confirmationUrl}`);
   } catch (error) {
     console.log(
       {
-        shop: 'shoptestdungpham.myshopify.com',
-        plan: 'Pro',
+        shop: req.body.shop,
+        plan: req.body.plan,
         error,
         errorMessage: error.message,
       },
       new Error().stack,
     );
   }
+};
+
+exports.cancel = async (req, res) => {
+  console.log(req.body)
+  const client = new Shopify.Clients.Graphql(
+    req.body.shop,
+    req.body.accessToken,
+  );
+  
+  const currentSubscription = await this.getCurrentSubscription(
+    req.body,
+    currentPlan,
+  );
+  
+  if (currentSubscription) {
+    try {
+      const session = await client.query({
+        data: {
+          query: APP_SUBSCRIPTION_CANCEL,
+          variables: {
+            id: currentSubscription.id,
+          },
+        },
+      });
+  
+      if (
+        (session?.body)?.data?.appSubscriptionCancel?.appSubscription?.id
+      ) {
+        // await this.updatePlanResource(shopEntity, plan);
+        return true;
+      }
+    } catch (error) {
+      this.logger.error(
+        {
+          shop: req.body.shop,
+          plan: req.body.plan,
+          error,
+          errorMessage: error.message,
+        },
+        new Error().stack,
+      );
+    }
+  }  
 };
 
 // const shopify = shopifyApi({

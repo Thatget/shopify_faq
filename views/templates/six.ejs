@@ -72,11 +72,11 @@
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                     <div class="faq-main-content">
                                                         <div class="faq-question-title" onclick="showHideContent(this)">
-                                                            <i class="faq-icon fa-solid fa-plus" class="fa-solid fa-plus" <% if(j === 0){%> style="opacity: 0"<%}
-                                                                else{%>style="opacity: 1"<%}%>></i>
-                                                            <i class="fa-solid fa-minus faq-icon" <% if(j === 0){%> style="opacity: 1"<%}
-                                                                else{%>style="opacity: 0"<%}%>></i>
-                                                            <span class="listed-faq" value><%= faqs.faq[j].title %> </span>
+                                                          <div style="width: <%=  setting.templateSetting.faq_font_size %>px; position: relative">
+                                                            <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" <% if(j === 0){%> style="opacity: 0"<%} else{%>style="opacity: 1"<%}%> viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                                                            <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" <% if(j === 0){%> style="opacity: 1"<%} else{%>style="opacity: 0"<%}%> viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                                          </div>
+                                                          <span class="listed-faq"><%= faqs.faq[j].title %> </span>
                                                         </div>
                                                         <div id="faq-answer-content" class="faq-answer-content" <% if(j === 0){%> style="display: block"<%}
                                                             else{%>style="display: none"<%}%>>
@@ -99,11 +99,11 @@
                         <% for(var j = 0; j < faqs.faq.length; j++) { %>
                             <div class="faq-main-content">
                                 <div class="faq-question-title" onclick="showHideContent(this)">
-                                    <i class="faq-icon fa-solid fa-plus" class="fa-solid fa-plus" <% if(j === 0){%> style="opacity: 0"<%}
-                                        else{%>style="opacity: 1"<%}%>></i>
-                                    <i class="fa-solid fa-minus faq-icon" <% if(j === 0){%> style="opacity: 1"<%}
-                                        else{%>style="opacity: 0"<%}%>></i>
-                                    <span class="listed-faq"><%= faqs.faq[j].title %> </span>
+                                  <div style="width: <%=  setting.templateSetting.faq_font_size %>px; position: relative">
+                                    <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" <% if(j === 0){%> style="opacity: 0"<%} else{%>style="opacity: 1"<%}%> viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                                    <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" <% if(j === 0){%> style="opacity: 1"<%} else{%>style="opacity: 0"<%}%> viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                  </div>
+                                  <span class="listed-faq"><%= faqs.faq[j].title %> </span>
                                 </div>
                                 <div class="faq-answer-content" <% if(j === 0){%> style="display: block"<%}
                                     else{%>style="display: none"<%}%>>
@@ -122,9 +122,11 @@
                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                     <div class="faq-main-content">
                                         <div class="faq-question-title" onclick="showHideContent(this)">
-                                            <i class="faq-icon fa-solid fa-plus" class="fa-solid fa-plus" style="opacity: 1"></i>
-                                            <i class="fa-solid fa-minus faq-icon" style="opacity: 0;"></i>
-                                            <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
+                                          <div style="width: <%=  setting.templateSetting.faq_font_size %>px; position: relative">
+                                            <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" style="opacity: 1" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                                            <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" style="opacity: 0" viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                          </div>
+                                          <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                         </div>
                                         <div class="faq-answer-content faq-answer-search" style="display: none;">
                                             <%- faqs.faq[j].content %>
@@ -463,7 +465,8 @@
     }
     .faq-icon{
         margin-top: calc(<%- setting.templateSetting.faq_font_size%>px * 0.65);
-        font-size: calc(<%- setting.templateSetting.faq_font_size%>px * 0.65);
+        height: calc(<%- setting.templateSetting.faq_font_size%>px * 0.65);
+        width: calc(<%- setting.templateSetting.faq_font_size%>px * 0.65);
         color: <%= setting.templateSetting.faq_font_color %>;
     }
     .category-bar{
@@ -519,6 +522,7 @@
     }
     .fa-minus{
         position: absolute;
+        left: 0
     }
     .faq-search{
         width: 60%;
@@ -590,6 +594,13 @@
         display: flex; 
         width: 100%;
     }
+    .fa-plus{
+      opacity: 1;
+    }
+    .fa-minus{
+      opacity: 0;
+      position: absolute
+    }
     .faq-footer-text{
         padding: 10px 0; 
         font-size: 18px;
@@ -620,7 +631,7 @@
     }
     .faq-answer-content{
         margin:0; 
-        padding: 4px 10px 4px calc(<%- setting.templateSetting.faq_font_size%>px* 0.65 + 16px);
+        padding: 4px 10px 4px calc(<%- setting.templateSetting.faq_font_size%>px + 16px);
         word-wrap: break-word;
     }
     svg:not(:root) {

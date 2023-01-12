@@ -81,6 +81,66 @@ app.get('/storeFAQs', async (req, res) => {
     return res.redirect(app_link+txt);
 });
 
+app.get('/select/plan', async (req, res) => {
+  console.log(req.query)
+  const linkApproveSupcription = await getlinkApproveSupcription(req.query)
+  console.log(linkApproveSupcription)
+ 
+});
+
+async function getlinkApproveSupcription(query) {
+  Shopify.Shopify.Context.initialize({
+    API_KEY: apiKey,
+    API_SECRET_KEY: apiSecret,
+    API_VERSION: Shopify.ApiVersion.January22,
+    SCOPES: scopes,
+    HOST_NAME: forwardingAddress,
+    HOST_SCHEME: 'https',
+    IS_EMBEDDED_APP: true,
+    IS_PRIVATE_APP: false,
+    SESSION_STORAGE: new Shopify.Shopify.Session.MemorySessionStorage(),
+  });
+  const client = new Shopify.Shopify.Clients.Graphql(
+    query.shop,
+    query.accessToken,
+  )
+  try {
+    const session = await client.query({
+      data: {
+        query: process.env.APP_SUBSCRIPTION_CREATE,
+        variables: {
+          lineItems: [
+            {
+              plan: {
+                appRecurringPricingDetails: {
+                  interval: 'EVERY_30_DAYS',
+                  price: {
+                    amount: query.price,
+                    currencyCode: 'USD',
+                  },
+                },
+              },
+            },
+          ],
+          name: `${query.plan} Plan`,
+          returnUrl:`https://${query.shop}`,
+        },
+      },
+    });
+    return (session.body)?.data?.appSubscriptionCreate?.confirmationUrl
+  } catch (error) {
+    console.log(
+      {
+        shop: query.shop,
+        plan: query.plan,
+        error,
+        errorMessage: error.message,
+      },
+      new Error().stack,
+    );
+  }
+}
+
 app.get('/admin', async (req, res) => {
     let tokenData = await getTokenAdmin(req.query);
     let txt = "";

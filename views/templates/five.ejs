@@ -71,7 +71,11 @@
                                             <div class="faq-main-content">
                                                 <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
                                                     <span class="listed-faq faq-question-search"><%= faqs.categories[i].faqs[j].title %></span>
-                                                    <i <% if(j % 2 === 0){%> class="fa-solid fa-caret-right question-title-right"<%}else{%>class="fa-solid fa-caret-left question-title-left"<%}%> :style="`color: ${settings.faq_bg_color}`"></i>
+                                                    <% if(j % 2 === 0){%> 
+                                                      <svg fill="<%=  setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-right question-title-right" viewBox="0 0 256 512"><path d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"/></svg>
+                                                    <%}else{%>
+                                                      <svg fill="<%=  setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-left question-title-left" viewBox="0 0 256 512"><path d="M9.4 278.6c-12.5-12.5-12.5-32.8 0-45.3l128-128c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 256c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-128-128z"/></svg>
+                                                    <%}%>                                                     
                                                 </div>
                                                 <div class="faq-answer-content faq-answer-search">
                                                     <%- faqs.categories[i].faqs[j].content %>
@@ -92,7 +96,11 @@
                             <div class="faq-main-content">
                                 <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
                                     <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
-                                    <i <% if(j % 2 === 0){%> class="fa-solid fa-caret-right question-title-right"<%}else{%>class="fa-solid fa-caret-left question-title-left"<%}%> :style="`color: ${settings.faq_bg_color}`"></i>
+                                      <% if(j % 2 === 0){%> 
+                                        <svg fill="<%=  setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-right question-title-right" viewBox="0 0 256 512"><path d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"/></svg>
+                                      <%}else{%>
+                                        <svg fill="<%=  setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-left question-title-left" viewBox="0 0 256 512"><path d="M9.4 278.6c-12.5-12.5-12.5-32.8 0-45.3l128-128c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 256c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-128-128z"/></svg>
+                                      <%}%>                                                     
                                 </div>
                                 <div class="faq-answer-content faq-answer-search">
                                     <%- faqs.faq[j].content %>
@@ -371,18 +379,18 @@ svg:not(:root) {
 .question-title-right{
   position: absolute;
   top: 50%;
-  right: -30px;
+  right: -60px;
   transform: translate(-50% ,-50%);
-  font-size: 60px;
-  color: <%=  setting.templateSetting.faq_bg_color %>;
+  width: 60px;
+  height: 60px;
 }
 .question-title-left{
   position: absolute;
   top: 50%;
   left: 2px;
   transform: translate(-50% ,-50%);
-  font-size: 60px;
-  color: <%=  setting.templateSetting.faq_bg_color %>;
+  width: 60px;
+  height: 60px;
 }
 .page-under-contruction{
     text-align: center;
