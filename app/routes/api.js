@@ -95,7 +95,7 @@ let initAPIs = (app) => {
     router.get("/api/plan/getAll", merchants_plan.findAll);
     router.get("/api/plan/get", merchants_plan.findOne);
     router.put("/api/plan/update", merchants_plan.update);
-    router.put("/api/plan/select", merchants_plan.select);
+    router.get("/api/plan/select", merchants_plan.select);
     
     //Template_setting
     router.post("/api/template_setting", template_setting.create);

@@ -295,18 +295,12 @@
                 document.getElementsByClassName('category-bar')[0].style.display = "flex"
                 document.getElementsByClassName('faq-container')[0].style.width = "70%"
                 nodeCategory[0].style.display = "none"
-                for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
-                    document.getElementsByClassName("faq-category-search")[i].style.display = "block"
-                }
             }
             else{
                 document.getElementsByClassName("category-faq-container")[0].style.display = "none"
                 document.getElementsByClassName('category-bar')[0].style.display = "none"
                 document.getElementsByClassName('faq-container')[0].style.width = "100%"
                 nodeCategory[0].style.display = "block"
-                for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
-                    document.getElementsByClassName("faq-category-search")[i].style.display = "none"
-                }
             }
             var checkexist = true;
             for (i = 0; i < filterByQuestion.length; i++) {
@@ -338,17 +332,11 @@
                 document.getElementsByClassName('faq-dont-category')[0].style.display = "block"
 
                 nodeCategory[0].style.display = "none"
-                for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
-                    document.getElementsByClassName("faq-category-search")[i].style.display = "block"
-                }
             }
             else{
                 document.getElementsByClassName('faq-dont-category')[0].style.display = "none"
 
                 nodeCategory[0].style.display = "block"
-                for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
-                    document.getElementsByClassName("faq-category-search")[i].style.display = "none"
-                }
             }
             var checkexist = true;
             for (i = 0; i < filterByQuestion.length; i++) {
@@ -473,12 +461,6 @@
         <% if (setting.templateSetting.category_font_family) { %>
             font-family: <%=  setting.templateSetting.category_font_family %>;
         <% } %>
-    }
-    .faq-category-search{
-        border-bottom: 1px solid #ccc; 
-        width: 100%; 
-        margin-top: 30px; 
-        padding-bottom: 10px
     }
     .faq-page-title{
         <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
