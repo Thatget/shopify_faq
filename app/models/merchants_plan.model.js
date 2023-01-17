@@ -8,6 +8,9 @@ module.exports = (sequelize, Sequelize) => {
       plan: {
         type: Sequelize.STRING,
       },
+      shopify_plan_id:{
+        type: Sequelize.STRING,
+      },
       expiry_date: {
         type: Sequelize.STRING
       },

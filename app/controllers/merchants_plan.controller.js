@@ -7,54 +7,6 @@ const apiSecret = process.env.SHOPIFY_API_SECRET;
 const apiKey = process.env.SHOPIFY_API_KEY;
 const scopes = process.env.SCOPES;
 const forwardingAddress = process.env.HOST;
-const authorizeLink = require('./authorizeLink.helper');
-
-const APP_SUBSCRIPTION_CREATE = `mutation createAppSubscription(
-  $lineItems: [AppSubscriptionLineItemInput!]!
-  $name: String!
-  $returnUrl: URL!
-  $test: Boolean = false
-  $trialDays: Int
-) {
-  appSubscriptionCreate(
-    lineItems: $lineItems
-    name: $name
-    returnUrl: $returnUrl
-    test: $test
-    trialDays: $trialDays
-  ) {
-    appSubscription {
-      id
-      lineItems {
-        id
-        plan {
-          pricingDetails {
-            __typename
-          }
-        }
-      }
-    }
-    confirmationUrl
-    userErrors {
-      field
-      message
-    }
-  }
-}`
-
-const APP_SUBSCRIPTION_CANCEL = `
-  mutation cancelAppSubscription($id: ID!) {
-    appSubscriptionCancel(id: $id) {
-      appSubscription {
-        id
-      }
-      userErrors {
-        field
-        message
-      }
-    }
-  }
-`;
 // Create a plan
 exports.create = async (req, res) => {
   const plan = req.body;
@@ -125,63 +77,7 @@ exports.update = async (req, res) => {
     });
 };
 
-exports.select = async (req, res) => {
-  console.log(req.body)
-  Shopify.Shopify.Context.initialize({
-    API_KEY: apiKey,
-    API_SECRET_KEY: apiSecret,
-    API_VERSION: Shopify.ApiVersion.January22,
-    SCOPES: scopes,
-    HOST_NAME: forwardingAddress,
-    HOST_SCHEME: 'https',
-    IS_EMBEDDED_APP: true,
-    IS_PRIVATE_APP: false,
-    SESSION_STORAGE: new Shopify.Shopify.Session.MemorySessionStorage(),
-  });
-  const client = new Shopify.Shopify.Clients.Graphql(
-    req.body.shop,
-    req.body.accessToken,
-  )
-  try {
-    const session = await client.query({
-      data: {
-        query: APP_SUBSCRIPTION_CREATE,
-        variables: {
-          lineItems: [
-            {
-              plan: {
-                appRecurringPricingDetails: {
-                  interval: 'EVERY_30_DAYS',
-                  price: {
-                    amount: 4.99,
-                    currencyCode: 'USD',
-                  },
-                },
-              },
-            },
-          ],
-          name: `${req.body.plan} Plan`,
-          returnUrl:`https://${req.body.shop}`,
-        },
-      },
-    });
-    console.log((session.body)?.data)
-    res.redirect(`${(session.body)?.data?.appSubscriptionCreate?.confirmationUrl}`);
-  } catch (error) {
-    console.log(
-      {
-        shop: req.body.shop,
-        plan: req.body.plan,
-        error,
-        errorMessage: error.message,
-      },
-      new Error().stack,
-    );
-  }
-};
-
 exports.cancel = async (req, res) => {
-  console.log(req.body)
   const client = new Shopify.Clients.Graphql(
     req.body.shop,
     req.body.accessToken,
@@ -206,7 +102,6 @@ exports.cancel = async (req, res) => {
       if (
         (session?.body)?.data?.appSubscriptionCancel?.appSubscription?.id
       ) {
-        // await this.updatePlanResource(shopEntity, plan);
         return true;
       }
     } catch (error) {
@@ -222,45 +117,3 @@ exports.cancel = async (req, res) => {
     }
   }  
 };
-
-// const shopify = shopifyApi({
-//   billing: {
-//     'My billing plan': {
-//       interval: BillingInterval.Every30Days,
-//       amount: 1,
-//       currencyCode: 'USD',
-//       replacementBehavior: BillingReplacementBehavior.ApplyImmediately,
-//     },
-//   },
-// });
-
-async function billingMiddleware(req, res, next) {
-  const sessionId = Shopify.session.getCurrentId({
-    isOnline: true,
-    rawRequest: req,
-    rawResponse: res,
-  });
-  console.log(sessionId)
-  // use sessionId to retrieve session from app's session storage
-  // In this example, getSessionFromStorage() must be provided by app
-  // const session = await getSessionFromStorage(sessionId);
-
-  // const hasPayment = await Shopify.Billing.check({
-  //   session,
-  //   plans: ['My billing plan'],
-  //   isTest: true,
-  // });
-
-  // if (hasPayment) {
-  //   next();
-  // } else {
-  //   // Either request payment now (if single plan) or redirect to plan selection page (if multiple plans available), e.g.
-  //   const confirmationUrl = await shopify.billing.request({
-  //     session,
-  //     plan: 'My billing plan',
-  //     isTest: true,
-  //   });
-
-  //   res.redirect(confirmationUrl);
-  // }
-}

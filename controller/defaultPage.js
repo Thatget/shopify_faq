@@ -2,13 +2,15 @@ const db = require("../app/models");
 const User = db.user;
 const Setting = db.setting;
 const MessageSetting = db.faq_messages_setting;
+const Plan = db.merchants_plan;
 const TemplateSetting = db.template_setting;
 const forwardingAddress = process.env.HOST;
 const errorLog = require('../app/helpers/log.helper');
 const { QueryTypes } = require('sequelize');
 
 // Using in nodeJs
-exports.findFaqs = async (shop, locale, path_prefix = "") => {
+exports.findFaqs = async (shop, locale, path_prefix = "", plan) => {
+  console.log(plan, 'Plan')
     let send_data = []
     let selectCondition = {}
     await User.findOne({
@@ -43,11 +45,21 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
                     let selectQueryFaqs = "SELECT `faq`.`title`,`faq`.`content`,`faq`.`locale`,`faq`.`identify`,`faq`.`category_identify` FROM faq" +
                         " where `faq`.`user_id` = ? and `faq`.`is_visible` = 1 and (`faq`.`locale` = 'default' or `faq`.`locale` = ?)";
 					
-					if (selectCondition.faq_sort_name) {
-                        selectQueryFaqs += " ORDER BY `faq`.`title`"
+					      if (selectCondition.faq_sort_name) {
+                  if(plan == 'Pro'){
+                    selectQueryFaqs += " ORDER BY `faq`.`title`"
+                  }
+                  else{
+                    selectQueryFaqs += " ORDER BY `faq`.`title` LIMIT 30"
+                  }
                     }
                     else{
+                      if(plan == 'Pro'){
                         selectQueryFaqs += " ORDER BY `faq`.`position`"
+                      }
+                      else{
+                        selectQueryFaqs += " ORDER BY `faq`.`position` LIMIT 30"
+                      }
                     }
 
                     dataFaqs = await db.sequelize.query(
@@ -63,7 +75,6 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
                     let listCategoryDefault = []
                     let listFaq = []
                     let listFaqDefault = []
-
                     dataFaqs.forEach(item => {
                         listCategoryIdentify.push(item.category_identify)
                         listFaqIdentify.push(item.identify)
@@ -75,11 +86,11 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
 						" where `faq_category`.`user_id` = ? and `faq_category`.`is_visible` = 1 and `faq_category`.`identify` in (?) and (`faq_category`.`locale` = 'default' or `faq_category`.`locale` = ?)";
 
 						if (selectCondition.category_sort_name) {
-                            selectQueryCategories += " ORDER BY `faq_category`.`title`"
-                        }
-                        else{
-                            selectQueryCategories += " ORDER BY `faq_category`.`position`"
-                        }
+                  selectQueryCategories += " ORDER BY `faq_category`.`title`"
+              }
+              else{
+                  selectQueryCategories += " ORDER BY `faq_category`.`position`"
+              }
 
 
 						dataCategories = await db.sequelize.query(
@@ -158,8 +169,7 @@ exports.findFaqs = async (shop, locale, path_prefix = "") => {
         });
     return send_data;
 };
-exports.findSetting = async (shop, locale) => {
-    errorLog.error(locale, 'aaa')
+exports.findSetting = async (shop, locale, plan) => {
     let returnData = {};
     let data = {};
     let templateSetting = {};
@@ -190,15 +200,6 @@ exports.findSetting = async (shop, locale) => {
                                     return;
                                 }
                             })
-                            // JSON.parse(settingData.search_not_found).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.search_not_found = v.content;
-                            //         return false;
-                            //     } else if(v.locale === 'default'){
-                            //         data.search_not_found = v.content;
-                            //     }
-                            //     return true;
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -212,15 +213,6 @@ exports.findSetting = async (shop, locale) => {
                                     return;
                                 }
                             })
-                            // JSON.parse(settingData.intro_text_content).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.intro_text_content = v.content;
-                            //         return false;
-                            //     } else if(v.locale === 'default') {
-                            //         data.intro_text_content = v.content;
-                            //     }
-                            //     return true;
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -233,15 +225,6 @@ exports.findSetting = async (shop, locale) => {
                                     return;
                                 }
                             })
-                            // JSON.parse(settingData.page_under_contruction).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.page_under_contruction = v.content;
-                            //         return false;
-                            //     } else if(v.locale === 'default') {
-                            //         data.page_under_contruction = v.content;
-                            //     }
-                            //     return true;
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -254,15 +237,6 @@ exports.findSetting = async (shop, locale) => {
                                     return;
                                 }
                             })
-                            // JSON.parse(settingData.search_placehoder).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.search_placehoder = v.content;
-                            //         return false;
-                            //     } else if(v.locale === 'default') {
-                            //         data.search_placehoder = v.content;
-                            //     }
-                            //     return true;
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -275,15 +249,6 @@ exports.findSetting = async (shop, locale) => {
                                     return;
                                 }
                             })
-                            // JSON.parse(settingData.page_title_content).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.page_title_content = v.content;
-                            //         return;
-                            //     } else {
-                            //         data.page_title_content = v.content;
-                            //         return ;
-                            //     }
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
@@ -297,18 +262,12 @@ exports.findSetting = async (shop, locale) => {
                                 }
                             })
 
-                            // JSON.parse(settingData.footer_text_content).every(v => {
-                            //     if (v.locale === locale) {
-                            //         data.footer_text_content = v.content;
-                            //         return false;
-                            //     } else if(v.locale === 'default') {
-                            //         data.footer_text_content = v.content;
-                            //     }
-                            //     return true;
-                            // });
                         } catch (e) {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
+                    }
+                    if(plan == 'Free' && (settingData.faq_template_number != 1 && settingData.faq_template_number != 2)){
+                      settingData.faq_template_number = 2
                     }
                     templateSetting = await getTemplateSetting(settingData.id, settingData.faq_template_number);
                     returnData = {data, templateSetting}
@@ -321,6 +280,31 @@ exports.findSetting = async (shop, locale) => {
             errorLog.error(`get setting frontend proxy get user error ${e.message}`)
         })
     return returnData;
+}
+
+exports.findMessagesSetting = async (shop, plan) => {
+  let returnData = {};
+  await User.findOne({
+      attributes: ['id'],
+      where: { shopify_domain: shop}
+  })
+      .then( async userData => {
+          if (userData) {
+              await MessageSetting.findOne({
+                  where: {
+                      user_id: userData.dataValues.id
+                  }
+              }).then(async settingData => {
+                  returnData = settingData.dataValues;
+              }).catch(error => {
+                  errorLog.error(`get setting frontend proxy ${error.message}`)
+              });
+          }
+      })
+      .catch(e =>{
+          errorLog.error(`get setting frontend proxy get user error ${e.message}`)
+      })
+  return returnData;
 }
 
 async function getTemplateSetting(setting_id, template_number) {
@@ -349,27 +333,3 @@ async function getTemplateSetting(setting_id, template_number) {
     return templateSetting;
 }
 
-exports.findMessagesSetting = async (shop) => {
-    let returnData = {};
-    await User.findOne({
-        attributes: ['id'],
-        where: { shopify_domain: shop}
-    })
-        .then( async userData => {
-            if (userData) {
-                await MessageSetting.findOne({
-                    where: {
-                        user_id: userData.dataValues.id
-                    }
-                }).then(async settingData => {
-                    returnData = settingData.dataValues;
-                }).catch(error => {
-                    errorLog.error(`get setting frontend proxy ${error.message}`)
-                });
-            }
-        })
-        .catch(e =>{
-            errorLog.error(`get setting frontend proxy get user error ${e.message}`)
-        })
-    return returnData;
-}

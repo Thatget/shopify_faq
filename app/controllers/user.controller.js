@@ -10,6 +10,7 @@ const Product = db.product;
 const FaqMorePage = db.faq_more_page;
 const FaqMorePageSetting = db.faq_more_page_setting;
 const Rating = db.merchants_rating;
+const Plan = db.merchants_plan;
 const errorLog = require('../helpers/log.helper');
 
 exports.create = (req, res) => {
@@ -100,6 +101,7 @@ exports.findAllData = async(req, res) => {
   let faqMorePageData = []
   let faqMorePageSettingData = []
   let ratingData = []
+  let planData = []
   const user_id = req.jwtDecoded.data.user_id;
   await User.findByPk(user_id,
     {
@@ -125,6 +127,8 @@ exports.findAllData = async(req, res) => {
       faqMorePageSettingData = await findFaqMorePageSetting(user_id)
 
       ratingData = await findRating(user_id)
+
+      planData = await findPlan(user_id)
     }
     else {
       res.status(404).send({
@@ -145,7 +149,8 @@ exports.findAllData = async(req, res) => {
     faqMorePage : faqMorePageData, 
     faqMorePageSetting : faqMorePageSettingData, 
     product : productData, 
-    rating : ratingData
+    rating : ratingData,
+    plan: planData
   }
   return res.send({data})
 }; 
@@ -342,7 +347,22 @@ async function findRating(user_id){
   .catch(err => {
     errorLog.error(err)
   });
+  console.log(ratingData)
   return ratingData
+}
+
+async function findPlan(user_id){
+  let planData = {}
+  await Plan.findOne({
+    where: {user_id : user_id}
+  })
+  .then(data => {
+    planData = data  
+  })
+  .catch(err => {
+    errorLog.error(err)
+  });
+  return planData
 }
 
 

@@ -5,10 +5,67 @@ const nonce = require('nonce')();
 const querystring = require('querystring');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const APP_SUBSCRIPTION_CREATE = `mutation createAppSubscription(
+  $lineItems: [AppSubscriptionLineItemInput!]!
+  $name: String!
+  $returnUrl: URL!
+  $test: Boolean = false
+  $trialDays: Int
+) {
+  appSubscriptionCreate(
+    lineItems: $lineItems
+    name: $name
+    returnUrl: $returnUrl
+    test: $test
+    trialDays: $trialDays
+  ) {
+    appSubscription {
+      id
+      lineItems {
+        id
+        plan {
+          pricingDetails {
+            __typename
+          }
+        }
+      }
+    }
+    confirmationUrl
+    userErrors {
+      field
+      message
+    }
+  }
+}`
+
+const APP_SUBSCRIPTION_CANCEL = `
+  mutation AppSubscriptionCancel($id: ID!) {
+    appSubscriptionCancel(id: $id) {
+      userErrors {
+        field
+        message
+      }
+      appSubscription {
+        id
+        status
+      }
+    }
+  }`
+
+const RECURRING_PURCHASES_QUERY = `
+  query appSubscription {
+    currentAppInstallation {
+      activeSubscriptions {
+        id
+        name
+        test
+      }
+    }
+  }
+`;
 
 const errorLog = require('./app/helpers/log.helper');
 const authorize = require('./app/helpers/authorizeScope');
-
 const app = express();
 // for parsing application/json
 // app.use(bodyParser.json());
@@ -21,7 +78,7 @@ app.use(cors({
 
 const db = require("./app/models");
 const User = db.user;
-
+const Plan = db.merchants_plan;
 const port = process.env.PORT;
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
@@ -36,39 +93,124 @@ const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
 const Shopify = require("@shopify/shopify-api");
 // const debug = console.log.bind(console);
 db.sequelize.sync({ force: false }).then(() => {
-    console.log("Drop and re-sync db.");
+    console.log("Drop and re-sync db.")
 });
+
+var host
+var shopAccessToken
+var shopRefreshToken
 
 app.get('/', async (req, res) => {
-  // console.log(res)
-  if (!req.query.session) {
-        if(!req.query.host){
-            const state = nonce();
-            const redirectUri = forwardingAddress + '/shopify/callback';
-            const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
-                '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri;
-            res.cookie('state',state);
-            res.redirect(pageUri);
+  let plan
+  if(req.query.host){
+    host = req.query.host
+  }
+  await User.findOne({
+    attributes:['shopify_domain','id', 'shopify_access_token'],
+    where: {
+      shopify_domain: req.query.shop
+    }
+  })
+  .then(async response => {
+    let query = {
+      shop: response.dataValues.shopify_domain,
+      accessToken: response.dataValues.shopify_access_token,
+      user_id: response.dataValues.id
+    }
+    const client = new Shopify.Shopify.Clients.Graphql(
+      query.shop,
+      query.accessToken,
+    );
+    const resp = await client.query({
+      data: RECURRING_PURCHASES_QUERY,
+    });
+    let currentPlan = resp.body?.data?.currentAppInstallation?.activeSubscriptions
+    console.log(currentPlan, 'currentPlan')
+    if(currentPlan.length > 0){
+      plan = await checkBilling(query)
+      if(plan.plan !== currentPlan[0].name){
+        await updatePlan(query, currentPlan[0])
+      }
+    }
+    else{
+      let data = {
+        plan: 'Free',
+        shopify_plan_id: ''
+      }    
+      await Plan.update(data, {
+        where: {
+          user_id: response.dataValues.id
         }
-        return res.render('index', {
-            shop: req.query.shop,
-            host: req.query.host,
-            apiKey: apiKey,
-            scopes: scopes,
-            forwardingAddress: forwardingAddress
-        });
+      })    
+    }
+  })
+  .catch(e => {
+    console.log(e)
+  })
+  if (!req.query.session) {
+    if(!req.query.host){
+      const state = nonce()
+      const redirectUri = forwardingAddress + '/shopify/callback'
+      const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+        '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri
+      res.cookie('state',state)
+      res.redirect(pageUri)
+    }
+    return res.render('index', {
+      shop: req.query.shop,
+      host: req.query.host,
+      apiKey: apiKey,
+      scopes: scopes,
+      forwardingAddress: forwardingAddress
+    });
   } else {
-		let txt = "";
+		let txt = ""
 		try {
-			let tokenData = await getToken(req.query);
+			let tokenData = await getToken(req.query)
 			if (tokenData.accessToken) {
-				txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+				txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
 			}
-		} catch (e) {}
-		return res.redirect(app_link+txt);
+		} catch (e){
+
+    }
+		return res.redirect(app_link+txt)
 	}
+  // let tokenData = await getToken(req.query);
+  // let txt = "";
+  // if (tokenData.accessToken) {
+  //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+  // }
+  // return res.redirect(app_link + txt ); 
 });
 
+async function checkBilling(query) {
+  let plan
+  await Plan.findOne({
+      attributes:['plan','id'],
+      where: {
+        user_id: query.user_id
+      }
+    })
+    .then(data => {
+      plan = data.dataValues
+    })
+    .catch(err => {
+      errorLog.log(err)
+    });
+  return plan
+}
+
+async function updatePlan(query, client){
+  let data = {
+    plan: client.name,
+    shopify_plan_id: client.id
+  }
+  await Plan.update(data, {
+    where: {
+      user_id: query.user_id
+    }
+  })
+}
 
 app.use(authorize);
 
@@ -80,12 +222,77 @@ app.get('/storeFAQs', async (req, res) => {
     }
     return res.redirect(app_link+txt);
 });
+app.set("appSupcription","./views");
+
+var linkApproveSupcription
 
 app.get('/select/plan', async (req, res) => {
   console.log(req.query)
-  const linkApproveSupcription = await getlinkApproveSupcription(req.query)
-  console.log(linkApproveSupcription)
- 
+  if(req.query.price != '0' && req.query.plan != 'Free'){
+    if(req.query.redirect == 'true' && linkApproveSupcription){
+      return res.render('appSupcription', {
+        shop: req.query.shop,
+        host: host,
+        apiKey: apiKey,
+        scopes: scopes,
+        forwardingAddress: linkApproveSupcription
+      });
+    }
+    else{
+      linkApproveSupcription = await getlinkApproveSupcription(req.query)
+    }
+  }
+  if(req.query.price == '0' && req.query.plan == 'Free'){
+    await Plan.update({
+      plan: 'Free'
+    }, {
+      where: {
+        shopify_plan_id: req.query.shopify_plan_id
+      }
+    })
+    .then(async() => {
+      return res.redirect(app_link+'?accessToken=' + shopAccessToken + '&refreshToken=' + shopRefreshToken);  
+    })      
+  }
+  if(req.query.price == '0' && req.query.plan == 'Pro'){
+    Shopify.Shopify.Context.initialize({
+      API_KEY: apiKey,
+      API_SECRET_KEY: apiSecret,
+      API_VERSION: Shopify.ApiVersion.January22,
+      SCOPES: scopes,
+      HOST_NAME: forwardingAddress,
+      HOST_SCHEME: 'https',
+      IS_EMBEDDED_APP: true,
+      IS_PRIVATE_APP: false,
+      SESSION_STORAGE: new Shopify.Shopify.Session.MemorySessionStorage(),
+    });
+    let query = {
+      shop: req.query.shop,
+      accessToken: req.query.accessToken,
+    }
+    const client = new Shopify.Shopify.Clients.Graphql(
+      query.shop,
+      query.accessToken,
+    );
+    const session = await client.query({
+      data: {
+        query : APP_SUBSCRIPTION_CANCEL,
+        variables: {
+          id : req.query.shopify_plan_id
+        },
+      },
+    }); 
+    console.log(session.body.data.appSubscriptionCancel) 
+    if(session.body?.data?.appSubscriptionCancel?.appSubscription?.status === 'CANCELLED'){
+      await Plan.update({
+        plan: 'Free'
+      }, {
+        where: {
+          shopify_plan_id: req.query.shopify_plan_id
+        }
+      })      
+    }
+  }
 });
 
 async function getlinkApproveSupcription(query) {
@@ -100,46 +307,71 @@ async function getlinkApproveSupcription(query) {
     IS_PRIVATE_APP: false,
     SESSION_STORAGE: new Shopify.Shopify.Session.MemorySessionStorage(),
   });
-  const client = new Shopify.Shopify.Clients.Graphql(
-    query.shop,
-    query.accessToken,
-  )
-  try {
-    const session = await client.query({
-      data: {
-        query: process.env.APP_SUBSCRIPTION_CREATE,
-        variables: {
-          lineItems: [
-            {
-              plan: {
-                appRecurringPricingDetails: {
-                  interval: 'EVERY_30_DAYS',
-                  price: {
-                    amount: query.price,
-                    currencyCode: 'USD',
+  const hasSubscription = await getCurrentSubscription(query);
+  if(!hasSubscription){
+    const client = new Shopify.Shopify.Clients.Graphql(
+      query.shop,
+      query.accessToken,
+    )
+    try {
+      const session = await client.query({
+        data: {
+          query: APP_SUBSCRIPTION_CREATE,
+          variables: {
+            lineItems: [
+              {
+                plan: {
+                  appRecurringPricingDetails: {
+                    interval: 'EVERY_30_DAYS',
+                    price: {
+                      amount: query.price,
+                      currencyCode: 'USD',
+                    },
                   },
                 },
               },
-            },
-          ],
-          name: `${query.plan} Plan`,
-          returnUrl:`https://${query.shop}`,
+            ],
+            name: `${query.plan}`,
+            returnUrl:`https://${query.shop}/admin/apps/${process.env.SHOPIFY_APP_NAME}`,
+            test: true
+          },
         },
-      },
-    });
-    return (session.body)?.data?.appSubscriptionCreate?.confirmationUrl
-  } catch (error) {
-    console.log(
-      {
-        shop: query.shop,
-        plan: query.plan,
-        error,
-        errorMessage: error.message,
-      },
-      new Error().stack,
-    );
+      });
+      return (session.body)?.data?.appSubscriptionCreate?.confirmationUrl
+    } catch (error) {
+      console.log(
+        {
+          shop: query.shop,
+          plan: query.plan,
+          error,
+          errorMessage: error.message,
+        },
+        new Error().stack,
+      );
+    }
   }
 }
+
+async function getCurrentSubscription(query) {
+  const subscriptions = await getActiveSubscriptions(query);
+  return (subscriptions || []).find(
+    (subscription) => subscription.name === query.plan,
+  );
+}
+
+async function getActiveSubscriptions(query) {
+  const client = new Shopify.Shopify.Clients.Graphql(
+    query.shop,
+    query.accessToken,
+  );
+
+  const res = await client.query({
+    data: RECURRING_PURCHASES_QUERY,
+  });
+  console.log((res.body)?.data?.currentAppInstallation, 'aaaaaaaaaaaaaaaaaaaaa')
+  return (res.body)?.data?.currentAppInstallation?.activeSubscriptions;
+}
+
 
 app.get('/admin', async (req, res) => {
     let tokenData = await getTokenAdmin(req.query);
@@ -227,9 +459,12 @@ app.set("views","./views");
 const defaultPage = require('./controller/defaultPage');
 
 app.get('/faq-page', async (req, res) => {
+  console.log(req.query)
         let shop = req.query.shop;
+        let shopify_access_token
+        let Plan
         let userData = await User.findOne({
-            attributes: ['id'],
+            attributes: ['id', 'shopify_access_token'],
             where: { shopify_domain: shop }
         });
         if (!userData) {
@@ -240,11 +475,26 @@ app.get('/faq-page', async (req, res) => {
                 let path_prefix = '';
 				if (req.query.path_prefix) {
 					path_prefix = req.query.path_prefix;
-				}
+				}      shopify_access_token = userData.shopify_access_token
+                const client = new Shopify.Shopify.Clients.Graphql(
+                  shop,
+                  shopify_access_token,
+                );
+                const resp = await client.query({
+                  data: RECURRING_PURCHASES_QUERY,
+                });
+                let currentPlan = resp.body?.data?.currentAppInstallation?.activeSubscriptions
+                if(currentPlan.length > 0){
+                  Plan = currentPlan[0].name
+                }
+                else{
+                  Plan = 'Free'
+                }
                 const locale = req.headers['accept-language'].split(',')[0];
-                const faqs = await defaultPage.findFaqs(shop, locale, path_prefix);
-                const setting = await defaultPage.findSetting(shop, locale);
-                const messagesSetting = await defaultPage.findMessagesSetting(shop);
+                const faqs = await defaultPage.findFaqs(shop, locale, path_prefix, Plan);
+                const setting = await defaultPage.findSetting(shop, locale, Plan);
+                console.log(setting)
+                const messagesSetting = await defaultPage.findMessagesSetting(shop, Plan);
                 return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting, locale: locale});
             } catch (e) {
                 errorLog.error(e.message);
@@ -309,6 +559,8 @@ async function getToken(query) {
             }
         }
     }
+    shopAccessToken = accessToken
+    shopRefreshToken = refreshToken
     return {accessToken, refreshToken};
 }
 async function getTokenAdmin() {
