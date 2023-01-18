@@ -128,7 +128,7 @@ app.get('/', async (req, res) => {
     if(resp.body.data.currentAppInstallation.activeSubscriptions){
       currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
     }
-    errorLog.log(currentPlan)
+    errorLog.log(`get Current Plan:  ${currentPlan}`)
     if(currentPlan.length > 0){
       plan = await checkBilling(query)
       if(plan.plan !== currentPlan[0].name){
@@ -174,9 +174,9 @@ app.get('/', async (req, res) => {
 				txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
 			}
 		} catch (e){
-
+      errorLog.log(e)
     }
-		return res.redirect(app_link+txt)
+		return res.redirect(app_link + txt)
 	}
   // let tokenData = await getToken(req.query);
   // let txt = "";
