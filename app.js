@@ -316,6 +316,7 @@ async function getlinkApproveSupcription(query) {
       query.shop,
       query.accessToken,
     )
+    errorLog.error(client, 'client')
     try {
       const session = await client.query({
         data: {
@@ -340,8 +341,9 @@ async function getlinkApproveSupcription(query) {
           },
         },
       });
-      if((session.body).data.appSubscriptionCreate.confirmationUrl){
-        return (session.body).data.appSubscriptionCreate.confirmationUrl
+      errorLog.error(session.body)
+      if(session.body.data.appSubscriptionCreate.confirmationUrl){
+        return session.body.data.appSubscriptionCreate.confirmationUrl
       }
       else{
         errorLog.error('getlinkApproveSupcription error')
