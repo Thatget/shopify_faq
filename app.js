@@ -5,36 +5,16 @@ const nonce = require('nonce')();
 const querystring = require('querystring');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const APP_SUBSCRIPTION_CREATE = `mutation createAppSubscription(
-  $lineItems: [AppSubscriptionLineItemInput!]!
-  $name: String!
-  $returnUrl: URL!
-  $test: Boolean = false
-  $trialDays: Int
-) {
-  appSubscriptionCreate(
-    lineItems: $lineItems
-    name: $name
-    returnUrl: $returnUrl
-    test: $test
-    trialDays: $trialDays
-  ) {
-    appSubscription {
-      id
-      lineItems {
-        id
-        plan {
-          pricingDetails {
-            __typename
-          }
-        }
-      }
-    }
-    confirmationUrl
+const APP_SUBSCRIPTION_CREATE = `mutation AppSubscriptionCreate($name: String!, $lineItems: [AppSubscriptionLineItemInput!]!, $returnUrl: URL!) {
+  appSubscriptionCreate(name: $name, returnUrl: $returnUrl, lineItems: $lineItems) {
     userErrors {
       field
       message
     }
+    appSubscription {
+      id
+    }
+    confirmationUrl
   }
 }`
 
