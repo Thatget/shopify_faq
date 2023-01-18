@@ -128,7 +128,7 @@ app.get('/', async (req, res) => {
     if(resp.body.data.currentAppInstallation.activeSubscriptions){
       currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
     }
-    errorLog.log(`get Current Plan:  ${currentPlan}`)
+    errorLog.error(`get Current Plan:  ${currentPlan}`)
     if(currentPlan.length > 0){
       plan = await checkBilling(query)
       if(plan.plan !== currentPlan[0].name){
@@ -174,7 +174,7 @@ app.get('/', async (req, res) => {
 				txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
 			}
 		} catch (e){
-      errorLog.log(e)
+      errorLog.error(e)
     }
 		return res.redirect(app_link + txt)
 	}
@@ -198,7 +198,7 @@ async function checkBilling(query) {
       plan = data.dataValues
     })
     .catch(err => {
-      errorLog.log(err)
+      errorLog.error(err)
     });
   return plan
 }
@@ -230,7 +230,7 @@ app.set("appSupcription","./views");
 var linkApproveSupcription
 
 app.get('/select/plan', async (req, res) => {
-  console.log(req.query)
+  errorLog.error(req.query)
   if(req.query.price != '0' && req.query.plan != 'Free'){
     if(req.query.redirect == 'true' && linkApproveSupcription){
       return res.render('appSupcription', {
