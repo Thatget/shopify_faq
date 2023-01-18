@@ -1,12 +1,7 @@
 
 const db = require("../models");
-const Shopify = require("@shopify/shopify-api");
 const Plan = db.merchants_plan;
 const errorLog = require('../helpers/log.helper');
-const apiSecret = process.env.SHOPIFY_API_SECRET;
-const apiKey = process.env.SHOPIFY_API_KEY;
-const scopes = process.env.SCOPES;
-const forwardingAddress = process.env.HOST;
 // Create a plan
 exports.create = async (req, res) => {
   const plan = req.body;
@@ -77,43 +72,3 @@ exports.update = async (req, res) => {
     });
 };
 
-exports.cancel = async (req, res) => {
-  const client = new Shopify.Clients.Graphql(
-    req.body.shop,
-    req.body.accessToken,
-  );
-  
-  const currentSubscription = await this.getCurrentSubscription(
-    req.body,
-    currentPlan,
-  );
-  
-  if (currentSubscription) {
-    try {
-      const session = await client.query({
-        data: {
-          query: APP_SUBSCRIPTION_CANCEL,
-          variables: {
-            id: currentSubscription.id,
-          },
-        },
-      });
-  
-      if (
-        (session?.body)?.data?.appSubscriptionCancel?.appSubscription?.id
-      ) {
-        return true;
-      }
-    } catch (error) {
-      this.logger.error(
-        {
-          shop: req.body.shop,
-          plan: req.body.plan,
-          error,
-          errorMessage: error.message,
-        },
-        new Error().stack,
-      );
-    }
-  }  
-};

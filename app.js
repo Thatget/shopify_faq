@@ -124,8 +124,11 @@ app.get('/', async (req, res) => {
     const resp = await client.query({
       data: RECURRING_PURCHASES_QUERY,
     });
-    let currentPlan = resp.body?.data?.currentAppInstallation?.activeSubscriptions
-    console.log(currentPlan, 'currentPlan')
+    let currentPlan
+    if(resp.body.data.currentAppInstallation.activeSubscriptions){
+      currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
+    }
+    errorLog.log(currentPlan)
     if(currentPlan.length > 0){
       plan = await checkBilling(query)
       if(plan.plan !== currentPlan[0].name){
@@ -283,7 +286,7 @@ app.get('/select/plan', async (req, res) => {
       },
     }); 
     console.log(session.body.data.appSubscriptionCancel) 
-    if(session.body?.data?.appSubscriptionCancel?.appSubscription?.status === 'CANCELLED'){
+    if(session.body.data.appSubscriptionCancel.appSubscription.status === 'CANCELLED'){
       await Plan.update({
         plan: 'Free'
       }, {
@@ -337,9 +340,14 @@ async function getlinkApproveSupcription(query) {
           },
         },
       });
-      return (session.body)?.data?.appSubscriptionCreate?.confirmationUrl
+      if((session.body).data.appSubscriptionCreate.confirmationUrl){
+        return (session.body).data.appSubscriptionCreate.confirmationUrl
+      }
+      else{
+        errorLog.error('getlinkApproveSupcription error')
+      }
     } catch (error) {
-      console.log(
+      errorLog.error(
         {
           shop: query.shop,
           plan: query.plan,
@@ -368,8 +376,12 @@ async function getActiveSubscriptions(query) {
   const res = await client.query({
     data: RECURRING_PURCHASES_QUERY,
   });
-  console.log((res.body)?.data?.currentAppInstallation, 'aaaaaaaaaaaaaaaaaaaaa')
-  return (res.body)?.data?.currentAppInstallation?.activeSubscriptions;
+  if(res.body.data.currentAppInstallation.activeSubscriptions){
+    return res.body.data.currentAppInstallation.activeSubscriptions;
+  }
+  else{
+    errorLog.error('getActiveSubscriptions error')
+  }
 }
 
 
@@ -483,7 +495,10 @@ app.get('/faq-page', async (req, res) => {
                 const resp = await client.query({
                   data: RECURRING_PURCHASES_QUERY,
                 });
-                let currentPlan = resp.body?.data?.currentAppInstallation?.activeSubscriptions
+                let currentPlan
+                if(resp.body.data.currentAppInstallation.activeSubscriptions){
+                  currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
+                }
                 if(currentPlan.length > 0){
                   Plan = currentPlan[0].name
                 }
@@ -493,7 +508,6 @@ app.get('/faq-page', async (req, res) => {
                 const locale = req.headers['accept-language'].split(',')[0];
                 const faqs = await defaultPage.findFaqs(shop, locale, path_prefix, Plan);
                 const setting = await defaultPage.findSetting(shop, locale, Plan);
-                console.log(setting)
                 const messagesSetting = await defaultPage.findMessagesSetting(shop, Plan);
                 return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting, locale: locale});
             } catch (e) {
