@@ -169,6 +169,7 @@
     </div>
 </div>
 <script>
+  if(document.getElementById("back-to-top")){
     let mybutton = document.getElementById("back-to-top");
     window.onscroll = function() {scrollFunction()};
     function scrollFunction() {
@@ -180,10 +181,11 @@
         }
     }
     function topFunction() {
-        document.body.scrollIntoView({
+        document.body.scrollIntoView({  
             behavior: "smooth"
         });    
     }
+  }
     var categoryId = []
     function changeCategory(id, faq_hover_color, category_bar_background, banner_visible){
         if(!categoryId.some(item => {

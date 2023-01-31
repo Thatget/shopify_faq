@@ -150,6 +150,7 @@
     </div>
   </div>
   <script>
+  if(document.getElementById("back-to-top")){
     let mybutton = document.getElementById("back-to-top");
     window.onscroll = function() {scrollFunction()};
     function scrollFunction() {
@@ -160,12 +161,12 @@
             mybutton.style.display = "none";
         }
     }
-
     function topFunction() {
-        document.body.scrollIntoView({
+        document.body.scrollIntoView({  
             behavior: "smooth"
         });    
     }
+  }
     var categoryName = []
     function changeCategory(id, category_bar_color, category_bar_background){
         if(!categoryName.some(item => {

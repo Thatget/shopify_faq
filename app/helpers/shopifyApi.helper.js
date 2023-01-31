@@ -11,14 +11,14 @@ const productList = async (req, res) => {
     const id = req.jwtDecoded.data.user_id;
     let limit = 50;
     if (req.query.limit) {
-        limit = Number(req.query.limit);
-        if (!Number.isInteger(limit)) {
-            res.status(500).send({
-                message: "Limit need interger type"
-            });
-            return;
-        }
-        limit = Math.abs(limit)
+      limit = Number(req.query.limit);
+      if (!Number.isInteger(limit)) {
+        res.status(500).send({
+          message: "Limit need interger type"
+        });
+        return;
+      }
+      limit = Math.abs(limit)
     }
     try {
         const userInfo = await User.findByPk(id, {attributes: ['shopify_domain', 'shopify_access_token']});
@@ -175,8 +175,52 @@ const searchProductByTitle = async (req, res) => {
     }
     return res.status(200).json(products);
 }
+const apiGraphql = process.env.API_GRAPHQL;
+
+const syncLanguage = async(req, res) => {
+  const id = req.jwtDecoded.data.user_id;
+  const userInfo = await User.findByPk(id, {attributes: ['shopify_domain', 'shopify_access_token']});
+  const shopRequestHeaders = {
+    'X-Shopify-Access-Token': userInfo.dataValues.shopify_access_token
+  };
+  let shop = userInfo.dataValues.shopify_domain
+  const body = {
+    query: `
+    query {
+      shopLocales {
+        locale
+        primary
+        published
+      }
+    }`
+  };
+  const shopRequestUrlLocale = 'https://' + shop + apiGraphql;
+  let shopLocales = '';
+  try {
+    const shopLocalesResponse = await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body});
+    shopLocales = JSON.stringify(shopLocalesResponse.data);
+    await User.update({shopLocales: shopLocales}, {
+      where:{
+        id: id
+      }
+    })
+    .then(data => {
+      res.send('Sync languages success !');
+    })
+    .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the User."
+        });
+        errorLog.error(`Some error occurred while creating the User: ${err.message}`)
+    });
+  } catch (err) {
+    errorLog.error(`reauthorize.helper get shop locale error: ${err.message}`)
+  }
+}
 
 module.exports = {
     getProductList: productList,
-    searchProductByTitle: searchProductByTitle
+    searchProductByTitle: searchProductByTitle,
+    syncLanguage: syncLanguage
 };

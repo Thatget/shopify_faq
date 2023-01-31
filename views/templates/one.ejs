@@ -135,6 +135,7 @@
     </div>
 </div>
 <script>
+  if(document.getElementById("back-to-top")){
     let mybutton = document.getElementById("back-to-top");
     window.onscroll = function() {scrollFunction()};
     function scrollFunction() {
@@ -145,12 +146,12 @@
             mybutton.style.display = "none";
         }
     }
-
     function topFunction() {
-        document.body.scrollIntoView({
+        document.body.scrollIntoView({  
             behavior: "smooth"
         });    
     }
+  }
     function simpleSearch() {
         var input = document.getElementById("search-text");
         var filter = input.value.toLowerCase();

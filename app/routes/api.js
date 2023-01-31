@@ -13,8 +13,8 @@ const user = require("../controllers/user.controller");
 const admin = require("../controllers/admin.controller");
 const setting = require("../controllers/setting.controller");
 const template_setting = require("../controllers/template_setting.controller");
-const merchants_plan = require("../controllers/merchants_plan.controller");
 const merchants_rating = require("../controllers/merchants_rating.controller");
+const merchants_plan = require("../controllers/merchants_plan.controller");
 const messages = require("../controllers/faq_messages.controller.js");
 const messages_setting = require("../controllers/faq_messages_setting.controller.js");
 const category = require("../controllers/faq_category.controller.js");
@@ -176,6 +176,7 @@ let initAPIs = (app) => {
     // get Product list
     router.get("/api/shop/product-list", shopifyApi.getProductList);
     router.get("/api/shop/search-product", shopifyApi.searchProductByTitle);
+    router.get("/api/sync-languages", shopifyApi.syncLanguage);
 
     // Upload image
     const multer = require('multer');

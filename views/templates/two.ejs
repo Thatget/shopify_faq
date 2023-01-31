@@ -136,6 +136,7 @@
     <div></div>
 </div>
 <script>
+  if(document.getElementById("back-to-top")){
     let mybutton = document.getElementById("back-to-top");
     window.onscroll = function() {scrollFunction()};
     function scrollFunction() {
@@ -146,12 +147,12 @@
             mybutton.style.display = "none";
         }
     }
-
     function topFunction() {
-        document.body.scrollIntoView({
+        document.body.scrollIntoView({  
             behavior: "smooth"
         });    
     }
+  }
     function showHideContent(el) {
         var content = el.nextElementSibling;
         var svgRight = el.getElementsByClassName('svg-right')

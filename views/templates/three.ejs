@@ -167,6 +167,7 @@
     </div>
 </div>
 <script> 
+  if(document.getElementById("back-to-top")){
     let mybutton = document.getElementById("back-to-top");
     window.onscroll = function() {scrollFunction()};
     function scrollFunction() {
@@ -182,6 +183,8 @@
             behavior: "smooth"
         });    
     }
+  }
+    
     var categoryName = []
     function changeCategory(id, category_bar_background){
         if(!categoryName.some(item => {
@@ -215,7 +218,7 @@
             }
         }
         if(categoryName.length > 0){
-            document.getElementById('dung').style.display= "none"
+            document.getElementById('dung').style.display = "none"
         }
         if(categoryName.length === 1){
             document.getElementsByClassName('category-bar-item')[0].style.backgroundColor = 'inherit'
