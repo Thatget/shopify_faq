@@ -3,7 +3,6 @@ const User = require("../../models").user;
 const apiGraphql = process.env.API_GRAPHQL;
 
 const updateUserTable = async (shop, accessToken) => {
-
   // Get shop info !
   const shopInfo = await getShopInfo(shop, accessToken);
 

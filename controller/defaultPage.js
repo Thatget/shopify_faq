@@ -277,7 +277,7 @@ exports.findSetting = async (shop, locale, plan) => {
             }
         })
         .catch(e =>{
-            errorLog.error(`get setting frontend proxy get user error ${e.message}`)
+          errorLog.error(`get setting frontend proxy get user error ${e.message}`)
         })
     return returnData;
 }

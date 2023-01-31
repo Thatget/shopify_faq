@@ -347,7 +347,6 @@ async function findRating(user_id){
   .catch(err => {
     errorLog.error(err)
   });
-  console.log(ratingData)
   return ratingData
 }
 

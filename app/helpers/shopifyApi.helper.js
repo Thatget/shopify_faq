@@ -2,6 +2,9 @@ const request = require('request-promise');
 const db = require("../models/index");
 const errorLog = require('./log.helper');
 const User = db.user;
+const apiGraphql = process.env.API_GRAPHQL;
+const productApiGraphql = process.env.PRODUCT_API_GRAPHQL;
+const countProductApi = process.env.COUNT_PRODUCT_API_GRAPHQL;
 
 const productList = async (req, res) => {
     var page = {};
@@ -22,8 +25,8 @@ const productList = async (req, res) => {
     }
     try {
         const userInfo = await User.findByPk(id, {attributes: ['shopify_domain', 'shopify_access_token']});
-        const shopRequestUrl = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-01/products.json';
-        const shopUrlCountProduct = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-04/products/count.json';
+        const shopRequestUrl = 'https://' + userInfo.dataValues.shopify_domain + productApiGraphql;
+        const shopUrlCountProduct = 'https://' + userInfo.dataValues.shopify_domain + countProductApi;
         if (req.query.page_info) {
             qs = {
                 fields: 'id,images,title',
@@ -157,7 +160,7 @@ const searchProductByTitle = async (req, res) => {
                 }
             `
         };
-        const shopRequestUrlLocale = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-01/graphql.json';
+        const shopRequestUrlLocale = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-04/graphql.json';
         await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
             .then(data => {
                 if(data.data.products){
@@ -175,7 +178,6 @@ const searchProductByTitle = async (req, res) => {
     }
     return res.status(200).json(products);
 }
-const apiGraphql = process.env.API_GRAPHQL;
 
 const syncLanguage = async(req, res) => {
   const id = req.jwtDecoded.data.user_id;

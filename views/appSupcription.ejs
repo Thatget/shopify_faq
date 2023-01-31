@@ -17,7 +17,6 @@
             apiKey: apiKey,
             host: host
         });
-        console.log(permissionUrl)
         Redirect.create(app).dispatch(Redirect.Action.REMOTE, permissionUrl);
      // Otherwise, redirect using the `window` object
     } else {

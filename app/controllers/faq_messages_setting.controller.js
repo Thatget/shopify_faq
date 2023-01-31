@@ -2,6 +2,7 @@ const db = require("../models");
 const MessagesSetting = db.faq_messages_setting;
 // const errorLog = require('../helpers/log.helper')
 const User = db.user
+const Plan = db.merchants_plan
 
 // Create a messages setting
 exports.create = async (req, res) => {
@@ -32,25 +33,28 @@ exports.findAllEmbedApp = async (req, res) => {
   .then(async response => {
     response.dataValues.id? userID = response.dataValues.id : ''
     if(userID){
-      await MessagesSetting.findOne({
-        where:{
-          user_id: userID
-        }
-      })
-      .then(data => {
-          if (data) {
-            messagesSetting = data.dataValues
-          } else {
-            res.status(404).send({
-                message: `Cannot find messages with user_id=${userID}.`
-            });
+      let plan = await getPlan(userID)
+      if(plan == 'Pro'){
+        await MessagesSetting.findOne({
+          where:{
+            user_id: userID
           }
-      })
-      .catch(err => {
-          res.status(500).send({
-              message: "Error retrieving messages with user_id =" + userID
-          });
-      }); 
+        })
+        .then(data => {
+            if (data) {
+              messagesSetting = data.dataValues
+            } else {
+              res.status(404).send({
+                  message: `Cannot find messages with user_id=${userID}.`
+              });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error retrieving messages with user_id =" + userID
+            });
+        }); 
+      }
     }
     return res.send({message_setting: messagesSetting}) 
   })
@@ -59,6 +63,28 @@ exports.findAllEmbedApp = async (req, res) => {
   })
 
 };
+
+async function getPlan(userID){
+  let PlanData = null
+    await Plan.findOne({
+        where: {
+            user_id: userID,
+        },
+    })
+    .then(async data => {
+        if(data){
+          console.log(data)
+          PlanData = data.dataValues.plan
+        }
+    })
+    .catch(err => {
+        return res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving plan."
+        })
+    });
+    return PlanData;
+}
 
 // Find a single MessagesSetting with an id
 exports.findOne = (req, res) => {
