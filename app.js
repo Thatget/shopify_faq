@@ -5,6 +5,9 @@ const nonce = require('nonce')();
 const querystring = require('querystring');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const freeExtraPlan = 'Free extra'
+const freePlan = "Free"
+const proPlan = "Pro"
 const APP_SUBSCRIPTION_CREATE = `mutation createAppSubscription(
   $lineItems: [AppSubscriptionLineItemInput!]!
   $name: String!
@@ -126,13 +129,13 @@ app.get('/', async (req, res) => {
     console.log(currentPlan)
     if(currentPlan.length > 0){
       plan = await checkBilling(query)
-      if(plan.plan !== currentPlan[0].name){
+      if(plan.plan !== currentPlan[0].name && plan.plan !== freeExtraPlan){
         await updatePlan(query, currentPlan[0])
       }
     }
     else{
       let data = {
-        plan: 'Free',
+        plan: freePlan,
         shopify_plan_id: ''
       }    
       await Plan.update(data, {
@@ -145,7 +148,7 @@ app.get('/', async (req, res) => {
   .catch(e => {
     console.log(e)
   })
-  if (!req.query.session) {
+  if(!req.query.session) {
     if(!req.query.host){
       const state = nonce()
       const redirectUri = forwardingAddress + '/shopify/callback'
@@ -184,17 +187,17 @@ app.get('/', async (req, res) => {
 async function checkBilling(query) {
   let plan
   await Plan.findOne({
-      attributes:['plan','id'],
-      where: {
-        user_id: query.user_id
-      }
-    })
-    .then(data => {
-      plan = data.dataValues
-    })
-    .catch(err => {
-      errorLog.error(err)
-    });
+    attributes:['plan','id'],
+    where: {
+      user_id: query.user_id
+    }
+  })
+  .then(data => {
+    plan = data.dataValues
+  })
+  .catch(err => {
+    errorLog.error(err)
+  });
   return plan
 }
 
@@ -220,16 +223,17 @@ app.get('/storeFAQs', async (req, res) => {
     }
     return res.redirect(app_link+txt);
 });
+
 app.set("appSupcription","./views");
 
 var linkApproveSupcription
 
 app.get('/select/plan', async (req, res) => {
   // errorLog.error(req.query)
-  if(req.query.price != '0' && req.query.plan != 'Free'){
+  if(req.query.price != '0' && req.query.plan != freePlan){
     if(req.query.redirect == 'true' && !linkApproveSupcription){
       await Plan.update({
-        plan: 'Pro'
+        plan: proPlan
       }, {
         where: {
           shopify_plan_id: req.query.shopify_plan_id
@@ -248,14 +252,14 @@ app.get('/select/plan', async (req, res) => {
         forwardingAddress: linkApproveSupcription
       });
     }
-    else{
+    if(req.query.redirect == 'false'){
       linkApproveSupcription = await getlinkApproveSupcription(req.query)
       console.log(linkApproveSupcription,'linkApproveSupcription')
     }
   }
-  if(req.query.price == '0' && req.query.plan == 'Free' && req.query.redirect == 'true'){
+  if(req.query.price == '0' && req.query.plan == freePlan && req.query.redirect == 'true'){
     await Plan.update({
-      plan: 'Free'
+      plan: freePlan
     }, {
       where: {
         shopify_plan_id: req.query.shopify_plan_id
@@ -265,7 +269,7 @@ app.get('/select/plan', async (req, res) => {
       return res.redirect(app_link+'?accessToken=' + shopAccessToken + '&refreshToken=' + shopRefreshToken);  
     })      
   }
-  if(req.query.price == '0' && req.query.plan == 'Pro'){
+  if(req.query.price == '0' && req.query.plan == proPlan){
     Shopify.Shopify.Context.initialize({
       API_KEY: apiKey,
       API_SECRET_KEY: apiSecret,
@@ -296,7 +300,7 @@ app.get('/select/plan', async (req, res) => {
     console.log(session.body.data.appSubscriptionCancel) 
     if(session.body.data.appSubscriptionCancel.appSubscription.status === 'CANCELLED'){
       await Plan.update({
-        plan: 'Free'
+        plan: freePlan
       }, {
         where: {
           shopify_plan_id: req.query.shopify_plan_id
@@ -344,7 +348,8 @@ async function getlinkApproveSupcription(query) {
               },
             ],
             name: `${query.plan}`,
-            returnUrl:`https://${query.shop}/admin/apps/${appName}`,
+            trialDays: 7,
+            returnUrl:`https://admin.shopify.com/store/${query.shop.slice(0, query.shop.indexOf('.'))}/apps/${appName}`,
             test: true
           },
         },
@@ -484,7 +489,7 @@ const defaultPage = require('./controller/defaultPage');
 app.get('/faq-page', async (req, res) => {
   let shop = req.query.shop;
   let shopify_access_token
-  let Plan
+  let plan
   let userData = await User.findOne({
     attributes: ['id', 'shopify_access_token'],
     where: { shopify_domain: shop }
@@ -510,16 +515,36 @@ app.get('/faq-page', async (req, res) => {
       if(resp.body.data.currentAppInstallation.activeSubscriptions){
         currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
       }
-      if(currentPlan.length > 0){
-        Plan = currentPlan[0].name
-      }
-      else{
-        Plan = 'Free'
-      }
+      await Plan.findOne({
+        attributes:['plan','id'],
+        where: {
+          user_id: userData.id
+        }
+      })
+      .then(async data => {
+        if(currentPlan.length > 0){
+          plan = data.dataValues.plan
+        }
+        else{
+          if(data.dataValues.plan == proPlan){
+            await Plan.update({
+              plan: freePlan
+            }, {
+              where: {
+                user_id: userData.id
+              }
+            })
+            plan = freePlan
+          }
+        }  
+      })
+      .catch(err => {
+        errorLog.error(err)
+      });
       const locale = req.headers['accept-language'].split(',')[0];
-      const faqs = await defaultPage.findFaqs(shop, locale, path_prefix, Plan);
-      const setting = await defaultPage.findSetting(shop, locale, Plan);
-      const messagesSetting = await defaultPage.findMessagesSetting(shop, Plan);
+      const faqs = await defaultPage.findFaqs(shop, locale, path_prefix, plan);
+      const setting = await defaultPage.findSetting(shop, locale, plan);
+      const messagesSetting = await defaultPage.findMessagesSetting(shop, plan);
       return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting, locale: locale});
     } catch (e) {
         errorLog.error(e.message);
@@ -561,6 +586,7 @@ async function getToken(query) {
     let accessToken = '';
     let refreshToken = '';
     const {shop, hmac} = query;
+    console.log(shop, 'queryyyyyyyyyyyyy')
     if (shop && hmac ) {
         const map = Object.assign({}, query);
         delete map['signature'];

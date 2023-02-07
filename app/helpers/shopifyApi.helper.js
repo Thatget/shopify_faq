@@ -201,6 +201,7 @@ const syncLanguage = async(req, res) => {
   try {
     const shopLocalesResponse = await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body});
     shopLocales = JSON.stringify(shopLocalesResponse.data);
+    console.log(shopLocales)
     await User.update({shopLocales: shopLocales}, {
       where:{
         id: id

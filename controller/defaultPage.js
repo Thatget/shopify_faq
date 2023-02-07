@@ -46,7 +46,7 @@ exports.findFaqs = async (shop, locale, path_prefix = "", plan) => {
                         " where `faq`.`user_id` = ? and `faq`.`is_visible` = 1 and (`faq`.`locale` = 'default' or `faq`.`locale` = ?)";
 					
 					      if (selectCondition.faq_sort_name) {
-                  if(plan == 'Pro'){
+                  if(plan !== 'Free'){
                     selectQueryFaqs += " ORDER BY `faq`.`title`"
                   }
                   else{
@@ -54,7 +54,7 @@ exports.findFaqs = async (shop, locale, path_prefix = "", plan) => {
                   }
                     }
                     else{
-                      if(plan == 'Pro'){
+                      if(plan !== 'Free'){
                         selectQueryFaqs += " ORDER BY `faq`.`position`"
                       }
                       else{

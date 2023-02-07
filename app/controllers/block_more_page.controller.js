@@ -32,7 +32,7 @@ exports.findFaqOnPage = async (req, res) => {
             let settingMorePageData = []
             let plan = await getPlan(userID)
             console.log(plan)
-            if(plan == 'Pro'){
+            if(plan != 'Free'){
               await FaqMorePageSetting.findAll({
                   where:{
                       user_id: userID

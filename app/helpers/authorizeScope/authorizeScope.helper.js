@@ -22,7 +22,7 @@ const authorizeScope = async (req, res) => {
   } catch (error) {
     errorLog.error(`Authorize scope failed: ${error.message}`)
   }
-  let pageUri = 'https://' + shop + '/admin/apps/' + appName;
+  let pageUri = 'https://admin.shopify.com/store/' + shop.slice(0, shop.indexOf('.')) + '/apps/' + appName;
   res.redirect(pageUri);
 }
 

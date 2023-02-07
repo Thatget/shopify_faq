@@ -29,7 +29,11 @@ async function findUser(){
   await User.findAll(
   {
     attributes:['shopify_domain','id', 'email', 'createdAt'],
-    order:['id']
+    order:['id'],
+    limit: 2,
+    where:{
+      id : 10
+    }
   })
   .then(data => {
     if (data) {
