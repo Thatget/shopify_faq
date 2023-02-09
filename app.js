@@ -373,7 +373,7 @@ async function getlinkApproveSupcription(query) {
           },
         },
       });
-      // errorLog.error(session.body)
+      errorLog.error(session.body)
       if(session.body.data.appSubscriptionCreate.confirmationUrl){
         return session.body.data.appSubscriptionCreate.confirmationUrl
       }
