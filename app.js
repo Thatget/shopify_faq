@@ -127,20 +127,21 @@ app.get('/', async (req, res) => {
       currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
     }
     // errorLog.error(`get Current Plan:  ${currentPlan}`)
-    console.log(currentPlan)
     if(currentPlan.length > 0){
       plan = await checkBilling(query)
-      if(plan.plan !== currentPlan[0].name && plan.plan !== freeExtraPlan){
+      if(plan.shopify_plan_id !== currentPlan[0].id && plan.plan !== freeExtraPlan){
+        console.log(user_data.id)
         await updatePlan(query, currentPlan[0])
-        await User.update({plan_extra: false}, {
-          where: {
-            user_id: user_data.id
-          }
-        })  
+        .then(async() => {
+          await User.update({plan_extra: false}, {
+            where: {
+              id: user_data.id
+            }
+          })  
+        })
       }
     }
     else{
-      console.log(user_data.plan_extra)
       if(user_data.plan_extra){
         let data = {
           plan: freeExtraPlan,
@@ -224,6 +225,7 @@ async function checkBilling(query) {
 }
 
 async function updatePlan(query, client){
+  console.log(client)
   let data = {
     plan: client.name,
     shopify_plan_id: client.id
@@ -255,16 +257,7 @@ app.get('/select/plan', async (req, res) => {
   console.log(req.query)
   if(req.query.price != '0' && req.query.plan != freePlan){
     if(req.query.redirect == 'true' && !linkApproveSupcription){
-      await Plan.update({
-        plan: proPlan
-      }, {
-        where: {
-          shopify_plan_id: req.query.shopify_plan_id
-        }
-      })
-      .then(() => {
-        return res.redirect(app_link+'?accessToken=' + shopAccessToken + '&refreshToken=' + shopRefreshToken);  
-      })      
+      return res.redirect(app_link+'?accessToken=' + shopAccessToken + '&refreshToken=' + shopRefreshToken);  
     }
     if(req.query.redirect == 'true' && linkApproveSupcription){
       return res.render('appSupcription', {
@@ -322,7 +315,8 @@ app.get('/select/plan', async (req, res) => {
     console.log(session.body.data.appSubscriptionCancel) 
     if(session.body.data.appSubscriptionCancel.appSubscription.status === 'CANCELLED'){
       await Plan.update({
-        plan: freePlan
+        plan: freePlan,
+        shopify_plan_id: ''
       }, {
         where: {
           shopify_plan_id: req.query.shopify_plan_id
