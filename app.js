@@ -148,7 +148,8 @@ app.get('/', async (req, res) => {
   .catch(e => {
     console.log(e)
   })
-  if(!req.query.session) {
+  if(!req.query.session) {    
+    console.log(req.query)
     if(!req.query.host){
       const state = nonce()
       const redirectUri = forwardingAddress + '/shopify/callback'
@@ -165,23 +166,23 @@ app.get('/', async (req, res) => {
       forwardingAddress: forwardingAddress
     });
   } else {
-		let txt = ""
-		try {
-			let tokenData = await getToken(req.query)
-			if (tokenData.accessToken) {
-				txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
-			}
-		} catch (e){
+    let txt = ""
+    try {
+      let tokenData = await getToken(req.query)
+      if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
+      }
+      console.log('txt')
+    } catch (e){
       errorLog.error(e)
     }
-		return res.redirect(app_link + txt)
 	}
-  // let tokenData = await getToken(req.query);
-  // let txt = "";
-  // if (tokenData.accessToken) {
-  //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-  // }
-  // return res.redirect(app_link + txt ); 
+  let tokenData = await getToken(req.query);
+  let txt = "";
+  if (tokenData.accessToken) {
+      txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+  }
+  return res.redirect(app_link + txt ); 
 });
 
 async function checkBilling(query) {

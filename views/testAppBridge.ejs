@@ -8,13 +8,12 @@
     var Redirect = actions.Redirect;
     var host = '<%= host %>';
     var apiKey = '<%= apiKey %>';
-    var redirectUri =  '<%= forwardingAddress %>'
-    console.log(redirectUri, 'redirectUri')
+    var redirectUri =  '<%= forwardingAddress %>';
     // If your app is embedded inside Shopify, use App Bridge to redirect
     if (AppBridgeUtils.isShopifyEmbedded()) {
         var app = createApp({
             apiKey: apiKey,
-            host: host
+            host: new URLSearchParams(location.search).get("host")
         });
         Redirect.create(app).dispatch(Redirect.Action.REMOTE, redirectUri);
      // Otherwise, redirect using the `window` object
