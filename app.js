@@ -396,7 +396,7 @@ async function getlinkApproveSupcription(query) {
 
 async function getCurrentSubscription(query) {
   const subscriptions = await getActiveSubscriptions(query);
-  console.log(subscriptions, 'subscriptions')
+  errorLog.error(subscriptions, 'subscriptions')
   return (subscriptions || []).find(
     (subscription) => subscription.name === query.plan,
   );
