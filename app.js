@@ -262,7 +262,7 @@ app.get('/select/plan', async (req, res) => {
           shopify_plan_id: req.query.shopify_plan_id
         }
       })
-      .then(async() => {
+      .then(() => {
         return res.redirect(app_link+'?accessToken=' + shopAccessToken + '&refreshToken=' + shopRefreshToken);  
       })      
     }
@@ -287,7 +287,7 @@ app.get('/select/plan', async (req, res) => {
         shopify_plan_id: req.query.shopify_plan_id
       }
     })
-    .then(async() => {
+    .then(() => {
       return res.redirect(app_link+'?accessToken=' + shopAccessToken + '&refreshToken=' + shopRefreshToken);  
     })      
   }
@@ -327,7 +327,10 @@ app.get('/select/plan', async (req, res) => {
         where: {
           shopify_plan_id: req.query.shopify_plan_id
         }
-      })      
+      })
+      .then(() => {
+        return res.redirect(app_link+'?accessToken=' + shopAccessToken + '&refreshToken=' + shopRefreshToken);  
+      })              
     }
   }
 });
