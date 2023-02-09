@@ -30,7 +30,7 @@ exports.findAllProduct = async (req, res) => {
             }
             let settingData = []
             let plan = await getPlan(userID)
-            if(plan != 'Free'){
+            if(plan != 'Free' || userData.plan_extra){
               await Setting.findOne({
                   where:{
                       user_id: userID

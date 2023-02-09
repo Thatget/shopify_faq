@@ -31,8 +31,7 @@ exports.findFaqOnPage = async (req, res) => {
             }
             let settingMorePageData = []
             let plan = await getPlan(userID)
-            console.log(plan)
-            if(plan != 'Free'){
+            if(plan != 'Free' || userData.plan_extra){
               await FaqMorePageSetting.findAll({
                   where:{
                       user_id: userID
@@ -96,7 +95,6 @@ exports.findFaqOnPage = async (req, res) => {
     .catch(error => {
         return res.status(500).send("some error");
     })
-    console.log(templateSetting)
     // const result = await User.findOne({ where: { shopify_domain: shop}}).catch(error => {
     //     return res.status(500).send("some error");
     // });
@@ -112,7 +110,6 @@ async function getPlan(userID){
     })
     .then(async data => {
         if(data){
-          console.log(data)
           PlanData = data.dataValues.plan
         }
     })

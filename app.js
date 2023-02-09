@@ -103,16 +103,17 @@ app.get('/', async (req, res) => {
     host = req.query.host
   }
   await User.findOne({
-    attributes:['shopify_domain','id', 'shopify_access_token'],
+    attributes:['shopify_domain','id', 'shopify_access_token', 'plan_extra'],
     where: {
       shopify_domain: req.query.shop
     }
   })
   .then(async response => {
+    let user_data = response.dataValues
     let query = {
-      shop: response.dataValues.shopify_domain,
-      accessToken: response.dataValues.shopify_access_token,
-      user_id: response.dataValues.id
+      shop: user_data.shopify_domain,
+      accessToken: user_data.shopify_access_token,
+      user_id: user_data.id
     }
     const client = new Shopify.Shopify.Clients.Graphql(
       query.shop,
@@ -131,23 +132,43 @@ app.get('/', async (req, res) => {
       plan = await checkBilling(query)
       if(plan.plan !== currentPlan[0].name && plan.plan !== freeExtraPlan){
         await updatePlan(query, currentPlan[0])
+        await User.update({plan_extra: false}, {
+          where: {
+            user_id: user_data.id
+          }
+        })  
       }
     }
     else{
-      let data = {
-        plan: freePlan,
-        shopify_plan_id: ''
-      }    
-      await Plan.update(data, {
-        where: {
-          user_id: response.dataValues.id
-        }
-      })    
+      console.log(user_data.plan_extra)
+      if(user_data.plan_extra){
+        let data = {
+          plan: freeExtraPlan,
+          shopify_plan_id: ''
+        }    
+        await Plan.update(data, {
+          where: {
+            user_id: user_data.id
+          }
+        })  
+      }
+      else{
+        let data = {
+          plan: freePlan,
+          shopify_plan_id: ''
+        }    
+        await Plan.update(data, {
+          where: {
+            user_id: user_data.id
+          }
+        })    
+      }
     }
   })
   .catch(e => {
     console.log(e)
   })
+  
   if(!req.query.session) {    
     console.log(req.query)
     if(!req.query.host){
@@ -155,7 +176,7 @@ app.get('/', async (req, res) => {
       const redirectUri = forwardingAddress + '/shopify/callback'
       const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
         '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri
-      res.cookie('state',state)
+      // res.cookie('state',state)
       res.redirect(pageUri)
     }
     return res.render('index', {
@@ -172,17 +193,17 @@ app.get('/', async (req, res) => {
       if (tokenData.accessToken) {
         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
       }
-      console.log('txt')
     } catch (e){
       errorLog.error(e)
     }
+    return res.redirect(app_link + txt ); 
 	}
-  let tokenData = await getToken(req.query);
-  let txt = "";
-  if (tokenData.accessToken) {
-      txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-  }
-  return res.redirect(app_link + txt ); 
+  // let tokenData = await getToken(req.query);
+  // let txt = "";
+  // if (tokenData.accessToken) {
+  //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+  // }
+  // return res.redirect(app_link + txt ); 
 });
 
 async function checkBilling(query) {
@@ -231,6 +252,7 @@ var linkApproveSupcription
 
 app.get('/select/plan', async (req, res) => {
   // errorLog.error(req.query)
+  console.log(req.query)
   if(req.query.price != '0' && req.query.plan != freePlan){
     if(req.query.redirect == 'true' && !linkApproveSupcription){
       await Plan.update({
@@ -255,7 +277,6 @@ app.get('/select/plan', async (req, res) => {
     }
     if(req.query.redirect == 'false'){
       linkApproveSupcription = await getlinkApproveSupcription(req.query)
-      console.log(linkApproveSupcription,'linkApproveSupcription')
     }
   }
   if(req.query.price == '0' && req.query.plan == freePlan && req.query.redirect == 'true'){
@@ -492,7 +513,7 @@ app.get('/faq-page', async (req, res) => {
   let shopify_access_token
   let plan
   let userData = await User.findOne({
-    attributes: ['id', 'shopify_access_token'],
+    attributes: ['id', 'shopify_access_token', 'plan_extra'],
     where: { shopify_domain: shop }
   });
   if (!userData) {
@@ -535,6 +556,21 @@ app.get('/faq-page', async (req, res) => {
                 user_id: userData.id
               }
             })
+            plan = freePlan
+          }
+          if(userData.plan_extra){
+            if(data.dataValues.plan == freePlan){
+              await Plan.update({
+                plan: freeExtraPlan
+              }, {
+                where: {
+                  user_id: userData.id
+                }
+              })
+              plan = freeExtraPlan
+            }
+          }
+          else{
             plan = freePlan
           }
         }  
@@ -587,7 +623,6 @@ async function getToken(query) {
     let accessToken = '';
     let refreshToken = '';
     const {shop, hmac} = query;
-    console.log(shop, 'queryyyyyyyyyyyyy')
     if (shop && hmac ) {
         const map = Object.assign({}, query);
         delete map['signature'];

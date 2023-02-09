@@ -34,7 +34,7 @@ exports.findAllEmbedApp = async (req, res) => {
     response.dataValues.id? userID = response.dataValues.id : ''
     if(userID){
       let plan = await getPlan(userID)
-      if(plan != 'Free'){
+      if(plan != 'Free' || userData.plan_extra){
         await MessagesSetting.findOne({
           where:{
             user_id: userID

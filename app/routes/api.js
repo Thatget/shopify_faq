@@ -57,7 +57,8 @@ let initAPIs = (app) => {
     router.use(AuthMiddleWare.isAuth);
 
     //admin router
-    router.get("/api/data/admin", admin.findAllData)
+    router.get("/api/data/admin/:offset/:limit", admin.findAllData)
+    router.get("/api/data/admin/search", admin.searchByDomain)
 
     //Tutorial Create
     router.post("/api/tutorial/create", tutorial.create);
