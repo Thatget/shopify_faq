@@ -2,6 +2,7 @@ const request = require('request-promise');
 const querystring = require('querystring');
 const crypto = require('crypto');
 const errorLog = require('../log.helper');
+const Shopify = require("@shopify/shopify-api");
 
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;

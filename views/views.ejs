@@ -1,12 +1,12 @@
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Playfair+Display" />
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Varela+Round" />
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Questrial" />
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Karla" />
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+
+<% if (setting.data.user_id !== 1) { %>
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Playfair+Display" />
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Varela+Round" />
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Questrial" />
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Karla" />
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat" />
+<% } %>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <% if (setting.data) {
     if (setting.data.faq_template_number) {
         switch(setting.data.faq_template_number) {
@@ -119,6 +119,7 @@
             background-color: <%= setting.templateSetting.btn_top_hover%>
         }
         .yanet-logo{
+<<<<<<< HEAD
           display: block !important;
           color: #4b4b4b !important; 
           font-size: 15px !important; 
@@ -126,6 +127,13 @@
         }
         .root-faq-template img{
           max-width: 100% !important
+=======
+            color: #4b4b4b; 
+            font-size: 15px; 
+            text-decoration: none; 
+            text-decoration: none;
+            font-family: 'Times New Roman', Times, serif;
+>>>>>>> f2514b30d1931ce051ffa2b6fb8df8a7490cb37b
         }
     </style>
 <% } %>

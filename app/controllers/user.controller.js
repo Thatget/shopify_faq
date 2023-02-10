@@ -105,7 +105,7 @@ exports.findAllData = async(req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
   await User.findByPk(user_id,
     {
-      attributes:['shopify_domain','store_name','shopLocales','phone','email','shopify_access_token']
+      attributes:['shopify_domain','store_name','shopLocales','phone','email','shopify_access_token','plan_extra']
     })
   .then(async data => {
     if (data) {
@@ -356,7 +356,7 @@ async function findPlan(user_id){
     where: {user_id : user_id}
   })
   .then(data => {
-    planData = data
+    planData = data  
   })
   .catch(err => {
     errorLog.error(err)

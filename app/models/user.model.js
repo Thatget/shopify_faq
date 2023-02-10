@@ -19,6 +19,9 @@ module.exports = (sequelize, Sequelize) => {
         },
         shopLocales: {
             type: Sequelize.TEXT
+        }, 
+        plan_extra: {
+          type: Sequelize.BOOLEAN
         }
     }, {
         freezeTableName: true

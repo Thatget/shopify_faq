@@ -57,7 +57,8 @@ let initAPIs = (app) => {
     router.use(AuthMiddleWare.isAuth);
 
     //admin router
-    router.get("/api/data/admin", admin.findAllData)
+    router.get("/api/data/admin/:offset/:limit", admin.findAllData)
+    router.get("/api/data/admin/search", admin.searchByDomain)
 
     //Tutorial Create
     router.post("/api/tutorial/create", tutorial.create);
@@ -95,7 +96,6 @@ let initAPIs = (app) => {
     router.get("/api/plan/getAll", merchants_plan.findAll);
     router.get("/api/plan/get", merchants_plan.findOne);
     router.put("/api/plan/update", merchants_plan.update);
-    router.get("/api/plan/select", merchants_plan.select);
     
     //Template_setting
     router.post("/api/template_setting", template_setting.create);
@@ -170,7 +170,7 @@ let initAPIs = (app) => {
     router.get("/api/faq-more-page-setting", faq_more_page_setting.findOne);
     router.get("/api/all/faq-more-page-setting", faq_more_page_setting.findAll);
     router.get("/api/faq-more-page-setting/page/:page", faq_more_page_setting.findByPage);
-    router.put("/api/faq-more-page-setting/:id", faq_more_page_setting.update);
+    router.put("/api/faq-more-page-setting/:user_id", faq_more_page_setting.update);
     router.delete("/api/faq-more-page-setting/:id", faq_more_page_setting.delete);
     router.delete("/api/faq-more-page-setting/page", faq_more_page_setting.deleteAll);
 

@@ -94,20 +94,26 @@ exports.findByPage = (req, res) => {
 
 // Update a FaqMorePageSetting by the id in the request
 exports.update = async (req, res) => {
-    if (!req.params.id) {
+    if (!req.params.user_id) {
         res.status(400).send({
             message: "FaqMorePageSetting update missing params!"
         });
         return;
     }
-    let id = req.params.id
+    let user_id = req.params.user_id
     // Check this faq_more_page_setting is exits or not
-    await FaqMorePageSetting.findByPk(req.params.id)
+    await FaqMorePageSetting.findOne(
+      {
+        where: {
+          user_id : req.params.user_id
+        }
+      }
+    )
         .then(async data => {
             if (data) {
                 // const user_id = data.dataValues.user_id;
                 await FaqMorePageSetting.update(req.body, {
-                    where: { id: req.params.id }
+                    where: { user_id: req.params.user_id }
                 })
                     .then( num => {
                         if (num == 1) {
@@ -116,24 +122,24 @@ exports.update = async (req, res) => {
                             });
                         } else {
                             res.send({
-                                message: `Cannot update category with id=${id}. Maybe category was not found or req.body is empty!`
+                                message: `Cannot update FaqMorePageSetting with user_id=${user_id}. Maybe FaqMorePageSetting was not found or req.body is empty!`
                             });
                         }
                     })
                     .catch(err => {
                         res.status(500).send({
-                            message: "Error updating category with id=" + id
+                            message: "Error updating FaqMorePageSetting with user_id=" + user_id
                         });
                     });
             } else {
                 res.send({
-                    message: `Cannot find category with id=${id}.`
+                    message: `Cannot find FaqMorePageSetting with user_id=${user_id}.`
                 });
                 return;
             }
         }).catch(error => {
             res.status(500).send({
-                message: "Can't find category with id=" + id
+                message: "Can't find FaqMorePageSetting with user_id=" + user_id
             });
         })
 };

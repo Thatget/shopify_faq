@@ -8,6 +8,7 @@ let listFaqId = []
 const FaqMorePageSetting = db.faq_more_page_setting;
 const FaqMorePage = db.faq_more_page;
 const errorLog = require('../helpers/log.helper');
+const Plan = db.merchants_plan
 
 exports.findFaqOnPage = async (req, res) => {
     let Faqs = [];
@@ -17,6 +18,7 @@ exports.findFaqOnPage = async (req, res) => {
     const shop = req.params.shop;
     const page_name = req.params.page
     let locale = req.params.locale
+
     await User.findOne({ where: { shopify_domain: shop}})
     .then( async userData => {
         if (userData) {
@@ -28,59 +30,61 @@ exports.findFaqOnPage = async (req, res) => {
                 locale = req.params.locale
             }
             let settingMorePageData = []
-            await FaqMorePageSetting.findAll({
-                where:{
-                    user_id: userID
-                }
-            })
-            .then(async data => {
-                settingMorePageData = data[0].dataValues
-                if((page_name === 'index' && settingMorePageData.home_page_visible === false) ||
-                    (page_name === 'cart' && settingMorePageData.cart_page_visible === false) ||
-                    (page_name === 'page' && settingMorePageData.cms_page_visible === false) ||
-                    (page_name === 'collection' && settingMorePageData.collection_page_visible === false)
-                ){
-                    return
-                }
-                else{
-                    let settingData = []
-                    await Setting.findOne({
-                        where:{
-                            user_id: userID
-                        }
-                    })
-                    .then(async data => {
-                        settingData = data.dataValues
-                        await TemplateSetting.findOne({
-                            where: {
-                                template_number: data.dataValues.faq_template_number,
-                                setting_id: data.dataValues.id
-                            }
-                        })
-                        .then(data => {
-                            templateSetting = data.dataValues
-                            if(settingData){
-                                templateSetting.category_sort_name = settingData.category_sort_name
-                                templateSetting.faq_sort_name = settingData.faq_sort_name
-                                templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
-                                templateSetting.dont_category_faq = settingData.dont_category_faq
-                            }
-                        })
-                        .catch(e =>{
-                            errorLog.error(e)
-                        })
-                    })
-                    .catch(e =>{
-                        errorLog.error(e)
-                    })
-                    await getFaqsId(userID, page_name, locale, Faqs)
-                    await getCategory(locale, userID, Categories,templateSetting)
-                }
-            })
-            .catch(e => {
-                errorLog.error(e)
-            })
-
+            let plan = await getPlan(userID)
+            if(plan != 'Free' || userData.plan_extra){
+              await FaqMorePageSetting.findAll({
+                  where:{
+                      user_id: userID
+                  }
+              })
+              .then(async data => {
+                  settingMorePageData = data[0].dataValues
+                  if((page_name === 'index' && settingMorePageData.home_page_visible === false) ||
+                      (page_name === 'cart' && settingMorePageData.cart_page_visible === false) ||
+                      (page_name === 'page' && settingMorePageData.cms_page_visible === false) ||
+                      (page_name === 'collection' && settingMorePageData.collection_page_visible === false)
+                  ){
+                      return
+                  }
+                  else{
+                      let settingData = []
+                      await Setting.findOne({
+                          where:{
+                              user_id: userID
+                          }
+                      })
+                      .then(async data => {
+                          settingData = data.dataValues
+                          await TemplateSetting.findOne({
+                              where: {
+                                  template_number: data.dataValues.faq_template_number,
+                                  setting_id: data.dataValues.id
+                              }
+                          })
+                          .then(data => {
+                              templateSetting = data.dataValues
+                              if(settingData){
+                                  templateSetting.category_sort_name = settingData.category_sort_name
+                                  templateSetting.faq_sort_name = settingData.faq_sort_name
+                                  templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
+                                  templateSetting.dont_category_faq = settingData.dont_category_faq
+                              }
+                          })
+                          .catch(e =>{
+                              errorLog.error(e)
+                          })
+                      })
+                      .catch(e =>{
+                          errorLog.error(e)
+                      })
+                      await getFaqsId(userID, page_name, locale, Faqs)
+                      await getCategory(locale, userID, Categories,templateSetting)
+                  }
+              })
+              .catch(e => {
+                  errorLog.error(e)
+              })
+            }
         }
         else {
             return res.status(400).send({
@@ -96,6 +100,27 @@ exports.findFaqOnPage = async (req, res) => {
     // });
     return res.send({faq: Faqs, category: Categories, templateSetting: templateSetting})
 };
+
+async function getPlan(userID){
+  let PlanData = null
+    await Plan.findOne({
+        where: {
+            user_id: userID,
+        },
+    })
+    .then(async data => {
+        if(data){
+          PlanData = data.dataValues.plan
+        }
+    })
+    .catch(err => {
+        return res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving plan."
+        })
+    });
+    return PlanData;
+}
 
 async function getFaqsId(userID, page_name , locale, Faqs){
     await FaqMorePage.findAll({
