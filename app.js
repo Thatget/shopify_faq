@@ -98,6 +98,7 @@ var shopAccessToken
 var shopRefreshToken
 
 app.get('/', async (req, res) => {
+  console.log('aaaaaaaaa')
   let plan
   if(req.query.host){
     host = req.query.host
@@ -127,9 +128,10 @@ app.get('/', async (req, res) => {
       currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
     }
     // errorLog.error(`get Current Plan:  ${currentPlan}`)
+    console.log(currentPlan)
     if(currentPlan.length > 0){
       plan = await checkBilling(query)
-      if(plan.shopify_plan_id !== currentPlan[0].id && plan.plan !== freeExtraPlan){
+      if(plan.shopify_plan_id !== currentPlan[0].id){
         console.log(user_data.id)
         await updatePlan(query, currentPlan[0])
         .then(async() => {
@@ -170,41 +172,41 @@ app.get('/', async (req, res) => {
     console.log(e)
   })
   
-  if(!req.query.session) {    
-    console.log(req.query)
-    if(!req.query.host){
-      const state = nonce()
-      const redirectUri = forwardingAddress + '/shopify/callback'
-      const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
-        '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri
-      // res.cookie('state',state)
-      res.redirect(pageUri)
-    }
-    return res.render('index', {
-      shop: req.query.shop,
-      host: req.query.host,
-      apiKey: apiKey,
-      scopes: scopes,
-      forwardingAddress: forwardingAddress
-    });
-  } else {
-    let txt = ""
-    try {
-      let tokenData = await getToken(req.query)
-      if (tokenData.accessToken) {
-        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
-      }
-    } catch (e){
-      errorLog.error(e)
-    }
-    return res.redirect(app_link + txt ); 
-	}
-  // let tokenData = await getToken(req.query);
-  // let txt = "";
-  // if (tokenData.accessToken) {
-  //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-  // }
-  // return res.redirect(app_link + txt ); 
+  // if(!req.query.session) {    
+  //   console.log(req.query)
+  //   if(!req.query.host){
+  //     const state = nonce()
+  //     const redirectUri = forwardingAddress + '/shopify/callback'
+  //     const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+  //       '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri
+  //     // res.cookie('state',state)
+  //     res.redirect(pageUri)
+  //   }
+  //   return res.render('index', {
+  //     shop: req.query.shop,
+  //     host: req.query.host,
+  //     apiKey: apiKey,
+  //     scopes: scopes,
+  //     forwardingAddress: forwardingAddress
+  //   });
+  // } else {
+  //   let txt = ""
+  //   try {
+  //     let tokenData = await getToken(req.query)
+  //     if (tokenData.accessToken) {
+  //       txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
+  //     }
+  //   } catch (e){
+  //     errorLog.error(e)
+  //   }
+  //   return res.redirect(app_link + txt ); 
+	// }
+  let tokenData = await getToken(req.query);
+  let txt = "";
+  if (tokenData.accessToken) {
+      txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+  }
+  return res.redirect(app_link + txt ); 
 });
 
 async function checkBilling(query) {

@@ -46,6 +46,7 @@ async function findUser(offset, limit){
   .catch(err => {
     errorLog.error(err)
   });
+  console.log(userInfo)
   return userInfo
 }
 
@@ -103,18 +104,20 @@ async function findRating(offset, limit){
 
 exports.searchByDomain = async(req, res) =>{
   let userInfo = []
+  let userData = []
   let settingData = []
   let faqMorePageSettingData = []
   let ratingData = []
-  userInfo = await searchUser(req.query.shop)
+  userInfo = await searchUser(req.query)
   if(userInfo.length > 0){
+    userData.push(userInfo[0])
     settingData = await searchUserSetting(userInfo[0].dataValues.id)
     faqMorePageSettingData = await searchUserFaqMorePageSetting(userInfo[0].dataValues.id)
     ratingData = await searchUserRating(userInfo[0].dataValues.id)
   }
   let data = {
-    user: userInfo,
-    setting: settingData, 
+    user: userData,
+    setting: settingData,
     faqMorePageSetting : faqMorePageSettingData,
     rating : ratingData
   }
@@ -123,26 +126,50 @@ exports.searchByDomain = async(req, res) =>{
 
 async function searchUser(shop){
   let userInfo = []
-  await User.findAll(
-  {
-    attributes:['id','email', 'shopify_domain', 'createdAt'],
-    where:{
-      shopify_domain: shop
-    }
-  })
-  .then(data => {
-    if (data) {
-      userInfo = data
-    } 
-    else {
-      res.status(404).send({
-        message: `Cannot find User with id=${id}.`
-      });
-    }
-  })
-  .catch(err => {
-    errorLog.error(err)
-  });
+  if(shop.shop){
+    await User.findAll(
+    {
+      attributes:['id','email', 'shopify_domain', 'createdAt'],
+      where:{
+        shopify_domain: shop.shop
+      }
+    })
+    .then(data => {
+      if (data) {
+        userInfo = data
+      }
+      else {
+        res.status(404).send({
+          message: `Cannot find User with id=${id}.`
+        });
+      }
+    })
+    .catch(err => {
+      errorLog.error(err)
+    });    
+  }
+  else{
+    await User.findAll(
+      {
+        attributes:['id','email', 'shopify_domain', 'createdAt'],
+        where:{
+          email: shop.email
+        }
+      })
+      .then(data => {
+        if (data) {
+          userInfo = data
+        }
+        else {
+          res.status(404).send({
+            message: `Cannot find User with id=${id}.`
+          });
+        }
+      })
+      .catch(err => {
+        errorLog.error(err)
+      });      
+  }
   return userInfo
 }
 
