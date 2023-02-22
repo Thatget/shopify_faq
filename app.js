@@ -158,40 +158,40 @@ app.get('/', async (req, res) => {
   .catch(e => {
     console.log(e)
   })  
-  // if(!req.query.session) {    
-  //   if(!req.query.host){
-  //     const state = nonce()
-  //     const redirectUri = forwardingAddress + '/shopify/callback'
-  //     const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
-  //       '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri
-  //     // res.cookie('state',state)
-  //     res.redirect(pageUri)
-  //   }
-  //   return res.render('index', {
-  //     shop: req.query.shop,
-  //     host: req.query.host,
-  //     apiKey: apiKey,
-  //     scopes: scopes,
-  //     forwardingAddress: forwardingAddress
-  //   });
-  // } else {
-  //   let txt = ""
-  //   try {
-  //     let tokenData = await getToken(req.query)
-  //     if (tokenData.accessToken) {
-  //       txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
-  //     }
-  //   } catch (e){
-  //     errorLog.error(e)
-  //   }
-  //   return res.redirect(app_link + txt ); 
-	// }
-  let tokenData = await getToken(req.query);
-  let txt = "";
-  if (tokenData.accessToken) {
-      txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-  }
-  return res.redirect(app_link + txt ); 
+  if(!req.query.session) {    
+    if(!req.query.host){
+      const state = nonce()
+      const redirectUri = forwardingAddress + '/shopify/callback'
+      const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+        '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri
+      // res.cookie('state',state)
+      res.redirect(pageUri)
+    }
+    return res.render('index', {
+      shop: req.query.shop,
+      host: req.query.host,
+      apiKey: apiKey,
+      scopes: scopes,
+      forwardingAddress: forwardingAddress
+    });
+  } else {
+    let txt = ""
+    try {
+      let tokenData = await getToken(req.query)
+      if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
+      }
+    } catch (e){
+      errorLog.error(e)
+    }
+    return res.redirect(app_link + txt ); 
+	}
+  // let tokenData = await getToken(req.query);
+  // let txt = "";
+  // if (tokenData.accessToken) {
+  //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+  // }
+  // return res.redirect(app_link + txt ); 
 });
 
 // async function checkBilling(query) {
