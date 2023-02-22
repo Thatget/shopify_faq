@@ -9,6 +9,7 @@ const FaqMorePageSetting = db.faq_more_page_setting;
 const FaqMorePage = db.faq_more_page;
 const errorLog = require('../helpers/log.helper');
 const Plan = db.merchants_plan
+const shopifyApi = require('./../helpers/shopifyApi.helper')
 
 exports.findFaqOnPage = async (req, res) => {
     let Faqs = [];
@@ -30,8 +31,9 @@ exports.findFaqOnPage = async (req, res) => {
                 locale = req.params.locale
             }
             let settingMorePageData = []
-            let plan = await getPlan(userID)
-            if(plan != 'Free' || userData.plan_extra){
+            // let plan = await getPlan(userID)
+            let currentPlan = await shopifyApi.getCurrentPlan(shop, userData.dataValues.shopify_access_token)
+            if(currentPlan.length > 0 || userData.plan_extra){
               await FaqMorePageSetting.findAll({
                   where:{
                       user_id: userID

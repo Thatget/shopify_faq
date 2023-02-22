@@ -141,7 +141,7 @@ let initAPIs = (app) => {
     router.get("/api/product", product.findAll);
     router.put("/api/product/:id", product.update);
     router.delete("/api/product/:product_id", product.delete);
-    router.post("/api/product/id", product.deleteAll);
+    router.delete("/api/product/", product.deleteAll);
 
     //Faq Product router
     router.post("/api/faq-product", faq_product.create);

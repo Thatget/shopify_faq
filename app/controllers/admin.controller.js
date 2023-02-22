@@ -4,17 +4,20 @@ const Op = db.Sequelize.Op;
 const Setting = db.setting;
 const FaqMorePageSetting = db.faq_more_page_setting;
 const Rating = db.merchants_rating;
+const Plan = db.merchants_plan;
+
 const errorLog = require('../helpers/log.helper');
 
 exports.findAllData = async(req, res) => {
+  const count = await User.count();
   let userInfo = []
   let settingData = []
   let faqMorePageSettingData = []
   let ratingData = []
-  userInfo = await findUser(req.params.offset, req.params.limit)
-  settingData = await findSetting(req.params.offset, req.params.limit)
-  faqMorePageSettingData = await findFaqMorePageSetting(req.params.offset, req.params.limit)
-  ratingData = await findRating(req.params.offset, req.params.limit)
+  userInfo = await findUser(parseInt(req.params.offset), parseInt(req.params.limit), count)
+  settingData = await findSetting(parseInt(req.params.offset), parseInt(req.params.limit), count)
+  faqMorePageSettingData = await findFaqMorePageSetting(parseInt(req.params.offset), parseInt(req.params.limit), count)
+  ratingData = await findRating(parseInt(req.params.offset), parseInt(req.params.limit), count)
   let data = {
     user: userInfo,
     setting: settingData, 
@@ -24,13 +27,13 @@ exports.findAllData = async(req, res) => {
   return res.send({data})
 }; 
 
-async function findUser(offset, limit){
+async function findUser(offset, limit, count){
   let userInfo = []
   await User.findAll(
   {
-    attributes:['shopify_domain','id', 'email', 'createdAt'],
+    attributes:['shopify_domain','id', 'email', 'createdAt', 'plan_extra'],
     order:['id'],
-    offset: parseInt(offset),
+    offset: parseInt(count - (offset + limit)),
     limit: parseInt(limit),
   })
   .then(data => {
@@ -50,12 +53,12 @@ async function findUser(offset, limit){
   return userInfo
 }
 
-async function findSetting(offset, limit){
+async function findSetting(offset, limit, count){
   let settingData = []
   await Setting.findAll({
     attributes:['user_id','id', 'yanet_logo_visible'],
     order:['user_id'],
-    offset: parseInt(offset),
+    offset: parseInt(count - (offset + limit)),
     limit: parseInt(limit),
   })
   .then(data => {
@@ -67,13 +70,13 @@ async function findSetting(offset, limit){
   return settingData
 }
 
-async function findFaqMorePageSetting(offset, limit){
+async function findFaqMorePageSetting(offset, limit, count){
   let faqMorePageSettingData = []
   await FaqMorePageSetting.findAll(
     {
       attributes:['user_id','id', 'active_feature', 'active_template'],
       order:['user_id'],
-      offset: parseInt(offset),
+      offset: parseInt(count - (offset + limit)),
       limit: parseInt(limit),  
     }
   )
@@ -86,11 +89,11 @@ async function findFaqMorePageSetting(offset, limit){
   return faqMorePageSettingData
 }
 
-async function findRating(offset, limit){
+async function findRating(offset, limit, count){
   let rattingData = []
   await Rating.findAll({
     order:['user_id'],
-    offset: parseInt(offset),
+    offset: parseInt(count - (offset + limit)),
     limit: parseInt(limit),
   })
   .then(data => {
@@ -108,18 +111,21 @@ exports.searchByDomain = async(req, res) =>{
   let settingData = []
   let faqMorePageSettingData = []
   let ratingData = []
+  let planData = []
   userInfo = await searchUser(req.query)
   if(userInfo.length > 0){
     userData.push(userInfo[0])
     settingData = await searchUserSetting(userInfo[0].dataValues.id)
     faqMorePageSettingData = await searchUserFaqMorePageSetting(userInfo[0].dataValues.id)
     ratingData = await searchUserRating(userInfo[0].dataValues.id)
+    planData = await searchUserPlan(userInfo[0].dataValues.id)
   }
   let data = {
     user: userData,
     setting: settingData,
     faqMorePageSetting : faqMorePageSettingData,
-    rating : ratingData
+    rating : ratingData,
+    plan : planData
   }
   return res.send({data})
 }
@@ -226,3 +232,19 @@ async function searchUserRating(user_id){
   return rattingData
 }
 
+async function searchUserPlan(user_id){
+  let planData = []
+  await Plan.findAll({
+    where: {
+      user_id: user_id
+    },
+    attributes:['plan'],
+  })
+  .then(data => {
+    planData = data
+  })
+  .catch(err => {
+    errorLog.error(err)
+  });
+  return planData
+}

@@ -1,4 +1,4 @@
-<div class="root-faq-template">
+<div class="root-faq-template" itemtype="https://schema.org/FAQPage">
     <div class="faq-header-3">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -65,11 +65,11 @@
                                             <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                  <div class="faq-main-content">
+                                                  <div class="faq-main-content" itemtype="https://schema.org/Question">
                                                       <div class="faq-question-title">
                                                           <span class="listed-faq" value><%= faqs.faq[j].title %></span>
                                                       </div>
-                                                      <div id="faq-answer-content" class="faq-answer-content">
+                                                      <div id="faq-answer-content" class="faq-answer-content" itemtype="https://schema.org/Answer">
                                                           <%- faqs.faq[j].content %>
                                                       </div>
                                                   </div> 
@@ -88,10 +88,10 @@
                     <div style="display: flex; flex-direction: column">
                         <% for(var j=0; j < faqs.faq.length; j++) { %>
                           <div class="faq-main-content">
-                            <div class="faq-question-title">
+                            <div class="faq-question-title" itemtype="https://schema.org/Question">
                               <span class="listed-faq"><%= faqs.faq[j].title %></span>
                               </div>
-                              <div class="faq-answer-content">
+                              <div class="faq-answer-content" itemtype="https://schema.org/Answer">
                                   <%- faqs.faq[j].content %>
                               </div>
                           </div>
@@ -106,10 +106,10 @@
                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                   <div class="faq-main-content">
-                                      <div class="faq-question-title">
+                                      <div class="faq-question-title" itemtype="https://schema.org/Question">
                                           <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                       </div>
-                                      <div class="faq-answer-content faq-answer-search">
+                                      <div class="faq-answer-content faq-answer-search" itemtype="https://schema.org/Answer">
                                           <%- faqs.faq[j].content %>
                                       </div>
                                   </div> 
@@ -416,6 +416,7 @@
     }
     .faq-main-content{
         margin-bottom: 20px;
+        display: block !important
     }
     .faq-main-container{
         margin-bottom: 30px;
@@ -562,19 +563,19 @@
     }
     @media only screen and (max-width: 700px) {
         .faq-search {
-          width: 90% !important;
-          margin: auto;
-          padding: 0;
-          overflow: hidden !important;
+            width: 90% !important;
+            margin: auto;
+            padding: 0;
+            overflow: hidden !important;
           border: none !important;
           background-color: unset !important;
         }
         .faq-search-no-title{
-          width: 90% !;
-          margin: auto;
-          margin-top: 70px;
-          padding: 0;
-          overflow: hidden;
+            width: 90% !;
+            margin: auto;
+            margin-top: 70px;
+            padding: 0;
+            overflow: hidden;
         }
     }
     #micro-scope{

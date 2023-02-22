@@ -1,4 +1,4 @@
-<div class="root-faq-template">
+<div class="root-faq-template" itemtype="https://schema.org/FAQPage">
     <div class="faq-header-2">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -70,11 +70,11 @@
                                         <% for(var j=0; j < faqs.faq.length; j++) { %>
                                             <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                 <div class="faq-main-content">
-                                                    <div class="faq-question-title" onclick="showHideContent(this)">
+                                                    <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
                                                         <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                                         <svg class="svg-right svg-style" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                                                     </div>
-                                                    <div class="faq-answer-content faq-answer-search">
+                                                    <div class="faq-answer-content faq-answer-search" itemtype="https://schema.org/Answer">
                                                         <%- faqs.faq[j].content %>
                                                     </div>
                                                 </div>
@@ -92,11 +92,11 @@
                     <% for(var j=0; j < faqs.faq.length; j++) { %>
                         <div class="category-faq-container">
                             <div class="faq-main-content">
-                                <div class="faq-question-title" onclick="showHideContent(this)">
+                                <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
                                     <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                     <svg class="svg-right svg-style" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                                 </div>
-                                <div class="faq-answer-content faq-answer-search">
+                                <div class="faq-answer-content faq-answer-search" itemtype="https://schema.org/Answer">
                                     <%- faqs.faq[j].content %>
                                 </div>
                             </div>

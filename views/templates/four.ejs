@@ -1,4 +1,4 @@
-<div class="root-faq-template">
+<div class="root-faq-template" itemtype="https://schema.org/FAQPage">
     <div class="faq-header-3">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -51,8 +51,8 @@
                                     <div class="category-bar">
                                         <% for(var i = 0; i < faqs.categories.length; i++) { %>
                                             <div class="category-bar-item" style="padding: 0 20px; margin-bottom: 16px">
-                                                <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>;">
-                                                  <span onclick="changeCategory('<%- i %>', '<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>')" class="category-bar-title" id="faq-category<%- i %>"<% if(i === 0){%> style="word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; border-bottom: 1px solid <%= setting.templateSetting.category_bar_background %>; text-decoration: none; font-size: 16px !important; user-select: none; color: <%= setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="color: <%= setting.templateSetting.category_bar_color %>;word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; text-decoration: none; font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></span>                                                  
+                                                <a href="#faq-main" style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>;">
+                                                    <span onclick="changeCategory('<%- i %>', '<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>')" class="category-bar-title" id="faq-category<%- i %>"<% if(i === 0){%> style="word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; border-bottom: 1px solid <%= setting.templateSetting.category_bar_background %>; text-decoration: none; font-size: 16px !important; user-select: none; color: <%= setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="color: <%= setting.templateSetting.category_bar_color %>;word-break: break-word; text-align: left; padding-bottom: 4px; cursor: pointer; text-decoration: none; font-size: 16px !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></span>                                                  
                                                 </a>
                                             </div>
                                         <% } %>                                
@@ -68,11 +68,11 @@
                                                       <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                           <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                               <div class="faq-main-content">
-                                                                  <div class="faq-question-title" onclick="showHideContent(this)">
+                                                                  <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
                                                                     <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
                                                                     <span class="listed-faq" value><%= faqs.faq[j].title %></span>
                                                                   </div>
-                                                                  <div class="faq-answer-content" style="display: none;">
+                                                                  <div class="faq-answer-content" style="display: none;" itemtype="https://schema.org/Answer">
                                                                       <%- faqs.faq[j].content %>
                                                                   </div>
                                                               </div>
@@ -82,15 +82,15 @@
                                             </div>
                                         <% } %>
                                         <div style="display: none;" id="category<%- i %>">
-                                            <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
+                                            <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                     <div class="faq-main-content">
-                                                        <div class="faq-question-title" onclick="showHideContent(this)">
+                                                        <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
                                                             <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
                                                             <span class="listed-faq" value><%= faqs.faq[j].title %></span>
                                                         </div>
-                                                        <div id="faq-answer-content" class="faq-answer-content"  style="display: none;">
+                                                        <div id="faq-answer-content" class="faq-answer-content"  style="display: none;" itemtype="https://schema.org/Answer">
                                                             <%- faqs.faq[j].content %>
                                                         </div>
                                                     </div>
@@ -109,11 +109,11 @@
                     <div style="display: flex; flex-direction: column">
                         <% for(var j=0; j < faqs.faq.length; j++) { %>
                             <div class="faq-main-content">
-                                <div class="faq-question-title" onclick="showHideContent(this)">
-                                <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
+                                  <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                                  <span class="listed-faq"><%= faqs.faq[j].title %></span>
                                 </div>
-                                <div class="faq-answer-content" style="display: none;">
+                                <div class="faq-answer-content" style="display: none;" itemtype="https://schema.org/Answer">
                                     <%- faqs.faq[j].content %>
                                 </div>
                             </div>
@@ -128,11 +128,11 @@
                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                     <div class="faq-main-content">
-                                        <div class="faq-question-title" onclick="showHideContent(this)">
+                                        <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
                                             <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
                                             <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                         </div>
-                                        <div class="faq-answer-content faq-answer-search" style="display: none;">
+                                        <div class="faq-answer-content faq-answer-search" style="display: none;" itemtype="https://schema.org/Answer">
                                             <%- faqs.faq[j].content %>
                                         </div>
                                     </div>
@@ -192,10 +192,8 @@
   }
     var categoryName = []
     function changeCategory(id, category_bar_color, category_bar_background){
-      document.body.scrollTo({
-        top: 1200,
-        behavior: 'smooth'
-      });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
         if(!categoryName.some(item => {
             return item === id
         })){            
@@ -531,7 +529,6 @@
         margin-top: 30px; 
         padding-bottom: 40px;
         word-wrap: break-word;
-        scroll-margin-top: 100px
     }
     #not-found-text{
         display: none; 
@@ -593,7 +590,7 @@
         margin-left: 20px
     }
     .faq-answer-content{
-        margin: 12px 0 0 0 ; 
+        margin:0; 
         padding: 0px 10px 0px calc(<%- setting.templateSetting.faq_font_size%>px + 20px);
         // position: relative;
         word-wrap: break-word;

@@ -1,4 +1,4 @@
-<div class="root-faq-template" style="line-height: 1.8 !important;">
+<div class="root-faq-template" style="line-height: 1.8 !important;"  itemtype="https://schema.org/FAQPage">
   <div class="faq-header">
       <div>
           <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -74,10 +74,10 @@
                                       <% for(var j=0; j < faqs.faq.length; j++) { %>
                                           <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                               <div class="faq-main-content">
-                                                  <div class="faq-question-title">
+                                                  <div class="faq-question-title"  itemtype="https://schema.org/FAQPage/Question">
                                                       <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                                   </div>
-                                                  <div class="faq-answer-content faq-answer-search">
+                                                  <div class="faq-answer-content faq-answer-search"  itemtype="https://schema.org/FAQPage/Answer">
                                                       <%- faqs.faq[j].content %>
                                                   </div>
                                               </div>
@@ -94,10 +94,10 @@
               <div class="faq-dont-category">
                   <% for(var j=0; j < faqs.faq.length; j++) { %>
                       <div class="faq-main-content">
-                          <div class="faq-question-title">
+                          <div class="faq-question-title"  itemtype="https://schema.org/FAQPage/Question">
                               <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                           </div>
-                          <div class="faq-answer-content faq-answer-search">
+                          <div class="faq-answer-content faq-answer-search"  itemtype="https://schema.org/FAQPage/Answer">
                               <%- faqs.faq[j].content %>
                           </div>
                       </div>
@@ -153,12 +153,6 @@
     }
   }
 
-  function topFunction() {
-      document.body.scrollIntoView({
-          behavior: "smooth"
-      });    
-  }
-  document.querySelector("img").style.width = "90% !important";
   function simpleSearch() {
       var input = document.getElementById("search-text");
       var filter = input.value.toLowerCase();

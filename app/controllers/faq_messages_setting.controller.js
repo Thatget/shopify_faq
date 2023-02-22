@@ -1,6 +1,6 @@
 const db = require("../models");
 const MessagesSetting = db.faq_messages_setting;
-// const errorLog = require('../helpers/log.helper')
+const errorLog = require('../helpers/log.helper')
 const User = db.user
 const Plan = db.merchants_plan
 
@@ -33,6 +33,30 @@ exports.findAllEmbedApp = async (req, res) => {
   .then(async response => {
     response.dataValues.id? userID = response.dataValues.id : ''
     if(userID){
+      let plan = await getPlan(userID)
+      if(plan != 'Free' || userData.plan_extra){
+        await MessagesSetting.findOne({
+          where:{
+            user_id: userID
+          }
+        })
+        .then(data => {
+            if (data) {
+              messagesSetting = data.dataValues
+            } else {
+              res.status(404).send({
+                  message: `Cannot find messages with user_id=${userID}.`
+              });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error retrieving messages with user_id =" + userID
+            });
+        }); 
+      }
+    }
+    else{
       let plan = await getPlan(userID)
       if(plan != 'Free' || userData.plan_extra){
         await MessagesSetting.findOne({

@@ -199,30 +199,20 @@ exports.delete = (req, res) => {
 };
 
 exports.deleteAll = (req, res) => {
-    if (!req.body) {
-        res.status(400).send({
-            message: "Missing product data!"
-        });
-        return;
+  const user_id = req.jwtDecoded.data.user_id;
+  Product.destroy({
+    where: {
+      user_id: user_id
     }
-    let condition = { product_id: req.body };
-    Product.destroy({
-        where: condition
-    })
-        .then( num => {
-            if (num == 1) {
-                res.send({
-                    message: "Product was deleted successfully!"
-                });
-            } else {
-                res.send({
-                    message: `Cannot delete this product Maybe product was not found!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Could not delete product"
-            });
-        });
+  })
+  .then( () => {
+    res.send({
+        message: "Product was deleted all successfully!"
+    });
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: "Could not delete all product"
+      });
+  });
 };

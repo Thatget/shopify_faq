@@ -5,6 +5,19 @@ const User = db.user;
 const apiGraphql = process.env.API_GRAPHQL;
 const productApiGraphql = process.env.PRODUCT_API_GRAPHQL;
 const countProductApi = process.env.COUNT_PRODUCT_API_GRAPHQL;
+const Shopify = require("@shopify/shopify-api");
+
+const RECURRING_PURCHASES_QUERY = `
+  query appSubscription {
+    currentAppInstallation {
+      activeSubscriptions {
+        id
+        name
+        test
+      }
+    }
+  }
+`;
 
 const productList = async (req, res) => {
     var page = {};
@@ -92,7 +105,6 @@ const productList = async (req, res) => {
 }
 
 const searchProductByTitle = async (req, res) => {
-
     var products = null;
     if (!req.jwtDecoded.data.user_id) {
         res.status(401).send({
@@ -101,7 +113,7 @@ const searchProductByTitle = async (req, res) => {
         return;
     }
     const id = req.jwtDecoded.data.user_id;
-    let limit = 50;
+    let limit = 20;
     if (req.query.limit) {
         limit = Number(req.query.limit);
         if (!Number.isInteger(limit)) {
@@ -143,7 +155,7 @@ const searchProductByTitle = async (req, res) => {
                                 id
                                 handle
                                 title
-                                images(first: 20){
+                                images(first: ${limit}){
                                     edges{
                                         node{
                                             url
@@ -161,6 +173,7 @@ const searchProductByTitle = async (req, res) => {
             `
         };
         const shopRequestUrlLocale = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-04/graphql.json';
+        await getAllColecttion(userInfo.dataValues.shopify_domain, userInfo.dataValues.shopify_access_token)
         await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
             .then(data => {
                 if(data.data.products){
@@ -179,6 +192,30 @@ const searchProductByTitle = async (req, res) => {
     return res.status(200).json(products);
 }
 // const apiGraphql = process.env.API_GRAPHQL;
+
+const getAllColecttion = async(shop, token) => {
+  const client = new Shopify.Shopify.Clients.Graphql(
+    shop,
+    token,
+  );
+  const data = await client.query({
+    data: `query {
+      collections(first: 5) {
+        edges {
+          node {
+            id
+            title
+            handle
+            updatedAt
+            productsCount
+            sortOrder
+          }
+        }
+      }
+    }`,
+  });
+  console.log(data.body.data.collections.edges)
+}
 
 const syncLanguage = async(req, res) => {
   const id = req.jwtDecoded.data.user_id;
@@ -222,8 +259,38 @@ const syncLanguage = async(req, res) => {
   }
 }
 
+const getCurrentPlan = async(shop, accessToken) => {
+  const client = new Shopify.Shopify.Clients.Graphql(
+    shop,
+    accessToken,
+  );
+  const resp = await client.query({
+    data: RECURRING_PURCHASES_QUERY,
+  });
+  let currentPlan
+  if(resp.body.data.currentAppInstallation.activeSubscriptions){
+    currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
+  }
+  return currentPlan
+}
+
+const updatePlan = async(user_id, client) => {
+  let data = {
+    plan: client.name,
+    shopify_plan_id: client.id
+  }
+  await Plan.update(data, {
+    where: {
+      user_id: user_id
+    }
+  })
+}
+
 module.exports = {
     getProductList: productList,
     searchProductByTitle: searchProductByTitle,
-    syncLanguage: syncLanguage
+    syncLanguage: syncLanguage,
+    getCurrentPlan: getCurrentPlan,
+    updatePlan: updatePlan
 };
+
