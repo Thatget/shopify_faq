@@ -9,18 +9,20 @@ const Plan = db.merchants_plan
 let listFaqId = []
 const FaqProduct = db.faq_product;
 const errorLog = require('../helpers/log.helper');
-let freeLimitFaqs = 30
+let freeLimitFaqs = 15
+let free01LimitFaqs = 30
 const shopifyApi = require('./../helpers/shopifyApi.helper')
+const freePlan = 'Free'
+const freePlan01 = 'Free_01'
 
 exports.findAllProduct = async (req, res) => {
-  console.log(req)
     let Faqs = [];
     let Categories = [];
     let userID = null;
     let templateSetting = []
-    const shop = req.shop;
-    const product_id = req.product_id
-    let locale = req.locale
+    const shop = req.params.shop;
+    const product_id = req.params.product_id
+    let locale = req.params.locale
     await User.findOne({ where: { shopify_domain: shop}})
     .then( async userData => {
         if (userData) {
@@ -29,10 +31,10 @@ exports.findAllProduct = async (req, res) => {
                 locale = 'default'
             }
             else{
-                locale = req.locale
+                locale = req.params.locale
             }
             let settingData = []
-            // let plan = await getPlan(userID)
+            let plan = await getPlan(userID)
             let currentPlan = await shopifyApi.getCurrentPlan(shop, userData.dataValues.shopify_access_token)
             // if(plan != 'Free' || userData.plan_extra){
               await Setting.findOne({
@@ -68,53 +70,49 @@ exports.findAllProduct = async (req, res) => {
               .catch(e =>{
                   errorLog.error(e)
               })
-              await getProduct(userID, product_id, locale, Faqs, templateSetting)
+              await getProduct(userID, product_id, locale, Faqs, templateSetting, plan)
               await getCategory(locale, userID, Categories, templateSetting)
             // }
         }
          else {
-            // return res.status(400).send({
-            //     message: "Shop name is not found !"
-            // });
+            return res.status(400).send({
+                message: "Shop name is not found !"
+            });
         }
     })
     .catch(error => {
         errorLog.error(error)
-        // return res.status(500).send("some error");
+        return res.status(500).send("some error");
     })
     // const result = await User.findOne({ where: { shopify_domain: shop}}).catch(error => {
     //     return res.status(500).send("some error");
     // });
-    let dataa = {
-      faq: Faqs, category: Categories, templateSetting: templateSetting
-    }
-    return dataa
-    // return res.send({faq: Faqs, category: Categories, templateSetting: templateSetting})
+
+    return res.send({faq: Faqs, category: Categories, templateSetting: templateSetting})
 };
 
-// async function getPlan(userID){
-//   let PlanData = null
-//     await Plan.findOne({
-//         where: {
-//             user_id: userID,
-//         },
-//     })
-//     .then(async data => {
-//         if(data){
-//           console.log(data)
-//           PlanData = data.dataValues.plan
-//         }
-//     })
-//     .catch(err => {
-//         return res.status(500).send({
-//             message:
-//                 err.message || "Some error occurred while retrieving plan."
-//         })
-//     });
-//     return PlanData;
-// }
+async function getPlan(userID){
+  let PlanData = null
+    await Plan.findOne({
+      where: {
+        user_id: userID,
+      },
+    })
+    .then(async data => {
+        if(data){
+          PlanData = data.dataValues.plan
+        }
+    })
+    .catch(err => {
+        return res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving plan."
+        })
+    });
+    return PlanData;
+}
 
-async function getProduct(userID, product_id, locale, Faqs, templateSetting){
+async function getProduct(userID, product_id, locale, Faqs, templateSetting, plan){
     let productId = null
     await Product.findOne({
         where: {
@@ -124,9 +122,8 @@ async function getProduct(userID, product_id, locale, Faqs, templateSetting){
     })
     .then(async data => {
         if(data){
-          console.log(data, 'Product')
             productId = data.dataValues.id
-            await getFaqsId(productId, locale, Faqs, userID, templateSetting)
+            await getFaqsId(productId, locale, Faqs, userID, templateSetting, plan)
         }
         else{
             productId = data
@@ -141,56 +138,99 @@ async function getProduct(userID, product_id, locale, Faqs, templateSetting){
     return Product;
 }
 
-async function getFaqsId(product_id , locale, Faqs, userID, templateSetting){
+async function getFaqsId(product_id , locale, Faqs, userID, templateSetting, plan){
   await FaqProduct.findAll({
-    attributes:['faq_id'],
-    where: {
-        product_id: product_id
-    },
+      where: {
+          product_id: product_id
+      },
   })
   .then( async data => {
-    console.log(data, 'Product FAQs')
     if(data){
-      listFaqId = JSON.parse(data[0].dataValues.faq_id)
-      console.log(listFaqId)
-      await getFaqs(listFaqId, locale, Faqs, userID)
+      listFaqId = data
+      for(let i = 0; i < listFaqId.length; i++){
+        await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID, plan)
+      }
     }
   })
 }
 
-async function getFaqs(listFaqId, locale, Faqs, userID){
+async function getFaqs(faq_identify, category_identify, locale, Faqs, userID, plan){
+  let limit = 0
+  if(plan == freePlan){
+    limit = freeLimitFaqs
+  }
+  else if(plan == freePlan01){
+    limit = free01LimitFaqs
+  }
+  if(limit > 0){
     await Faq.findAll({
-        where: {
-            id: listFaqId,
-            user_id : userID
-        },
-        limit: freeLimitFaqs
+      where: {
+        identify : faq_identify ,
+        category_identify : category_identify,
+        user_id : userID
+      },
+      limit: freeLimitFaqs
     })
     .then(async data => {
-        if(data && data.length > 0){
-            if(data.some(element => {
-                return element.dataValues.locale == locale
-            })){
-                var checkFaq = data.filter(item => {
-                    return item.dataValues.locale == locale
-                })
-            }
-            else{
-                var checkFaq = data.filter(item => {
-                    return item.dataValues.locale == 'default'
-                })
-            }
-            if(checkFaq.length > 0){
-                Faqs.push(checkFaq[0])
-            }
+      if(data && data.length > 0){
+        if(data.some(element => {
+          return element.dataValues.locale == locale
+        })){
+          var checkFaq = data.filter(item => {
+            return item.dataValues.locale == locale
+          })
         }
+        else{
+          var checkFaq = data.filter(item => {
+            return item.dataValues.locale == 'default'
+          })
+        }
+        if(checkFaq.length > 0){
+          Faqs.push(checkFaq[0])
+        }
+      }
+      console.log(Faqs)
     })
     .catch(err => {
-        return res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving Product."
-        })
+      return res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Product."
+      })
     });
+  }
+  else{
+    await Faq.findAll({
+      where: {
+        identify : faq_identify ,
+        category_identify : category_identify,
+        user_id : userID
+      },
+    })
+    .then(async data => {
+      if(data && data.length > 0){
+        if(data.some(element => {
+          return element.dataValues.locale == locale
+        })){
+          var checkFaq = data.filter(item => {
+            return item.dataValues.locale == locale
+          })
+        }
+        else{
+          var checkFaq = data.filter(item => {
+            return item.dataValues.locale == 'default'
+          })
+        }
+        if(checkFaq.length > 0){
+          Faqs.push(checkFaq[0])
+        }
+      }
+      console.log(Faqs)
+    })
+    .catch(err => {
+      return res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Product."
+      })
+    });
+  }
 }
 
 async function getCategory(locale, userID, Categories, templateSetting){

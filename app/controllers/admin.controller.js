@@ -14,52 +14,103 @@ exports.findAllData = async(req, res) => {
   let settingData = []
   let faqMorePageSettingData = []
   let ratingData = []
-  userInfo = await findUser(parseInt(req.params.offset), parseInt(req.params.limit), count)
-  settingData = await findSetting(parseInt(req.params.offset), parseInt(req.params.limit), count)
-  faqMorePageSettingData = await findFaqMorePageSetting(parseInt(req.params.offset), parseInt(req.params.limit), count)
-  ratingData = await findRating(parseInt(req.params.offset), parseInt(req.params.limit), count)
+  let listUserId = []
+  if(req.params.plan == 'Pro'){
+    planData = await findPlan(userInfo, parseInt(req.params.offset), parseInt(req.params.limit), req.params.plan)
+    planData.forEach(item => {
+      listUserId.push(item.user_id)
+    })
+    userInfo = await findUser(parseInt(req.params.offset), parseInt(req.params.limit), count, listUserId)
+  }
+  else if(req.params.plan == 'Free'){
+    planData = await findPlan(userInfo, parseInt(req.params.offset), parseInt(req.params.limit), req.params.plan)
+    planData.forEach(item => {
+      listUserId.push(item.user_id)
+    })
+    userInfo = await findUser(parseInt(req.params.offset), parseInt(req.params.limit), count, listUserId)
+  }
+  else{
+    userInfo = await findUser(parseInt(req.params.offset), parseInt(req.params.limit), count, listUserId)
+    userInfo.forEach(item => {
+      listUserId.push(item.id)
+    })
+    planData = await findPlan(listUserId)
+  }
+  settingData = await findSetting(listUserId)
+  faqMorePageSettingData = await findFaqMorePageSetting(listUserId)
+  ratingData = await findRating()
   let data = {
     user: userInfo,
     setting: settingData, 
     faqMorePageSetting : faqMorePageSettingData,
-    rating : ratingData
+    rating : ratingData,
+    plan: planData
   }
   return res.send({data})
 }; 
 
-async function findUser(offset, limit, count){
+
+async function findUser(offset, limit, count, listUserId){
   let userInfo = []
-  await User.findAll(
-  {
-    attributes:['shopify_domain','id', 'email', 'createdAt', 'plan_extra'],
-    order:['id'],
-    offset: parseInt(count - (offset + limit)),
-    limit: parseInt(limit),
-  })
-  .then(data => {
-    if (data) {
-      userInfo = data
-    } 
-    else {
-      res.status(404).send({
-        message: `Cannot find User with id=${id}.`
-      });
-    }
-  })
-  .catch(err => {
-    errorLog.error(err)
-  });
+  if(listUserId.length > 0){
+    await User.findAll(
+    {
+      attributes:['shopify_domain','id', 'email', 'createdAt', 'plan_extra'],
+      order:['id'],
+      // offset: parseInt(count - (offset + limit)),
+      // limit: parseInt(limit),
+      where: {
+        id: listUserId
+      }
+    })
+    .then(data => {
+      if (data) {
+        userInfo = data
+      } 
+      else {
+        res.status(404).send({
+          message: `Cannot find User with id=${id}.`
+        });
+      }
+    })
+    .catch(err => {
+      errorLog.error(err)
+    });
+  }
+  else{
+    await User.findAll(
+    {
+      attributes:['shopify_domain','id', 'email', 'createdAt', 'plan_extra'],
+      order:['id'],
+      // offset: parseInt(count - (offset + limit)),
+      // limit: parseInt(limit),
+    })
+    .then(data => {
+      if (data) {
+        userInfo = data
+      } 
+      else {
+        res.status(404).send({
+          message: `Cannot find User with id=${id}.`
+        });
+      }
+    })
+    .catch(err => {
+      errorLog.error(err)
+    });
+  }
   console.log(userInfo)
   return userInfo
 }
 
-async function findSetting(offset, limit, count){
+async function findSetting(listUserId){
   let settingData = []
   await Setting.findAll({
     attributes:['user_id','id', 'yanet_logo_visible'],
     order:['user_id'],
-    offset: parseInt(count - (offset + limit)),
-    limit: parseInt(limit),
+    where: {
+      user_id : listUserId
+    }
   })
   .then(data => {
     settingData = data
@@ -70,14 +121,15 @@ async function findSetting(offset, limit, count){
   return settingData
 }
 
-async function findFaqMorePageSetting(offset, limit, count){
+async function findFaqMorePageSetting(listUserId){
   let faqMorePageSettingData = []
   await FaqMorePageSetting.findAll(
     {
       attributes:['user_id','id', 'active_feature', 'active_template'],
       order:['user_id'],
-      offset: parseInt(count - (offset + limit)),
-      limit: parseInt(limit),  
+      where: {
+        user_id : listUserId
+      }  
     }
   )
   .then(data => {
@@ -89,12 +141,10 @@ async function findFaqMorePageSetting(offset, limit, count){
   return faqMorePageSettingData
 }
 
-async function findRating(offset, limit, count){
+async function findRating(){
   let rattingData = []
   await Rating.findAll({
     order:['user_id'],
-    offset: parseInt(count - (offset + limit)),
-    limit: parseInt(limit),
   })
   .then(data => {
     rattingData = data
@@ -103,6 +153,57 @@ async function findRating(offset, limit, count){
     errorLog.error(err)
   });
   return rattingData
+}
+
+async function findPlan(listUserId, offset, limit, plan){
+  let planData = []
+  if(listUserId.length > 0){
+    await Plan.findAll({
+      order:['user_id'],
+      where: {
+        user_id: listUserId
+      }
+    })
+    .then(data => {
+      planData = data
+    })
+    .catch(err => {
+      errorLog.error(err)
+    });
+  }
+  else{
+    if(plan != 'Pro'){
+      await Plan.findAll({
+        order:['user_id'],
+        limit: limit,
+        where: {
+          plan: ['Free', 'Free extra', 'Free_01']
+        }
+      })
+      .then(data => {
+        planData = data
+      })
+      .catch(err => {
+        errorLog.error(err)
+      });
+    }
+    else{
+      await Plan.findAll({
+        order:['user_id'],
+        limit: limit,
+        where: {
+          plan: plan
+        }
+      })
+      .then(data => {
+        planData = data
+      })
+      .catch(err => {
+        errorLog.error(err)
+      });
+    }
+  }
+  return planData
 }
 
 exports.searchByDomain = async(req, res) =>{

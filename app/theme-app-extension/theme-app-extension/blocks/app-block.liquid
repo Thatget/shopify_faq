@@ -13,14 +13,14 @@
     var background_hover = ''
     console.log('{{template.name}}')
     if('{{template.name}}' !== 'product'){
-      fetch('https://dev-be-faq.yanet.io/api/no-token/block-more-page/{{shop.permanent_domain}}/{{template.name}}/{{request.locale.iso_code}}')
+      fetch('https://backend-faq.yanet.io/api/no-token/block-more-page/{{shop.permanent_domain}}/{{template.name}}/{{request.locale.iso_code}}')
       .then(response => response.json())
       .then(async data => {
         await getData(data)
       })
     }
     else{
-      fetch('https://dev-be-faq.yanet.io/api/no-token/block/{{shop.permanent_domain}}/{{product.id}}/{{request.locale.iso_code}}')
+      fetch('https://backend-faq.yanet.io/api/no-token/block/{{shop.permanent_domain}}/{{product.id}}/{{request.locale.iso_code}}')
       .then(response => response.json())
       .then(async data => {
         await getData(data)
@@ -29,6 +29,7 @@
     function getData(data){
       const faqs = data.faq
       var block_container = ''
+      var block_container_demo = ''
       const categories = data.category
       var listCategoryIdentify = []
       for(let i = 0; i < faqs.length; i++){
@@ -36,10 +37,20 @@
       }
       var check_category_identify = Array.from(new Set(listCategoryIdentify))
       const template_setting = data.templateSetting
+
+      //Custom
       if(template_setting.setting_id === 1696){
         document.getElementById('professional-faqs-block').style.maxWidth = "1180px"
-        document.getElementById('professional-faqs-block').style.padding = "30px"
+        document.getElementById('professional-faqs-block').style.padding = "30px 20px !important"
       }
+      if(template_setting.setting_id === 3098){
+        document.getElementById('professional-faqs-block').style.maxWidth = "1180px"
+        document.getElementById('professional-faqs-block').style.paddingLeft = "20px !important"
+      }
+      if(template_setting.setting_id === 2678){
+        document.getElementById('professional-faqs-block').style.maxWidth = "960px"
+      }
+
       console.log(data)
       var content_block = ""
       var item = ''
@@ -50,6 +61,7 @@
         })
         list_category.push(item)
       }
+
       if(template_setting.dont_category_faq === true){
         if(template_setting.faq_sort_name === true){
           faqs.sort(function(a, b){
@@ -75,7 +87,7 @@
                 block_container += `<div id="faq-container" class="faq-container-2" onmouseleave="myLeaveFunction(this)" onmouseover="myOverFunction(this)"><div onclick="showHideContent(this)" class="faq-list-2" id="faq-list-${j}" style="text-transform: none; color: ${template_setting.faq_font_color}; background-color: ${template_setting.faq_bg_color}; font-weight: ${template_setting.faq_font_weight}; font-family: ${template_setting.faq_font_family}; font-size: ${template_setting.faq_font_size}px; "> <div id="faq-title"  class="faq-title-2">` + faq_title + `</div><svg class="svg-right" fill="${template_setting.faq_font_color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></div><div id="faq-content" style="background-color:${template_setting.answer_bg_color}; color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}; text-transform: none; line-height: 1.8 !important" class="faq-content-2">`+ faq_content +'</div></div>'
                 break;
               case 3:
-                block_container += `<div id="faq-container" class="faq-container-3" ><div id="faq-list-${j}" style="border-bottom: 1px solid #ccc; color: ${template_setting.faq_font_color}; background-color: ${template_setting.faq_bg_color}; font-weight: ${template_setting.faq_font_weight}; font-family: ${template_setting.faq_font_family}; font-size: ${template_setting.faq_font_size}px"><div onclick="showHideContent(this)" class="faq-list-3" style="text-transform: none; line-height: 1.8 !important"><div class="faq-title-3">`+ faq_title +`</div><div class="list-svg"><svg class="svg-plus" fill="${template_setting.faq_font_color}" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg><svg class="svg-minus" fill="${template_setting.faq_font_color}" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg></div></div><div class="faq-content-3" style="color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}; text-transform: none; line-height: 1.8 !important">`+ faq_content +`</div></div></div>`
+                block_container += `<div id="faq-container" class="faq-container-3" ><div id="faq-list-${j}" style="border-bottom: 1px solid #ccc; color: ${template_setting.faq_font_color}; background-color: ${template_setting.faq_bg_color}; font-weight: ${template_setting.faq_font_weight}; font-family: ${template_setting.faq_font_family}; font-size: ${template_setting.faq_font_size}px"><div onclick="showHideContent(this)" class="faq-list-3" style="text-transform: none; line-height: 1.8 !important; font-family: ${template_setting.faq_font_family}"><div class="faq-title-3" style="font-weight: ${template_setting.faq_font_weight}">`+ faq_title +`</div><div class="list-svg"><svg class="svg-plus" fill="${template_setting.faq_font_color}" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg><svg class="svg-minus" fill="${template_setting.faq_font_color}" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg></div></div><div class="faq-content-3" style="color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}; text-transform: none; line-height: 1.8 !important">`+ faq_content +`</div></div></div>`
                 break;
               case 4:
                 block_container += `<div id="faq-container" class="faq-container-4""><div onclick="showHideContent(this)" class="faq-list-4" id="faq-list-${j}" style="text-transform: none; line-height: 1.8 !important; color: ${template_setting.faq_font_color}; background-color: ${template_setting.faq_bg_color}; font-weight: ${template_setting.faq_font_weight}; font-family: ${template_setting.faq_font_family}; font-size: ${template_setting.faq_font_size}px"><svg class="svg-right-4" style="height: ${template_setting.faq_font_size}px; width: ${template_setting.faq_font_size}px; margin-top: calc(${template_setting.faq_font_size}px * 0.4)" fill="${template_setting.faq_font_color}" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg><div id="faq-title"  class="faq-title-4">` + faq_title + `</div></div><div id="faq-content" style="background-color:${template_setting.answer_bg_color}; color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}; text-transform: none; line-height: 1.8 !important; padding: 0 10px 0 calc(${template_setting.faq_font_size}px + 22px)" class="faq-content-4">`+ faq_content +'</div></div>'
@@ -142,7 +154,7 @@
                   content_block += `<div id="faq-container" class="faq-container-2" onmouseleave="myLeaveFunction(this)" onmouseover="myOverFunction(this)"><div onclick="showHideContent(this)" class="faq-list-2" id="faq-list-${j}" style="text-transform: none; line-height: 1.8 !important; color: ${template_setting.faq_font_color}; background-color: ${template_setting.faq_bg_color}; font-weight: ${template_setting.faq_font_weight}; font-family: ${template_setting.faq_font_family}; font-size: ${template_setting.faq_font_size}px; "> <div id="faq-title"  class="faq-title-2">` + faq_title + `</div><svg class="svg-right" fill="${template_setting.faq_font_color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></div><div id="faq-content" style="background-color:${template_setting.answer_bg_color}; color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}; text-transform: none; line-height: 1.8 !important" class="faq-content-2">`+ faq_content +'</div></div>'
                   break;
                 case 3:
-                  content_block += `<div id="faq-container" class="faq-container-3" ><div id="faq-list-${j}" style="border-bottom: 1px solid #ccc; color: ${template_setting.faq_font_color}; background-color: ${template_setting.faq_bg_color}; font-weight: ${template_setting.faq_font_weight}; font-family: ${template_setting.faq_font_family}; font-size: ${template_setting.faq_font_size}px"><div onclick="showHideContent(this)" class="faq-list-3" style="text-transform: none; line-height: 1.8 !important"><div class="faq-title-3">`+ faq_title +`</div><div class="list-svg"><svg class="svg-plus" fill="${template_setting.faq_font_color}" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg><svg class="svg-minus" fill="${template_setting.faq_font_color}" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg></div></div><div class="faq-content-3" style="color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}; text-transform: none; line-height: 1.8 !important">`+ faq_content +`</div></div></div>`
+                  content_block += `<div id="faq-container" class="faq-container-3" ><div id="faq-list-${j}" style="border-bottom: 1px solid #ccc; background-color: ${template_setting.faq_bg_color}; font-weight: ${template_setting.faq_font_weight}"><div onclick="showHideContent(this)" class="faq-list-3" style="display: flex; align-items: center;justify-content: space-between;width: 100%; cursor: pointer; line-height: 1.8 !important; padding: 12px; border-radius: 4px 4px 0 0; text-transform: none; line-height: 1.8 !important; font-family: ${template_setting.faq_font_family};"><div class="faq-title-3" style="word-wrap:break-word; word-break: break-word; text-align: start; font-weight: ${template_setting.faq_font_weight} !important; color: ${template_setting.faq_font_color}; font-size: ${template_setting.faq_font_size}px">`+ faq_title +`</div><div class="list-svg" style="display: flex; align-items: center; justify-content: center;"><svg class="svg-plus" style="position: relative; left: 13.2px; opacity: 1; min-width: 14px !important; height: 14px !important;" fill="${template_setting.faq_font_color}" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg><svg class="svg-minus" style="opacity: 0; min-width: 14px !important; height: 14px;" fill="${template_setting.faq_font_color}" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg></div></div><div class="faq-content-3" style="display: none; line-height: 1.8 !important; text-align: start; word-wrap: break-word; padding: 12px; margin-right: 28px; color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}; text-transform: none; line-height: 1.8 !important">`+ faq_content +`</div></div></div>`
                   break;
                 case 4:
                   content_block += `<div id="faq-container" class="faq-container-4""><div onclick="showHideContent(this)" class="faq-list-4" id="faq-list-${j}" style="text-transform: none; line-height: 1.8 !important; color: ${template_setting.faq_font_color}; background-color: ${template_setting.faq_bg_color}; font-weight: ${template_setting.faq_font_weight}; font-family: ${template_setting.faq_font_family}; font-size: ${template_setting.faq_font_size}px"><svg class="svg-right-4" style="height: ${template_setting.faq_font_size}px; width: ${template_setting.faq_font_size}px; margin-top: calc(${template_setting.faq_font_size}px * 0.4)" fill="${template_setting.faq_font_color}" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg><div id="faq-title"  class="faq-title-4">` + faq_title + `</div></div><div id="faq-content" style="background-color:${template_setting.answer_bg_color}; color: ${template_setting.answer_font_color}; font-family:${template_setting.answer_font_family}; font-size: ${template_setting.answer_font_size}px; font-weight: ${template_setting.answer_font_weight}; text-transform: none; line-height: 1.8 !important; padding: 0 10px 0 calc(${template_setting.faq_font_size}px + 22px)" class="faq-content-4">`+ faq_content +'</div></div>'
@@ -176,7 +188,7 @@
                 block_container += `<div class="category-container" style="color: ${template_setting.category_font_color}; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}; text-align: ${template_setting.category_text_align}; text-transform: ${template_setting.category_text_style}">`+ `<div style="line-height: 1.8 !important">`+ category_title +`</div>` + content_block +`</div>`
                 break;
               case 3: 
-                block_container += `<div class="category-container" style="color: ${template_setting.category_font_color}; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}; text-align: ${template_setting.category_text_align}; text-transform: ${template_setting.category_text_style}">`+ `<div style="line-height: 1.8 !important; border-bottom: 1px solid #ccc; padding: 12px 0">`+ category_title +`</div>` + content_block +`</div>`
+                block_container += `<div class="category-container" id="category${i}" style="color: ${template_setting.category_font_color}; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}; text-align: ${template_setting.category_text_align}; text-transform: ${template_setting.category_text_style}">`+ `<div style="line-height: 1.8 !important; border-bottom: 1px solid #ccc; padding: 12px 0; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}">`+ category_title +`</div>` + content_block +`</div>`
                 break;
               case 4:
                 block_container += `<div class="category-container" style="color: ${template_setting.category_font_color}; font-family: ${template_setting.category_font_family}; font-size: ${template_setting.category_font_size}px; font-weight: ${template_setting.category_font_weight}; text-align: ${template_setting.category_text_align}; text-transform: ${template_setting.category_text_style}">`+ `<div style="line-height: 1.8 !important; padding: 10px 0">`+ category_title +`</div>` + content_block +`</div>`
@@ -197,14 +209,31 @@
           }
         }
         if(template_setting.setting_id === 1696){
-          block_container = `<div class="faq-block-title">FAQ's</div>` + block_container
+          block_container = `<div class="faq-block-title-1696">Frequently Asked Questions</div>` + block_container
+        }
+        if(template_setting.setting_id === 2563){
+          let list_category_bar = ''
+          for(let i = 0; i < list_category.length; i++){
+            list_category_bar += `<a href="#${list_category[i][0].title.replace(/ /g, '-')}" style="text-decoration: none; color: ${template_setting.category_bar_color}"><div onclick="changeCategory('${i}','${template_setting.category_bar_background}', '${template_setting.category_bar_color}')" class="category-bar-item" id="faq-category${i}" style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: ${ template_setting.category_text_style }">${ list_category[i][0].title }</div></a>`
+          }
+          block_container = `<div class="faq-yanet-container"><div class="category_bar_custom">${list_category_bar}</div><div class="category_bar_custom_width">${block_container}</div></div>`
         }
         document.getElementById('professional-faqs-block').innerHTML = block_container
+        if(template_setting.setting_id == 2563){
+          document.getElementById('faq-category0').style.backgroundColor = template_setting.category_bar_background
+          for(let i = 0; i < list_category.length; i++){
+            if(i == 0){
+              document.getElementById(`category0`).style.display = "block"
+            }
+            else{
+              document.getElementById(`category${i}`).style.display = "none"
+            }
+          }
+        }
         document.getElementsByClassName('category-title-8')[0].style.marginTop = "15px"
-        console.log(document.getElementsByClassName('category-title-8')[0].style.display)
       }
     }
-
+    
     function myLeaveFunction(el) {
       el.getElementsByClassName('faq-list-2')[0].style.backgroundColor = background_color
     }
@@ -308,6 +337,49 @@
           faqMinus[0].style.transition  = "ease-in .3s";
           faqMinus[0].style.opacity = "1";
         }
+      }
+    }
+    var categoryName = []
+    function changeCategory(id, category_bar_background, category_bar_color) {
+      if(!categoryName.some(item => {
+          return item == id
+      })){            
+          categoryName.push(id)
+      }
+      var categoryShow = categoryName.filter(item => {
+          return item == id
+      })
+      var categoryHide = categoryName.filter(item => {
+          return item != id
+      })
+      for(i = 0; i < document.getElementsByClassName('faq-content-3').length; i++){
+          document.getElementsByClassName('faq-content-3')[i].style.display = 'none'
+          document.getElementsByClassName('svg-plus')[i].style.opacity = '1'
+          document.getElementsByClassName('svg-plus')[i].style.transform = "rotate(0deg)";
+          document.getElementsByClassName('svg-plus')[i].style.transition  = "all .7s";
+          document.getElementsByClassName('svg-minus')[i].style.transform = "rotate(0deg)";
+          document.getElementsByClassName('svg-minus')[i].style.transition  = "ease-in .3s";
+          document.getElementsByClassName('svg-minus')[i].style.opacity = '0'
+      }
+      for(let i = 0; i < categoryName.length; i++){
+          if(categoryName[i] == id){
+              document.getElementById(`category${id}`).style.display = 'block'
+              document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = `${category_bar_background}`
+              document.getElementById(`faq-category${categoryName[i]}`).style.color = `${category_bar_color}`
+          }
+          else{
+              document.getElementById(`category${categoryName[i]}`).style.display = 'none'
+              document.getElementById(`faq-category${categoryName[i]}`).style.backgroundColor = 'inherit'
+          }
+      }
+      if(id == 0){
+        document.getElementById('faq-category0').style.backgroundColor = `${category_bar_background}`
+      }
+      else{
+        document.getElementById('category0').style.display = "none"
+      }
+      if(categoryName.length === 1){
+          document.getElementsByClassName('category-bar-item')[0].style.backgroundColor = 'inherit'
       }
     }
 </script>

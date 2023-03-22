@@ -1,20 +1,11 @@
 
-<% if (setting.data.user_id !== 1) { %>
+<% if (setting.data.user_id !== 2183) { %>
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Playfair+Display" />
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Varela+Round" />
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Questrial" />
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Karla" />
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat" />
 <% } %>
-  <script type="application/ld+json">
-    <% if (schema) { %>
-      {
-        "@context": "https://schema.org",
-        "@type": "Professtional FAQs Page",
-        "mainEntity": [<%- schema %>]
-      }
-    <% } %>
-  </script>    
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <% if (setting.data) {
     if (setting.data.faq_template_number) {

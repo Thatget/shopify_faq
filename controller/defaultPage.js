@@ -7,6 +7,9 @@ const TemplateSetting = db.template_setting;
 const forwardingAddress = process.env.HOST;
 const errorLog = require('../app/helpers/log.helper');
 const { QueryTypes } = require('sequelize');
+const freePlan = 'Free'
+const freePlan01 = 'Free_01'
+const proPlan = 'Pro'
 
 // Using in nodeJs
 exports.findFaqs = async (shop, locale, path_prefix = "", plan) => {
@@ -45,19 +48,25 @@ exports.findFaqs = async (shop, locale, path_prefix = "", plan) => {
                     " where `faq`.`user_id` = ? and `faq`.`is_visible` = 1 and (`faq`.`locale` = 'default' or `faq`.`locale` = ?)";
       
             if (selectCondition.faq_sort_name) {
-              if(plan !== 'Free' || userData.dataValues.plan_extra){
+              if(plan == proPlan || userData.dataValues.plan_extra){
                 selectQueryFaqs += " ORDER BY `faq`.`title`"
               }
-              else{
+              else if(plan == freePlan01){
                 selectQueryFaqs += " ORDER BY `faq`.`title` LIMIT 30"
+              }
+              else if(plan == freePlan){
+                selectQueryFaqs += " ORDER BY `faq`.`title` LIMIT 15"
               }
             }
             else{
-              if(plan !== 'Free' || userData.dataValues.plan_extra){
+              if(plan == proPlan || userData.dataValues.plan_extra){
                 selectQueryFaqs += " ORDER BY `faq`.`position`"
               }
-              else{
-                selectQueryFaqs += " ORDER BY `faq`.`position` LIMIT 30"
+              else if(plan == freePlan01){
+                selectQueryFaqs += " ORDER BY `faq`.`title` LIMIT 30"
+              }
+              else if(plan == freePlan){
+                selectQueryFaqs += " ORDER BY `faq`.`title` LIMIT 15"
               }
             }
 
@@ -361,7 +370,7 @@ exports.findSetting = async (shop, locale, plan) => {
                             errorLog.error(`setting json parse error ${e.message}`)
                         }
                     }
-                    if(plan == 'Free' && (settingData.faq_template_number > 3) && !userData.dataValues.plan_extra){
+                    if((plan == freePlan || plan == freePlan01) && (settingData.faq_template_number > 3) && !userData.dataValues.plan_extra){
                       settingData.faq_template_number = 2
                     }
                     templateSetting = await getTemplateSetting(settingData.id, settingData.faq_template_number);

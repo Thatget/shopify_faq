@@ -7,7 +7,6 @@ const appName = process.env.SHOPIFY_APP_NAME;
 
 const authorizeScope = async (req, res) => {
 	// const authorize = cookie.parse(req.headers.cookie).authorize||false;
-
   const { shop } = req.query;
   const accessToken = req.accessToken;
   try {

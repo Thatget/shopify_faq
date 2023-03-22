@@ -5,7 +5,7 @@ const forwardingAddress = process.env.HOST;
 
 const uninstallApp = async (shop, accessToken) => {
   try {
-    const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2022-01/webhooks.json';
+    const shopRequestUrlWebhook = 'https://' + shop + '/admin/api/2023-01/webhooks.json';
 
     const shopRequestHeaders = {
       'X-Shopify-Access-Token': accessToken

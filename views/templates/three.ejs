@@ -1,4 +1,4 @@
-<div class="root-faq-template" itemtype="https://schema.org/FAQPage">
+<div class="root-faq-template" itemscope itemtype="https://schema.org/FAQPage">
     <div class="faq-header-3">
         <div>
           <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -47,23 +47,34 @@
                 <div class="faq-main-container">
                     <div class="faq-category-container">
                         <% if(faqs.categories.length){%>
-                          <% if(faqs.user_id === 1){%>
-                            <div class="category-bar category-bar-2048" style="color: <%=  setting.templateSetting.category_bar_color %>">
-                                <% for(var i = 0; i < faqs.categories.length; i++) { %>
-                                    <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" <% if(i === 0 && faqs.user_id === 1){%> style="text-decoration: none; color: #fff"<%}else{%>style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>"<%}%>>
-                                      <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>', '<%=  setting.templateSetting.category_bar_color %>', '<%=  faqs.user_id %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
-                                    </a>
-                                <% } %>
+                          <% if(faqs.user_id === 2376){%>
+                            <div class="category-bar" style="color: <%=  setting.templateSetting.category_bar_color %>">
+                              <% for(var i = 0; i < faqs.categories.length; i++) { %>
+                                  <div style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>">
+                                    <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>', '<%=  setting.templateSetting.category_bar_color %>', '<%=  faqs.user_id %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
+                                  </div>
+                              <% } %>
                             </div>
                           <% }
                           else{ %>
-                            <div class="category-bar" style="color: <%=  setting.templateSetting.category_bar_color %>">
-                                <% for(var i = 0; i < faqs.categories.length; i++) { %>
-                                    <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>">
-                                      <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>', '<%=  setting.templateSetting.category_bar_color %>', '<%=  faqs.user_id %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
-                                    </a>
-                                <% } %>
-                            </div>
+                            <% if(faqs.user_id === 1){%>
+                              <div class="category-bar category-bar-2048" style="color: <%=  setting.templateSetting.category_bar_color %>">
+                                  <% for(var i = 0; i < faqs.categories.length; i++) { %>
+                                      <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" <% if(i === 0 && faqs.user_id === 1){%> style="text-decoration: none; color: #fff"<%}else{%>style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>"<%}%>>
+                                        <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>', '<%=  setting.templateSetting.category_bar_color %>', '<%=  faqs.user_id %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
+                                      </a>
+                                  <% } %>
+                              </div>
+                            <% }
+                            else{ %>
+                              <div class="category-bar" style="color: <%=  setting.templateSetting.category_bar_color %>">
+                                  <% for(var i = 0; i < faqs.categories.length; i++) { %>
+                                      <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" style="text-decoration: none; color: <%=  setting.templateSetting.category_bar_color %>">
+                                        <div onclick="changeCategory('<%- i %>','<%= setting.templateSetting.category_bar_background %>', '<%=  setting.templateSetting.category_bar_color %>', '<%=  faqs.user_id %>')" class="category-bar-item" id="faq-category<%- i %>" <% if(i === 0){%> style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; user-select: none; background-color: <%=  setting.templateSetting.category_bar_background %>; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}else{%>style="word-break: break-word; text-align: left; padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; text-decoration: none; background-color: inherit !important; user-select: none; text-transform: <%=  setting.templateSetting.category_text_style %>"<%}%>><%- faqs.categories[i].title %></div>                                        
+                                      </a>
+                                  <% } %>
+                              </div>
+                            <% } %>
                           <% } %>
                             <div class="faq-container">
                                 <div class="category-faq-container" id="category-container">
@@ -73,14 +84,16 @@
                                                 <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                                 <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                     <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                        <div class="faq-main-content">
-                                                            <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
-                                                                <span class="listed-faq" value><%= faqs.faq[j].title %></span>
+                                                        <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                                            <div class="faq-question-title" onclick="showHideContent(this)">
+                                                                <span class="listed-faq" value itemprop="name"><%= faqs.faq[j].title %></span>
                                                                 <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                                 <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                             </div>
-                                                            <div class="faq-answer-content " itemtype="https://schema.org/Answer">
-                                                                <%- faqs.faq[j].content %>
+                                                            <div class="faq-answer-content " itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                                                <div itemprop="text">
+                                      <%- faqs.faq[j].content %>
+                                    </div>
                                                             </div>
                                                         </div>
                                                     <% } %>    
@@ -91,14 +104,16 @@
                                             <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                    <div class="faq-main-content">
-                                                        <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
-                                                            <span class="listed-faq" value><%= faqs.faq[j].title %></span>
+                                                    <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                                        <div class="faq-question-title" onclick="showHideContent(this)">
+                                                            <span class="listed-faq" value itemprop="name"><%= faqs.faq[j].title %></span>
                                                             <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                             <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                                         </div>
-                                                        <div id="faq-answer-content" class="faq-answer-content " itemtype="https://schema.org/Answer">
+                                                        <div id="faq-answer-content" class="faq-answer-content " itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                                          <div itemprop="text">
                                                             <%- faqs.faq[j].content %>
+                                                          </div>
                                                         </div>
                                                     </div>
                                                 <% } %>
@@ -114,14 +129,16 @@
             else{ %>
                 <div class="faq-dont-category">
                     <% for(var j=0; j < faqs.faq.length; j++) { %>
-                        <div class="faq-main-content">
-                            <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
-                                <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                        <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                            <div class="faq-question-title" onclick="showHideContent(this)">
+                                <span class="listed-faq" itemprop="name"><%= faqs.faq[j].title %></span>
                                 <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                 <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                             </div>
-                            <div class="faq-answer-content " itemtype="https://schema.org/Answer">
-                                <%- faqs.faq[j].content %>
+                            <div class="faq-answer-content" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                <div itemprop="text">
+                                      <%- faqs.faq[j].content %>
+                                    </div>
                             </div>
                         </div>
                     <%}%>
@@ -132,14 +149,16 @@
                     <div>
                         <% for(var j=0; j < faqs.faq.length; j++) { %>
                             <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                <div class="faq-main-content">
-                                    <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
-                                        <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
+                                <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                    <div class="faq-question-title" onclick="showHideContent(this)">
+                                        <span class="listed-faq faq-question-search" itemprop="name"><%= faqs.faq[j].title %></span>
                                         <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                         <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
                                     </div>
-                                    <div class="faq-answer-content faq-answer-search" itemtype="https://schema.org/Answer">
-                                        <%- faqs.faq[j].content %>
+                                    <div class="faq-answer-content faq-answer-search" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                        <div itemprop="text">
+                                      <%- faqs.faq[j].content %>
+                                    </div>
                                     </div>
                                 </div>
                             <% } %>
@@ -651,6 +670,11 @@
         }
     
     }
+    <%
+      if(setting.templateSetting.custom_css) { %>
+          <%= setting.templateSetting.custom_css%>
+      <%}
+    %>
     #micro-scope{
         <% if (setting.templateSetting.micro_scope_color) { %>
             fill: <%=  setting.templateSetting.micro_scope_color %>;
@@ -661,9 +685,4 @@
         :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important};
         ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important};
     <% } %>
-    <%
-        if(setting.templateSetting.custom_css) { %>
-            <%= setting.templateSetting.custom_css%>
-        <%}
-    %>
 </style>

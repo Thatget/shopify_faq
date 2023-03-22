@@ -1,13 +1,19 @@
 .professional-faqs{
-  padding: 30px 0;
+  padding: 30px 20px !important;
+  margin: auto;
 }
-.faq-block-title{
-  font-size: 36px;
-  font-weight: bold;
-  text-align: center;
+.faq-block-title-1696{
+  font-size: 47px !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  margin-bottom: 20px !important;
+  color: #000000 !important
 }
 .category-container{
   margin-bottom: 20px;
+}
+.category-container7{
+  margin-bottom: 40px;
 }
 .faq-content-1, .faq-content-7, .faq-content-8{
   line-height: 1.8 !important;
@@ -70,8 +76,20 @@
   cursor: pointer; 
   line-height: 1.8 !important;
   padding: 12px;
-  border-radius: 4px 4px 0 0; 
+  border-radius: 4px; 
   margin-top: 12px;
+}
+.faq-list-5{
+  display: flex; 
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer; 
+  line-height: 1.8 !important;
+  border-radius: 4px; 
+  position: relative;
+  padding: 20px 30px;
+  line-height: 1.8 !important;
 }
 .faq-title-2{
   word-wrap:break-word;
@@ -155,7 +173,7 @@ svg:not(:root) {
 }
 .faq-list-4{
   display: flex;
-  align-items: center;
+  align-items: start;
   cursor: pointer;
 }
 .faq-title-4{
@@ -173,4 +191,43 @@ svg:not(:root) {
   margin-top: 45px;
   padding-bottom: 15px;
   line-height: 1.8 !important;
+}
+.category-container img{
+  max-width: 100% !important;
+}
+
+.category_bar_custom{
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  border-top: 1px solid #ccc;
+  margin-top: 67px;
+  margin-right: 50px;
+}
+.faq-yanet-container{
+  display: flex;
+  flex-direction: row;
+}
+.category_bar_custom_width{
+  width: 70%;
+}
+@media only screen and (max-width: 768px) {
+  .faq-category-container{
+      flex-direction: column;
+  }
+  .faq-container{
+      width: 100% !important;
+  }
+  .category_bar_custom_width{
+    width: 100%;
+  }  
+  .category_bar_custom{
+      width: 100% !important;
+      margin: 0 !important;
+      margin-top: 20px !important;
+  }
+  .faq-yanet-container{
+    display: flex;
+    flex-direction: column;
+  }  
 }
