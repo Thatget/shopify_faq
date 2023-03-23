@@ -1,0 +1,13 @@
+<div class="yanet-qr-code-generator" style="text-align: center; font-size: 36px; font-weight: bold">
+  <span class="">Scan QR code generator...</span>
+</div>
+<script>
+  fetch(`https://f35d-117-5-45-187.ngrok.io/api/qr-generator?data=${window.location.href}`)
+    .then(response => response.json())
+    .then(async data => {
+      console.log(data)
+      // location.href = data.qr_link
+    })
+</script>
+<style>
+</style>
