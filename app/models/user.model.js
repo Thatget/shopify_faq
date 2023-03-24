@@ -6,22 +6,18 @@ module.exports = (sequelize, Sequelize) => {
       shopify_domain: {
           type: Sequelize.STRING,
           allowNull: false,
-          unique: true
       },
       shop_domain: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
       },
       shopify_access_token: {
           type: Sequelize.STRING,
           allowNull: false,
-          unique: true  
       },  
       email: {
           type: Sequelize.STRING,
           allowNull: false,
-          unique: true  
       },
       phone: {
           type: Sequelize.STRING
