@@ -2,7 +2,7 @@
 //   HOST: "localhost",
 //   USER: "root",
 //   PASSWORD: "Matkhau1",
-//   DB: "faq_app",
+//   DB: "purchase_order",
 //   dialect: "mysql",
 //   pool: {
 //       max: 5,
