@@ -6,8 +6,8 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
-    qr_code_name: {
-      type: Sequelize.STRING,
+    qr_code_id: {
+      type: Sequelize.INTEGER,
       allowNull: false,
     },
     qr_logo_link:{
@@ -56,18 +56,81 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER
     },
     qr_frame:{
-      type: Sequelize.STRING
+      type: Sequelize.INTEGER
     },
     qr_frame_color:{
       type: Sequelize.STRING
     },
-    qr_shape_dot:{
+    qr_code_image: {
       type: Sequelize.STRING
     },
-    qr_corner:{
+    hide_bg_dots: {
+      type: Sequelize.BOOLEAN
+    },
+    image_margin: {
+      type: Sequelize.INTEGER
+    },
+    qr_code_image_size: {
+      type: Sequelize.INTEGER
+    },
+    corner_dot_rotation: {
+      type: Sequelize.INTEGER
+    },
+    corner_dot_gradient_color_2: {
       type: Sequelize.STRING
     },
-    qr_corner_dot:{
+    corner_dot_gradient_color_1: {
+      type: Sequelize.STRING
+    },
+    corner_dot_single_color: {
+      type: Sequelize.STRING
+    },
+    corner_dot_color_type: {
+      type: Sequelize.STRING
+    },
+    corner_dot_style: {
+      type: Sequelize.STRING
+    },
+    corner_square_rotation: {
+      type: Sequelize.INTEGER
+    },
+    corner_square_gradient_color_1: {
+      type: Sequelize.STRING
+    },
+    corner_square_gradient_color_2: {
+      type: Sequelize.STRING
+    },
+    corner_square_single_color: {
+      type: Sequelize.STRING
+    },
+    corner_square_color_type: {
+      type: Sequelize.STRING
+    },
+    corner_square_style: {
+      type: Sequelize.STRING
+    },
+    qr_type: {
+      type: Sequelize.INTEGER
+    }, 
+    error_correction_level: {
+      type: Sequelize.STRING
+    },
+    dot_rotation: {
+      type: Sequelize.INTEGER
+    },
+    dot_gradient_color_2: {
+      type: Sequelize.STRING
+    },
+    dot_gradient_color_1: {
+      type: Sequelize.STRING
+    },
+    dot_single_color: {
+      type: Sequelize.STRING
+    },
+    dot_color_type: {
+      type: Sequelize.STRING
+    },
+    dot_style: {
       type: Sequelize.STRING
     },
   },

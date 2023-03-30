@@ -1,62 +1,68 @@
 const db = require("../models");
 const QR_code = db.qr_code;
 const Op = db.Sequelize.Op;
-const Qr_code_style = db.qr_code_style
-const Qr_code_setting = db.qr_code_setting
+const QR_code_setting = db.qr_code_setting;
+const QR_code_style = db.qr_code_style;
 
 exports.create = async(req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
-  console.log(req.body)
-  var qr_code_data
   // Validate request
-  if (!req.body.qr_code_style || !req.body.qr_code_setting) {
+  if (!req.body.qr_code_create) {
     res.status(400).send({
-      message: "qr_code_setting, qr_code_style can not be empty!"
+      message: "qr_code_name can not be empty!"
     });
     return;
   }
   // Create a qr_code
-  if(req.body.qr_code_create){
-    const qr_code = {
-      user_id : user_id,
-      qr_code_name : req.body.qr_code_create.qr_code_name
-    };
-    await QR_code.create(qr_code)
-  }
-  await QR_code.findOne({
-    where: {
-      qr_code_name: req.body.qr_code_setting.qr_code_name
+  const qr_code = {
+    user_id : user_id,
+    qr_code_name : req.body.qr_code_create.qr_code_name,
+    qr_code_type : req.body.qr_code_create.qr_code_type
+  };
+  await QR_code.create(qr_code)
+  .then(async data => {
+    if (data) {
+      await QR_code.findOne({
+        where: {
+          user_id: user_id
+        },
+        attributes:['id'],
+        order: [
+          ['id', 'DESC']
+        ],
+        limit: 1,          
+      })
+      .then(async qr_code => {
+        if(qr_code){
+          req.body.qr_code_setting.qr_code_id = qr_code.dataValues.id
+          req.body.qr_code_setting.user_id = user_id
+          req.body.qr_code_style.user_id = user_id
+          req.body.qr_code_style.qr_code_id = qr_code.dataValues.id
+        }
+        delete req.body.qr_code_style["qr_logo_file"]
+        delete req.body.qr_code_style["qr_logo_base64"]
+        console.log(req.body)
+        await QR_code_setting.create(req.body.qr_code_setting)
+        await QR_code_style.create(req.body.qr_code_style)
+        .then(() => {
+          console.log('aaa')
+        })
+        .catch(e => {
+          console.log(e)
+        })
+      })
+    } else {
+      res.status(404).send({
+        message: `Cannot create QR_code with user_id=${user_id}.`
+      });
     }
+    res.send('Create Qr code success !');
   })
-  .then(async(data) => {
-    if(data){
-      qr_code_data = data
-      if(req.body.qr_code_style){
-        req.body.qr_code_style.user_id = user_id
-        req.body.qr_code_style.qr_code_name = qr_code_data.qr_code_name
-        console.log(req.body.qr_code_style)
-        await Qr_code_style.create(req.body.qr_code_style)
-      }
-      if(req.body.qr_code_setting){
-        req.body.qr_code_setting.user_id = user_id
-        req.body.qr_code_setting.qr_code_name = qr_code_data.qr_code_name
-        await Qr_code_setting.create(req.body.qr_code_setting)
-      }
-      res.send('Create Qr code success !');
-    }
-    else{
-      if(req.body.qr_code_style){
-        req.body.qr_code_style.user_id = user_id
-        await Qr_code_style.create(req.body.qr_code_style)
-      }
-      if(req.body.qr_code_setting){
-        req.body.qr_code_setting.user_id = user_id
-        await Qr_code_setting.create(req.body.qr_code_setting)
-      }
-      res.send('Create Qr code success !');
-    }
-  })
-
+  .catch(err => {
+    res.status(500).send({
+      message: "Error create qr_code with id=" + user_id
+    });
+  });
 };
 
 // Find a single QR_code with an id
@@ -107,19 +113,42 @@ exports.findAll = (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const id = req.params.id;
-  const data = req.body
-  await QR_code.update(data, {
-    where: { id: id }
+  const user_id = req.jwtDecoded.data.user_id;
+  const qr_id = req.params.id;
+  req.body.qr_code_setting.qr_code_id = qr_id
+  req.body.qr_code_setting.user_id = user_id
+  req.body.qr_code_style.qr_code_id = qr_id
+  req.body.qr_code_style.user_id = user_id
+  console.log(req.body)
+  const qr_code = {
+    qr_code_name : req.body.qr_code_create.qr_code_name
+  };
+  await QR_code.update(qr_code,{
+    where: {
+      user_id: user_id,
+      id: qr_id
+    }
   })
-  .then(() => {
-    res.send({
-      message: "update QR_code Success !"
+  .then( async() => {
+    await QR_code_setting.update( req.body.qr_code_setting, {
+      where: {
+        user_id: user_id,
+        qr_code_id: qr_id
+      }
+    })
+    await QR_code_style.update(req.body.qr_code_style, {
+      where: {
+        user_id: user_id,
+        qr_code_id: qr_id
+      }
+    })
+    res.send('Update Qr code success !');
+  })
+  .catch(() => {
+    res.status(500).send({
+      message: "Error update qr_code with qr_code=" + qr_id
     });
   })
-  .catch(err => {
-      errorLog.error('error update QR_code 500 status'+err.message)
-  });
 };
 
 

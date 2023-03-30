@@ -25,7 +25,7 @@ const db = require("./app/models");
 const User = db.user;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
 // Token data
-
+  
 // const debug = console.log.bind(console);
 db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.")

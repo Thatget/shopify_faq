@@ -99,44 +99,45 @@ exports.generatorQR = async (req, res) => {
     if (data) {
       let data_scans = {
         user_id: data.user_id,
-        qr_code_name: data.qr_code_name
+        qr_code_name: data.qr_code_name,
+        qr_code_type: data.qr_code_type
       }
       switch(data.qr_code_type){
         case 'Home page':
           await Scans_shopify_homepage.create(data_scans)
         break;
         case 'Product page':
-          await Scans_shopify_homepage.create(data_scans)
+          await Scans_shopify_productpage.create(data_scans)
         break;
         case 'Checkout page':
-          await Scans_shopify_homepage.create(data_scans)
+          await Scans_shopify_checkoutpage.create(data_scans)
         break;
-        case 'Cart page':
-          await Scans_shopify_homepage.create(data_scans)
+        case 'Add to cart':
+          await Scans_shopify_cartpage.create(data_scans)
         break;
         case 'Collection page':
-          await Scans_shopify_homepage.create(data_scans)
+          await Scans_shopify_collectionpage.create(data_scans)
         break;
         case 'Shopify page':
-          await Scans_shopify_homepage.create(data_scans)
+          await Scans_shopify_shopifypage.create(data_scans)
         break;
         case 'Images':
-          await Scans_shopify_homepage.create(data_scans)
+          await Scans_custom_images.create(data_scans)
         break;
         case 'Mobile App':
-          await Scans_shopify_homepage.create(data_scans)
+          await Scans_custom_mobile.create(data_scans)
         break;
         case 'Text':
-          await Scans_shopify_homepage.create(data_scans)
+          await Scans_custom_text.create(data_scans)
         break;
         case 'V-card':
-          await Scans_shopify_homepage.create(data_scans)
+          await Scans_custom_vcard.create(data_scans)
         break;
         case 'Pdf File':
-          await Scans_shopify_homepage.create(data_scans)
+          await Scans_custom_pdf.create(data_scans)
         break;
         case 'Custom Url':
-          await Scans_shopify_homepage.create(data_scans)
+          await Scans_custom_url.create(data_scans)
         break;
       }
       return res.send(data)

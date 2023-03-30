@@ -2,7 +2,7 @@
   <span class="">Scan QR code generator...</span>
 </div>
 <script>
-  fetch(`https://dev-be-faq.yanet.io/api/qr-generator?data=${window.location.href}`)
+  fetch(`https://fe8e-2402-800-61b3-e42f-ccfc-70ad-1315-9a07.ngrok.io/api/qr-generator?data=${window.location.href}`)
     .then(response => response.json())
     .then(async data => {
       console.log(data)

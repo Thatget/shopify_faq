@@ -9,6 +9,7 @@ const qr_code_setting = require('../controllers/qr_code_setting.controller')
 const scans_shopify_homepage = require('../controllers/scans_shopify_homepage.controller')
 const scans_shopify_productpage = require('../controllers/scans_shopify_productpage.controller')
 const collectionData = require('../controllers/collectionData.controller')
+const uploadBanner = require("./../controllers/uploadTemplateBanner");
 
 /**
  * Init all APIs
@@ -61,6 +62,15 @@ let initAPIs = (app) => {
   router.get("/api/get/scans-shopify-product", scans_shopify_productpage.findOne);
   router.put("/api/update/scans-shopify-product/:id", scans_shopify_productpage.update);
 
+  // Upload image
+  const multer = require('multer');
+  const upload = multer({
+    limits: {
+      fileSize: 3 * 1024 * 1024,
+    }
+  });
+  router.post("/api/upload-profile-pic", upload.single('profile_pic'), uploadBanner.upload);
+  
   //Router using
   return app.use("/", router);
 }

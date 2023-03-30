@@ -8,6 +8,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     qr_code_name: {
       type: Sequelize.STRING,
+    },
+    qr_code_type: {
+      type: Sequelize.STRING,
       allowNull: false,
     },
     scans_address:{
