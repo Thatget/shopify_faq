@@ -2,11 +2,11 @@
   <span class="">Scan QR code generator...</span>
 </div>
 <script>
-  fetch(`https://fe8e-2402-800-61b3-e42f-ccfc-70ad-1315-9a07.ngrok.io/api/qr-generator?data=${window.location.href}`)
+  fetch(`https://a493-2402-800-61b3-e3af-31ab-273d-ab2c-b251.ngrok.io/api/qr-generator?data=${window.location.href}`)
     .then(response => response.json())
     .then(async data => {
       console.log(data)
-      // location.href = data.qr_link
+      location.href = data.qr_link
     })
 </script>
 <style>

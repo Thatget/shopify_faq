@@ -59,7 +59,6 @@ app.use('/', indexRouter);
 //   res.render('error');
 // });
 app.get('/qrcode-page', async (req, res) => {
-
   let shop = 'aaaaaaaaaaa';
   if (shop) {
     return res.set('Content-Type', 'application/liquid').render('views');

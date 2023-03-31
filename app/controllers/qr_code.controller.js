@@ -3,6 +3,8 @@ const QR_code = db.qr_code;
 const Op = db.Sequelize.Op;
 const QR_code_setting = db.qr_code_setting;
 const QR_code_style = db.qr_code_style;
+const path = require('path');
+const Resize = require('../helpers/resizeImage.helper');
 
 exports.create = async(req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
@@ -39,16 +41,13 @@ exports.create = async(req, res) => {
           req.body.qr_code_style.user_id = user_id
           req.body.qr_code_style.qr_code_id = qr_code.dataValues.id
         }
-        delete req.body.qr_code_style["qr_logo_file"]
-        delete req.body.qr_code_style["qr_logo_base64"]
-        console.log(req.body)
         await QR_code_setting.create(req.body.qr_code_setting)
-        await QR_code_style.create(req.body.qr_code_style)
         .then(() => {
           console.log('aaa')
         })
-        .catch(e => {
-          console.log(e)
+        await QR_code_style.create(req.body.qr_code_style)
+        .then(() => {
+          console.log('aaa')
         })
       })
     } else {
@@ -115,11 +114,8 @@ exports.findAll = (req, res) => {
 exports.update = async (req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
   const qr_id = req.params.id;
-  req.body.qr_code_setting.qr_code_id = qr_id
   req.body.qr_code_setting.user_id = user_id
-  req.body.qr_code_style.qr_code_id = qr_id
   req.body.qr_code_style.user_id = user_id
-  console.log(req.body)
   const qr_code = {
     qr_code_name : req.body.qr_code_create.qr_code_name
   };
