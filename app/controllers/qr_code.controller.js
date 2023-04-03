@@ -5,6 +5,7 @@ const QR_code_setting = db.qr_code_setting;
 const QR_code_style = db.qr_code_style;
 const path = require('path');
 const Resize = require('../helpers/resizeImage.helper');
+const errorLog = require('./../helpers/log.helper');
 
 exports.create = async(req, res) => {
   const user_id = req.jwtDecoded.data.user_id;
@@ -42,12 +43,12 @@ exports.create = async(req, res) => {
           req.body.qr_code_style.qr_code_id = qr_code.dataValues.id
         }
         await QR_code_setting.create(req.body.qr_code_setting)
-        .then(() => {
-          console.log('aaa')
+        .catch(e => {
+          errorLog.error(`error create qr_code_setting ${e}`)
         })
         await QR_code_style.create(req.body.qr_code_style)
-        .then(() => {
-          console.log('aaa')
+        .catch(e => {
+          errorLog.error(`error create qr_code_style ${e}`)
         })
       })
     } else {
