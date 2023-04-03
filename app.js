@@ -17,6 +17,10 @@ const initAPIs = require("./app/api/api.js");
 const errorLog = require('./app/helpers/log.helper');
 const authorize = require('./app/helpers/authorizeScope');
 const app = express();
+const forwardingAddress = process.env.HOST;
+const apiKey = process.env.SHOPIFY_API_KEY;
+const scopes = process.env.SCOPES;
+
 // for parsing application/json
 // app.use(bodyParser.json());
 app.use(bodyParser.json({ verify: verifyRequest }));
@@ -36,7 +40,7 @@ db.sequelize.sync({ force: false }).then(() => {
     console.log("Drop and re-sync db.")
 });
 
-var indexRouter = require('./routes/index');
+// var indexRouter = require('./routes/index');
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
