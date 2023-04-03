@@ -53,6 +53,7 @@ exports.findAllData = async(req, res) => {
   let Qr_code_setting_data = []
   let Scans_data = []
   const user_id = req.jwtDecoded.data.user_id;
+  console.log(user_id)
   await User.findByPk(user_id)
   .then(async data => {
     if(data){
@@ -322,7 +323,6 @@ async function findAllScan(user_id, scans_list) {
       item.createdAt = date.slice(0, date.indexOf('GMT'))
     })
   }
-  console.log(scans_list)
   return scans_list
 }
 

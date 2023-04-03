@@ -2,10 +2,9 @@ const jwt = require("jsonwebtoken");
 const {decode} = require("jsonwebtoken");
 
 let generateToken = (user, secretSignature, tokenLife) => {
-  console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     return new Promise((resolve, reject) => {
         const userData = {
-            user_id: user.user_id,
+            user_id: user.id,
             shopify_domain: user.shopify_domain,
             email: user.email
         }

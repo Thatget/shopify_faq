@@ -11,6 +11,7 @@ exports.upload = async (req, res) => {
 // Upload image <have header and template_number>
     const imagePath = path.join(__dirname, '../../var/images/qr_image');
     const fileUpload = new Resize(imagePath);
+    console.log(fileUpload, 'fileUpload')
     if (!req.file || !req.body.qr_code_id || !req.file.buffer) {
         res.status(401).json({error: 'Please provide an image'});
         return ;
@@ -23,6 +24,7 @@ exports.upload = async (req, res) => {
             continueCheck = false
             errorLog.error(error.message)
         })
+    console.log(filename, 'filename')
     if (!continueCheck) {
         res.status(500).json({error: 'can\'t upload image !'});
         return;

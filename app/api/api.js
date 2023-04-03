@@ -10,7 +10,6 @@ const scans_shopify_homepage = require('../controllers/scans_shopify_homepage.co
 const scans_shopify_productpage = require('../controllers/scans_shopify_productpage.controller')
 const collectionData = require('../controllers/collectionData.controller')
 const uploadBanner = require("./../controllers/uploadTemplateBanner");
-
 /**
  * Init all APIs
  * @param {*} app from express

@@ -8,7 +8,12 @@ const querystring = require('querystring');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv').config();
-
+const app_link = process.env.FRONT_END;
+const accessTokenLife = process.env.JWT_KEY_LIFE;
+const accessTokenSecret = process.env.JWT_KEY;
+const refreshTokenLife = process.env.REFRESH_JWT_KEY_LIFE;
+const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
+const initAPIs = require("./app/api/api.js");
 const errorLog = require('./app/helpers/log.helper');
 const authorize = require('./app/helpers/authorizeScope');
 const app = express();
@@ -18,7 +23,7 @@ app.use(bodyParser.json({ verify: verifyRequest }));
 // for parsing application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors({
-    origin: '*'
+    origin: '*',
 }));
 
 const db = require("./app/models");
@@ -45,7 +50,51 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.get('/', async (req, res) => {
+  // let user_data
+  // await User.findOne({
+  //   // attributes:['shopify_domain','id', 'shopify_access_token', 'plan_extra'],
+  //   where: {
+  //     shopify_domain: req.query.shop
+  //   }
+  // })
+  // .then(async response => {
+  //   user_data = response.dataValues
+  // })
+  // .catch(e => {
+  //   console.log(e)
+  // })  
+  if(!req.query.session) {    
+    if(!req.query.host){
+      const state = nonce()
+      const redirectUri = forwardingAddress + '/shopify/callback'
+      const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+        '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri
+      // res.cookie('state',state)
+      res.redirect(pageUri)
+    }
+  } else {
+    let txt = ""
+    try {
+      let tokenData = await getToken(req.query)
+      if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
+      }
+    } catch (e){
+      errorLog.error(e)
+    }
+    console.log(app_link + txt)
+    return res.redirect(app_link + txt); 
+	}
+  // let tokenData = await getToken(req.query);
+  // let txt = "";
+  // if (tokenData.accessToken) {
+  //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+  // }
+  // return res.redirect(app_link + txt);
+});
+app.use(authorize);
+
 // app.use('/users', usersRouter);
 
 // error handler
@@ -93,14 +142,13 @@ app.post('/uninstall', async (req, res) => {
       res.end();
     });
     
+initAPIs(app);
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
 
-app.use(authorize);
 //Api
-const initAPIs = require("./app/api/api.js");
-initAPIs(app);
 
 function verifyRequest(req, res, buf, encoding) {
     req.rawBody=buf
@@ -119,4 +167,41 @@ async function removeShop(shop) {
     errorLog.error(error.message)
   }
 }
+
+async function getToken(query) {
+  let accessToken = '';
+  let refreshToken = '';
+  const {shop, hmac} = query;
+  if (shop && hmac ) {
+    const map = Object.assign({}, query);
+    delete map['signature'];
+    delete map['hmac'];
+    let userData 
+    const message = querystring.stringify(map);
+    const generateHash = crypto.createHmac('sha256', apiSecret)
+    .update(message)
+    .digest('hex');
+    if (generateHash === hmac) {
+      try {
+        let jwtHelper = require("./app/helpers/jwt.helper");
+        await User.findOne({
+          attributes: ['id','email','shopify_domain'],
+          where: { shopify_domain: shop }
+        })
+        .then(res => {
+          userData = res
+        })
+        .catch(e => {
+          console.log(e)
+        })
+        accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
+        refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
+      } catch (error) {
+          // errorLog.error(`error in login function ${error.message}`);
+      }
+    }
+  }
+  return {accessToken, refreshToken};
+}
+
 module.exports = app;

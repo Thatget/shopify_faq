@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const { authorizeMiddleware } = require('./authorize.middleware')
-console.log(authorizeMiddleware)
 const authorizeLink = require('./authorizeLink.helper');
 const authorizeScope = require('./authorizeScope.helper');
 
