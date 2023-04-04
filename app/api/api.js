@@ -16,6 +16,12 @@ const uploadBanner = require("./../controllers/uploadTemplateBanner");
  */
 let initAPIs = (app) => {
 // Api
+  router.get('/var/images/*', (req,res)=>{
+    const path = require('path');
+    const imagePath = path.join(__dirname, '../../var/images/');
+    res.sendFile(imagePath+req.params[0]);
+  });
+
   router.get("/api/qr-generator", qr_code_setting.generatorQR);
 
   // Sử dụng authMiddleware.isAuth trước những api cần xác thực
