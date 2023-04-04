@@ -55,19 +55,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', async (req, res) => {
-  // let user_data
-  // await User.findOne({
-  //   // attributes:['shopify_domain','id', 'shopify_access_token', 'plan_extra'],
-  //   where: {
-  //     shopify_domain: req.query.shop
-  //   }
-  // })
-  // .then(async response => {
-  //   user_data = response.dataValues
-  // })
-  // .catch(e => {
-  //   console.log(e)
-  // })  
   if(!req.query.session) {    
     if(!req.query.host){
       const state = nonce()
@@ -90,12 +77,6 @@ app.get('/', async (req, res) => {
     console.log(app_link + txt)
     return res.redirect(app_link + txt); 
 	}
-  // let tokenData = await getToken(req.query);
-  // let txt = "";
-  // if (tokenData.accessToken) {
-  //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-  // }
-  // return res.redirect(app_link + txt);
 });
 app.use(authorize);
 

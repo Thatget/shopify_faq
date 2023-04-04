@@ -7,12 +7,12 @@ const path = require('path');
 const Resize = require('../helpers/resizeImage.helper');
 
 exports.upload = async (req, res) => {
-  console.log(req.file.buffer)
+  errorLog.error(req.params.qr_code_id)
 // Upload image <have header and template_number>
-    const imagePath = path.join(__dirname, '../../var/images/qr_image');
+    const imagePath = path.join(__dirname, '../../var/images/banner');
     const fileUpload = new Resize(imagePath);
-    console.log(fileUpload, 'fileUpload')
-    if (!req.file || !req.body.qr_code_id || !req.file.buffer) {
+    errorLog.error(fileUpload, 'fileUpload')
+    if (!req.file || !req.params.qr_code_id || !req.file.buffer) {
         res.status(401).json({error: 'Please provide an image'});
         return ;
     }
@@ -24,28 +24,18 @@ exports.upload = async (req, res) => {
             continueCheck = false
             errorLog.error(error.message)
         })
-    console.log(filename, 'filename')
     if (!continueCheck) {
         res.status(500).json({error: 'can\'t upload image !'});
         return;
     }
-
+    let data_update = {
+      qr_code_image: filename
+    }
+    QR_code_style.update(data_update,{
+      where: {
+        id : req.body.qr_code_id
+      }
+    })
     return res.status(200).json({ name: filename });
 };
 
-async function getSettingId(user_id) {
-    let settingId = 0;
-    await setting.findOne(
-        {
-            attributes: ['id'],
-            where: {user_id: user_id}
-        })
-        .then( data => {
-            if (data) {
-                settingId = data.dataValues.id;
-            }
-        }).catch(e => {
-            errorLog.error(e.message)
-        })
-    return settingId;
-}
