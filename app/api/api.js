@@ -68,7 +68,7 @@ let initAPIs = (app) => {
       fileSize: 3 * 1024 * 1024,
     }
   });
-  router.post("/api/upload-profile-pic/:qr_code_id", upload.single('profile_pic'), uploadBanner.upload);
+  router.post("/api/upload-profile-pic/", upload.single('profile_pic'), uploadBanner.upload);
   
   //Router using
   return app.use("/", router);
