@@ -214,7 +214,6 @@ const getAllColecttion = async(shop, token) => {
       }
     }`,
   });
-  console.log(data.body.data.collections.edges)
 }
 
 const syncLanguage = async(req, res) => {

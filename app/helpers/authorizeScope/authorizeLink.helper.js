@@ -7,7 +7,6 @@ const apiKey = process.env.SHOPIFY_API_KEY;
 const scopes = process.env.SCOPES;
 
 const authorizeLink = async (req, res) => {
-  console.log('authorizeLink')
 	try {
 		const state = nonce();
 		const redirectUri = forwardingAddress + '/shopify/callback';

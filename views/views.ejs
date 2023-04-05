@@ -2,7 +2,8 @@
   <span id="yanet-qr-code" class="yanet-qr-code">Yanet Scan QR code generator...</span>
 </div>
 <script>
-  fetch(`https://7f68-2402-800-61b3-e3af-798b-79b1-cffb-bd1f.ngrok.io/api/qr-generator?data=${window.location.href}`)
+  // fetch(`https://7f68-2402-800-61b3-e3af-798b-79b1-cffb-bd1f.ngrok.io/api/qr-generator?data=${window.location.href}`)
+  fetch(`https://dev-be-faq.yanet.io/api/qr-generator?data=${window.location.href}`)
   .then(response => response.json())
   .then(async data => {
     if(data.qr_code_type == 'Text'){

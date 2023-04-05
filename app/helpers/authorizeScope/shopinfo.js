@@ -4,7 +4,6 @@ const apiGraphql = process.env.API_GRAPHQL;
 
 const updateUserTable = async (shop, accessToken) => {
   // Get shop info !
-  console.log('updateUserTable')
 
   const shopInfo = await getShopInfo(shop, accessToken);
 
@@ -30,7 +29,6 @@ const updateUserTable = async (shop, accessToken) => {
 module.exports = { updateUserTable }
 
 const getShopInfo = async (shop, accessToken) => {
-  console.log('getShopInfo')
   const shopRequestHeaders = {
     'X-Shopify-Access-Token': accessToken
   };

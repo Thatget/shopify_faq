@@ -9,7 +9,6 @@ const apiSecret = process.env.SHOPIFY_API_SECRET;
 
 let fileName = 'autheorize.middleware'
 exports.authorizeMiddleware = async (req, res, next) => {
-  console.log('authorizeMiddleware')
   const {shop, hmac, code} = req.query;
   if (shop && hmac && code) {
     const map = Object.assign({}, req.query);
