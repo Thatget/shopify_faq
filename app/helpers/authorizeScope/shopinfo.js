@@ -11,6 +11,7 @@ const updateUserTable = async (shop, accessToken) => {
   const user = {
     store_name: shopInfo[0].shop.name,
     shopify_domain: shopInfo[0].shop.myshopify_domain,
+    shop_domain: shopInfo[0].shop.domain,
     shopify_access_token: accessToken,
     email: shopInfo[0].shop.email,
     phone: shopInfo[0].shop.phone,
@@ -18,9 +19,9 @@ const updateUserTable = async (shop, accessToken) => {
   };
 
   // Check and create update shop info in database
-  const userData = await User.findOne({ where: { shopify_domain: shopInfo[0].shop.domain }});
+  const userData = await User.findOne({ where: { shopify_domain: shopInfo[0].shop.myshopify_domain }});
   if (userData) {
-  await User.update(user, {where: { shopify_domain: shopInfo[0].shop.domain }})
+  await User.update(user, {where: { shopify_domain: shopInfo[0].shop.myshopify_domain }})
   } else {
   await User.create(user)
   }

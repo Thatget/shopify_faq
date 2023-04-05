@@ -3,10 +3,10 @@ const User = db.user;
 const Op = db.Sequelize.Op;
 const Scans_Shopify_Homepage = db.scans_shopify_homepage;
 const Scans_Shopify_Productpage = db.scans_shopify_productpage;
-const Scans_Shopify_Cartpage = db.scans_shopify_homepage;
-const Scans_Shopify_Collectionpage = db.scans_shopify_productpage;
-const Scans_Shopify_Checkoutpage = db.scans_shopify_homepage;
-const Scans_Shopify_Shopifypage = db.scans_shopify_productpage;
+const Scans_Shopify_Cartpage = db.scans_shopify_cartpage;
+const Scans_Shopify_Collectionpage = db.scans_shopify_collectionpage;
+const Scans_Shopify_Checkoutpage = db.scans_shopify_checkoutpage;
+const Scans_Shopify_Shopifypage = db.scans_shopify_shopifypage;
 const Scans_Custom_text = db.scans_custom_text;
 const Scans_Custom_Images = db.scans_custom_images;
 const Scans_Custom_Vcard = db.scans_custom_vcard;
@@ -53,7 +53,6 @@ exports.findAllData = async(req, res) => {
   let Qr_code_setting_data = []
   let Scans_data = []
   const user_id = req.jwtDecoded.data.user_id;
-  console.log(user_id)
   await User.findByPk(user_id)
   .then(async data => {
     if(data){
@@ -141,7 +140,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -156,7 +155,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -165,13 +164,14 @@ async function findAllScan(user_id, scans_list) {
   .catch(() => {
     console.log(`Cannot find All Scans_Shopify_Productpage with user_id = ${user_id}`)
   })
+
   await Scans_Shopify_Cartpage.findAll({
     where: {
       user_id: user_id
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -186,7 +186,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -201,7 +201,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -216,7 +216,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -231,7 +231,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -246,7 +246,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -261,7 +261,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -276,7 +276,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -292,7 +292,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -308,7 +308,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .then(data => {
-    if(data.length){
+    if(data.length > 0){
       data.forEach(item => {
         scans_list.push(item.dataValues)
       })
@@ -317,12 +317,12 @@ async function findAllScan(user_id, scans_list) {
   .catch(() => {
     console.log(`Cannot find All Scans_Custom_Vcard with user_id = ${user_id}`)
   })
-  if(scans_list.length > 0){
-    scans_list.forEach(item => {
-      date = new Date(item.createdAt).toString()
-      item.createdAt = date.slice(0, date.indexOf('GMT'))
-    })
-  }
+  // if(scans_list.length > 0){
+  //   scans_list.forEach(item => {
+  //     date = new Date(item.createdAt).toString()
+  //     item.createdAt = date.slice(0, date.indexOf('GMT'))
+  //   })
+  // }
   return scans_list
 }
 

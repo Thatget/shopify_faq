@@ -1,13 +1,25 @@
-<div class="yanet-qr-code-generator" style="text-align: center; font-size: 36px; font-weight: bold">
-  <span class="">Scan QR code generator...</span>
+<div class="yanet-qr-code-generator" style="text-align: center; font-size: 36px; padding: 10px 20px">
+  <span id="yanet-qr-code" class="yanet-qr-code">Yanet Scan QR code generator...</span>
 </div>
 <script>
-  fetch(`https://a493-2402-800-61b3-e3af-31ab-273d-ab2c-b251.ngrok.io/api/qr-generator?data=${window.location.href}`)
-    .then(response => response.json())
-    .then(async data => {
-      console.log(data)
+  fetch(`https://7f68-2402-800-61b3-e3af-798b-79b1-cffb-bd1f.ngrok.io/api/qr-generator?data=${window.location.href}`)
+  .then(response => response.json())
+  .then(async data => {
+    if(data.qr_code_type == 'Text'){
+      document.getElementById('yanet-qr-code').innerText = data.qr_link
+      document.getElementById('yanet-qr-code').style.fontSize = `${data.qr_text_fontsize}px`
+      document.getElementsByClassName('yanet-qr-code-generator')[0].style.textAlign = 'start'
+      document.getElementById('yanet-qr-code').style.fontWeight = 'normal'
+    }
+    else{
       location.href = data.qr_link
-    })
+    }
+  })
 </script>
 <style>
+  .yanet-qr-code{
+    font-weight: bold;
+    word-break:break-all; 
+    line-height: 1.8
+  }
 </style>

@@ -1,8 +1,12 @@
 module.exports = (sequelize, Sequelize) => {
-  const User = require("./user.model.js")(sequelize, Sequelize);
+  const Qr_code = require("./qr_code.model.js")(sequelize, Sequelize);
   const scans_custom_text = sequelize.define("scans_custom_text",
   {
     user_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+    qr_code_id: {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
@@ -29,6 +33,6 @@ module.exports = (sequelize, Sequelize) => {
   {
     freezeTableName: true
   });
-  scans_custom_text.belongsTo(User, {foreignKey: 'user_id', targetKey: 'id', onDelete: 'CASCADE',});
+  scans_custom_text.belongsTo(Qr_code, {foreignKey: 'qr_code_id', targetKey: 'id', onDelete: 'CASCADE',});
   return scans_custom_text;
 };

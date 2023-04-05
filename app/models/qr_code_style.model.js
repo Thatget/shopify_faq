@@ -10,6 +10,15 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
+    qr_text_title:{
+      type: Sequelize.TEXT
+    },
+    qr_product_name:{
+      type: Sequelize.STRING
+    },
+    qr_collection_name:{
+      type: Sequelize.STRING
+    },
     qr_logo_link:{
       type: Sequelize.STRING
     },

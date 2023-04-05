@@ -18,17 +18,17 @@ module.exports = (sequelize, Sequelize) => {
     qr_data:{
       type: Sequelize.STRING
     },
+    qr_data_domain:{
+      type: Sequelize.STRING
+    },
     qr_link:{
-      type: Sequelize.STRING
-    },
-    qr_type:{
-      type: Sequelize.STRING
-    },
-    qr_code_type:{
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
     },
     qr_text_fontsize:{
       type: Sequelize.INTEGER
+    },
+    qr_code_type:{
+      type: Sequelize.STRING
     },
     qr_utm_enable:{
       type: Sequelize.BOOLEAN

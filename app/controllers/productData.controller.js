@@ -6,49 +6,12 @@ const User = db.user;
 // const productApiGraphql = process.env.PRODUCT_API_GRAPHQL;
 // const countProductApi = process.env.COUNT_PRODUCT_API_GRAPHQL;
 const Shopify = require("@shopify/shopify-api");
-const Client = require("shopify-buy")
 const productList = async (req, res) => {
     var products = null;
     const id = req.jwtDecoded.data.user_id;
     const product_title = req.query.product_title
     try {
       const userInfo = await User.findByPk(id, {attributes: ['shopify_domain', 'shopify_access_token']});
-      const client = Client.buildClient({
-        domain: userInfo.shopify_domain,
-        storefrontAccessToken: userInfo.shopify_access_token
-      })
-      console.log(client.checkout)
-      // client.checkout.create().then((checkout) => {
-      //   // Do something with the checkout
-      //   console.log(checkout);
-      // });
-      // errorLog.error(options)
-      // await request(options).then(function(response) {
-      //     if(response.headers.link){
-      //         var headerLink = response.headers.link;
-      //         var strArray = headerLink.split(',');
-      //         for (i = 0; i < strArray.length; i++) {
-      //             let params = new URLSearchParams(strArray[i].replace(/<|>|rel="next"|;|rel="previous"/g, ""));
-      //             if (strArray[i].indexOf('rel="next"') !== -1 ) {
-      //                 pagination.next = params.get('page_info');
-      //             } 
-      //             else {
-      //                 pagination.previous = params.get('page_info');
-      //             }
-      //         }
-      //     }
-      //     products = response.body
-      // }).catch(e => {
-      //     // errorLog.error(e.messages)
-      // });
-
-      // await request(optionsCount)
-      // .then(data => {
-      //     countProduct = JSON.parse(data)
-      // })
-      // .catch(e => {
-      //     // errorLog.error(e)
-      // })
       if(product_title){
         const client = new Shopify.Shopify.Clients.Graphql(userInfo.dataValues.shopify_domain, userInfo.dataValues.shopify_access_token);
         const data = await client.query({
@@ -58,6 +21,7 @@ const productList = async (req, res) => {
                 node {
                   id
                   title
+                  description
                   images(first: 1){
                     edges{
                       node{
@@ -124,7 +88,6 @@ const getProductVariants = async (req, res) => {
           }`,
         });
         products_variants = data.body.data.product
-        console.log(data.body.data)
       }
     } catch (e) {
       return res.status(e.statusCode || 500).json(e.message);

@@ -7,3 +7,7 @@
 {"level":"error","message":"D:\\Purchase Orders\\node-POs\\var\\images\\banner\\5f00c6f1-97ff-472a-9afa-7af99dbbeb4d.png: unable to open for write\nwindows error: The system cannot find the file specified.\r\n\n"}
 {"level":"error","message":"D:\\Purchase Orders\\node-POs\\var\\images\\banner\\5f298232-e66b-4df8-94ab-be6d45dc6457.png: unable to open for write\nwindows error: The system cannot find the file specified.\r\n\n"}
 {"level":"error","message":"D:\\Purchase Orders\\node-POs\\var\\images\\banner\\de70e9a9-229f-404e-81d9-86e74a9c741b.png: unable to open for write\nwindows error: The system cannot find the file specified.\r\n\n"}
+{"level":"error","message":"error create qr_code_setting SequelizeUniqueConstraintError: Validation error"}
+{"level":"error","message":"error create qr_code_style SequelizeUniqueConstraintError: Validation error"}
+{"level":"error","message":"error create qr_code_setting SequelizeUniqueConstraintError: Validation error"}
+{"level":"error","message":"error create qr_code_style SequelizeUniqueConstraintError: Validation error"}

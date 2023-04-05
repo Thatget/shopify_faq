@@ -90,7 +90,7 @@ exports.update = async (req, res) => {
   
 exports.generatorQR = async (req, res) => {
   QR_code_setting.findOne({
-    attributes:['user_id', 'qr_link', 'qr_code_type', 'qr_utm_enable', 'auto_add_discount', 'qr_code_name'],
+    attributes:['user_id', 'qr_text_fontsize', 'qr_code_id', 'qr_link', 'qr_code_type', 'qr_utm_enable', 'auto_add_discount', 'qr_code_name'],
     where: {
       qr_data: req.query.data
     },
@@ -100,7 +100,8 @@ exports.generatorQR = async (req, res) => {
       let data_scans = {
         user_id: data.user_id,
         qr_code_name: data.qr_code_name,
-        qr_code_type: data.qr_code_type
+        qr_code_type: data.qr_code_type,
+        qr_code_id: data.qr_code_id
       }
       switch(data.qr_code_type){
         case 'Home page':
@@ -142,9 +143,59 @@ exports.generatorQR = async (req, res) => {
       }
       return res.send(data)
     } else {
-      return res.status(404).send({
-        message: `Cannot find QR_code_setting with qr_data=${req.query.data}.`
-      });
+      QR_code_setting.findOne({
+        attributes:['user_id', 'qr_code_id', 'qr_link', 'qr_code_type', 'qr_utm_enable', 'auto_add_discount', 'qr_code_name'],
+        where: {
+          qr_data_domain: req.query.data
+        },
+      })
+      if (data) {
+        let data_scans = {
+          user_id: data.user_id,
+          qr_code_name: data.qr_code_name,
+          qr_code_type: data.qr_code_type,
+          qr_code_id: data.qr_code_id
+        }
+        switch(data.qr_code_type){
+          case 'Home page':
+            await Scans_shopify_homepage.create(data_scans)
+          break;
+          case 'Product page':
+            await Scans_shopify_productpage.create(data_scans)
+          break;
+          case 'Checkout page':
+            await Scans_shopify_checkoutpage.create(data_scans)
+          break;
+          case 'Add to cart':
+            await Scans_shopify_cartpage.create(data_scans)
+          break;
+          case 'Collection page':
+            await Scans_shopify_collectionpage.create(data_scans)
+          break;
+          case 'Shopify page':
+            await Scans_shopify_shopifypage.create(data_scans)
+          break;
+          case 'Images':
+            await Scans_custom_images.create(data_scans)
+          break;
+          case 'Mobile App':
+            await Scans_custom_mobile.create(data_scans)
+          break;
+          case 'Text':
+            await Scans_custom_text.create(data_scans)
+          break;
+          case 'V-card':
+            await Scans_custom_vcard.create(data_scans)
+          break;
+          case 'Pdf File':
+            await Scans_custom_pdf.create(data_scans)
+          break;
+          case 'Custom Url':
+            await Scans_custom_url.create(data_scans)
+          break;
+        }
+        return res.send(data)
+      }
     }
   })
   .catch(err => {
