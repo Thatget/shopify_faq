@@ -74,7 +74,6 @@ app.get('/', async (req, res) => {
     } catch (e){
       errorLog.error(e)
     }
-    console.log(app_link + txt)
     return res.redirect(app_link + txt); 
 	}
   // let tokenData = await getToken(req.query);
