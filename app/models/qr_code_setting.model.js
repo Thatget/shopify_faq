@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const user = require("./user.model.js")(sequelize, Sequelize);
+  const Qr_code = require("./qr_code.model.js")(sequelize, Sequelize);
   const qr_code_setting = sequelize.define("qr_code_setting",
   {
     user_id: {
@@ -40,6 +40,6 @@ module.exports = (sequelize, Sequelize) => {
   {
     freezeTableName: true
   });
-  qr_code_setting.belongsTo(user, {foreignKey: 'user_id', targetKey: 'id', onDelete: 'CASCADE',});
+  qr_code_setting.belongsTo(Qr_code, {foreignKey: 'qr_code_id', targetKey: 'id', onDelete: 'CASCADE',});
   return qr_code_setting;
 };

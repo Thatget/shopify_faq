@@ -26,6 +26,7 @@ let initAPIs = (app) => {
 
   // Sử dụng authMiddleware.isAuth trước những api cần xác thực
   router.use(AuthMiddleWare.isAuth);
+
   //User
   router.get("/api/user", user.findOne);
   router.get("/api/get-all-data", user.findAllData);
@@ -42,6 +43,7 @@ let initAPIs = (app) => {
   router.get("/api/getAll/qr-code", qr_code.findAll);
   router.get("/api/get/qr-code", qr_code.findOne);
   router.put("/api/update/qr-code/:id", qr_code.update);
+  router.delete("/api/delete/qr-code/:id", qr_code.delete);
 
   //QR code style
   router.post("/api/qr-code-style", qr_code_style.create);
@@ -75,6 +77,7 @@ let initAPIs = (app) => {
     }
   });
   router.post("/api/upload-profile-pic/", upload.single('profile_pic'), uploadBanner.upload);
+  router.post("/api/upload-profile-pic/:qr_code_id", upload.single('profile_pic'), uploadBanner.upload);
   
   //Router using
   return app.use("/", router);

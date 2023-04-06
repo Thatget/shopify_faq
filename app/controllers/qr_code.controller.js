@@ -148,5 +148,25 @@ exports.update = async (req, res) => {
   })
 };
 
+exports.delete = async (req, res) => {
+  const user_id = req.jwtDecoded.data.user_id;
+  const qr_id = req.params.id;
+  await QR_code.destroy({
+    where: {
+      user_id: user_id,
+      id: qr_id
+    }
+  })
+  .then( async() => {
+    res.send('Delete Qr code success !');
+  })
+  .catch(() => {
+    res.status(500).send({
+      message: "Error delete qr_code with qr_code=" + qr_id
+    });
+  })
+};
+
+
 
 
