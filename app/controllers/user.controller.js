@@ -133,6 +133,13 @@ async function findAllQrCodeSetting(user_id, qr_code_setting) {
   })
 }
 
+exports.findAllScans = async(req, res) => {
+  let scans_data = []
+  const user_id = req.jwtDecoded.data.user_id;
+  await findAllScan(user_id, scans_data)
+  res.send(scans_data)
+}
+
 async function findAllScan(user_id, scans_list) {
   await Scans_Shopify_Homepage.findAll({
     where: {
@@ -317,12 +324,12 @@ async function findAllScan(user_id, scans_list) {
   .catch(() => {
     console.log(`Cannot find All Scans_Custom_Vcard with user_id = ${user_id}`)
   })
-  // if(scans_list.length > 0){
-  //   scans_list.forEach(item => {
-  //     date = new Date(item.createdAt).toString()
-  //     item.createdAt = date.slice(0, date.indexOf('GMT'))
-  //   })
-  // }
+  if(scans_list.length > 0){
+    scans_list.forEach(item => {
+      date = new Date(item.createdAt).toString()
+      item.createdAt = date.slice(0, date.indexOf('GMT'))
+    })
+  }
   return scans_list
 }
 

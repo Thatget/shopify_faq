@@ -36,6 +36,15 @@ module.exports = (sequelize, Sequelize) => {
     auto_add_discount:{
       type: Sequelize.BOOLEAN
     },
+    qr_product_name:{
+      type: Sequelize.STRING
+    },
+    qr_collection_name:{
+      type: Sequelize.STRING
+    },
+    product_variant_name:{
+      type: Sequelize.STRING
+    }
   },
   {
     freezeTableName: true

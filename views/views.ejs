@@ -3,7 +3,7 @@
 </div>
 <script>
 console.log(window.navigator)
-  fetch(`https://a5f4-2402-800-61b3-e3af-c16d-91af-3e45-418e.ngrok.io/api/qr-generator?data=${window.location.href}&navigation=${window.navigator.userAgent}`)
+  fetch(`https://6392-2402-800-61b3-e3af-ec33-81fa-6f7-d998.ngrok.io/api/qr-generator?data=${window.location.href}&navigation=${window.navigator.userAgent}`)
   // fetch(`https://dev-be-faq.yanet.io/api/qr-generator?data=${window.location.href}`)
   .then(response => response.json())
   .then(async data => {
@@ -13,9 +13,9 @@ console.log(window.navigator)
       document.getElementsByClassName('yanet-qr-code-generator')[0].style.textAlign = 'start'
       document.getElementById('yanet-qr-code').style.fontWeight = 'normal'
     }
-    // else{
-    //   location.href = data.qr_link
-    // }
+    else{
+      location.href = data.qr_link
+    }
   })
 </script>
 <style>

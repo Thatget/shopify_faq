@@ -30,6 +30,7 @@ let initAPIs = (app) => {
   //User
   router.get("/api/user", user.findOne);
   router.get("/api/get-all-data", user.findAllData);
+  router.get("/api/get-all-scans", user.findAllScans);
 
   //Product Data
   router.get("/api/shopify/products", productData.getProductList)
