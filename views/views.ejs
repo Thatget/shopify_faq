@@ -3,8 +3,8 @@
 </div>
 <script>
 console.log(window.navigator)
-  fetch(`https://c1c0-2001-ee0-4101-3fb-cda5-14eb-392e-b439.ngrok-free.app/api/qr-generator?data=${window.location.href}&navigation=${window.navigator.userAgent}`)
-  //fetch(`https://dev-be-faq.yanet.io/api/qr-generator?data=${window.location.href}`)
+  //fetch(`https://c1c0-2001-ee0-4101-3fb-cda5-14eb-392e-b439.ngrok-free.app/api/qr-generator?data=${window.location.href}&navigation=${window.navigator.userAgent}`)
+  fetch(`https://dev-be-faq.yanet.io/api/qr-generator?data=${window.location.href}`)
   .then(response => response.json())
   .then(async data => {
     if(data.qr_code_type == 'Text'){
