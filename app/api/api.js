@@ -4,6 +4,7 @@ const AuthMiddleWare = require("../middleware/AuthMiddleware");
 const user = require("../controllers/user.controller");
 const productData = require('../controllers/productData.controller')
 const qr_code = require('../controllers/qr_code.controller')
+const qr_code_images = require('../controllers/qr_code_images.controller')
 const qr_code_style = require('../controllers/qr_code_style.controller')
 const qr_code_setting = require('../controllers/qr_code_setting.controller')
 const scans_shopify_homepage = require('../controllers/scans_shopify_homepage.controller')
@@ -31,6 +32,10 @@ let initAPIs = (app) => {
   router.get("/api/user", user.findOne);
   router.get("/api/get-all-data", user.findAllData);
   router.get("/api/get-all-scans", user.findAllScans);
+
+  //Images
+  router.get("/api/images", qr_code_images.create);
+  router.get("/api/get-all/images", qr_code_images.findAll);
 
   //Product Data
   router.get("/api/shopify/products", productData.getProductList)

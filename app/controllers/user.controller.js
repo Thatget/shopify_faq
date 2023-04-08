@@ -13,7 +13,7 @@ const Scans_Custom_Vcard = db.scans_custom_vcard;
 const Scans_Custom_Url = db.scans_custom_url;
 const Scans_Custom_Pdf = db.scans_custom_pdf;
 const Scans_Custom_Mobile = db.scans_custom_mobile;
-
+const QR_code_images = db.qr_code_images;
 const QR_code = db.qr_code;
 const QR_code_setting = db.qr_code_setting;
 const QR_code_style = db.qr_code_style;
@@ -52,6 +52,8 @@ exports.findAllData = async(req, res) => {
   let Qr_code_style_data = []
   let Qr_code_setting_data = []
   let Scans_data = []
+  let Images_data = []
+
   const user_id = req.jwtDecoded.data.user_id;
   await User.findByPk(user_id)
   .then(async data => {
@@ -60,12 +62,14 @@ exports.findAllData = async(req, res) => {
       await findAllQrCodeStyle(user_id, Qr_code_style_data)
       await findAllQrCodeSetting(user_id, Qr_code_setting_data)
       await findAllScan(user_id, Scans_data)
+      await fintAllImages(user_id, Images_data)
       let allData = {
         user: data,
         qr_code: Qr_code_data? Qr_code_data : [],
         qr_code_style : Qr_code_style_data? Qr_code_style_data : [],
         qr_code_setting : Qr_code_setting_data? Qr_code_setting_data: [],
         scans_data : Scans_data? Scans_data: [],
+        images_data : Images_data? Images_data: [],
       }
       res.send(allData)
     }
@@ -98,6 +102,24 @@ async function findAllQrCode(user_id, qr_code) {
     console.log(`Cannot find All QR Code with user_id = ${user_id}`)
   })
 }
+
+async function fintAllImages(user_id, qr_code_images) {
+  await QR_code_images.findAll({
+    where: {
+      user_id: user_id
+    }
+  })
+  .then(data => {
+    data.forEach(item => {
+      qr_code_images.push(item.dataValues)
+    })
+    return qr_code_images
+  })
+  .catch(() => {
+    console.log(`Cannot find All QR Code with user_id = ${user_id}`)
+  })
+}
+
 
 async function findAllQrCodeStyle(user_id, qr_code_style) {
   await QR_code_style.findAll({

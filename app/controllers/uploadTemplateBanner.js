@@ -2,12 +2,16 @@ const db = require("../models");
 const QR_code_style = db.qr_code_style;
 const fs = require('fs');
 const errorLog = require('../helpers/log.helper');
+const Qr_code_images = db.qr_code_images;
+const forwardingAddress = process.env.HOST;
 
 const path = require('path');
 const Resize = require('../helpers/resizeImage.helper');
 
 exports.upload = async (req, res) => {
+  errorLog.error(forwardingAddress)
   errorLog.error(req.params.qr_code_id)
+  const user_id = req.jwtDecoded.data.user_id;
 // Upload image <have header and template_number>
   const imagePath = path.join(__dirname, '../../var/images/banner');
   const fileUpload = new Resize(imagePath);
@@ -31,12 +35,20 @@ exports.upload = async (req, res) => {
   let data_update = {
     qr_code_image: filename
   }
+  let data_images = {
+    qr_logo_name: `${forwardingAddress}/${filename}`,
+    user_id: user_id
+  }
   if(req.params.qr_code_id){
-    QR_code_style.update(data_update,{
+    await QR_code_style.update(data_update,{
       where: {
         qr_code_id : req.params.qr_code_id
       }
     })
+    .catch(e => {
+      errorLog.error(`${e} fileUpload error`)
+    })
+    await Qr_code_images.create(data_images)
     .catch(e => {
       errorLog.error(`${e} fileUpload error`)
     })
