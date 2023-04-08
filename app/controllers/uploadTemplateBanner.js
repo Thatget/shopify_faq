@@ -36,7 +36,7 @@ exports.upload = async (req, res) => {
     qr_code_image: filename
   }
   let data_images = {
-    qr_logo_name: `${forwardingAddress}/${filename}`,
+    qr_logo_name: `${forwardingAddress}/var/images/banner/${filename}`,
     user_id: user_id
   }
   if(req.params.qr_code_id){
