@@ -74,12 +74,12 @@ app.get('/', async (req, res) => {
     }
     return res.redirect(app_link + txt); 
 	}
-  let tokenData = await getToken(req.query);
-  let txt = "";
-  if (tokenData.accessToken) {
-      txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
-  }
-  return res.redirect(app_link + txt);
+  // let tokenData = await getToken(req.query);
+  // let txt = "";
+  // if (tokenData.accessToken) {
+  //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
+  // }
+  // return res.redirect(app_link + txt);
 });
 app.use(authorize);
 
