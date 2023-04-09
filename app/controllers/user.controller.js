@@ -17,6 +17,7 @@ const QR_code_images = db.qr_code_images;
 const QR_code = db.qr_code;
 const QR_code_setting = db.qr_code_setting;
 const QR_code_style = db.qr_code_style;
+const errorLog = require('../helpers/log.helper');
 
 exports.create = (req, res) => {
     // Validate request
@@ -80,7 +81,7 @@ exports.findAllData = async(req, res) => {
     }
   })
   .catch(e => {
-    console.log(e)
+    errorLog.error(e)
   })
 }
 
@@ -99,7 +100,7 @@ async function findAllQrCode(user_id, qr_code) {
     return qr_code
   })
   .catch(() => {
-    console.log(`Cannot find All QR Code with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All QR Code with user_id = ${user_id}`)
   })
 }
 
@@ -116,7 +117,7 @@ async function fintAllImages(user_id, qr_code_images) {
     return qr_code_images
   })
   .catch(() => {
-    console.log(`Cannot find All QR Code with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All QR Code with user_id = ${user_id}`)
   })
 }
 
@@ -134,7 +135,7 @@ async function findAllQrCodeStyle(user_id, qr_code_style) {
     return qr_code_style
   })
   .catch(() => {
-    console.log(`Cannot find All QR_Code_Style with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All QR_Code_Style with user_id = ${user_id}`)
   })
 }
 
@@ -151,7 +152,7 @@ async function findAllQrCodeSetting(user_id, qr_code_setting) {
     return qr_code_setting
   })
   .catch(() => {
-    console.log(`Cannot find All QR_Code_Style with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All QR_Code_Style with user_id = ${user_id}`)
   })
 }
 
@@ -176,7 +177,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Shopify_Homepage with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Shopify_Homepage with user_id = ${user_id}`)
   })
   await Scans_Shopify_Productpage.findAll({
     where: {
@@ -191,7 +192,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Shopify_Productpage with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Shopify_Productpage with user_id = ${user_id}`)
   })
 
   await Scans_Shopify_Cartpage.findAll({
@@ -207,7 +208,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Shopify_Cartpage with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Shopify_Cartpage with user_id = ${user_id}`)
   })
   await Scans_Shopify_Checkoutpage.findAll({
     where: {
@@ -222,7 +223,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Shopify_Checkoutpage with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Shopify_Checkoutpage with user_id = ${user_id}`)
   })
   await Scans_Shopify_Collectionpage.findAll({
     where: {
@@ -237,7 +238,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Shopify_Collectionpage with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Shopify_Collectionpage with user_id = ${user_id}`)
   })
   await Scans_Shopify_Shopifypage.findAll({
     where: {
@@ -252,7 +253,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Shopify_Shopifypage with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Shopify_Shopifypage with user_id = ${user_id}`)
   })
   await Scans_Custom_text.findAll({
     where: {
@@ -267,7 +268,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Custom_text with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Custom_text with user_id = ${user_id}`)
   })
   await Scans_Custom_Images.findAll({
     where: {
@@ -282,7 +283,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Custom_Images with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Custom_Images with user_id = ${user_id}`)
   })
   await Scans_Custom_Mobile.findAll({
     where: {
@@ -297,7 +298,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Custom_Mobile with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Custom_Mobile with user_id = ${user_id}`)
   })
   await Scans_Custom_Pdf.findAll({
     where: {
@@ -312,7 +313,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Custom_Pdf with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Custom_Pdf with user_id = ${user_id}`)
   })
 
   await Scans_Custom_Url.findAll({
@@ -328,7 +329,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Custom_Url with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Custom_Url with user_id = ${user_id}`)
   })
 
   await Scans_Custom_Vcard.findAll({
@@ -344,7 +345,7 @@ async function findAllScan(user_id, scans_list) {
     }
   })
   .catch(() => {
-    console.log(`Cannot find All Scans_Custom_Vcard with user_id = ${user_id}`)
+    errorLog.error(`Cannot find All Scans_Custom_Vcard with user_id = ${user_id}`)
   })
   if(scans_list.length > 0){
     scans_list.forEach(item => {
@@ -365,13 +366,13 @@ async function findAllScan(user_id, scans_list) {
 //     data.forEach(item => {
 //       date = new Date(item.dataValues.createdAt).toString()
 //       item.dataValues.createdAt = date.slice(0, date.indexOf('GMT'))
-//       console.log(item.dataValues.createdAt)
+//       errorLog.error(item.dataValues.createdAt)
 //       scans_product.push(item.dataValues)
 //     })
 //     return scans_product
 //   })
 //   .catch(() => {
-//     console.log(`Cannot find All Scans_Shopify_Productpage with user_id = ${user_id}`)
+//     errorLog.error(`Cannot find All Scans_Shopify_Productpage with user_id = ${user_id}`)
 //   })
 // }
 
