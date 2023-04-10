@@ -3,6 +3,7 @@ const errorLog = require('../log.helper');
 const { updateUserTable } = require('./shopinfo');
 const { uninstallApp } = require('./webhook');
 
+const api_key = process.env.SHOPIFY_API_KEY
 const appName = process.env.SHOPIFY_APP_NAME;
 
 const authorizeScope = async (req, res) => {
@@ -21,7 +22,7 @@ const authorizeScope = async (req, res) => {
   } catch (error) {
     errorLog.error(`Authorize scope failed: ${error.message}`)
   }
-  let pageUri = 'https://admin.shopify.com/store/' + shop.slice(0, shop.indexOf('.')) + '/apps/' + appName;
+  let pageUri = 'https://admin.shopify.com/store/' + shop.slice(0, shop.indexOf('.')) + '/apps/' + api_key;
   // let pageUri = 'https://' + shop + '/admin/apps/' + appName;
   res.redirect(pageUri);
 }
