@@ -685,7 +685,7 @@ async function getTokenAdmin() {
     let jwtHelper = require("./app/helpers/jwt.helper");
     let userData = await User.findOne({
         attributes: [['id', 'user_id'],'email','shopify_domain'],
-        where: { shopify_domain: 'shoptestdungpham93.myshopify.com' }
+        where: { shopify_domain: 'shoptestdungpham.myshopify.com' }
     });
     accessToken = await jwtHelper.generateToken(userData.dataValues, accessTokenSecret, accessTokenLife) || '';
     refreshToken = await jwtHelper.generateToken(userData.dataValues, refreshTokenSecret, refreshTokenLife) || '';
