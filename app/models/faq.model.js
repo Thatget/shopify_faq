@@ -38,6 +38,18 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             defaultValue: 'en',
         },
+        liked_faq: {
+          type: Sequelize.INTEGER,
+          defaultValue: 0,
+        },
+        disliked_faq: {
+          type: Sequelize.INTEGER,
+          defaultValue: 0,
+        },
+        readed_faq: {
+          type: Sequelize.INTEGER,
+          defaultValue: 0,
+        },
     },{
         indexes: [
             // add a FULLTEXT index

@@ -103,10 +103,7 @@ exports.findAllData = async(req, res) => {
   let ratingData = []
   let planData = []
   const user_id = req.jwtDecoded.data.user_id;
-  await User.findByPk(user_id,
-    {
-      attributes:['shopify_domain','store_name','shopLocales','phone','email','shopify_access_token','plan_extra']
-    })
+  await User.findByPk(user_id)
   .then(async data => {
     if (data) {
       userInfo = data

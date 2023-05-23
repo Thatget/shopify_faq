@@ -14,6 +14,7 @@ let free01LimitFaqs = 30
 const shopifyApi = require('./../helpers/shopifyApi.helper')
 const freePlan = 'Free'
 const freePlan01 = 'Free_01'
+const freeExtraPlan = 'Free extra'
 
 exports.findAllProduct = async (req, res) => {
     let Faqs = [];
@@ -61,6 +62,7 @@ exports.findAllProduct = async (req, res) => {
                           templateSetting.faq_sort_name = settingData.faq_sort_name
                           templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
                           templateSetting.dont_category_faq = settingData.dont_category_faq
+                          templateSetting.more_page_schema = settingData.more_page_schema
                       }
                   })
                   .catch(e =>{
@@ -147,90 +149,57 @@ async function getFaqsId(product_id , locale, Faqs, userID, templateSetting, pla
   .then( async data => {
     if(data){
       listFaqId = data
+      let limit = 0
+      if(plan == freePlan){
+        limit = freeLimitFaqs
+      }
+      else if(plan == freePlan01 || plan == freeExtraPlan){
+        limit = free01LimitFaqs
+      }    
       for(let i = 0; i < listFaqId.length; i++){
-        await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID, plan)
+        if(i < limit && limit > 0){
+          await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
+        }
+        else{
+          await getFaqs(listFaqId[i].dataValues.faq_identify,listFaqId[i].dataValues.category_identify, locale, Faqs, userID)
+        }
       }
     }
   })
 }
 
-async function getFaqs(faq_identify, category_identify, locale, Faqs, userID, plan){
-  let limit = 0
-  if(plan == freePlan){
-    limit = freeLimitFaqs
-  }
-  else if(plan == freePlan01){
-    limit = free01LimitFaqs
-  }
-  if(limit > 0){
-    await Faq.findAll({
-      where: {
-        identify : faq_identify ,
-        category_identify : category_identify,
-        user_id : userID
-      },
-      limit: freeLimitFaqs
-    })
-    .then(async data => {
-      if(data && data.length > 0){
-        if(data.some(element => {
-          return element.dataValues.locale == locale
-        })){
-          var checkFaq = data.filter(item => {
-            return item.dataValues.locale == locale
-          })
-        }
-        else{
-          var checkFaq = data.filter(item => {
-            return item.dataValues.locale == 'default'
-          })
-        }
-        if(checkFaq.length > 0){
-          Faqs.push(checkFaq[0])
-        }
+async function getFaqs(faq_identify, category_identify, locale, Faqs, userID){
+  await Faq.findAll({
+    where: {
+      identify : faq_identify ,
+      category_identify : category_identify,
+      user_id : userID
+    },
+  })
+  .then(async data => {
+    if(data && data.length > 0){
+      if(data.some(element => {
+        return element.dataValues.locale == locale
+      })){
+        var checkFaq = data.filter(item => {
+          return item.dataValues.locale == locale
+        })
       }
-      console.log(Faqs)
-    })
-    .catch(err => {
-      return res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Product."
-      })
-    });
-  }
-  else{
-    await Faq.findAll({
-      where: {
-        identify : faq_identify ,
-        category_identify : category_identify,
-        user_id : userID
-      },
-    })
-    .then(async data => {
-      if(data && data.length > 0){
-        if(data.some(element => {
-          return element.dataValues.locale == locale
-        })){
-          var checkFaq = data.filter(item => {
-            return item.dataValues.locale == locale
-          })
-        }
-        else{
-          var checkFaq = data.filter(item => {
-            return item.dataValues.locale == 'default'
-          })
-        }
-        if(checkFaq.length > 0){
-          Faqs.push(checkFaq[0])
-        }
+      else{
+        var checkFaq = data.filter(item => {
+          return item.dataValues.locale == 'default'
+        })
       }
-      console.log(Faqs)
+      if(checkFaq.length > 0){
+        Faqs.push(checkFaq[0])
+      }
+    }
+  })
+  .catch(err => {
+    return res.status(500).send({
+      message: err.message || "Some error occurred while retrieving Product."
     })
-    .catch(err => {
-      return res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Product."
-      })
-    });
-  }
+  });
 }
 
 async function getCategory(locale, userID, Categories, templateSetting){
@@ -261,7 +230,7 @@ async function getCategory(locale, userID, Categories, templateSetting){
             order:['position']
         })
         .then(data => {
-            Categories.push(data)
+          Categories.push(data)
         })
         .catch(err => {
             return res.status(500).send({

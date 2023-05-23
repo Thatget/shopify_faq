@@ -70,6 +70,7 @@ exports.findFaqOnPage = async (req, res) => {
                                   templateSetting.faq_sort_name = settingData.faq_sort_name
                                   templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
                                   templateSetting.dont_category_faq = settingData.dont_category_faq
+                                  templateSetting.more_page_schema = settingData.more_page_schema
                               }
                           })
                           .catch(e =>{

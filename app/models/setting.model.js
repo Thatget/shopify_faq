@@ -63,7 +63,19 @@ module.exports = (sequelize, Sequelize) => {
     },  
     tutorial_active:{
       type: Sequelize.BOOLEAN
-    }  
+    },
+    faq_page_schema:{
+      type: Sequelize.BOOLEAN
+    },
+    more_page_schema:{
+      type: Sequelize.BOOLEAN
+    },
+    view_faq_page: {
+      type: Sequelize.INTEGER,
+    },
+    use_analytics: {
+      type: Sequelize.BOOLEAN
+    }
   },
   {
     freezeTableName: true

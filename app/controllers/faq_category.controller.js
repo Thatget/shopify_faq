@@ -274,6 +274,7 @@ exports.update = async (req, res) => {
 
 // Update rearrange Categories
 exports.updateRearrangeCategories = async (req, res) => {
+  const user_id = req.jwtDecoded.data.user_id;
     let categories = req.body
     if(!categories){
         res.status(400).send({
@@ -286,7 +287,8 @@ exports.updateRearrangeCategories = async (req, res) => {
             position: item.position,
         },{
             where: {
-                identify: item.identify
+              identify: item.identify,
+              user_id: user_id
             }
         })
     })

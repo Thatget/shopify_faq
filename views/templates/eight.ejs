@@ -1,4 +1,9 @@
-<div class="root-faq-template" itemscope itemtype="https://schema.org/FAQPage">
+<% if(setting.data.faq_page_schema) {%>
+  <div class="root-faq-template" itemscope itemtype="https://schema.org/FAQPage">
+ <% }  
+else{ %>
+  <div class="root-faq-template">
+<% } %>
     <div class="faq-header-3">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -65,6 +70,7 @@
                                             <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                                <% if(setting.data.faq_page_schema) {%>
                                                   <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
                                                       <div class="faq-question-title">
                                                           <span class="listed-faq" value itemprop="name"><%= faqs.faq[j].title %></span>
@@ -75,7 +81,20 @@
                                                           </div>
                                                       </div>
                                                   </div> 
-                                                <% } %>                                           
+                                                <% } 
+                                                else{ %>
+                                                  <div class="faq-main-content">
+                                                      <div class="faq-question-title">
+                                                          <span class="listed-faq" ><%= faqs.faq[j].title %></span>
+                                                      </div>
+                                                      <div id="faq-answer-content" class="faq-answer-content">
+                                                         <div>
+                                                            <%- faqs.faq[j].content %>
+                                                          </div>
+                                                      </div>
+                                                  </div> 
+                                                <% } %>
+                                              <% } %>                                           
                                             <%}%>
                                         </div>
                                     <% } %>
@@ -89,16 +108,30 @@
                 <div class="faq-dont-category">
                     <div style="display: flex; flex-direction: column">
                         <% for(var j=0; j < faqs.faq.length; j++) { %>
-                          <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                            <div class="faq-question-title">
-                              <span class="listed-faq" itemprop="name"><%= faqs.faq[j].title %></span>
-                              </div>
-                              <div class="faq-answer-content" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                                 <div itemprop="text">
-                                  <%- faqs.faq[j].content %>
+                          <% if(setting.data.faq_page_schema) {%>
+                            <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                              <div class="faq-question-title">
+                                <span class="listed-faq" itemprop="name"><%= faqs.faq[j].title %></span>
                                 </div>
-                              </div>
-                          </div>
+                                <div class="faq-answer-content" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                  <div itemprop="text">
+                                    <%- faqs.faq[j].content %>
+                                  </div>
+                                </div>
+                            </div>
+                          <% } 
+                          else{ %>
+                            <div class="faq-main-content">
+                              <div class="faq-question-title">
+                                <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                </div>
+                                <div class="faq-answer-content">
+                                  <div>
+                                    <%- faqs.faq[j].content %>
+                                  </div>
+                                </div>
+                            </div>                          
+                          <% } %>
                         <%}%>
                     </div>
                 </div>
@@ -109,16 +142,30 @@
                         <div>
                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                  <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                  <% if(setting.data.faq_page_schema) {%>
+                                    <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                        <div class="faq-question-title">
+                                            <span class="listed-faq faq-question-search" itemprop="name"><%= faqs.faq[j].title %></span>
+                                        </div>
+                                        <div class="faq-answer-content faq-answer-search" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                          <div itemprop="text">
+                                              <%- faqs.faq[j].content %>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                  <% } 
+                                  else{ %>
+                                    <div class="faq-main-content">
                                       <div class="faq-question-title">
-                                          <span class="listed-faq faq-question-search" itemprop="name"><%= faqs.faq[j].title %></span>
+                                          <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                       </div>
-                                      <div class="faq-answer-content faq-answer-search" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                                         <div itemprop="text">
+                                      <div class="faq-answer-content faq-answer-search">
+                                         <div>
                                             <%- faqs.faq[j].content %>
                                           </div>
                                       </div>
                                   </div> 
+                                  <% } %>
                                 <% } %>                              
                             <%}%>
                         </div>

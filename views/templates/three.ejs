@@ -1,4 +1,9 @@
-<div class="root-faq-template" itemscope itemtype="https://schema.org/FAQPage">
+<% if(setting.data.faq_page_schema) {%>
+  <div class="root-faq-template" itemscope itemtype="https://schema.org/FAQPage">
+ <% }  
+else{ %>
+  <div class="root-faq-template">
+<% } %>
     <div class="faq-header-3">
         <div>
           <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -84,7 +89,8 @@
                                                 <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                                 <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                     <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                        <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                                      <% if(setting.data.faq_page_schema) {%>
+                                                        <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
                                                             <div class="faq-question-title" onclick="showHideContent(this)">
                                                                 <span class="listed-faq" value itemprop="name"><%= faqs.faq[j].title %></span>
                                                                 <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -92,10 +98,25 @@
                                                             </div>
                                                             <div class="faq-answer-content " itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
                                                                 <div itemprop="text">
-                                      <%- faqs.faq[j].content %>
-                                    </div>
+                                                                  <%- faqs.faq[j].content %>
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                      <% }
+                                                      else{ %>
+                                                        <div class="faq-main-content">
+                                                            <div class="faq-question-title" onclick="showHideContent(this)">
+                                                                <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                                <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                                <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                            </div>
+                                                            <div class="faq-answer-content">
+                                                                <div>
+                                                                  <%- faqs.faq[j].content %>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                      <% } %>
                                                     <% } %>    
                                                 <%}%>
                                             </div>
@@ -104,6 +125,7 @@
                                             <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                                  <% if(setting.data.faq_page_schema) {%>
                                                     <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
                                                         <div class="faq-question-title" onclick="showHideContent(this)">
                                                             <span class="listed-faq" value itemprop="name"><%= faqs.faq[j].title %></span>
@@ -116,6 +138,21 @@
                                                           </div>
                                                         </div>
                                                     </div>
+                                                  <% }
+                                                  else{ %>
+                                                    <div class="faq-main-content">
+                                                      <div class="faq-question-title" onclick="showHideContent(this)">
+                                                          <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                          <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                          <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                                      </div>
+                                                      <div id="faq-answer-content" class="faq-answer-content">
+                                                        <div>
+                                                          <%- faqs.faq[j].content %>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  <% } %>
                                                 <% } %>
                                             <%}%>
                                         </div>
@@ -129,6 +166,7 @@
             else{ %>
                 <div class="faq-dont-category">
                     <% for(var j=0; j < faqs.faq.length; j++) { %>
+                      <% if(setting.data.faq_page_schema) {%>
                         <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
                             <div class="faq-question-title" onclick="showHideContent(this)">
                                 <span class="listed-faq" itemprop="name"><%= faqs.faq[j].title %></span>
@@ -140,7 +178,22 @@
                                       <%- faqs.faq[j].content %>
                                     </div>
                             </div>
-                        </div>
+                        </div>                    
+                      <% } 
+                      else{ %>
+                        <div class="faq-main-content">
+                          <div class="faq-question-title" onclick="showHideContent(this)">
+                              <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                              <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                              <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                          </div>
+                          <div class="faq-answer-content">
+                            <div>
+                              <%- faqs.faq[j].content %>
+                            </div>
+                          </div>
+                      </div>
+                      <% } %>
                     <%}%>
                 </div>
             <% } %>
@@ -149,7 +202,8 @@
                     <div>
                         <% for(var j=0; j < faqs.faq.length; j++) { %>
                             <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                              <% if(setting.data.faq_page_schema) {%>
+                                  <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
                                     <div class="faq-question-title" onclick="showHideContent(this)">
                                         <span class="listed-faq faq-question-search" itemprop="name"><%= faqs.faq[j].title %></span>
                                         <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
@@ -161,6 +215,21 @@
                                     </div>
                                     </div>
                                 </div>
+                              <% } 
+                              else{ %> 
+                                <div class="faq-main-content">
+                                  <div class="faq-question-title" onclick="showHideContent(this)">
+                                      <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
+                                      <svg class="svg-plus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                      <svg class="svg-minus" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                                  </div>
+                                  <div class="faq-answer-content faq-answer-search">
+                                      <div>
+                                    <%- faqs.faq[j].content %>
+                                  </div>
+                                  </div>
+                                </div>
+                              <% } %>
                             <% } %>
                         <%}%>
                     </div>
@@ -195,7 +264,7 @@
             </div>
         <% } %>
     </div>
-</div>
+  </div>
 <script> 
   if(document.getElementById("back-to-top")){
     let mybutton = document.getElementById("back-to-top");
