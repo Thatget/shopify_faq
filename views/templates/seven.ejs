@@ -56,14 +56,14 @@ else{ %>
                               <% if(setting.templateSetting.category_bar_number === 1){%>
                                   <div class="category-bar">
                                       <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                          <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
+                                          <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
                                       <% } %>
                                   </div>
                               <% } %>
                               <% if(setting.templateSetting.category_bar_number === 2){%>
                                   <div class="category-bar">
                                       <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                          <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
+                                          <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
                                       <% } %>
                                   </div>
                               <% } %>
