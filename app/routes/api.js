@@ -104,6 +104,7 @@ let initAPIs = (app) => {
     router.get("/api/template_setting/:setting_id", template_setting.findAll);
     router.get("/api/template_setting-all", template_setting.getAll);
     router.put("/api/update/template_setting/:id", template_setting.update);
+    router.delete("/api/delete/template_setting/:setting_id", template_setting.delete);
 
     //Messages router
     router.get("/api/messages", messages.findAll);

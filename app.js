@@ -634,7 +634,7 @@ app.listen(port, () => {
 
 function verifyRequest(req, res, buf, encoding) {
     req.rawBody=buf
-};
+}
 
 async function removeShop(shop) {
   try {

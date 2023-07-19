@@ -49,7 +49,7 @@ exports.findAllEmbedApp = async (req, res) => {
               });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error retrieving messages with user_id =" + userID
             });
@@ -73,7 +73,7 @@ exports.findAllEmbedApp = async (req, res) => {
               });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error retrieving messages with user_id =" + userID
             });
@@ -83,7 +83,7 @@ exports.findAllEmbedApp = async (req, res) => {
     return res.send({message_setting: messagesSetting}) 
   })
   .catch(e => {
-    errorLog.error(error)
+    errorLog.error(e)
   })
 
 };
@@ -97,16 +97,9 @@ async function getPlan(userID){
     })
     .then(async data => {
         if(data){
-          console.log(data)
           PlanData = data.dataValues.plan
         }
     })
-    .catch(err => {
-        return res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving plan."
-        })
-    });
     return PlanData;
 }
 
@@ -127,7 +120,7 @@ exports.findOne = (req, res) => {
       });
     }
   })
-  .catch(err => {
+  .catch(() => {
       res.status(500).send({
           message: "Error retrieving messages with user_id =" + user_id
       });
@@ -152,7 +145,7 @@ exports.update = (req, res) => {
           });
       }
   })
-  .catch(err => {
+  .catch(() => {
       res.status(500).send({
           message: "Error update messages setting with user_id =" + user_id
       });

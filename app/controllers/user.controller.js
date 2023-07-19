@@ -1,9 +1,8 @@
 const db = require("../models");
 const User = db.user;
-const Op = db.Sequelize.Op;
 const Setting = db.setting;
 // const MessageSetting = db.faq_messages_setting;
-const TemplateSetting = db.template_setting;
+// const TemplateSetting = db.template_setting;
 const FaqCategory = db.faq_category;
 const Faq = db.faq;
 const Product = db.product;
@@ -58,7 +57,7 @@ exports.findOne = (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch(() => {
       res.status(500).send({
         message: "Error retrieving user with id=" + id
       });
@@ -78,13 +77,13 @@ exports.findAll = (req, res) => {
       res.send(data);
     } else {
       res.status(404).send({
-        message: `Cannot find User with id=${id}.`
+        message: `Cannot find User.`
       });
     }
   })
-  .catch(err => {
+  .catch(() => {
     res.status(500).send({
-      message: "Error retrieving user with id=" + id
+      message: "Error retrieving user"
     });
   });
 };
@@ -153,24 +152,23 @@ exports.findAllData = async(req, res) => {
 }; 
 
 async function findSetting(user_id){
-  let return_setting_data = {};
-  let template_setting = {};
-  let settingData = []
+  // let template_setting = {};
+  let settingData
   await Setting.findOne({ where: { user_id : user_id}})
   .then(async data => {
     if (data) {
-      if (data.dataValues.faq_template_number) {
-        await TemplateSetting.findOne({ where: { setting_id : data.dataValues.id, template_number: data.dataValues.faq_template_number}})
-        .then(template_setting_data => {
-          if (template_setting_data) {
-            template_setting = template_setting_data.dataValues;
-            delete template_setting.id;
-          }
-        })
-        .catch()
-      }
-      return_setting_data = Object.assign(data.dataValues, template_setting);
-      settingData.push(return_setting_data)
+      // if (data.dataValues.faq_template_number) {
+      //   await TemplateSetting.findOne({ where: { setting_id : data.dataValues.id, template_number: data.dataValues.faq_template_number}})
+      //   .then(template_setting_data => {
+      //     if (template_setting_data) {
+      //       template_setting = template_setting_data.dataValues;
+      //       delete template_setting.id;
+      //     }
+      //   })
+      //   .catch()
+      // }
+      // return_setting_data = Object.assign(data.dataValues, template_setting);
+      settingData = data.dataValues
     } 
     else {
       errorLog.error(`Cannot find Setting with user_id=${user_id}.`)

@@ -3,8 +3,6 @@ const Faq = db.faq;
 const FaqCategory = db.faq_category;
 const User = db.user;
 const errorLog = require('../helpers/log.helper');
-const { response } = require("express");
-const Op = db.Sequelize.Op;
 const Setting = db.setting
 
 exports.create = async (req, res) => {
@@ -108,7 +106,7 @@ exports.create = async (req, res) => {
                             return;
                         }
                     })
-                        .catch(err => {
+                        .catch(() => {
                             res.status(500).send({
                                 message: "Error updating faq with id"
                             });
@@ -135,7 +133,7 @@ exports.create = async (req, res) => {
                             });
                     }
                 }
-            }).catch(err => {
+            }).catch(() => {
                 res.status(500).send({
                     message: "Error retrieving faq with identify=" + identify + ` in locale ${locale}`
                 });
@@ -215,9 +213,8 @@ exports.findAllFaq = async (req, res) => {
                 return res.status(400).send({
                     message: "Shop name is not found !"
                 });
-                return false;
             }
-        }).catch(error => {
+        }).catch(() => {
         return res.status(500).send("some error");
     })
 };
@@ -381,7 +378,7 @@ exports.findOne = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error retrieving faq with id=" + id
             });
@@ -493,7 +490,7 @@ exports.update = async (req, res) => {
                         });
                     }
                 })
-                .catch(err => {
+                .catch(() => {
                     res.status(500).send({
                         message: "Error updating faq with id=" + id
                     });
@@ -651,7 +648,6 @@ exports.updateAnalyticsFaq = async (req, res) => {
           disliked_faq: response.disliked_faq + 1
         }
       }
-      console.log(data_update)
       Faq.update(data_update,{
         where: {
           id : faq_id,
@@ -693,7 +689,7 @@ exports.delete = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete faq"
             });
@@ -736,7 +732,6 @@ exports.searchFaqTitle = async (req, res) =>{
         return res.status(400).send({
             message: "Data is missing!"
         });
-        return false;
     }
         const shop = req.params.shop;
         const title = req.query.title;
@@ -763,9 +758,8 @@ exports.searchFaqTitle = async (req, res) =>{
                     return res.status(400).send({
                         message: "Shop name is not found !"
                     });
-                    return false;
                 }
-            }).catch(error => {
+            }).catch(() => {
                 return res.status(500).send("some error");
             })
 
@@ -779,7 +773,6 @@ exports.findAllInFaqPage = async (req, res) => {
         return  res.status(400).send({
             message: "Shop and locale can not be empty!"
         });
-        return false;
     }
     const shop = req.params.shop;
     let locale = req.query.locale;
@@ -815,9 +808,8 @@ exports.findAllInFaqPage = async (req, res) => {
                 return res.status(400).send({
                     message: "Shop name is not found !"
                 });
-                return false;
             }
-        }).catch(error => {
+        }).catch(() => {
         return res.status(500).send("some error");
     })
 };

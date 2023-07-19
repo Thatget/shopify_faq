@@ -16,7 +16,6 @@ exports.create = async (req, res) => {
     // Create a faq_category
     const user_id = req.jwtDecoded.data.user_id;
     const locale = req.body.locale;
-    const title = req.body.title;
     // const faq_category = {
     //     title: title,
     //     description: req.body.description,
@@ -141,7 +140,7 @@ exports.findOne = async (req, res) => {
                     message: `Cannot find category with identify=${req.query.identify} in locale ${req.query.locale}.`
                 });
             }
-        }).catch(err => {
+        }).catch(() => {
             res.status(500).send({
                 message: "Error retrieving category with identify=" + req.query.identify + ` in locale ${req.query.locale}`
             });
@@ -157,7 +156,7 @@ exports.findOne = async (req, res) => {
                     });
                 }
             })
-            .catch(err => {
+            .catch(() => {
                 res.status(500).send({
                     message: "Error retrieving category with id=" + id
                 });
@@ -204,7 +203,7 @@ exports.update = async (req, res) => {
                                 continueCondition.check = true;
                                 continueCondition.message = "Category for this locale already exist!";
                             }
-                        }).catch(error => {
+                        }).catch(() => {
                             res.status(400).send({
                                 message: "Error when checking category !"
                             });
@@ -253,7 +252,7 @@ exports.update = async (req, res) => {
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch(() => {
                         res.status(500).send({
                             message: "Error updating category with id=" + id
                         });
@@ -265,7 +264,7 @@ exports.update = async (req, res) => {
                 });
                 return;
             }
-        }).catch(error => {
+        }).catch(() => {
             res.status(500).send({
                 message: "Can't find category with id=" + id
             });
@@ -324,7 +323,7 @@ exports.delete = async (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete category"
             });

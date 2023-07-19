@@ -5,25 +5,12 @@ const User = db.user;
 const errorLog = require('../helpers/log.helper')
 
 exports.create = async (req, res) => {
-
     // Create a setting
-    const setting = req.body;
-    setting.user_id = req.jwtDecoded.data.user_id;
-
-    let template_setting = {};
-    let setting_data = {};
-    Setting.create(setting)
-    .then(async data => {
-      let return_data = {};
-      setting_data = data.dataValues;
-      setting.setting_id = setting_data.id;
-      try {
-          template_setting = await createFaqTemplate(setting);
-          delete template_setting.id;
-      } catch (e) {
-      }
-      return_data = {setting_data,template_setting};
-      res.send(return_data);
+    let setting_data = req.body;
+    setting_data.user_id = req.jwtDecoded.data.user_id;
+    Setting.create(setting_data)
+    .then(data => {
+      res.send(data.dataValues);
   })
   .catch(err => {
       res.status(500).send({
@@ -36,31 +23,30 @@ exports.create = async (req, res) => {
 // Find a single Setting with an id
 exports.findOne = async (req, res) => {
     const user_id = req.jwtDecoded.data.user_id;
-    let return_setting_data = {};
-    let template_setting = {};
+    // let template_setting = {};
     let setting_data = {};
     await Setting.findOne({ where: { user_id : user_id}})
     .then(async data => {
       if (data) {
           setting_data = data.dataValues;
-          if (setting_data.faq_template_number) {
-              await TemplateSetting.findOne({ where: { setting_id : setting_data.id, template_number: setting_data.faq_template_number}})
-                  .then(template_setting_data => {
-                      if (template_setting_data) {
-                          template_setting = template_setting_data.dataValues;
-                          delete template_setting.id;
-                      }
-                  }).catch()
-          }
-          return_setting_data = Object.assign(setting_data, template_setting);
-        res.send(return_setting_data);
+          // if (setting_data.faq_template_number) {
+          //     await TemplateSetting.findOne({ where: { setting_id : setting_data.id, template_number: setting_data.faq_template_number}})
+          //         .then(template_setting_data => {
+          //             if (template_setting_data) {
+          //                 template_setting = template_setting_data.dataValues;
+          //                 delete template_setting.id;
+          //             }
+          //         }).catch()
+          // }
+          // return_setting_data = Object.assign(setting_data, template_setting);
+        res.send(setting_data);
       } else {
         res.status(404).send({
           message: `Cannot find Setting with user_id=${user_id}.`
         });
       }
     })
-    .catch(err => {
+    .catch(() => {
         res.status(500).send({
             message: "Error retrieving setting with user_id=" + user_id
         });
@@ -77,7 +63,6 @@ exports.update = async (req, res) => {
   if (setting.id) {
       delete setting.id;
   }
-
   let returnData = {}
     returnData.data = 'done'
     await Setting.findOne({ where: { user_id : user_id}})
@@ -86,12 +71,9 @@ exports.update = async (req, res) => {
                 let setting_data_id = data.dataValues.id;
                 // Update Setting
                 await Setting.update(setting, {
+                  faq_template_number: setting.template_number
+                },{
                     where: { id: setting_data_id }
-                }).then(num => {
-                        if (num == 1) {
-                        } else {
-                            errorLog.error('error update setting')
-                        }
                 }).catch(err => {
                     errorLog.error('error update setting 500 status'+err.message)
                 });
@@ -102,11 +84,6 @@ exports.update = async (req, res) => {
                             if (data) {
                                 // Update template setting
                                 await TemplateSetting.update(setting, {where: {template_number: req.body.faq_template_number, setting_id: setting_data_id}})
-                                    .then(num => {
-                                        if (num == 1) {
-                                        } else {
-                                        }
-                                    })
                                     .catch(err => {
                                         errorLog.error('error update template setting '+ err.message)
                                         returnData.error = true
@@ -117,7 +94,7 @@ exports.update = async (req, res) => {
                                 // Create template setting
                                 setting.setting_id = setting_data_id;
                                 try {
-                                    template_setting = await createFaqTemplate(setting);
+                                    await createFaqTemplate(setting);
                                 }catch (e) {
                                     errorLog.error('error create template setting' + e.message)
                                     returnData.error = true
@@ -190,7 +167,7 @@ exports.delete = (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch(() => {
       res.status(500).send({
         message: "Could not delete setting with user_id=" + user_id
       });
@@ -254,7 +231,7 @@ async function createFaqTemplate(templateSetting) {
         .then(data => {
             template_setting = data.dataValues;
         })
-        .catch(err => {}
+        .catch(() => {}
         );
     return template_setting;
 }
