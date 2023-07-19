@@ -1,4 +1,5 @@
 const jwtHelper = require("../helpers/jwt.helper");
+const errorLog = require('../helpers/log.helper');
 
 const accessTokenSecret = process.env.JWT_KEY;
 const app_link = process.env.FRONT_END;
@@ -7,6 +8,7 @@ let isAuth = async (req, res, next) => {
     const tokenFromClient = req.params.token || req.headers["x-access-token"] || '';
     if (tokenFromClient) {
         try {
+            errorLog.error(req.query)
             const decoded = await jwtHelper.verifyToken(tokenFromClient, accessTokenSecret);
             req.jwtDecoded = decoded;
             // if(Shopify.Shopify.Context.IS_EMBEDDED_APP){

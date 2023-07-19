@@ -31,29 +31,56 @@ exports.findAllEmbedApp = async (req, res) => {
   let messagesSetting = []
   await User.findOne({ where: { shopify_domain: shop}})
   .then(async response => {
-    response.dataValues.id? userID = response.dataValues.id : ''
+     userID = response.dataValues.id
+     let userData = response.dataValues
     if(userID){
-      let plan = await getPlan(userID)
-      if(plan != 'Free' || userData.plan_extra){
-        await MessagesSetting.findOne({
-          where:{
-            user_id: userID
-          }
-        })
-        .then(data => {
-            if (data) {
-              messagesSetting = data.dataValues
-            } else {
-              res.status(404).send({
-                  message: `Cannot find messages with user_id=${userID}.`
-              });
+      if(userID != 3329){
+        // let plan = await getPlan(userID)
+        // if(plan != 'Free' || userData.plan_extra){
+          await MessagesSetting.findOne({
+            where:{
+              user_id: userID
             }
-        })
-        .catch(() => {
-            res.status(500).send({
-                message: "Error retrieving messages with user_id =" + userID
-            });
-        }); 
+          })
+          .then(data => {
+              if (data) {
+                messagesSetting = data.dataValues
+              } else {
+                res.status(404).send({
+                    message: `Cannot find messages with user_id=${userID}.`
+                });
+              }
+          })
+          .catch(() => {
+              res.status(500).send({
+                  message: "Error retrieving messages with user_id =" + userID
+              });
+          }); 
+        // }
+      }
+      else{
+        let plan = await getPlan(userID)
+        if(plan != 'Free' || userData.plan_extra){
+          await MessagesSetting.findOne({
+            where:{
+              user_id: userID
+            }
+          })
+          .then(data => {
+              if (data) {
+                messagesSetting = data.dataValues
+              } else {
+                res.status(404).send({
+                    message: `Cannot find messages with user_id=${userID}.`
+                });
+              }
+          })
+          .catch(() => {
+              res.status(500).send({
+                  message: "Error retrieving messages with user_id =" + userID
+              });
+          }); 
+        }
       }
     }
     else{
@@ -100,7 +127,10 @@ async function getPlan(userID){
           PlanData = data.dataValues.plan
         }
     })
-    return PlanData;
+    .catch(e => {
+      errorLog.error(e)
+    })
+      return PlanData;
 }
 
 // Find a single MessagesSetting with an id

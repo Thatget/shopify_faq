@@ -14,8 +14,8 @@ exports.create = async (req, res) => {
   }
   if(data){
     Messages.create(data)
-    .then(data => {
-      res.send('create success!');
+    .then(() => {
+      res.status(200).send('create success!');
     })
     .catch(err => {
         res.status(500).send({
@@ -36,14 +36,14 @@ exports.findAll = (req, res) => {
   })
   .then(data => {
       if (data) {
-          res.send(data);
+        res.status(200).send(data);
       } else {
           res.status(404).send({
               message: `Cannot find messages with user_id=${user_id}.`
           });
       }
   })
-  .catch(err => {
+  .catch(() => {
       res.status(500).send({
           message: "Error retrieving messages with user_id =" + user_id
       });
@@ -71,7 +71,7 @@ exports.delete = (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch(() => {
       res.status(500).send({
         message: "Could not delete messages with id=" + id
       });
@@ -96,7 +96,7 @@ exports.deleteAll = (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch(() => {
       res.status(500).send({
         message: "Could not delete messages with user_id=" + user_id
       });

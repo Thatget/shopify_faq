@@ -3,6 +3,8 @@ const Faq = db.faq;
 const FaqCategory = db.faq_category;
 const User = db.user;
 const errorLog = require('../helpers/log.helper');
+// const { response } = require("express");
+// const Op = db.Sequelize.Op;
 const Setting = db.setting
 
 exports.create = async (req, res) => {
@@ -478,9 +480,9 @@ exports.update = async (req, res) => {
                         .then(num => {
                             errorLog.error(num)
                         })
-                        // .catch(e => {
-                        //     console.log(e)
-                        // })
+                        .catch(e => {
+                          errorLog.error(e)
+                        })
                         res.send({
                             message: "Faq was updated successfully."
                         });
@@ -578,88 +580,24 @@ exports.updateWhenDeleteCategory = async (req, res) => {
 };
 
 exports.updateRearrangeFaqs = async (req, res) => {
-  const user_id = req.jwtDecoded.data.user_id;
   let faqs = req.body
   if(!faqs){
-    res.status(400).send({
-        message: "Could not update Faqs !"
+    return res.status(400).send({
+      message: "Could not update Faqs !"
     });
-    return;
   }
-  faqs.forEach(item => {
-    Faq.update({
-      position: item.position,
-    },{
-      where: {
-        user_id : user_id,
-        identify: item.identify
-      }
+  await Faq.bulkCreate(faqs, 
+  {
+    updateOnDuplicate: ["position"],
+  })
+  .then(() => {
+    res.send({
+        message: 'Update Successfully !'
     })
   })
-  res.send({
-      message: 'Update Successfully !'
+  .catch(e => {
+    errorLog.error(e)
   })
-};
-
-exports.updateAnalytics = async (req, res) => {
-  const faq_id = req.params.id;
-  if(faq_id){
-    Faq.findOne({
-      where: {
-        id : faq_id
-      }
-    })
-    .then(response => {
-      let data_update = {
-        readed_faq: response.readed_faq + 1
-      }
-      Faq.update(data_update,{
-        where: {
-          id : faq_id,
-        }
-      })
-      .then(() => {
-        res.status(200).send({
-            message: 'Update Successfully !'
-        })
-      })
-    })
-  }
-};
-
-exports.updateAnalyticsFaq = async (req, res) => {
-  const faq_id = req.params.id;
-  const type = req.query.type
-  if(faq_id){
-    Faq.findOne({
-      where: {
-        id : faq_id
-      }
-    })
-    .then(response => {
-      var data_update
-      if(type === 'like'){
-        data_update = {
-          liked_faq: response.liked_faq + 1
-        }
-      }
-      else{
-        data_update = {
-          disliked_faq: response.disliked_faq + 1
-        }
-      }
-      Faq.update(data_update,{
-        where: {
-          id : faq_id,
-        }
-      })
-      .then(() => {
-        res.status(200).send({
-            message: 'Update Successfully !'
-        })
-      })
-    })
-  }
 };
 
 // Delete a Tutorial with the specified id in the request

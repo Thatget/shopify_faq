@@ -59,6 +59,7 @@ const getShopInfo = async (shop, accessToken) => {
       const shopResonse = await request.get(shopRequestUrl, {headers: shopRequestHeaders});
       return JSON.parse(shopResonse);
     } catch (e) {
+      errorLog.error(e)
     }
   }
   const shopLocales = locales();

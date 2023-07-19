@@ -44,12 +44,12 @@ exports.create = async (req, res) => {
     }
     else{
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the rating."
+        message: "Some error occurred while creating the rating."
       });
     }
   })
   .catch(e => {
-    console.log(e)
+    errorLog.error(e)
   })
 };
 

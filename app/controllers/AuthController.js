@@ -17,14 +17,12 @@ const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
 let login = async (req, res) => {
     if (req.query.shopify_domain) {
         try {
-            let shopify_access_token = '';
-            let email = '';
-            let user_id = 0;
-            let hasUser = true;
-            await User.findOne({where: {shopify_domain: req.query.shopify_domain}})
+          let email = '';
+          let user_id = 0;
+          let hasUser = true;
+          await User.findOne({where: {shopify_domain: req.query.shopify_domain}})
                 .then(data => {
                     if (data) {
-                        shopify_access_token = data.dataValues.shopify_access_token;
                         email = data.dataValues.email;
                         user_id = data.dataValues.id;
                     }else {

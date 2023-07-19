@@ -1,7 +1,5 @@
 const errorLog = require('../log.helper');
 const nonce = require('nonce')();
-
-
 const forwardingAddress = process.env.HOST;
 const apiKey = process.env.SHOPIFY_API_KEY;
 const scopes = process.env.SCOPES;

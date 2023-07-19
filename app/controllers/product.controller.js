@@ -1,6 +1,6 @@
 const db = require("../models");
 const Product = db.product;
-const errorLog = require('../helpers/log.helper');
+// const errorLog = require('../helpers/log.helper');
 const User = db.user;
 
 // Create a product
@@ -81,9 +81,8 @@ exports.findAllProduct = async (req, res) => {
             return res.status(400).send({
                 message: "Shop name is not found !"
             });
-            return false;
         }
-    }).catch(error => {
+    }).catch(() => {
     return res.status(500).send("some error");
 })
 
@@ -112,7 +111,7 @@ exports.findOne = async (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error retrieving product with product_id=" + product_id
             });
@@ -151,7 +150,7 @@ exports.update = async (req, res) => {
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch(() => {
                         res.status(500).send({
                             message: "Error updating category with id=" + id
                         });
@@ -162,7 +161,7 @@ exports.update = async (req, res) => {
                 });
                 return;
             }
-        }).catch(error => {
+        }).catch(() => {
             res.status(500).send({
                 message: "Can't find category with id=" + id
             });
@@ -191,7 +190,7 @@ exports.delete = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete product"
             });
@@ -210,7 +209,7 @@ exports.deleteAll = (req, res) => {
         message: "Product was deleted all successfully!"
     });
   })
-  .catch(err => {
+  .catch(() => {
       res.status(500).send({
           message: "Could not delete all product"
       });

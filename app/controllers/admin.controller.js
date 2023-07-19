@@ -1,6 +1,5 @@
 const db = require("../models");
 const User = db.user;
-const Op = db.Sequelize.Op;
 const Setting = db.setting;
 const FaqMorePageSetting = db.faq_more_page_setting;
 const Rating = db.merchants_rating;
@@ -15,7 +14,8 @@ exports.findAllData = async(req, res) => {
   let faqMorePageSettingData = []
   let ratingData = []
   let listUserId = []
-  if(req.params.plan == 'Pro'){
+  let planData
+  if(req.params.plan == 'Pro' || req.params.plan == 'Ultimate'){
     planData = await findPlan(userInfo, parseInt(req.params.offset), parseInt(req.params.limit), req.params.plan)
     planData.forEach(item => {
       listUserId.push(item.user_id)
@@ -57,20 +57,10 @@ async function findUser(offset, limit, count, listUserId){
     {
       attributes:['shopify_domain','id', 'email', 'createdAt', 'plan_extra'],
       order:['id'],
-      // offset: parseInt(count - (offset + limit)),
-      // limit: parseInt(limit),
+      offset: listUserId.length > (offset + limit)? parseInt(listUserId.length - (offset + limit)) : 0,
+      limit: parseInt(limit),
       where: {
         id: listUserId
-      }
-    })
-    .then(data => {
-      if (data) {
-        userInfo = data
-      } 
-      else {
-        res.status(404).send({
-          message: `Cannot find User with id=${id}.`
-        });
       }
     })
     .catch(err => {
@@ -82,24 +72,13 @@ async function findUser(offset, limit, count, listUserId){
     {
       attributes:['shopify_domain','id', 'email', 'createdAt', 'plan_extra'],
       order:['id'],
-      // offset: parseInt(count - (offset + limit)),
-      // limit: parseInt(limit),
-    })
-    .then(data => {
-      if (data) {
-        userInfo = data
-      } 
-      else {
-        res.status(404).send({
-          message: `Cannot find User with id=${id}.`
-        });
-      }
+      offset: count > 50? parseInt(count - (offset + limit)) : 0,
+      limit: limit,
     })
     .catch(err => {
       errorLog.error(err)
     });
   }
-  console.log(userInfo)
   return userInfo
 }
 
@@ -172,7 +151,7 @@ async function findPlan(listUserId, offset, limit, plan){
     });
   }
   else{
-    if(plan != 'Pro'){
+    if(plan != 'Pro' && plan != 'Ultimate'){
       await Plan.findAll({
         order:['user_id'],
         limit: limit,
@@ -190,7 +169,7 @@ async function findPlan(listUserId, offset, limit, plan){
     else{
       await Plan.findAll({
         order:['user_id'],
-        limit: limit,
+        // limit: limit,
         where: {
           plan: plan
         }
@@ -241,16 +220,6 @@ async function searchUser(shop){
         shopify_domain: shop.shop
       }
     })
-    .then(data => {
-      if (data) {
-        userInfo = data
-      }
-      else {
-        res.status(404).send({
-          message: `Cannot find User with id=${id}.`
-        });
-      }
-    })
     .catch(err => {
       errorLog.error(err)
     });    
@@ -261,16 +230,6 @@ async function searchUser(shop){
         attributes:['id','email', 'shopify_domain', 'createdAt'],
         where:{
           email: shop.email
-        }
-      })
-      .then(data => {
-        if (data) {
-          userInfo = data
-        }
-        else {
-          res.status(404).send({
-            message: `Cannot find User with id=${id}.`
-          });
         }
       })
       .catch(err => {

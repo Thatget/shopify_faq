@@ -1,13 +1,8 @@
-<% if(setting.data.faq_page_schema) {%>
-  <div class="root-faq-template" itemscope itemtype="https://schema.org/FAQPage">
- <% }  
-else{ %>
-  <div class="root-faq-template">
-<% } %>
+<div class="root-faq-template" itemtype="https://schema.org/FAQPage">
     <div class="faq-header-3">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
-                <h1 class="faq-page-title"><%- setting.data.page_title_content %></h1>
+                <div class="faq-page-title"><%- setting.data.page_title_content %></div>
             <% } %>
             <% if(setting.templateSetting.show_search_input) { %>
                 <% if(setting.data.show_page_title && setting.data.page_title_content){%>
@@ -75,26 +70,8 @@ else{ %>
                                             <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                             <% for(var j = 0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                  <% if(setting.data.faq_page_schema) {%>
-                                                    <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                                                        <div class="faq-question-title" onclick="showHideContent(this)">
-                                                          <div style="width: <%=  setting.templateSetting.faq_font_size %>px; position: relative">
-                                                            <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" <% if(j === 0){%> style="opacity: 0"<%} else{%>style="opacity: 1"<%}%> viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-                                                            <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" <% if(j === 0){%> style="opacity: 1"<%} else{%>style="opacity: 0"<%}%> viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
-                                                          </div>
-                                                          <span class="listed-faq" itemprop="name"><%= faqs.faq[j].title %> </span>
-                                                        </div>
-                                                        <div id="faq-answer-content" class="faq-answer-content" <% if(j === 0){%> style="display: block"<%}
-                                                            else{%>style="display: none"<%}%> itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
-                                                          <div itemprop="text">
-                                                            <%- faqs.faq[j].content %>
-                                                          </div> 
-                                                        </div>
-                                                    </div>
-                                                  <% } 
-                                                  else{ %>
                                                     <div class="faq-main-content">
-                                                        <div class="faq-question-title" onclick="showHideContent(this)">
+                                                        <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/FAQPage/Question">
                                                           <div style="width: <%=  setting.templateSetting.faq_font_size %>px; position: relative">
                                                             <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" <% if(j === 0){%> style="opacity: 0"<%} else{%>style="opacity: 1"<%}%> viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
                                                             <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" <% if(j === 0){%> style="opacity: 1"<%} else{%>style="opacity: 0"<%}%> viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
@@ -102,13 +79,10 @@ else{ %>
                                                           <span class="listed-faq"><%= faqs.faq[j].title %> </span>
                                                         </div>
                                                         <div id="faq-answer-content" class="faq-answer-content" <% if(j === 0){%> style="display: block"<%}
-                                                            else{%>style="display: none"<%}%>>
-                                                          <div>
-                                                            <%- faqs.faq[j].content %>
-                                                          </div> 
+                                                            else{%>style="display: none"<%}%> itemtype="https://schema.org/FAQPage/Answer">
+                                                            <%- faqs.faq[j].content %> 
                                                         </div>
                                                     </div>
-                                                  <% } %>
                                                 <% } %>
                                             <%}%>
                                         </div>
@@ -123,38 +97,19 @@ else{ %>
                 <div class="faq-dont-category">
                     <div style="display: flex; flex-direction: column">
                         <% for(var j = 0; j < faqs.faq.length; j++) { %>
-                          <% if(setting.data.faq_page_schema) {%>
-                            <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                                <div class="faq-question-title" onclick="showHideContent(this)">
-                                  <div style="width: <%=  setting.templateSetting.faq_font_size %>px; position: relative">
-                                    <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-                                    <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
-                                  </div>
-                                  <span class="listed-faq" itemprop="name"><%= faqs.faq[j].title %> </span>
-                                </div>
-                                <div class="faq-answer-content" style="display: none" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
-                                    <div itemprop="text">
-                                      <%- faqs.faq[j].content %>
-                                    </div> 
-                                </div>
-                            </div>
-                          <% } 
-                          else{ %>
                             <div class="faq-main-content">
-                                <div class="faq-question-title" onclick="showHideContent(this)">
+                                <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/FAQPage/Question">
                                   <div style="width: <%=  setting.templateSetting.faq_font_size %>px; position: relative">
-                                    <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-                                    <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                                    <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" <% if(j === 0){%> style="opacity: 0"<%} else{%>style="opacity: 1"<%}%> viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                                    <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" <% if(j === 0){%> style="opacity: 1"<%} else{%>style="opacity: 0"<%}%> viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
                                   </div>
                                   <span class="listed-faq"><%= faqs.faq[j].title %> </span>
                                 </div>
-                                <div class="faq-answer-content" style="display: none">
-                                    <div>
-                                      <%- faqs.faq[j].content %>
-                                    </div> 
+                                <div class="faq-answer-content" <% if(j === 0){%> style="display: block"<%}
+                                    else{%>style="display: none"<%}%> itemtype="https://schema.org/FAQPage/Answer">
+                                    <%- faqs.faq[j].content %> 
                                 </div>
                             </div>
-                          <% } %>
                         <%}%>
                     </div>
                 </div>
@@ -165,38 +120,18 @@ else{ %>
                         <div>
                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                    <% if(setting.data.faq_page_schema) {%>
-                                      <div class="faq-main-content"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                                          <div class="faq-question-title" onclick="showHideContent(this)">
-                                            <div style="width: <%=  setting.templateSetting.faq_font_size %>px; position: relative">
-                                              <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" style="opacity: 1" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-                                              <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" style="opacity: 0" viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
-                                            </div>
-                                            <span class="listed-faq faq-question-search" itemprop="name"><%= faqs.faq[j].title %></span>
+                                    <div class="faq-main-content">
+                                        <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/FAQPage/Question">
+                                          <div style="width: <%=  setting.templateSetting.faq_font_size %>px; position: relative">
+                                            <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" style="opacity: 1" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                                            <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" style="opacity: 0" viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
                                           </div>
-                                          <div class="faq-answer-content faq-answer-search" style="display: none;" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
-                                            <div itemprop="text">
-                                              <%- faqs.faq[j].content %>
-                                            </div>
-                                          </div>
-                                      </div>
-                                    <% } 
-                                    else{ %>
-                                      <div class="faq-main-content">
-                                          <div class="faq-question-title" onclick="showHideContent(this)">
-                                            <div style="width: <%=  setting.templateSetting.faq_font_size %>px; position: relative">
-                                              <svg fill="<%= setting.templateSetting.faq_font_color %>" class="faq-icon fa-plus" style="opacity: 1" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-                                              <svg fill="<%= setting.templateSetting.faq_font_color %>" class="fa-minus faq-icon" style="opacity: 0" viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
-                                            </div>
-                                            <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
-                                          </div>
-                                          <div class="faq-answer-content faq-answer-search" style="display: none;">
-                                            <div>
-                                              <%- faqs.faq[j].content %>
-                                            </div>
-                                          </div>
-                                      </div>
-                                    <% } %>
+                                          <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
+                                        </div>
+                                        <div class="faq-answer-content faq-answer-search" style="display: none;" itemtype="https://schema.org/Answer">
+                                            <%- faqs.faq[j].content %>
+                                        </div>
+                                    </div>
                                 <% } %>
                             <%}%>
                         </div>
@@ -285,9 +220,16 @@ else{ %>
             }
         }
         for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
-            document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
-            document.getElementsByClassName('fa-plus')[i].style.opacity = '1'
-            document.getElementsByClassName('fa-minus')[i].style.opacity = '0'
+            if(i === 0){
+                document.getElementsByClassName('faq-answer-content')[0].style.display = 'block'
+                document.getElementsByClassName('fa-plus')[0].style.opacity = '0'
+                document.getElementsByClassName('fa-minus')[0].style.opacity = '1'
+            }
+            else{
+                document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
+                document.getElementsByClassName('fa-plus')[i].style.opacity = '1'
+                document.getElementsByClassName('fa-minus')[i].style.opacity = '0'
+            }
         }
         for(let i = 0; i < categoryId.length; i++){
             if(categoryId[i] == id){
@@ -552,19 +494,19 @@ else{ %>
             <%} 
         %>; 
         margin:0; 
-        padding: 20px 30px !important; 
-        font-weight: 900 !important;
+        padding: 20px 30px; 
+        font-weight: 900;
         font-size:36px;
         <% if (setting.templateSetting.page_title_font) { %>
-            font-family: <%=  setting.templateSetting.page_title_font %> !important;
+            font-family: <%=  setting.templateSetting.page_title_font %>;
         <% } if (setting.templateSetting.page_title_fontsize) { %>
-            font-size: <%=  setting.templateSetting.page_title_fontsize %>px !important;
+            font-size: <%=  setting.templateSetting.page_title_fontsize %>px;
         <% } if (setting.templateSetting.page_title_color) { %>
-            color: <%=  setting.templateSetting.page_title_color %> !important;
+            color: <%=  setting.templateSetting.page_title_color %>;
         <% } if (setting.templateSetting.page_title_paddingtop) { %>
-            padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px !important;
+            padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px;
         <% } if (setting.templateSetting.page_title_paddingbottom) { %>
-            padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px !important;
+            padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px;
         <% } %>
     }
     .faq-main-content{
@@ -703,26 +645,26 @@ else{ %>
         }
     }
     @media only screen and (max-width: 700px) {
-      .faq-search {
-          width: 90% !important;
-          margin: auto;
-          padding: 0;
-          overflow: hidden !important;
-          border: none !important;
-          background-color: unset !important;
-      }
-      .faq-search-no-title{
-          width: 90% !;
-          margin: auto;
-          margin-top: 70px;
-          padding: 0;
-          overflow: hidden;
-      }
+        .faq-search {
+            width: 90% !important;
+            margin: auto;
+            padding: 0;
+            overflow: hidden !important;
+            border: none !important;
+            background-color: unset !important;
+        }
+        .faq-search-no-title{
+            width: 90% !;
+            margin: auto;
+            margin-top: 70px;
+            padding: 0;
+            overflow: hidden;
+        }
     }
     #micro-scope{
-      <% if (setting.templateSetting.micro_scope_color) { %>
-          fill: <%=  setting.templateSetting.micro_scope_color %>;
-      <% } %>    
+        <% if (setting.templateSetting.micro_scope_color) { %>
+            fill: <%=  setting.templateSetting.micro_scope_color %>;
+        <% } %>    
     }
     <% if (setting.templateSetting.placeholder_color) { %>
         ::placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important}

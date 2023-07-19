@@ -8,7 +8,7 @@ let listFaqId = []
 const FaqMorePageSetting = db.faq_more_page_setting;
 const FaqMorePage = db.faq_more_page;
 const errorLog = require('../helpers/log.helper');
-const Plan = db.merchants_plan
+// const Plan = db.merchants_plan
 const shopifyApi = require('./../helpers/shopifyApi.helper')
 
 exports.findFaqOnPage = async (req, res) => {
@@ -95,7 +95,7 @@ exports.findFaqOnPage = async (req, res) => {
             });
         }
     })
-    .catch(error => {
+    .catch(() => {
         return res.status(500).send("some error");
     })
     // const result = await User.findOne({ where: { shopify_domain: shop}}).catch(error => {
@@ -104,26 +104,26 @@ exports.findFaqOnPage = async (req, res) => {
     return res.send({faq: Faqs, category: Categories, templateSetting: templateSetting})
 };
 
-async function getPlan(userID){
-  let PlanData = null
-    await Plan.findOne({
-        where: {
-            user_id: userID,
-        },
-    })
-    .then(async data => {
-        if(data){
-          PlanData = data.dataValues.plan
-        }
-    })
-    .catch(err => {
-        return res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving plan."
-        })
-    });
-    return PlanData;
-}
+// async function getPlan(userID){
+//   let PlanData = null
+//     await Plan.findOne({
+//         where: {
+//             user_id: userID,
+//         },
+//     })
+//     .then(async data => {
+//         if(data){
+//           PlanData = data.dataValues.plan
+//         }
+//     })
+//     .catch(err => {
+//         return res.status(500).send({
+//             message:
+//                 err.message || "Some error occurred while retrieving plan."
+//         })
+//     });
+//     return PlanData;
+// }
 
 async function getFaqsId(userID, page_name , locale, Faqs){
     await FaqMorePage.findAll({
@@ -141,10 +141,7 @@ async function getFaqsId(userID, page_name , locale, Faqs){
         }
     })
     .catch(err => {
-        return res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving Faqs."
-        })
+        errorLog.error(err)
     });
 }
 
@@ -158,29 +155,27 @@ async function getFaqs(faq_identify, category_identify, locale, Faqs){
     })
     .then(async data => {
         if(data && data.length > 0){
+          let faqData
             if(data.some(element => {
                 return element.dataValues.locale == locale
             })){
-                var aaa = data.filter(item => {
+                faqData = data.filter(item => {
                     return item.dataValues.locale == locale
                 })
             }
             else{
-                var aaa = data.filter(item => {
+                faqData = data.filter(item => {
                     return item.dataValues.locale == 'default'
                 })
             }
-            if(aaa.length > 0){
-                Faqs.push(aaa[0])
+            if(faqData.length > 0){
+                Faqs.push(faqData[0])
             }
         }
     })
     .catch(err => {
-        return res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving Product."
-        })
-    });
+      errorLog.error(err)
+  });
 }
 
 async function getCategory(locale, userID, Categories, templateSetting){
@@ -196,12 +191,9 @@ async function getCategory(locale, userID, Categories, templateSetting){
             Categories.push(data)
         })
         .catch(err => {
-            return res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving Product."
-            })
-        });
-    }
+          errorLog.error(err)
+      });
+      }
     else{
         await FaqCategory.findAll({
             where: {
@@ -214,11 +206,8 @@ async function getCategory(locale, userID, Categories, templateSetting){
             Categories.push(data)
         })
         .catch(err => {
-            return res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving Product."
-            })
-        });
-    }
+          errorLog.error(err)
+      });
+      }
     return Categories;
 }

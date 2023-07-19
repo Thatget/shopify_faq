@@ -63,7 +63,6 @@ exports.import = async (req, res) => {
                         is_visible: item.Category_visible,
                         locale: localeDefault,
                         identify: item.category_identify,
-                        is_visible: item.Category_visible
                     }
                     category.push(dataPush)
                     return
@@ -82,7 +81,6 @@ exports.import = async (req, res) => {
                         is_visible: item.Category_visible,
                         locale: localeDefault,
                         identify: item.category_identify,
-                        is_visible: item.Category_visible
                     }
                     category.push(dataPush)
                 }
@@ -193,7 +191,7 @@ exports.export = async (req, res) => {
             selectQuery += " and `faq`.`locale` = ?";
         }
     }
-    data = await db.sequelize.query(
+    let data = await db.sequelize.query(
         selectQuery+";",
         {
             replacements: [user_id, req.query.locale],

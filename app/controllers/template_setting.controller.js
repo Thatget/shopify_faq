@@ -1,6 +1,7 @@
 const db = require("../models");
 const TemplateSetting = db.template_setting;
 const Setting = db.setting;
+// const errorLog = require('../helpers/log.helper');
 
 // Create template
 exports.create = async (req, res) => {
@@ -8,7 +9,7 @@ exports.create = async (req, res) => {
   if(template){
     await TemplateSetting.create(template)
     .then(data => {
-        res.send(data);
+        res.status(200).send(data);
         return;
     })
     .catch(err => {
@@ -27,7 +28,6 @@ exports.create = async (req, res) => {
   }
 };
 
-
 // Retrieve all TemplateSetting of a category from the database.
 exports.findAll = (req, res) => {
   TemplateSetting.findAll({
@@ -36,7 +36,7 @@ exports.findAll = (req, res) => {
     }
   })
   .then(data => {
-    res.send(data);
+    res.status(200).send(data);
   })
   .catch(err => {
     res.status(500).send({
@@ -51,7 +51,7 @@ exports.getAll = (req, res) => {
     attributes:['id', 'custom_css', 'setting_id']
   })
   .then(data => {
-    res.send(data);
+    res.status(200).send(data);
   })
   .catch(err => {
     res.status(500).send({
@@ -60,6 +60,7 @@ exports.getAll = (req, res) => {
     })
   });
 };
+
 
 exports.update = async(req, res) => {
   const data = req.body
@@ -108,4 +109,3 @@ exports.delete = (req, res) => {
     })
   });
 };
-

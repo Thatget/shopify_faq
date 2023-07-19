@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const {decode} = require("jsonwebtoken");
+// const {decode} = require("jsonwebtoken");
 
 let generateToken = (user, secretSignature, tokenLife) => {
     return new Promise((resolve, reject) => {

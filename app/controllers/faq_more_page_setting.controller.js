@@ -1,6 +1,6 @@
 const db = require("../models");
 const FaqMorePageSetting = db.faq_more_page_setting;
-const errorLog = require('../helpers/log.helper');
+// const errorLog = require('../helpers/log.helper');
 
 exports.create = async (req, res) => {
     // Validate request
@@ -126,7 +126,7 @@ exports.update = async (req, res) => {
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch(() => {
                         res.status(500).send({
                             message: "Error updating FaqMorePageSetting with user_id=" + user_id
                         });
@@ -137,7 +137,7 @@ exports.update = async (req, res) => {
                 });
                 return;
             }
-        }).catch(error => {
+        }).catch(() => {
             res.status(500).send({
                 message: "Can't find FaqMorePageSetting with user_id=" + user_id
             });
@@ -164,7 +164,7 @@ exports.updateFaqs = async (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error updating FaqMorePageSetting"
             });
@@ -199,7 +199,7 @@ exports.delete = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete faq_more_page_setting"
             });

@@ -76,7 +76,7 @@ else{ %>
                                             <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                               <% if(setting.data.faq_page_schema) {%>
                                                 <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                                                  <div class="faq-question-title" itemprop="name" onclick="showHideContent(this, <%= faqs.faq[j].id %>)">
+                                                  <div class="faq-question-title" id="faq-question-title-<%= j+1 %>" itemprop="name" onclick="showHideContent(this)">
                                                       <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                                       <svg class="svg-right svg-style" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                                                   </div>
@@ -92,8 +92,8 @@ else{ %>
                                                 </div>
                                               <% }
                                               else{ %>
-                                                 <div class="faq-main-content">
-                                                  <div class="faq-question-title" onclick="showHideContent(this, <%= faqs.faq[j].id %>)">
+                                                <div class="faq-main-content">
+                                                  <div class="faq-question-title" id="faq-question-title-<%= j+1 %>" onclick="showHideContent(this)">
                                                       <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                                       <svg class="svg-right svg-style" fill="<%= setting.templateSetting.faq_font_color %>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                                                   </div>
@@ -127,6 +127,9 @@ else{ %>
                                             <%}%>
                                         <%}%>
                                     </div>
+                                  <% if(setting.data.id == 4625) {%>
+                                    <button onclick="showMoreFaqs(this, <%= i %>, 6)" class="yanet-btn-toggle btn-show-faq"></button>
+                                  <% } %>
                                 <% } %>
                             </div>
                         <% } %>
@@ -136,10 +139,10 @@ else{ %>
             else{ %>
                 <div style="padding: 30px 0;">
                     <% for(var j=0; j < faqs.faq.length; j++) { %>
-                        <div class="category-faq-container">
+                      <div class="category-faq-container">
                         <% if(setting.data.faq_page_schema) {%>
                           <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                              <div class="faq-question-title" itemprop="name" onclick="showHideContent(this, <%= faqs.faq[j].id %>)">
+                              <div class="faq-question-title" id="faq-question-title-<%= j+1 %>" itemprop="name" onclick="showHideContent(this)">
                                   <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                   <svg class="svg-right svg-style" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                               </div>
@@ -152,7 +155,7 @@ else{ %>
                         <% } 
                         else{ %>
                         <div class="faq-main-content">
-                            <div class="faq-question-title" onclick="showHideContent(this, <%= faqs.faq[j].id %>)">
+                            <div class="faq-question-title" id="faq-question-title-<%= j+1 %>" onclick="showHideContent(this)">
                                 <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                 <svg class="svg-right svg-style" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg>
                             </div>
@@ -163,8 +166,11 @@ else{ %>
                             </div>
                           </div>  
                         <% } %>
-                        </div>
+                      </div>
                     <%}%>
+                    <% if(setting.data.id == 4625) {%>
+                      <button onclick="showMoreFaqs(this, 0, 6)" class="yanet-btn-toggle btn-show-faq"></button>
+                    <% } %>
                 </div>
             <% } %>
         <% }  
@@ -199,7 +205,7 @@ else{ %>
     <div></div>
 </div>
 <script>
-  let be_link = 'https://9ddc-2402-800-61b3-43cc-2461-b54b-893e-fc14.ngrok-free.app'
+  let be_link = 'https://backend-faq.yanet.io'
   if(document.getElementById("back-to-top")){
     let mybutton = document.getElementById("back-to-top");
     window.onscroll = function() {scrollFunction()};
@@ -217,7 +223,7 @@ else{ %>
         }); 
     }
   }
-    function showHideContent(el, faq) {
+    function showHideContent(el) {
         var content = el.nextElementSibling;
         var svgRight = el.getElementsByClassName('svg-right')
         var svgDown = el.getElementsByClassName('svg-down')
@@ -227,15 +233,75 @@ else{ %>
             svgRight[0].style.transition  = "all .2s";
         } 
         else {
-          let link = `${be_link}/api/shop/faq/update_analytics/${faq}`
-          fetch(link)
-          .then(response => response.json())
+          // if(use_analytics_faq === true){
+          //   let link = `${be_link}/api/shop/faq/update_analytics/${faq_id}`
+          //   fetch(link)
+          //   .then(response => response.json())
+          // }
           content.style.display = "block";
           svgRight[0].style.transform = "rotate(90deg)";
           svgRight[0].style.transition  = "all .2s";
         }
     }
 
+    function showMoreFaqs(el, number, number_faq_show){
+      if(<%= !setting.data.dont_category_faq %>){
+        let categoryFaqContainer = document.getElementsByClassName('category-faq-container')[number]
+        for(let j = 0; j < categoryFaqContainer.getElementsByClassName('faq-main-content').length; j++){
+          if(j >= number_faq_show){
+            categoryFaqContainer.getElementsByClassName('faq-main-content')[j].style.display = "block"
+          }
+        }
+        document.getElementsByClassName('btn-show-faq')[number].style.display = "none"
+      }
+      else{
+        for(let j = 0; j < <%= faqs.faq.length %>; j++){
+          if(j >= number_faq_show){
+            document.getElementsByClassName('faq-main-content')[j].style.display = "block"
+          }
+        }
+        document.getElementsByClassName('btn-show-faq')[number].style.display = "none"
+      }
+    }
+
+    function hideFaq(){
+      if(<%= !setting.data.dont_category_faq %>){
+        for(let i = 0; i < <%= faqs.categories.length %>; i++){
+          let categoryFaqContainer = document.getElementsByClassName('category-faq-container')[i]
+          for(let j = 0; j < categoryFaqContainer.getElementsByClassName('faq-main-content').length; j++){
+            if(j >= 6){
+              categoryFaqContainer.getElementsByClassName('faq-main-content')[j].style.display = "none"
+            }
+          }
+          if(categoryFaqContainer.getElementsByClassName('faq-main-content').length > 6){
+            document.getElementsByClassName('btn-show-faq')[i].style.display = "block"
+            let numberFaqHide = (categoryFaqContainer.getElementsByClassName('faq-main-content').length - 6)
+            document.getElementsByClassName('btn-show-faq')[i].innerText = `See more (${numberFaqHide} Faqs)`
+          }
+          else{
+            document.getElementsByClassName('btn-show-faq')[i].style.display = "none"
+          }
+        }
+      }
+      else{
+        for(let j = 0; j < <%= faqs.faq.length %>; j++){
+          if(j >= 6){
+            document.getElementsByClassName('faq-main-content')[j].style.display = "none"
+          }
+        }
+        if(document.getElementsByClassName('faq-main-content').length > 6){
+          document.getElementsByClassName('btn-show-faq')[0].style.display = "block"
+          let numberFaqHide = (document.getElementsByClassName('faq-main-content').length - 6)
+          document.getElementsByClassName('btn-show-faq')[0].innerText = `See more (${numberFaqHide} Faqs)`
+        }
+        else{
+          document.getElementsByClassName('btn-show-faq')[0].style.display = "none"
+        }      
+      }
+    }
+    if(<%= setting.data.id %> == 4625){
+      hideFaq()
+    }
 
     function evaluateFaq(type, id, number){
       document.getElementById(`yanet-faq-evaluate-${id}`).style.display = "none"
@@ -253,62 +319,85 @@ else{ %>
     }
 
     function simpleSearch() {
-        var input = document.getElementById("search-text");
-        var filter = input.value.toLowerCase();
-        var filterByQuestion = document.getElementsByClassName('faq-question-search');
-        var filterByAnswer = document.getElementsByClassName('faq-answer-search');
-        var nodeCategory = document.getElementsByClassName('category-faq-container');
-        var categoryBar = document.getElementsByClassName('category-bar')
-        if(categoryBar.length > 0){
-            if(document.getElementById('search-text').value === ''){
-                document.getElementsByClassName('category-bar')[0].style.display = "flex"
-                for(i = 0; i < nodeCategory.length; i++){
-                    document.getElementsByClassName("faq-category-width")[i].style.display = "block"
-                }
+      var input = document.getElementById("search-text");
+      var filter = input.value.toLowerCase();
+      var filterByQuestion = document.getElementsByClassName('faq-question-search');
+      var filterByAnswer = document.getElementsByClassName('faq-answer-search');
+      var nodeCategory = document.getElementsByClassName('category-faq-container');
+      var categoryBar = document.getElementsByClassName('category-bar')
+      if(categoryBar.length > 0){
+          if(document.getElementById('search-text').value === ''){
+            document.getElementsByClassName('category-bar')[0].style.display = "flex"
+            for(i = 0; i < nodeCategory.length; i++){
+                document.getElementsByClassName("faq-category-width")[i].style.display = "block"
             }
-            else{
-                document.getElementsByClassName('category-bar')[0].style.display = "none"
-                for(i = 0; i < nodeCategory.length; i++){
-                    document.getElementsByClassName("faq-category-width")[i].style.display = "none"
-                }
+            if(<%= setting.data.id %> == 4625){
+              for(let i = 0; i < <%= faqs.categories.length %>; i++){
+                document.getElementsByClassName('btn-show-faq')[i].style.display = "block"
+              }
             }
+          }
+          else{
+            document.getElementsByClassName('category-bar')[0].style.display = "none"
+            for(i = 0; i < nodeCategory.length; i++){
+                document.getElementsByClassName("faq-category-width")[i].style.display = "none"
+            }
+            if(<%= setting.data.id %> == 4625){
+              for(let i = 0; i < <%= faqs.categories.length %>; i++){
+                document.getElementsByClassName('btn-show-faq')[i].style.display = "none"
+              }
+            }
+          }
+      }
+      var checkexist = true;
+      for (i = 0; i < filterByQuestion.length; i++) {
+          if (filterByQuestion[i].innerText.toLowerCase().includes(filter)) {
+              filterByQuestion[i].parentNode.parentNode.style.display = "block";
+              checkexist = false;
+          }
+          else {
+              for(j = 0; j < filterByAnswer.length; j++){
+                  if(filterByAnswer[j].innerText.toLowerCase().includes(filter)){
+                      filterByQuestion[j].parentNode.parentNode.style.display = "block";
+                      checkexist = false;        
+                  }
+                  else{
+                      filterByQuestion[i].parentNode.parentNode.style.display = "none";
+                  }
+              }
+          }
+      }
+      for (j = 0; j < nodeCategory.length; j++) {
+          let subFaq = nodeCategory[j].getElementsByClassName('faq-main-content');
+          let checkDisplay = false;
+          for (k = 0; k < subFaq.length; k++) {
+              if(subFaq[k].style.display == "block") {
+                  checkDisplay = true;
+                  break;
+              }
+          }
+          if (checkDisplay) {
+              nodeCategory[j].style.display = "block";
+          } else nodeCategory[j].style.display = "none";
+      }
+      if (checkexist) {
+          document.getElementById("not-found-text").style.display = "block";
+      } else {
+          document.getElementById("not-found-text").style.display = "none";
+      }
+      if(<%= setting.data.id %> == 4625){
+        if(document.getElementById('search-text').value === ''){
+          hideFaq()
         }
-        var checkexist = true;
-        for (i = 0; i < filterByQuestion.length; i++) {
-            if (filterByQuestion[i].innerText.toLowerCase().includes(filter)) {
-                filterByQuestion[i].parentNode.parentNode.style.display = "block";
-                checkexist = false;
-            }
-            else {
-                for(j = 0; j < filterByAnswer.length; j++){
-                    if(filterByAnswer[j].innerText.toLowerCase().includes(filter)){
-                        filterByQuestion[j].parentNode.parentNode.style.display = "block";
-                        checkexist = false;        
-                    }
-                    else{
-                        filterByQuestion[i].parentNode.parentNode.style.display = "none";
-                    }
-                }
-            }
+        if(categoryBar.length <= 0){
+          if(document.getElementById('search-text').value === ''){
+            document.getElementsByClassName('btn-show-faq')[0].style.display = "block"
+          }
+          else{
+            document.getElementsByClassName('btn-show-faq')[0].style.display = "none"
+          }
         }
-        for (j = 0; j < nodeCategory.length; j++) {
-            let subFaq = nodeCategory[j].getElementsByClassName('faq-main-content');
-            let checkDisplay = false;
-            for (k = 0; k < subFaq.length; k++) {
-                if(subFaq[k].style.display == "block") {
-                    checkDisplay = true;
-                    break;
-                }
-            }
-            if (checkDisplay) {
-                nodeCategory[j].style.display = "block";
-            } else nodeCategory[j].style.display = "none";
-        }
-        if (checkexist) {
-            document.getElementById("not-found-text").style.display = "block";
-        } else {
-            document.getElementById("not-found-text").style.display = "none";
-        }
+      }
     }
 
 </script>
@@ -396,6 +485,10 @@ else{ %>
         <% } %>
     }
 
+    .yanet-btn-show{
+      display: flex;
+      justify-content: center
+    }
     .search-input{
         line-height: 1 !important;
         width: 100% !important; 
@@ -578,6 +671,11 @@ else{ %>
     .svg-style{
         fill: <%=  setting.templateSetting.faq_font_color %> !important
     }
+    <%
+      if(setting.templateSetting.custom_css) { %>
+          <%= setting.templateSetting.custom_css%>
+      <%}
+    %>
     #micro-scope{
     <% if (setting.templateSetting.micro_scope_color) { %>
         fill: <%=  setting.templateSetting.micro_scope_color %> !important;
@@ -588,9 +686,4 @@ else{ %>
         :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important}
         ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important}
     <% } %>
-    <%
-      if(setting.templateSetting.custom_css) { %>
-          <%= setting.templateSetting.custom_css%>
-      <%}
-    %>
 </style>

@@ -1,6 +1,6 @@
 const db = require("../models");
 const FaqProduct = db.faq_product;
-const errorLog = require('../helpers/log.helper');
+// const errorLog = require('../helpers/log.helper');
 
 exports.create = async (req, res) => {
     // Validate request
@@ -72,7 +72,7 @@ exports.findOne = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error retrieving faq_product with id=" + id
             });
@@ -87,6 +87,7 @@ exports.update = async (req, res) => {
         });
         return;
     }
+    let id = req.params.id
     // Check this faq_product is exits or not
     await FaqProduct.findByPk(req.body.id)
         .then(async data => {
@@ -106,7 +107,7 @@ exports.update = async (req, res) => {
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch(() => {
                         res.status(500).send({
                             message: "Error updating category with id=" + id
                         });
@@ -117,7 +118,7 @@ exports.update = async (req, res) => {
                 });
                 return;
             }
-        }).catch(error => {
+        }).catch(() => {
             res.status(500).send({
                 message: "Can't find category with id=" + id
             });
@@ -229,7 +230,7 @@ exports.delete = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete faq_product"
             });

@@ -1,6 +1,6 @@
 const db = require("../models");
 const FaqMorePage = db.faq_more_page;
-const errorLog = require('../helpers/log.helper');
+// const errorLog = require('../helpers/log.helper');
 
 exports.create = async (req, res) => {
     // Validate request
@@ -98,7 +98,7 @@ exports.findOne = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error retrieving faq_more_page with id=" + id
             });
@@ -113,6 +113,7 @@ exports.update = async (req, res) => {
         });
         return;
     }
+    let id = req.params.id
     // Check this faq_more_page is exits or not
     await FaqMorePage.findByPk(req.body.id)
         .then(async data => {
@@ -132,7 +133,7 @@ exports.update = async (req, res) => {
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch(() => {
                         res.status(500).send({
                             message: "Error updating category with id=" + id
                         });
@@ -143,7 +144,7 @@ exports.update = async (req, res) => {
                 });
                 return;
             }
-        }).catch(error => {
+        }).catch(() => {
             res.status(500).send({
                 message: "Can't find category with id=" + id
             });
@@ -228,7 +229,7 @@ exports.delete = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete faq_more_page"
             });

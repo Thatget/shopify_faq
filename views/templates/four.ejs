@@ -1,13 +1,8 @@
-<% if(setting.data.faq_page_schema) {%>
-  <div class="root-faq-template" itemscope itemtype="https://schema.org/FAQPage">
- <% }  
-else{ %>
-  <div class="root-faq-template">
-<% } %>
+<div class="root-faq-template" itemtype="https://schema.org/FAQPage">
     <div class="faq-header-3">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
-                <h1 class="faq-page-title"><%- setting.data.page_title_content %></h1>
+                <div class="faq-page-title"><%- setting.data.page_title_content %></div>
             <% } %>
             <% if(setting.templateSetting.show_search_input) { %>
                 <% if(setting.data.show_page_title && setting.data.page_title_content){%>
@@ -72,32 +67,15 @@ else{ %>
                                                   <div style="display: flex; justify-content: center; flex-direction: column">
                                                       <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                           <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                            <% if(setting.data.faq_page_schema) {%>
-                                                              <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                                                                  <div class="faq-question-title" onclick="showHideContent(this)">
-                                                                    <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                                                    <span class="listed-faq" value itemprop="name"><%= faqs.faq[j].title %></span>
-                                                                  </div>
-                                                                  <div class="faq-answer-content" style="display: none;" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                                                                    <div itemprop="text">
-                                                                      <%- faqs.faq[j].content %>
-                                                                    </div>
-                                                                  </div>
-                                                              </div>
-                                                            <% } 
-                                                            else{ %>
                                                               <div class="faq-main-content">
-                                                                  <div class="faq-question-title" onclick="showHideContent(this)">
+                                                                  <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
                                                                     <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                                                    <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                                    <span class="listed-faq" value><%= faqs.faq[j].title %></span>
                                                                   </div>
-                                                                  <div class="faq-answer-content" style="display: none;">
-                                                                    <div>
+                                                                  <div class="faq-answer-content" style="display: none;" itemtype="https://schema.org/Answer">
                                                                       <%- faqs.faq[j].content %>
-                                                                    </div>
                                                                   </div>
                                                               </div>
-                                                            <% } %>
                                                           <% } %>    
                                                       <%}%>
                                                   </div>
@@ -107,32 +85,15 @@ else{ %>
                                             <div id="<%- faqs.categories[i].title %>" class="faq-category-title"><%- faqs.categories[i].title %></div>
                                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                                  <% if(setting.data.faq_page_schema) {%>
-                                                    <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                                                        <div class="faq-question-title" onclick="showHideContent(this)">
-                                                            <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                                            <span class="listed-faq" value itemprop="name"><%= faqs.faq[j].title %></span>
-                                                        </div>
-                                                        <div id="faq-answer-content" class="faq-answer-content"  style="display: none;" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                                                          <div itemprop="text">
-                                                            <%- faqs.faq[j].content %>
-                                                          </div>
-                                                        </div>
-                                                    </div>                                              
-                                                  <% } 
-                                                  else{ %>
                                                     <div class="faq-main-content">
-                                                        <div class="faq-question-title" onclick="showHideContent(this)">
+                                                        <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
                                                             <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                                            <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                            <span class="listed-faq" value><%= faqs.faq[j].title %></span>
                                                         </div>
-                                                        <div id="faq-answer-content" class="faq-answer-content"  style="display: none;">
-                                                          <div>
+                                                        <div id="faq-answer-content" class="faq-answer-content"  style="display: none;" itemtype="https://schema.org/Answer">
                                                             <%- faqs.faq[j].content %>
-                                                          </div>
                                                         </div>
                                                     </div>
-                                                  <% } %>
                                                 <% } %>
                                             <%}%>
                                         </div>
@@ -147,32 +108,15 @@ else{ %>
                 <div class="faq-dont-category">
                     <div style="display: flex; flex-direction: column">
                         <% for(var j=0; j < faqs.faq.length; j++) { %>
-                          <% if(setting.data.faq_page_schema) {%>
-                            <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                                <div class="faq-question-title" onclick="showHideContent(this)">
-                                  <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                  <span class="listed-faq" itemprop="name"><%= faqs.faq[j].title %></span>
-                                </div>
-                                <div class="faq-answer-content" style="display: none;" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                                  <div itemprop="text">
-                                    <%- faqs.faq[j].content %>
-                                  </div>
-                                </div>
-                            </div>                          
-                          <% } 
-                          else{ %>
                             <div class="faq-main-content">
-                                <div class="faq-question-title" onclick="showHideContent(this)">
+                                <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
                                   <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
                                   <span class="listed-faq"><%= faqs.faq[j].title %></span>
                                 </div>
-                                <div class="faq-answer-content" style="display: none;">
-                                  <div>
+                                <div class="faq-answer-content" style="display: none;" itemtype="https://schema.org/Answer">
                                     <%- faqs.faq[j].content %>
-                                  </div>
                                 </div>
-                            </div>     
-                          <% } %>
+                            </div>
                         <%}%>
                     </div>
                 </div>
@@ -183,32 +127,15 @@ else{ %>
                         <div>
                             <% for(var j=0; j < faqs.faq.length; j++) { %>
                                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                  <% if(setting.data.faq_page_schema) {%>
-                                    <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                                        <div class="faq-question-title" onclick="showHideContent(this)">
-                                            <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
-                                            <span class="listed-faq faq-question-search" itemprop="name"><%= faqs.faq[j].title %></span>
-                                        </div>
-                                        <div class="faq-answer-content faq-answer-search" style="display: none;" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                                          <div itemprop="text">
-                                            <%- faqs.faq[j].content %>
-                                          </div>
-                                        </div>
-                                    </div>
-                                  <% } 
-                                  else{ %>
                                     <div class="faq-main-content">
-                                        <div class="faq-question-title" onclick="showHideContent(this)">
+                                        <div class="faq-question-title" onclick="showHideContent(this)" itemtype="https://schema.org/Question">
                                             <svg class="svg-icon" fill="<%= setting.templateSetting.faq_font_color %>" viewBox="0 0 448 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
                                             <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
                                         </div>
-                                        <div class="faq-answer-content faq-answer-search" style="display: none;">
-                                          <div>
+                                        <div class="faq-answer-content faq-answer-search" style="display: none;" itemtype="https://schema.org/Answer">
                                             <%- faqs.faq[j].content %>
-                                          </div>
                                         </div>
                                     </div>
-                                  <% } %>
                                 <% } %>
                             <%}%>
                         </div>
@@ -534,15 +461,15 @@ else{ %>
         font-weight: 900;
         font-size:36px;
         <% if (setting.templateSetting.page_title_font) { %>
-            font-family: <%=  setting.templateSetting.page_title_font %> !important;
+            font-family: <%=  setting.templateSetting.page_title_font %>;
         <% } if (setting.templateSetting.page_title_fontsize) { %>
-            font-size: <%=  setting.templateSetting.page_title_fontsize %>px !important;
+            font-size: <%=  setting.templateSetting.page_title_fontsize %>px;
         <% } if (setting.templateSetting.page_title_color) { %>
-            color: <%=  setting.templateSetting.page_title_color %> !important;
+            color: <%=  setting.templateSetting.page_title_color %>;
         <% } if (setting.templateSetting.page_title_paddingtop) { %>
-            padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px !important;
+            padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px;
         <% } if (setting.templateSetting.page_title_paddingbottom) { %>
-            padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px !important;
+            padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px;
         <% } %>
     }
     .faq-main-content{

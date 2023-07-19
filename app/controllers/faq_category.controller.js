@@ -16,6 +16,7 @@ exports.create = async (req, res) => {
     // Create a faq_category
     const user_id = req.jwtDecoded.data.user_id;
     const locale = req.body.locale;
+    // const title = req.body.title;
     // const faq_category = {
     //     title: title,
     //     description: req.body.description,
@@ -273,27 +274,24 @@ exports.update = async (req, res) => {
 
 // Update rearrange Categories
 exports.updateRearrangeCategories = async (req, res) => {
-  const user_id = req.jwtDecoded.data.user_id;
-    let categories = req.body
-    if(!categories){
-        res.status(400).send({
-            message: "Could not update Categories !"
-        });
-        return;
-    }
-    categories.forEach(item => {
-        FaqCategory.update({
-            position: item.position,
-        },{
-            where: {
-              identify: item.identify,
-              user_id: user_id
-            }
-        })
-    })
+  let categories = req.body
+  if(!categories){
+      res.status(400).send({
+          message: "Could not update Categories !"
+      });
+      return;
+  }
+  await FaqCategory.bulkCreate(categories,{
+    updateOnDuplicate: ["position"],
+  })  
+  .then(() => {
     res.send({
-        message: 'Update Successfully !'
+      message: 'Update Successfully !'
     })
+  })
+  .catch(e => {
+    errorLog.error(e)
+  })  
 };
 
 // Delete a Category with the specified id in the request

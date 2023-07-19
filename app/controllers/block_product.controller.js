@@ -106,10 +106,7 @@ async function getPlan(userID){
         }
     })
     .catch(err => {
-        return res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving plan."
-        })
+      errorLog.error(err)
     });
     return PlanData;
 }
@@ -132,10 +129,7 @@ async function getProduct(userID, product_id, locale, Faqs, templateSetting, pla
         }
     })
     .catch(err => {
-        return res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving Product."
-        })
+      errorLog.error(err)
     });
     return Product;
 }
@@ -178,15 +172,16 @@ async function getFaqs(faq_identify, category_identify, locale, Faqs, userID){
   })
   .then(async data => {
     if(data && data.length > 0){
+      let checkFaq
       if(data.some(element => {
         return element.dataValues.locale == locale
       })){
-        var checkFaq = data.filter(item => {
+        checkFaq = data.filter(item => {
           return item.dataValues.locale == locale
         })
       }
       else{
-        var checkFaq = data.filter(item => {
+        checkFaq = data.filter(item => {
           return item.dataValues.locale == 'default'
         })
       }
@@ -196,9 +191,7 @@ async function getFaqs(faq_identify, category_identify, locale, Faqs, userID){
     }
   })
   .catch(err => {
-    return res.status(500).send({
-      message: err.message || "Some error occurred while retrieving Product."
-    })
+    errorLog.error(err)
   });
 }
 
@@ -212,13 +205,10 @@ async function getCategory(locale, userID, Categories, templateSetting){
             order:['title']
         })
         .then(data => {
-            Categories.push(data)
+          Categories.push(data)
         })
         .catch(err => {
-            return res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving Product."
-            })
+           errorLog.error(err)
         });
     }
     else{
@@ -233,11 +223,8 @@ async function getCategory(locale, userID, Categories, templateSetting){
           Categories.push(data)
         })
         .catch(err => {
-            return res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving Product."
-            })
+          errorLog.error(err)
         });
-    }
+        }
     return Categories;
 }

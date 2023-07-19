@@ -1,7 +1,7 @@
 
 const db = require("../models");
 const Plan = db.merchants_plan;
-const errorLog = require('../helpers/log.helper');
+// const errorLog = require('../helpers/log.helper');
 // Create a plan
 exports.create = async (req, res) => {
   const plan = req.body;

@@ -95,7 +95,7 @@ const accessTokenSecret = process.env.JWT_KEY;
 const refreshTokenLife = process.env.REFRESH_JWT_KEY_LIFE;
 const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
 const appName = process.env.SHOPIFY_APP_NAME
-const shopifyApi = require('./app/helpers/shopifyApi.helper')
+// const shopifyApi = require('./app/helpers/shopifyApi.helper')
 const Shopify = require("@shopify/shopify-api");
 // const debug = console.log.bind(console);
 db.sequelize.sync({ force: false }).then(() => {
@@ -118,89 +118,89 @@ app.get('/', async (req, res) => {
     }
   })
   .then(async response => {
-    // let user_data = response.dataValues
-    // // const hasSubscription = await getCurrentSubscription(query);
-    // const client = new Shopify.Shopify.Clients.Graphql(
-    //   user_data.shopify_domain,
-    //   user_data.shopify_access_token,
-    // );
-    // const resp = await client.query({
-    //   data: RECURRING_PURCHASES_QUERY,
-    // });
-    // if(resp.body.data.currentAppInstallation.activeSubscriptions){
-    //   currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
-    // }
-    // let currentPlan = await shopifyApi.getCurrentPlan(user_data.shopify_domain, user_data.shopify_access_token)
-    // if(currentPlan.length > 0){
-    //   let data = {
-    //     plan: currentPlan[0].name,
-    //     shopify_plan_id: currentPlan[0].id,
-    //   }
-    //   await Plan.update(data, {
-    //     where: {
-    //       user_id: user_data.id
-    //     }
-    //   })
-    //   .then(async() => {
-    //     await User.update({plan_extra: false}, {
-    //       where: {
-    //         id: user_data.id
-    //       }
-    //     })  
-    //     await Setting.update({yanet_logo_visible: false}, {
-    //       where: {
-    //         user_id: user_data.id
-    //       }
-    //     }) 
-    //   })    
-    // }
-    // else{
-    //   if(user_data.plan_extra){
-    //     let data = {
-    //       plan: freeExtraPlan,
-    //       shopify_plan_id: ''
-    //     }    
-    //     await Plan.update(data, {
-    //       where: {
-    //         user_id: user_data.id
-    //       }
-    //     })  
-    //   }
-    //   else{
-    //     await Plan.findOne({
-    //       where: {
-    //         user_id: user_data.id
-    //       }
-    //     })
-    //     .then(async res => {
-    //       if(res.dataValues.plan == 'Free_01'){
-    //         let data = {
-    //           plan: freePlan01,
-    //           shopify_plan_id: ''
-    //         }    
-    //         await Plan.update(data, {
-    //           where: {
-    //             user_id: user_data.id
-    //           }
-    //         })        
-    //       }
-    //       else{
-    //         let data = {
-    //           plan: freePlan,
-    //           shopify_plan_id: ''
-    //         }    
-    //         await Plan.update(data, {
-    //           where: {
-    //             user_id: user_data.id
-    //           }
-    //         })        
-    //       }
-    //     })
-    //     .catch((e) => {
-    //       errorLog.error(e)
-    //     })
-    //   }
-    // }
+    let user_data = response.dataValues
+    // const hasSubscription = await getCurrentSubscription(query);
+    const client = new Shopify.Shopify.Clients.Graphql(
+      user_data.shopify_domain,
+      user_data.shopify_access_token,
+    );
+    const resp = await client.query({
+      data: RECURRING_PURCHASES_QUERY,
+    });
+    let currentPlan
+    if(resp.body.data.currentAppInstallation.activeSubscriptions){
+      currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
+    }
+    if(currentPlan.length > 0){
+      let data = {
+        plan: currentPlan[0].name,
+        shopify_plan_id: currentPlan[0].id,
+      }
+      await Plan.update(data, {
+        where: {
+          user_id: user_data.id
+        }
+      })
+      .then(async() => {
+        await User.update({plan_extra: false}, {
+          where: {
+            id: user_data.id
+          }
+        })  
+        await Setting.update({yanet_logo_visible: false}, {
+          where: {
+            user_id: user_data.id
+          }
+        }) 
+      })    
+    }
+    else{
+      if(user_data.plan_extra){
+        let data = {
+          plan: freeExtraPlan,
+          shopify_plan_id: ''
+        }    
+        await Plan.update(data, {
+          where: {
+            user_id: user_data.id
+          }
+        })  
+      }
+      else{
+        await Plan.findOne({
+          where: {
+            user_id: user_data.id
+          }
+        })
+        .then(async res => {
+          if(res.dataValues.plan == 'Free_01'){
+            let data = {
+              plan: freePlan01,
+              shopify_plan_id: ''
+            }    
+            await Plan.update(data, {
+              where: {
+                user_id: user_data.id
+              }
+            })        
+          }
+          else{
+            let data = {
+              plan: freePlan,
+              shopify_plan_id: ''
+            }    
+            await Plan.update(data, {
+              where: {
+                user_id: user_data.id
+              }
+            })        
+          }
+        })
+        .catch((e) => {
+          errorLog.error(e)
+        })
+      }
+    }
   })
   .catch(e => {
     console.log(e)
@@ -233,8 +233,8 @@ app.get('/', async (req, res) => {
     }
     return res.redirect(app_link + txt ); 
 	}
+
   // let tokenData = await getToken(req.query);
-  // console.log(req.query)
   // let txt = "";
   // if (tokenData.accessToken) {
   //     txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken;
@@ -394,7 +394,7 @@ async function getlinkApproveSupcription(query) {
             name: `${query.plan}`,
             trialDays: 7,
             returnUrl:`https://admin.shopify.com/store/${query.shop.slice(0, query.shop.indexOf('.'))}/apps/${appName}`,
-            test: true
+            // test: true
           },
         },
       });
@@ -532,13 +532,13 @@ app.get('/faq-page', async (req, res) => {
   let shop = req.query.shop;
   let shopify_access_token
   let plan
-  if (shop.indexOf('myshopify.com') === -1) {
-    shop = req.headers['x-shop-domain'];
-  }
   let userData = await User.findOne({
-    attributes: ['id', 'shopify_access_token', 'plan_extra', 'shopLocales'],
+    attributes: ['id', 'shopify_access_token', 'plan_extra'],
     where: { shopify_domain: shop }
   });
+  if (!userData) {
+    shop = req.headers['x-shop-domain'];
+  }
   let currentPlan
   if (shop) {
     try {
@@ -609,10 +609,10 @@ app.get('/faq-page', async (req, res) => {
         errorLog.error(err)
       });
       const locale = req.headers['accept-language'].split(',')[0];
-      const faqs = await defaultPage.findFaqs(userData, locale, path_prefix, plan);
-      const setting = await defaultPage.findSetting(userData, locale, plan);
-      // const messagesSetting = await defaultPage.findMessagesSetting(shop, plan);
-      return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, locale: locale});
+      const faqs = await defaultPage.findFaqs(shop, locale, path_prefix, plan);
+      const setting = await defaultPage.findSetting(shop, locale, plan);
+      const messagesSetting = await defaultPage.findMessagesSetting(shop, plan);
+      return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting, locale: locale});
     } catch (e) {
         errorLog.error(e.message);
         res.status(400).send('unexpected error occurred');
@@ -632,7 +632,7 @@ app.listen(port, () => {
     console.log(`Server runing on port ${port} !`);
 });
 
-function verifyRequest(req, res, buf, encoding) {
+function verifyRequest(req, res, buf) {
     req.rawBody=buf
 }
 
@@ -641,7 +641,6 @@ async function removeShop(shop) {
     await User.destroy({
         where: { shopify_domain: shop }
     })
-    .then(num => {})
     .catch(err => {
       errorLog.error(err.message)
     });
@@ -661,6 +660,7 @@ async function getToken(query) {
         const generateHash = crypto.createHmac('sha256', apiSecret)
             .update(message)
             .digest('hex');
+
         if (generateHash === hmac) {
             try {
                 let jwtHelper = require("./app/helpers/jwt.helper");

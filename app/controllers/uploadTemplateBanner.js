@@ -8,6 +8,7 @@ const path = require('path');
 const Resize = require('../helpers/resizeImage.helper');
 
 exports.upload = async (req, res) => {
+
     let setingId = 0;
 // Upload image <have header and template_number>
     const imagePath = path.join(__dirname, '../../var/images/banner');
@@ -65,11 +66,6 @@ exports.upload = async (req, res) => {
                     else{
                         templateSetting.update(template_data, {
                             where: {id: templateId}
-                        }).then(num => {
-                        if (num == 1) {
-                            } else {
-                                errorLog.error('update template setting error <update image>')
-                            }
                         }).catch(e => {
                             errorLog.error(e.message)
                         })

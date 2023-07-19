@@ -83,7 +83,7 @@ exports.findAll = (req, res) => {
   })
   .catch(() => {
     res.status(500).send({
-      message: "Error retrieving user"
+      message: "Error retrieving."
     });
   });
 };
@@ -152,22 +152,10 @@ exports.findAllData = async(req, res) => {
 }; 
 
 async function findSetting(user_id){
-  // let template_setting = {};
   let settingData
   await Setting.findOne({ where: { user_id : user_id}})
   .then(async data => {
     if (data) {
-      // if (data.dataValues.faq_template_number) {
-      //   await TemplateSetting.findOne({ where: { setting_id : data.dataValues.id, template_number: data.dataValues.faq_template_number}})
-      //   .then(template_setting_data => {
-      //     if (template_setting_data) {
-      //       template_setting = template_setting_data.dataValues;
-      //       delete template_setting.id;
-      //     }
-      //   })
-      //   .catch()
-      // }
-      // return_setting_data = Object.assign(data.dataValues, template_setting);
       settingData = data.dataValues
     } 
     else {

@@ -46,8 +46,6 @@ let initAPIs = (app) => {
     router.get("/api/shop/faq/:shop", faq.findAllInFaqPage);
     router.get("/api/no-token/feature-faq/:shop", faq.findAllFeatureFaq);
     router.get("/api/shop/faq/search/:shop", faq.searchFaqTitle);
-    router.get("/api/shop/faq/update_analytics/:id", faq.updateAnalytics);
-    router.get("/api/shop/faq/analytics-faq/:id", faq.updateAnalyticsFaq);
     router.get("/api/shop/setting/:shop", setting.findOneInFaqPage);
     router.get("/api/shop/faq-category/:shop", category.findAllInFaqPage);
     router.get("/api/no-token/block/:shop/:product_id/:locale", block.findAllProduct)

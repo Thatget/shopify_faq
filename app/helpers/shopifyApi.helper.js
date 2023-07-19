@@ -6,6 +6,7 @@ const apiGraphql = process.env.API_GRAPHQL;
 const productApiGraphql = process.env.PRODUCT_API_GRAPHQL;
 const countProductApi = process.env.COUNT_PRODUCT_API_GRAPHQL;
 const Shopify = require("@shopify/shopify-api");
+const Plan = db.merchants_plan;
 
 const RECURRING_PURCHASES_QUERY = `
   query appSubscription {
@@ -40,6 +41,7 @@ const productList = async (req, res) => {
         const userInfo = await User.findByPk(id, {attributes: ['shopify_domain', 'shopify_access_token']});
         const shopRequestUrl = 'https://' + userInfo.dataValues.shopify_domain + productApiGraphql;
         const shopUrlCountProduct = 'https://' + userInfo.dataValues.shopify_domain + countProductApi;
+        let qs
         if (req.query.page_info) {
             qs = {
                 fields: 'id,images,title',
@@ -73,7 +75,7 @@ const productList = async (req, res) => {
             if(response.headers.link){
                 var headerLink = response.headers.link;
                 var strArray = headerLink.split(',');
-                for (i = 0; i < strArray.length; i++) {
+                for (let i = 0; i < strArray.length; i++) {
                     let params = new URLSearchParams(strArray[i].replace(/<|>|rel="next"|;|rel="previous"/g, ""));
                     if (strArray[i].indexOf('rel="next"') !== -1 ) {
                         pagination.next = params.get('page_info');
@@ -113,7 +115,7 @@ const searchProductByTitle = async (req, res) => {
         return;
     }
     const id = req.jwtDecoded.data.user_id;
-    let limit = 20;
+    let limit = 50;
     if (req.query.limit) {
         limit = Number(req.query.limit);
         if (!Number.isInteger(limit)) {
@@ -125,66 +127,68 @@ const searchProductByTitle = async (req, res) => {
         limit = Math.abs(limit)
     }
     try {
-    if (req.query.title) {
-        req.query.title = req.query.title.replace(/"/g, '\\"')
-        var title = `,query: "title:*${req.query.title}*"`;
-    } else {
-        var title = "";
-    }
+      let title
+      let cursor
+      if (req.query.title) {
+          req.query.title = req.query.title.replace(/"/g, '\\"')
+          title = `,query: "title:*${req.query.title}*"`;
+      } else {
+          title = "";
+      }
 
-    if (req.query.cursor && req.query.cursor !== "undefined") {
-        var cursor = req.query.cursor
-        var option = ''
-        cursor.indexOf('after') != -1? option = `first: ${limit}, ${title}, ${cursor}`: option = `last: ${limit}, ${title}, ${cursor}`
-    } else {
-        var cursor = "";
-        option = `first: ${limit}, ${title}, ${cursor}`
-    }
-        const userInfo = await User.findByPk(id, {attributes: ['shopify_domain', 'shopify_access_token']});
-        const shopRequestHeaders = {
-            'X-Shopify-Access-Token': userInfo.dataValues.shopify_access_token
-        };
+      if (req.query.cursor && req.query.cursor !== "undefined") {
+          cursor = req.query.cursor
+          var option = ''
+          cursor.indexOf('after') != -1? option = `first: ${limit}, ${title}, ${cursor}`: option = `last: ${limit}, ${title}, ${cursor}`
+      } else {
+          cursor = "";
+          option = `first: ${limit}, ${title}, ${cursor}`
+      }
+      const userInfo = await User.findByPk(id, {attributes: ['shopify_domain', 'shopify_access_token']});
+      const shopRequestHeaders = {
+          'X-Shopify-Access-Token': userInfo.dataValues.shopify_access_token
+      };
 
-        const body = {
-            query: `
-                {
-                    products(${option}) {
-                        edges {
-                            cursor
-                            node {
-                                id
-                                handle
-                                title
-                                images(first: ${limit}){
-                                    edges{
-                                        node{
-                                            url
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        pageInfo {
-                            hasNextPage
-                            hasPreviousPage
-                        }
-                    }
-                }
-            `
-        };
-        const shopRequestUrlLocale = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-04/graphql.json';
-        await getAllColecttion(userInfo.dataValues.shopify_domain, userInfo.dataValues.shopify_access_token)
-        await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
-            .then(data => {
-                if(data.data.products){
-                    products = data.data.products
-                }
-                else{
-                    products = []
-                }
-            }).catch(e => {
-                errorLog.error(e.messages)
-            });
+      const body = {
+          query: `
+              {
+                  products(${option}) {
+                      edges {
+                          cursor
+                          node {
+                              id
+                              handle
+                              title
+                              images(first: ${limit}){
+                                  edges{
+                                      node{
+                                          url
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                      pageInfo {
+                          hasNextPage
+                          hasPreviousPage
+                      }
+                  }
+              }
+          `
+      };
+      const shopRequestUrlLocale = 'https://' + userInfo.dataValues.shopify_domain + '/admin/api/2022-04/graphql.json';
+      await getAllColecttion(userInfo.dataValues.shopify_domain, userInfo.dataValues.shopify_access_token)
+      await request.post(shopRequestUrlLocale, {headers: shopRequestHeaders, json: body})
+      .then(data => {
+          if(data.data.products){
+              products = data.data.products
+          }
+          else{
+              products = []
+          }
+      }).catch(e => {
+          errorLog.error(e.messages)
+      });
 
     } catch (e) {
         return res.status(e.statusCode || 500).json(e.message);
@@ -244,7 +248,7 @@ const syncLanguage = async(req, res) => {
         id: id
       }
     })
-    .then(data => {
+    .then(() => {
       res.send('Sync languages success !');
     })
     .catch(err => {
