@@ -100,7 +100,7 @@ exports.findAllData = async(req, res) => {
   let faqMorePageData = []
   let faqMorePageSettingData = []
   let ratingData = []
-  let planData = []
+  let planData
   const user_id = req.jwtDecoded.data.user_id;
   await User.findByPk(user_id)
   .then(async data => {
@@ -339,7 +339,7 @@ async function findPlan(user_id){
     where: {user_id : user_id}
   })
   .then(data => {
-    planData = data  
+    planData = data.dataValues
   })
   .catch(err => {
     errorLog.error(err)

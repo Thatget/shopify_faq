@@ -87,11 +87,11 @@ exports.update = async(req, res) => {
   });
 };
 
-exports.delete = (req, res) => {
+exports.delete = async(req, res) => {
   let list_number = [1,2,3,4,5,6,7,8]
   const setting_id = req.params.setting_id
   var list_template_number = list_number.filter(item => item != req.query.template_number)
-  TemplateSetting.destroy({
+  await TemplateSetting.destroy({
     where:{
       template_number: list_template_number,
       setting_id: setting_id

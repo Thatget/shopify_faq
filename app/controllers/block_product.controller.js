@@ -82,9 +82,8 @@ exports.findAllProduct = async (req, res) => {
             });
         }
     })
-    .catch(error => {
-        errorLog.error(error)
-        return res.status(500).send("some error");
+    .catch((e) => {
+        return res.status(500).send(e);
     })
     // const result = await User.findOne({ where: { shopify_domain: shop}}).catch(error => {
     //     return res.status(500).send("some error");

@@ -8,8 +8,11 @@ module.exports = (sequelize, Sequelize) => {
       plan: {
         type: Sequelize.STRING,
       },
-      check_subscription: {
-        type: Sequelize.BOOLEAN,
+      // check_subscription: {
+      //   type: Sequelize.BOOLEAN,
+      // },
+      plan_extra: {
+        type: Sequelize.STRING,
       },
       shopify_plan_id:{
         type: Sequelize.STRING,

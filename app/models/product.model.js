@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         product_image:{
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT,
             // allowNull: false
         },
         product_title:{

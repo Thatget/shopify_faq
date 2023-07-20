@@ -178,195 +178,196 @@ exports.findFaqs = async (shop, locale_data, path_prefix = "", plan) => {
     });
 return send_data;
 };
+
 exports.findSetting = async (shop, locale_data, plan) => {
-    let returnData = {};
-    let data = {};
-    let templateSetting = {};
-    let locale
-    await User.findOne({
-        attributes: ['id', 'shopLocales'],
-        where: { shopify_domain: shop}
-    })
-        .then( async userData => {
-            if (userData) {
-                if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
-                    locale = 'default'
-                }
-                else{
-                    locale = locale_data
-                }
-                
-                await Setting.findOne({
-                    where: {
-                        user_id: userData.dataValues.id
-                    }
-                }).then(async settingData => {
-                    data = settingData.dataValues;
-                    if (settingData.search_not_found) {
-                        try {
-                          let checkLocales = JSON.parse(settingData.search_not_found).some(ele => {
-                            return ele.locale === locale
-                          })
-                          if(checkLocales){
-                            JSON.parse(settingData.search_not_found).forEach(item => {
-                                if(item.locale === locale) {
-                                    data.search_not_found = item.content;
-                                    return;
-                                }
-                            })
-                          }
-                          else{
-                            JSON.parse(settingData.search_not_found).forEach(item => {
-                              if(item.locale === 'default') {
+  let returnData = {};
+  let data = {};
+  let templateSetting = {};
+  let locale
+  await User.findOne({
+      attributes: ['id', 'shopLocales'],
+      where: { shopify_domain: shop}
+  })
+      .then( async userData => {
+          if (userData) {
+              if(locale === JSON.parse(userData.dataValues.shopLocales).shopLocales.filter(item => {return item.primary === true})[0].locale){
+                  locale = 'default'
+              }
+              else{
+                  locale = locale_data
+              }
+              
+              await Setting.findOne({
+                  where: {
+                      user_id: userData.dataValues.id
+                  }
+              }).then(async settingData => {
+                  data = settingData.dataValues;
+                  if (settingData.search_not_found) {
+                      try {
+                        let checkLocales = JSON.parse(settingData.search_not_found).some(ele => {
+                          return ele.locale === locale
+                        })
+                        if(checkLocales){
+                          JSON.parse(settingData.search_not_found).forEach(item => {
+                              if(item.locale === locale) {
                                   data.search_not_found = item.content;
                                   return;
                               }
-                            })
-                          }
-                        } catch (e) {
-                            errorLog.error(`setting json parse error ${e.message}`)
-                        }
-                    }
-
-                    if (settingData.intro_text_content) {
-                        try {
-                          let checkLocales = JSON.parse(settingData.intro_text_content).some(ele => {
-                            return ele.locale === locale
                           })
-                          if(checkLocales){
-                            JSON.parse(settingData.intro_text_content).forEach(item => {
-                                if(item.locale === locale) {
-                                    data.intro_text_content = item.content;
-                                    return;
-                                }
-                            })
-                          }
-                          else{
-                            JSON.parse(settingData.intro_text_content).forEach(item => {
-                              if(item.locale === 'default') {
+                        }
+                        else{
+                          JSON.parse(settingData.search_not_found).forEach(item => {
+                            if(item.locale === 'default') {
+                                data.search_not_found = item.content;
+                                return;
+                            }
+                          })
+                        }
+                      } catch (e) {
+                          errorLog.error(`setting json parse error ${e.message}`)
+                      }
+                  }
+
+                  if (settingData.intro_text_content) {
+                      try {
+                        let checkLocales = JSON.parse(settingData.intro_text_content).some(ele => {
+                          return ele.locale === locale
+                        })
+                        if(checkLocales){
+                          JSON.parse(settingData.intro_text_content).forEach(item => {
+                              if(item.locale === locale) {
                                   data.intro_text_content = item.content;
                                   return;
                               }
-                            })
-                          }
-                        } catch (e) {
-                            errorLog.error(`setting json parse error ${e.message}`)
-                        }
-                    }
-                    if (settingData.page_under_contruction) {
-                        try {
-                          let checkLocales = JSON.parse(settingData.page_under_contruction).some(ele => {
-                            return ele.locale === locale
                           })
-                          if(checkLocales){
-                            JSON.parse(settingData.page_under_contruction).forEach(item => {
-                                if(item.locale === locale) {
-                                    data.page_under_contruction = item.content;
-                                    return;
-                                }
-                            })
-                          }
-                          else{
-                            JSON.parse(settingData.page_under_contruction).forEach(item => {
-                              if(item.locale === 'default') {
+                        }
+                        else{
+                          JSON.parse(settingData.intro_text_content).forEach(item => {
+                            if(item.locale === 'default') {
+                                data.intro_text_content = item.content;
+                                return;
+                            }
+                          })
+                        }
+                      } catch (e) {
+                          errorLog.error(`setting json parse error ${e.message}`)
+                      }
+                  }
+                  if (settingData.page_under_contruction) {
+                      try {
+                        let checkLocales = JSON.parse(settingData.page_under_contruction).some(ele => {
+                          return ele.locale === locale
+                        })
+                        if(checkLocales){
+                          JSON.parse(settingData.page_under_contruction).forEach(item => {
+                              if(item.locale === locale) {
                                   data.page_under_contruction = item.content;
                                   return;
                               }
-                            })
-                          }
-                        } catch (e) {
-                            errorLog.error(`setting json parse error ${e.message}`)
-                        }
-                    }
-                    if (settingData.search_placehoder) {
-                        try {
-                          let checkLocales = JSON.parse(settingData.search_placehoder).some(ele => {
-                            return ele.locale === locale
                           })
-                          if(checkLocales){
-                            JSON.parse(settingData.search_placehoder).forEach(item => {
-                                if(item.locale === locale) {
-                                    data.search_placehoder = item.content;
-                                    return;
-                                }
-                            })
-                          }
-                          else{
-                            JSON.parse(settingData.search_placehoder).forEach(item => {
-                              if(item.locale === 'default') {
+                        }
+                        else{
+                          JSON.parse(settingData.page_under_contruction).forEach(item => {
+                            if(item.locale === 'default') {
+                                data.page_under_contruction = item.content;
+                                return;
+                            }
+                          })
+                        }
+                      } catch (e) {
+                          errorLog.error(`setting json parse error ${e.message}`)
+                      }
+                  }
+                  if (settingData.search_placehoder) {
+                      try {
+                        let checkLocales = JSON.parse(settingData.search_placehoder).some(ele => {
+                          return ele.locale === locale
+                        })
+                        if(checkLocales){
+                          JSON.parse(settingData.search_placehoder).forEach(item => {
+                              if(item.locale === locale) {
                                   data.search_placehoder = item.content;
                                   return;
                               }
-                            })
-                          }
-                        } catch (e) {
-                            errorLog.error(`setting json parse error ${e.message}`)
-                        }
-                    }
-                    if (settingData.page_title_content) {
-                        try {
-                          let checkLocales = JSON.parse(settingData.page_title_content).some(ele => {
-                            return ele.locale === locale
                           })
-                          if(checkLocales){
-                            JSON.parse(settingData.page_title_content).forEach(item => {
-                                if(item.locale === locale) {
-                                    data.page_title_content = item.content;
-                                    return;
-                                }
-                            })
-                          }
-                          else{
-                            JSON.parse(settingData.page_title_content).forEach(item => {
-                              if(item.locale === 'default') {
+                        }
+                        else{
+                          JSON.parse(settingData.search_placehoder).forEach(item => {
+                            if(item.locale === 'default') {
+                                data.search_placehoder = item.content;
+                                return;
+                            }
+                          })
+                        }
+                      } catch (e) {
+                          errorLog.error(`setting json parse error ${e.message}`)
+                      }
+                  }
+                  if (settingData.page_title_content) {
+                      try {
+                        let checkLocales = JSON.parse(settingData.page_title_content).some(ele => {
+                          return ele.locale === locale
+                        })
+                        if(checkLocales){
+                          JSON.parse(settingData.page_title_content).forEach(item => {
+                              if(item.locale === locale) {
                                   data.page_title_content = item.content;
                                   return;
                               }
-                            })
-                          }
-                        } catch (e) {
-                            errorLog.error(`setting json parse error ${e.message}`)
-                        }
-                    }
-                    if (settingData.footer_text_content) {
-                        try {
-                          let checkLocales = JSON.parse(settingData.footer_text_content).some(ele => {
-                            return ele.locale === locale
                           })
-                          if(checkLocales){
-                            JSON.parse(settingData.footer_text_content).forEach(item => {
-                                if(item.locale === locale) {
-                                    data.footer_text_content = item.content;
-                                    return;
-                                }
-                            })
-                          }
-                          else{
-                            JSON.parse(settingData.footer_text_content).forEach(item => {
-                              if(item.locale === 'default') {
+                        }
+                        else{
+                          JSON.parse(settingData.page_title_content).forEach(item => {
+                            if(item.locale === 'default') {
+                                data.page_title_content = item.content;
+                                return;
+                            }
+                          })
+                        }
+                      } catch (e) {
+                          errorLog.error(`setting json parse error ${e.message}`)
+                      }
+                  }
+                  if (settingData.footer_text_content) {
+                      try {
+                        let checkLocales = JSON.parse(settingData.footer_text_content).some(ele => {
+                          return ele.locale === locale
+                        })
+                        if(checkLocales){
+                          JSON.parse(settingData.footer_text_content).forEach(item => {
+                              if(item.locale === locale) {
                                   data.footer_text_content = item.content;
                                   return;
                               }
-                            })
-                          }
-                        } catch (e) {
-                            errorLog.error(`setting json parse error ${e.message}`)
+                          })
                         }
-                    }
-                    if((plan == freePlan || plan == freePlan01) && (settingData.faq_template_number > 3) && !userData.dataValues.plan_extra){
-                      settingData.faq_template_number = 2
-                    }
-                    templateSetting = await getTemplateSetting(settingData.id, settingData.faq_template_number);
-                    returnData = {data, templateSetting}
-                }).catch(error => {
-                    errorLog.error(`get setting frontend proxy ${error.message}`)
-                });
-            }
-        })
-        .catch(e =>{
-          errorLog.error(`get setting frontend proxy get user error ${e.message}`)
-        })
-    return returnData;
+                        else{
+                          JSON.parse(settingData.footer_text_content).forEach(item => {
+                            if(item.locale === 'default') {
+                                data.footer_text_content = item.content;
+                                return;
+                            }
+                          })
+                        }
+                      } catch (e) {
+                          errorLog.error(`setting json parse error ${e.message}`)
+                      }
+                  }
+                  if((plan == freePlan || plan == freePlan01) && (settingData.faq_template_number > 3) && !userData.dataValues.plan_extra){
+                    settingData.faq_template_number = 2
+                  }
+                  templateSetting = await getTemplateSetting(settingData.id, settingData.faq_template_number);
+                  returnData = {data, templateSetting}
+              }).catch(error => {
+                  errorLog.error(`get setting frontend proxy ${error.message}`)
+              });
+          }
+      })
+      .catch(e =>{
+        errorLog.error(`get setting frontend proxy get user error ${e.message}`)
+      })
+  return returnData;
 }
 
 exports.findMessagesSetting = async (shop) => {
@@ -396,6 +397,11 @@ exports.findMessagesSetting = async (shop) => {
 
 async function getTemplateSetting(setting_id, template_number) {
     let templateSetting = {};
+    let list_number = [1,2,3,4,5,6,7,8]
+    var list_template_number = list_number.filter(item => item != template_number)
+    if(template_number){
+      await deleteTemplate(list_template_number, setting_id)
+    }
     await TemplateSetting.findOne({ where: { setting_id: setting_id, template_number: template_number}})
         .then(data => {
             if (data){
@@ -418,5 +424,18 @@ async function getTemplateSetting(setting_id, template_number) {
             errorLog.error(`template Setting ${e.message}`)
     });
     return templateSetting;
+}
+
+async function deleteTemplate(list_template_number, setting_id) {
+  try {
+    await TemplateSetting.destroy({
+      where:{
+        template_number: list_template_number,
+        setting_id: setting_id
+      }
+    })  
+  } catch (error) {
+    errorLog.error(error)
+  }
 }
 

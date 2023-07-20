@@ -63,6 +63,9 @@ async function findUser(offset, limit, count, listUserId){
         id: listUserId
       }
     })
+    .then(data => {
+      userInfo = data
+    })
     .catch(err => {
       errorLog.error(err)
     });
@@ -74,6 +77,9 @@ async function findUser(offset, limit, count, listUserId){
       order:['id'],
       offset: count > 50? parseInt(count - (offset + limit)) : 0,
       limit: limit,
+    })
+    .then(data => {
+      userInfo = data
     })
     .catch(err => {
       errorLog.error(err)
@@ -220,6 +226,9 @@ async function searchUser(shop){
         shopify_domain: shop.shop
       }
     })
+    .then(data => {
+      userInfo = data
+    })
     .catch(err => {
       errorLog.error(err)
     });    
@@ -232,6 +241,9 @@ async function searchUser(shop){
           email: shop.email
         }
       })
+      .then(data => {
+        userInfo = data
+      })  
       .catch(err => {
         errorLog.error(err)
       });      
