@@ -74,7 +74,7 @@ const app = express();
 app.use(bodyParser.json({ verify: verifyRequest }));
 // for parsing application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(dotenv)
+
 app.use(cors({
     origin: '*'
 }));
