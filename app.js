@@ -559,6 +559,8 @@ app.get('/faq-page', async (req, res) => {
           currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
         }
       }
+      errorLog.error(userData.id)
+      errorLog.error(currentPlan)
       await Plan.findOne({
         attributes:['plan','id'],
         where: {
@@ -567,15 +569,49 @@ app.get('/faq-page', async (req, res) => {
       })
       .then(async data => {
         if(currentPlan.length > 0){
+          errorLog.error(userData.id)
+          errorLog.error(currentPlan)    
           plan = currentPlan[0].name
-          await Plan.update({
-            plan: currentPlan[0].name,
-            shopify_plan_id: currentPlan[0].id
-          }, {
-            where: {
-              user_id: userData.id
-            }
-          })
+          try {
+           await Plan.update({
+              plan: currentPlan[0].name,
+              shopify_plan_id: currentPlan[0].id
+            }, {
+              where: {
+                user_id: userData.id
+              }
+            })
+            .then(result => {
+              errorLog.error('result')
+              errorLog.error(result)
+            })
+            .catch(e => {
+              errorLog.error(e)
+            })
+
+            errorLog.error(updatePlan)
+
+            await User.update(
+              {
+                plan_extra: false
+              },
+              {
+                where: {
+                  id: userData.id
+                }
+              }
+            )
+            .then(result => {
+              errorLog.error('User result')
+              errorLog.error(result)
+            })
+            .catch(e => {
+              errorLog.error(e)
+            })
+
+          } catch (error) {
+            errorLog.error(error)
+          }
         }
         else{
           if(data.dataValues.plan == proPlan || data.dataValues.plan == ultimatePlan){

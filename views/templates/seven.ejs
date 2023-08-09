@@ -1,8 +1,13 @@
-<div class="root-faq-template" style="line-height: 1.8 !important;"  itemtype="https://schema.org/FAQPage">
+<% if(setting.data.faq_page_schema) {%>
+  <div class="root-faq-template" style="line-height: 1.8 !important;" itemscope itemtype="https://schema.org/FAQPage">
+ <% }  
+else{ %>
+  <div class="root-faq-template" style="line-height: 1.8 !important;">
+<% } %>
   <div class="faq-header">
       <div>
           <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
-              <div class="faq-page-title"><%- setting.data.page_title_content %></div>
+              <h1 class="faq-page-title"><%- setting.data.page_title_content %></h1>
           <% } %>
           <% if(setting.templateSetting.show_search_input) { %>
               <% if(setting.data.show_page_title && setting.data.page_title_content){%>
@@ -51,14 +56,14 @@
                               <% if(setting.templateSetting.category_bar_number === 1){%>
                                   <div class="category-bar">
                                       <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                          <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
+                                          <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
                                       <% } %>
                                   </div>
                               <% } %>
                               <% if(setting.templateSetting.category_bar_number === 2){%>
                                   <div class="category-bar">
                                       <% for(var i=0; i < faqs.categories.length; i++) { %>
-                                          <a href="#<%- faqs.categories[i].title %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
+                                          <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
                                       <% } %>
                                   </div>
                               <% } %>
@@ -73,14 +78,30 @@
                                       </div>
                                       <% for(var j=0; j < faqs.faq.length; j++) { %>
                                           <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
-                                              <div class="faq-main-content">
-                                                  <div class="faq-question-title"  itemtype="https://schema.org/FAQPage/Question">
-                                                      <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
-                                                  </div>
-                                                  <div class="faq-answer-content faq-answer-search"  itemtype="https://schema.org/FAQPage/Answer">
-                                                      <%- faqs.faq[j].content %>
-                                                  </div>
-                                              </div>
+                                              <% if(setting.data.faq_page_schema) {%>
+                                                <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                                    <div class="faq-question-title">
+                                                        <span class="listed-faq faq-question-search" itemprop="name"><%= faqs.faq[j].title %></span>
+                                                    </div>
+                                                    <div class="faq-answer-content faq-answer-search"  itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                                        <div itemprop="text">
+                                                          <%- faqs.faq[j].content %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                              <% } 
+                                              else{ %>
+                                                 <div class="faq-main-content">
+                                                    <div class="faq-question-title">
+                                                        <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
+                                                    </div>
+                                                    <div class="faq-answer-content faq-answer-search">
+                                                        <div>
+                                                          <%- faqs.faq[j].content %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                              <% } %>
                                           <% } %>
                                       <%}%>
                                   </div>
@@ -93,14 +114,30 @@
           else{ %>
               <div class="faq-dont-category">
                   <% for(var j=0; j < faqs.faq.length; j++) { %>
+                    <% if(setting.data.faq_page_schema) {%>
+                      <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                          <div class="faq-question-title">
+                              <span class="listed-faq faq-question-search" itemprop="name"><%= faqs.faq[j].title %></span>
+                          </div>
+                          <div class="faq-answer-content faq-answer-search"  itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                              <div itemprop="text">
+                                <%- faqs.faq[j].content %>
+                              </div>
+                          </div>
+                      </div>                    
+                    <% } 
+                    else{ %>
                       <div class="faq-main-content">
-                          <div class="faq-question-title"  itemtype="https://schema.org/FAQPage/Question">
-                              <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
-                          </div>
-                          <div class="faq-answer-content faq-answer-search"  itemtype="https://schema.org/FAQPage/Answer">
+                        <div class="faq-question-title">
+                            <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
+                        </div>
+                        <div class="faq-answer-content faq-answer-search">
+                            <div itemprop="text">
                               <%- faqs.faq[j].content %>
-                          </div>
+                            </div>
+                        </div>
                       </div>
+                    <% } %>
                   <%}%>
               </div>
           <% } %>
@@ -281,19 +318,19 @@
             <%} 
         %>; 
         margin:0; 
-        padding: 20px 30px; 
-        font-weight: 600;
+        padding: 20px 30px !important; 
+        font-weight: 600 !important;
         font-size: 36px;
         <% if (setting.templateSetting.page_title_font) { %>
-            font-family: <%=  setting.templateSetting.page_title_font %>;
+            font-family: <%=  setting.templateSetting.page_title_font %> !important;
         <% } if (setting.templateSetting.page_title_fontsize) { %>
-            font-size: <%=  setting.templateSetting.page_title_fontsize %>px;
+            font-size: <%=  setting.templateSetting.page_title_fontsize %>px !important;
         <% } if (setting.templateSetting.page_title_color) { %>
-            color: <%=  setting.templateSetting.page_title_color %>;
+            color: <%=  setting.templateSetting.page_title_color %> !important;
         <% } if (setting.templateSetting.page_title_paddingtop) { %>
-            padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px;
+            padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px !important;
         <% } if (setting.templateSetting.page_title_paddingbottom) { %>
-            padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px;
+            padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px !important;
         <% } %>
     }
     .faq-search-input{

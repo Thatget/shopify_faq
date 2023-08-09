@@ -1,8 +1,13 @@
-<div class="root-faq-template" itemtype="https://schema.org/FAQPage">
+<% if(setting.data.faq_page_schema) {%>
+  <div class="root-faq-template" itemscope itemtype="https://schema.org/FAQPage">
+ <% }  
+else{ %>
+  <div class="root-faq-template">
+<% } %>
     <div class="faq-header-2">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
-                <div class="faq-page-title"><%- setting.data.page_title_content %></div>
+                <h1 class="faq-page-title"><%- setting.data.page_title_content %></h1>
             <% } %>
             <% if(setting.templateSetting.show_search_input) { %>
                 <% if(setting.data.show_page_title && setting.data.page_title_content){%>
@@ -68,19 +73,40 @@
                                     <div class="category-faq-container">
                                         <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-width"><%- faqs.categories[i].title %></div>
                                         <% for(var j = 0; j < faqs.categories[i].faqs.length; j++) { %>
-                                            <div class="faq-main-content">
-                                                <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px" itemtype="https://schema.org/Question">
-                                                    <span class="listed-faq faq-question-search"><%= faqs.categories[i].faqs[j].title %></span>
+                                          <% if(setting.data.faq_page_schema) {%>
+                                            <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                                <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
+                                                    <span class="listed-faq faq-question-search" itemprop="name"><%= faqs.categories[i].faqs[j].title %></span>
                                                     <% if(j % 2 === 0){%> 
-                                                      <svg fill="<%=  setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-right question-title-right" viewBox="0 0 256 512"><path d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"/></svg>
+                                                      <svg fill="<%= setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-right question-title-right" viewBox="0 0 256 512"><path d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"/></svg>
                                                     <%}else{%>
-                                                      <svg fill="<%=  setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-left question-title-left" viewBox="0 0 256 512"><path d="M9.4 278.6c-12.5-12.5-12.5-32.8 0-45.3l128-128c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 256c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-128-128z"/></svg>
+                                                      <svg fill="<%= setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-left question-title-left" viewBox="0 0 256 512"><path d="M9.4 278.6c-12.5-12.5-12.5-32.8 0-45.3l128-128c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 256c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-128-128z"/></svg>
                                                     <%}%>                                                     
                                                 </div>
-                                                <div class="faq-answer-content faq-answer-search" itemtype="https://schema.org/Answer">
-                                                    <%- faqs.categories[i].faqs[j].content %>
+                                                <div class="faq-answer-content faq-answer-search" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                                    <div itemprop="text">
+                                                      <%- faqs.categories[i].faqs[j].content %>
+                                                    </div>
                                                 </div>
                                             </div>
+                                          <% } 
+                                          else{ %>
+                                            <div class="faq-main-content">
+                                                <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
+                                                    <span class="listed-faq faq-question-search"><%= faqs.categories[i].faqs[j].title %></span>
+                                                    <% if(j % 2 === 0){%> 
+                                                      <svg fill="<%= setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-right question-title-right" viewBox="0 0 256 512"><path d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"/></svg>
+                                                    <%}else{%>
+                                                      <svg fill="<%= setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-left question-title-left" viewBox="0 0 256 512"><path d="M9.4 278.6c-12.5-12.5-12.5-32.8 0-45.3l128-128c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 256c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-128-128z"/></svg>
+                                                    <%}%>                                                     
+                                                </div>
+                                                <div class="faq-answer-content faq-answer-search">
+                                                    <div>
+                                                      <%- faqs.categories[i].faqs[j].content %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          <% } %>
                                         <%}%>
                                     </div>
                                 <% } %>
@@ -93,19 +119,40 @@
                 <div style="padding: 30px 0;">
                     <% for(var j = 0; j < faqs.faq.length; j++) { %>
                         <div class="category-faq-container">
-                            <div class="faq-main-content">
-                                <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px" itemtype="https://schema.org/Question">
-                                    <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
+                          <% if(setting.data.faq_page_schema) {%>
+                            <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
+                                    <span itemprop="name"><%= faqs.faq[j].title %></span>
                                       <% if(j % 2 === 0){%> 
-                                        <svg fill="<%=  setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-right question-title-right" viewBox="0 0 256 512"><path d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"/></svg>
+                                        <svg fill="<%= setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-right question-title-right" viewBox="0 0 256 512"><path d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"/></svg>
                                       <%}else{%>
-                                        <svg fill="<%=  setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-left question-title-left" viewBox="0 0 256 512"><path d="M9.4 278.6c-12.5-12.5-12.5-32.8 0-45.3l128-128c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 256c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-128-128z"/></svg>
+                                        <svg fill="<%= setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-left question-title-left" viewBox="0 0 256 512"><path d="M9.4 278.6c-12.5-12.5-12.5-32.8 0-45.3l128-128c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 256c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-128-128z"/></svg>
                                       <%}%>                                                     
                                 </div>
-                                <div class="faq-answer-content faq-answer-search" itemtype="https://schema.org/Answer">
-                                    <%- faqs.faq[j].content %>
+                                <div class="faq-answer-content faq-answer-search" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                    <div itemprop="text">
+                                      <%- faqs.faq[j].content %>
+                                    </div>
                                 </div>
                             </div>
+                          <% } 
+                          else{ %>
+                            <div class="faq-main-content">
+                                <div onclick="showHideContent(this)" class="faq-question-title" style="position: relative; padding: 20px 12px">
+                                    <span><%= faqs.faq[j].title %></span>
+                                      <% if(j % 2 === 0){%> 
+                                        <svg fill="<%= setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-right question-title-right" viewBox="0 0 256 512"><path d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"/></svg>
+                                      <%}else{%>
+                                        <svg fill="<%= setting.templateSetting.faq_bg_color %>" class="fa-solid fa-caret-left question-title-left" viewBox="0 0 256 512"><path d="M9.4 278.6c-12.5-12.5-12.5-32.8 0-45.3l128-128c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 256c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-128-128z"/></svg>
+                                      <%}%>                                                     
+                                </div>
+                                <div class="faq-answer-content faq-answer-search">
+                                    <div>
+                                      <%- faqs.faq[j].content %>
+                                    </div>
+                                </div>
+                            </div>
+                          <% } %>
                         </div>
                     <%}%>
                 </div>
@@ -269,15 +316,15 @@
     font-weight: 900;
     font-size:36px;
     <% if (setting.templateSetting.page_title_font) { %>
-        font-family: <%=  setting.templateSetting.page_title_font %>;
+        font-family: <%=  setting.templateSetting.page_title_font %> !important;
     <% } if (setting.templateSetting.page_title_fontsize) { %>
-        font-size: <%=  setting.templateSetting.page_title_fontsize %>px;
+        font-size: <%=  setting.templateSetting.page_title_fontsize %>px !important;
     <% } if (setting.templateSetting.page_title_color) { %>
-        color: <%=  setting.templateSetting.page_title_color %>;
+        color: <%=  setting.templateSetting.page_title_color %> !important;
     <% } if (setting.templateSetting.page_title_paddingtop) { %>
-        padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px;
+        padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px !important;
     <% } if (setting.templateSetting.page_title_paddingbottom) { %>
-        padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px;
+        padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px !important;
     <% } %>
 }
 

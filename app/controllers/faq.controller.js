@@ -6,7 +6,7 @@ const errorLog = require('../helpers/log.helper');
 // const { response } = require("express");
 // const Op = db.Sequelize.Op;
 const Setting = db.setting
-
+const FaqMessageSetting = db.faq_messages_setting
 exports.create = async (req, res) => {
     // Validate request
     if (!req.body.title) {
@@ -314,6 +314,7 @@ exports.findAllFeatureFaq = async (req, res) => {
     let Categories = [];
     let user_id = ''
     const shop = req.params.shop;
+    let locale = req.query.locale
     if (!shop) {
         res.status(400).send({
             message: "Error not user selected ?"
@@ -325,8 +326,35 @@ exports.findAllFeatureFaq = async (req, res) => {
     })
     .then(async data => {
         user_id = data.dataValues.id
+        const list_locales = JSON.parse(data.dataValues.shopLocales).shopLocales
+        const faq_default_show = await FaqMessageSetting.findOne({
+          attributes: ['show_default_locale']
+        },{
+          where: {
+            user_id: user_id
+          }
+        })
+        .then(result => {
+          return result.dataValues.show_default_locale
+        })
+        
+        if(faq_default_show){
+          locale = 'default'
+        }
+        else{
+          if(locale === list_locales.filter(item => {return item.primary === true})[0].locale){
+            locale = 'default'
+          }
+          else{
+            locale = req.query.locale      
+          }
+        }
+
         await Faq.findAll({ 
-            where: { user_id: user_id }
+            where: { 
+              user_id: user_id,
+              locale: locale 
+            }
         })
         .then(data => {
             Faqs = data
@@ -340,7 +368,8 @@ exports.findAllFeatureFaq = async (req, res) => {
         await FaqCategory.findAll({
             where: {
                 user_id: user_id,
-                feature_category: true
+                feature_category: true,
+                locale: locale 
             }
         })
         .then(data => {

@@ -46,6 +46,10 @@
         allowNull: false,
         // primaryKey: true
       },
+      show_default_locale: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
       email_link: {
         type: Sequelize.STRING,
         allowNull: false,
