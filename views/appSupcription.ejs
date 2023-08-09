@@ -9,7 +9,6 @@
     var host = '<%= host %>';
     var apiKey = '<%= apiKey %>';
     var redirectUri =  '<%= forwardingAddress %>'
-    console.log(redirectUri, 'redirectUri')
     // If your app is embedded inside Shopify, use App Bridge to redirect
     if (AppBridgeUtils.isShopifyEmbedded()) {
         var app = createApp({

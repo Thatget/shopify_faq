@@ -559,8 +559,6 @@ app.get('/faq-page', async (req, res) => {
           currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
         }
       }
-      errorLog.error(userData.id)
-      errorLog.error(currentPlan)
       await Plan.findOne({
         attributes:['plan','id'],
         where: {
@@ -569,8 +567,6 @@ app.get('/faq-page', async (req, res) => {
       })
       .then(async data => {
         if(currentPlan.length > 0){
-          errorLog.error(userData.id)
-          errorLog.error(currentPlan)    
           plan = currentPlan[0].name
           try {
            await Plan.update({
@@ -581,15 +577,9 @@ app.get('/faq-page', async (req, res) => {
                 user_id: userData.id
               }
             })
-            .then(result => {
-              errorLog.error('result')
-              errorLog.error(result)
-            })
             .catch(e => {
               errorLog.error(e)
             })
-
-            errorLog.error(updatePlan)
 
             await User.update(
               {
@@ -601,10 +591,6 @@ app.get('/faq-page', async (req, res) => {
                 }
               }
             )
-            .then(result => {
-              errorLog.error('User result')
-              errorLog.error(result)
-            })
             .catch(e => {
               errorLog.error(e)
             })
