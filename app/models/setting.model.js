@@ -75,6 +75,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     use_analytics: {
       type: Sequelize.BOOLEAN
+    },
+    meta_tag_description: {
+      type: Sequelize.TEXT
     }
   },
   {

@@ -3,8 +3,9 @@ const db = require("../models/index");
 const errorLog = require('./log.helper');
 const User = db.user;
 const apiGraphql = process.env.API_GRAPHQL;
-const productApiGraphql = process.env.PRODUCT_API_GRAPHQL;
-const countProductApi = process.env.COUNT_PRODUCT_API_GRAPHQL;
+const dotenv = require('dotenv').config();
+const productApiGraphql = process.env.PRODUCT_API_GRAPHQL || '/admin/api/2022-04/products.json';
+const countProductApi = process.env.COUNT_PRODUCT_API_GRAPHQL || '/admin/api/2022-04/products/count.json';
 const Shopify = require("@shopify/shopify-api");
 const Plan = db.merchants_plan;
 
