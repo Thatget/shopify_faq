@@ -150,9 +150,9 @@ exports.findOne = (req, res) => {
       });
     }
   })
-  .catch(() => {
+  .catch((e) => {
       res.status(500).send({
-          message: "Error retrieving messages with user_id =" + user_id
+          message: e
       });
   });
 };
