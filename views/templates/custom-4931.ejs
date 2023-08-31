@@ -29,7 +29,7 @@ else{ %>
                         <% if(setting.templateSetting.search_input_style == 2) { %>
                             <div style="position:relative; border-bottom: 1px solid rgb(187, 188, 188); height: 40px; margin: 15px 0px 12px;">
                                 <input class="faq-search-input faq-search-input-style2" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
-                                <svg id="micro-scope" style="position: absolute; right: 16px; top: 25%; margin-left: 18px" height="18" width="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+                                <svg id="micro-scope" style="position: absolute; right: 16px; top: 18%; margin-left: 18px" height="18" width="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
                             </div>
                         <% } %>   
                     </div>
@@ -43,7 +43,7 @@ else{ %>
                         <% } %>
                         <% if(setting.templateSetting.search_input_style == 2) { %>
                             <div style="position:relative; border-bottom: 1px solid rgb(187, 188, 188); height: 40px">
-                                <svg id="micro-scope" style="position: absolute; right: 16px; top: 25%; margin-left: 18px" height="18" width="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+                                <svg id="micro-scope" style="position: absolute; right: 16px; top: 18%; margin-left: 18px" height="18" width="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
                                 <input class="faq-search-input faq-search-input-style2" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">                                
                             </div>
                         <% } %>
@@ -78,12 +78,12 @@ else{ %>
                                               <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
                                                 <% if(setting.data.faq_page_schema) {%>
                                                     <div class="faq-question-title yanet-faq-question" id="faq-id-<%- j %>" onclick="showHideContent(<%- j %>, -1)">
-                                                        <span class="listed-faq" id="faq-bar<%- j %>" style="padding: 20px 38px; border-top: 1px solid rgb(235, 235, 235);" value itemprop="name"><%= faqs.faq[j].title %></span>
+                                                        <span class="listed-faq" id="faq-bar<%- j %>" style="padding: 20px 38px;line-height: 20px; border-top: 1px solid rgb(235, 235, 235);" value itemprop="name"><%= faqs.faq[j].title %></span>
                                                     </div>
                                                 <% }
                                                 else{ %>
                                                     <div class="faq-question-title yanet-faq-question" id="faq-id-<%- j %>" onclick="showHideContent(<%- j %>, -1)">
-                                                        <span class="listed-faq" id="faq-bar<%- j %>" style="padding: 20px 38px; border-top: 1px solid rgb(235, 235, 235);"><%= faqs.faq[j].title %></span>
+                                                        <span class="listed-faq" id="faq-bar<%- j %>" style="padding: 20px 38px;line-height: 20px; border-top: 1px solid rgb(235, 235, 235);"><%= faqs.faq[j].title %></span>
                                                     </div>
                                                 <% } %>
                                               <% } %>
@@ -581,12 +581,12 @@ else{ %>
         padding: 32.75px 40px 33px;
     }
     .faq-dropdown-category{
-      padding-left: 1.40px;
+      padding-left: 14px;
       padding-right: 40px;
-      border-radius: 0.40px;
+      border-radius: 40px;
       border: 1px solid rgb(187, 188, 188);
       font-family: Roboto, Arial, sans-serif;
-      font-size: 1.40px;
+      font-size: 14px;
       line-height: 1;
       position: relative;
       height: 40px;
@@ -598,7 +598,7 @@ else{ %>
       width: 100%;
       padding-left: 1.40px;
       padding-right: 40px;
-      border-radius: 0.40px;
+      border-radius: 40px;
       border: 1px solid rgb(187, 188, 188);
       font-family: Roboto, Arial, sans-serif;
       font-size: 1.40px;
