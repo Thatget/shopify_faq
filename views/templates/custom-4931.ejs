@@ -14,7 +14,7 @@ else{ %>
                 <div style="width: 100%; background-color: rgb(245, 245, 245); text-align: center">
                   <div class="faq-page-header">
                     <div class="yanet-select-category" style="flex: 1; display: flex; flex-direction: column;">
-                      <label for="categories" style="text-align: start; font-weight: 900;">Select category</label>
+                      <label for="categories" style="text-align: start; font-weight: 700; font-size: 16px; padding: 0; margin: 0">Select category</label>
                       <select class="faq-dropdown-category" name="categories" id="categories" onChange="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>')">
                         <% for(var i = 0; i < faqs.categories.length; i++) { %>
                             <option value="<%- i %>"><%- faqs.categories[i].title %></option>
@@ -22,7 +22,7 @@ else{ %>
                       </select>                    
                     </div>
                       <div class="faq-search" style="box-shadow: none; display: flex; flex-direction: column;">
-                        <label for="search-text" style="text-align: start; font-weight: 900;">Search</label>
+                        <label for="search-text" style="text-align: start; font-weight: 700; font-size: 16px; padding: 0; margin: 0">Search</label>
                         <% if(setting.templateSetting.search_input_style == 1) { %>
                             <input class="faq-search-input faq-search-input-style1" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
                         <% } %>   
