@@ -1,0 +1,858 @@
+<% if(setting.data.faq_page_schema) {%>
+  <div class="root-faq-template" itemscope itemtype="https://schema.org/FAQPage">
+ <% }  
+else{ %>
+  <div class="root-faq-template">
+<% } %>
+    <div class="faq-header-4745">
+        <div>
+            <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
+                <h1 class="faq-page-title"><%- setting.data.page_title_content %></h1>
+            <% } %>
+            <% if(setting.templateSetting.show_search_input) { %>
+                <% if(setting.data.show_page_title && setting.data.page_title_content){%>
+                <div style="width: 100%; background-color: rgb(245, 245, 245); text-align: center">
+                  <div class="faq-page-header">
+                    <div class="yanet-select-category" style="flex: 1; display: flex; flex-direction: column;">
+                      <label for="categories" style="text-align: start; font-weight: 900;">Select category</label>
+                      <select class="faq-dropdown-category" name="categories" id="categories" onChange="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>')">
+                        <% for(var i = 0; i < faqs.categories.length; i++) { %>
+                            <option value="<%- i %>"><%- faqs.categories[i].title %></option>
+                        <% } %> 
+                      </select>                    
+                    </div>
+                      <div class="faq-search" style="box-shadow: none; display: flex; flex-direction: column;">
+                        <label for="search-text" style="text-align: start; font-weight: 900;">Search</label>
+                        <% if(setting.templateSetting.search_input_style == 1) { %>
+                            <input class="faq-search-input faq-search-input-style1" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                        <% } %>   
+                        <% if(setting.templateSetting.search_input_style == 2) { %>
+                            <div style="position:relative; border-bottom: 0.1rem solid rgb(187, 188, 188); height: 4rem; margin: 1.5rem 0px 1.2rem;">
+                                <input class="faq-search-input faq-search-input-style2" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                                <svg id="micro-scope" style="position: absolute; right: 16px; top: 25%; margin-left: 18px" height="18" width="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+                            </div>
+                        <% } %>   
+                    </div>
+                  </div>
+                </div>
+                <%}
+                else{%>
+                    <div class="faq-search-no-title">
+                        <% if(setting.templateSetting.search_input_style == 1) { %>
+                            <input class="faq-search-input faq-search-input-style1" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">
+                        <% } %>
+                        <% if(setting.templateSetting.search_input_style == 2) { %>
+                            <div style="position:relative; border-bottom: 0.1rem solid rgb(187, 188, 188); height: 4rem">
+                                <svg id="micro-scope" style="position: absolute; right: 16px; top: 25%; margin-left: 18px" height="18" width="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg>
+                                <input class="faq-search-input faq-search-input-style2" style="color: <%= setting.templateSetting.placeholder_color %>" id="search-text" onkeyup="simpleSearch()" type="text" <% if(setting.data.search_placehoder) {%> placeholder="<%= setting.data.search_placehoder %>" <%}%> name="search">                                
+                            </div>
+                        <% } %>
+                    </div>
+                <%} %>
+            <% } %>
+        </div>
+        <div>
+            <% if(setting.data.show_intro_text && setting.data.intro_text_content) {%>
+                <div class="faq-intro-text">
+                    <span><%- setting.data.intro_text_content %></span>
+                </div>
+            <% } %>    
+        </div>
+    </div>
+    <div class="faq-main" id="faq-main">
+        <% if(!setting.data.show_page_construction){%>
+            <% if(faqs && !setting.data.dont_category_faq){ %>
+                <div class="faq-main-container">
+                    <div class="faq-category-container">
+                        <% if(faqs.categories.length){%>
+                              <div class="faq-category-menu">
+                                  <div class="yanet-faq-bar" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 0.2rem 1.3rem 0px;">
+                                    <div class="faq-main-content" style="padding: 0; margin: 0" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                        <div style="font-size: 1.6rem; font-weight: 900; line-height: 2rem; display: flex">
+                                            <span class="listed-faq" style="padding: 2rem 3.8rem; border-top: 0.1rem solid rgb(235, 235, 235); font-size: 1.6rem" value itemprop="name">ARTICLES IN THIS CATEGORY</span>
+                                        </div>
+                                    </div>
+                                    <% for(var i=0; i < faqs.categories.length; i++) { %>
+                                      <div id="faq-list<%- i %>">
+                                          <% for(var j=0; j < faqs.faq.length; j++) { %>
+                                              <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                                <% if(setting.data.faq_page_schema) {%>
+                                                    <div class="faq-question-title yanet-faq-question" id="faq-id-<%- j %>" onclick="showHideContent(<%- j %>, -1)">
+                                                        <span class="listed-faq" id="faq-bar<%- j %>" style="padding: 2rem 3.8rem; border-top: 0.1rem solid rgb(235, 235, 235);" value itemprop="name"><%= faqs.faq[j].title %></span>
+                                                    </div>
+                                                <% }
+                                                else{ %>
+                                                    <div class="faq-question-title yanet-faq-question" id="faq-id-<%- j %>" onclick="showHideContent(<%- j %>, -1)">
+                                                        <span class="listed-faq" id="faq-bar<%- j %>" style="padding: 2rem 3.8rem; border-top: 0.1rem solid rgb(235, 235, 235);"><%= faqs.faq[j].title %></span>
+                                                    </div>
+                                                <% } %>
+                                              <% } %>
+                                          <%}%>
+                                      </div>
+                                    <% } %>                             
+                                  </div>
+                                  <div class="yanet-faq-select">
+                                    <div class="faq-main-content" style="padding: 0; margin: 0" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                        <div style="font-size: 1.6rem; font-weight: 900; line-height: 2rem; display: flex">
+                                            <span style="font-size: 1.6rem" value itemprop="name">ARTICLES IN THIS CATEGORY</span>
+                                        </div>
+                                    </div>
+                                      <% for(var i=0; i < faqs.categories.length; i++) { %>
+                                        <div id="faq-list-select<%- i %>" style="display: none">
+                                          <select class="faq-dropdown-faq" name="categories" onChange="showHideContent(-1, <%- i %>)">
+                                            <% for(var j = 0; j < faqs.faq.length; j++) { %>
+                                              <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                                  <option value="<%- j %>"><%- faqs.faq[j].title %></option>
+                                              <% } %>
+                                            <% } %> 
+                                          </select>                    
+                                        </div>
+                                      <% } %>
+                                  </div>
+                              </div>
+                            <div class="faq-container">
+                                <div class="category-faq-container">
+                                    <% for(var i=0; i < faqs.categories.length; i++) { %>
+                                        <div id="category<%- i %>">
+                                            <% for(var j=0; j < faqs.faq.length; j++) { %>
+                                                <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                                  <% if(setting.data.faq_page_schema) {%>
+                                                    <div class="yanet-faq-container" id="yanet-faq-container-<%= j %>">
+                                                      <div class="faq-main-content" style="padding: 0" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                                          <div class="faq-question-title" style="margin: 16px 0 9px; font-size: 2.4rem; text-transform: uppercase; font-weight: 700;">
+                                                              <span class="listed-faq" value itemprop="name"><%= faqs.faq[j].title %></span>
+                                                          </div>
+                                                          <div id="faq-answer-content<%- j %>" class="faq-answer-content" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                                            <div itemprop="text">
+                                                              <%- faqs.faq[j].content %>
+                                                            </div>
+                                                          </div>
+                                                      </div>                                              
+                                                    </div>
+                                                  <% } 
+                                                  else{ %>
+                                                    <div class="yanet-faq-container" id="yanet-faq-container-<%= j %>">
+                                                      <div class="faq-main-content" style="padding: 0">
+                                                          <div class="faq-question-title" style="margin: 16px 0 9px; font-size: 2.4rem; text-transform: uppercase; font-weight: 700;">
+                                                              <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                                          </div>
+                                                          <div id="faq-answer-content<%- j %>" class="faq-answer-content">
+                                                            <div>
+                                                              <%- faqs.faq[j].content %>
+                                                            </div>
+                                                          </div>
+                                                      </div>
+                                                    </div>
+                                                  <% } %>
+                                                <% } %>
+                                            <%}%>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            <% }
+            else{ %>
+                <div class="faq-dont-category">
+                    <div style="display: flex; flex-direction: column">
+                        <% for(var j=0; j < faqs.faq.length; j++) { %>
+                          <% if(setting.data.faq_page_schema) {%>
+                            <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                <div class="faq-question-title" onclick="showHideContent(this)">
+                                  <span class="listed-faq" itemprop="name"><%= faqs.faq[j].title %></span>
+                                </div>
+                                <div class="faq-answer-content" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                  <div itemprop="text">
+                                    <%- faqs.faq[j].content %>
+                                  </div>
+                                </div>
+                            </div>                          
+                          <% } 
+                          else{ %>
+                            <div class="faq-main-content">
+                                <div class="faq-question-title" onclick="showHideContent(this)">
+                                  <span class="listed-faq"><%= faqs.faq[j].title %></span>
+                                </div>
+                                <div class="faq-answer-content">
+                                  <div>
+                                    <%- faqs.faq[j].content %>
+                                  </div>
+                                </div>
+                            </div>     
+                          <% } %>
+                        <%}%>
+                    </div>
+                </div>
+            <% } %>
+            <div class="category-faq-search">
+                <div style="display: flex; flex-direction: column">
+                    <% for(var i=0; i < faqs.categories.length; i++) { %>
+                        <div>
+                            <% for(var j=0; j < faqs.faq.length; j++) { %>
+                                <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                                  <% if(setting.data.faq_page_schema) {%>
+                                    <div class="faq-main-content" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                                        <div class="faq-question-title" onclick="showHideContent(this)">
+                                            <span class="listed-faq faq-question-search" itemprop="name"><%= faqs.faq[j].title %></span>
+                                        </div>
+                                        <div class="faq-answer-content faq-answer-search" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                          <div itemprop="text">
+                                            <%- faqs.faq[j].content %>
+                                          </div>
+                                        </div>
+                                    </div>
+                                  <% } 
+                                  else{ %>
+                                    <div class="faq-main-content">
+                                        <div class="faq-question-title" onclick="showHideContent(this)">
+                                            <span class="listed-faq faq-question-search"><%= faqs.faq[j].title %></span>
+                                        </div>
+                                        <div class="faq-answer-content faq-answer-search">
+                                          <div>
+                                            <%- faqs.faq[j].content %>
+                                          </div>
+                                        </div>
+                                    </div>
+                                  <% } %>
+                                <% } %>
+                            <%}%>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        <% }
+        else{ %>
+            <div class="page-under-contruction">
+                <%- setting.data.page_under_contruction %>
+            </div>
+        <% } %>
+        <div id="not-found-text">
+            <% if(setting.data.search_not_found) {%>
+                <%- setting.data.search_not_found %>
+            <% } %>
+        </div>
+        <% if(setting.data.show_footer_text) {%>
+            <div class="faq-footer-text">
+                <% if(setting.data.footer_text_content) {%>
+                    <%- setting.data.footer_text_content %>
+                <% } %>
+            </div>
+        <% } %>
+        <% if(setting.data.yanet_logo_visible) {%>
+            <div class="" style="text-align: center; padding-bottom: 10px">
+                <a href="https://apps.shopify.com/yanet-professional-faq-page" class="yanet-logo" target="_blank">Powered by Yanet</a>
+            </div>
+        <% } %>
+        <% if(setting.templateSetting.btn_top_visible) {%>
+            <div class="btn-back-to-top" onclick="topFunction()" id="back-to-top" title="Go to top">
+                <svg fill="#ffffff" height="14" width="14" viewBox="0 0 448 512"><path d="M246.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 109.3 361.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 301.3 361.4 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"/></svg>
+            </div>
+        <% } %>
+    </div>
+  </div>
+  <script>
+    for(let i = 0; i < <%= faqs.categories.length %>; i++){
+      document.getElementById(`category0`).style.display = 'block'
+      document.getElementById(`category0`).children[0].style.display = 'flex'
+      if(i == 0){
+        var listFaqCurrent = document.getElementById(`faq-list${i}`)
+        listFaqCurrent.style.display = 'block'
+        listFaqCurrent.children[0].style.backgroundColor = '<%= setting.templateSetting.category_bar_background %>'
+        listFaqCurrent.children[0].style.color = '#fff'
+        listFaqCurrent.children[0].style.fontWeight = 'bold'
+      }
+      else{
+        document.getElementById(`faq-list${i}`).style.display = 'none'
+        document.getElementById(`category${i}`).style.display = 'none'
+      }
+    }
+    if(document.getElementById('faq-list-select0')){
+        document.getElementById('faq-list-select0').style.display = 'block'
+      }
+    if(document.getElementById("back-to-top")){
+      let mybutton = document.getElementById("back-to-top");
+      window.onscroll = function() {scrollFunction()};
+      function scrollFunction() {
+          if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
+              mybutton.style.display = "flex";
+          } 
+          else {
+              mybutton.style.display = "none";
+          }
+      }
+      function topFunction() {
+          document.body.scrollIntoView({  
+              behavior: "smooth"
+          });    
+      }
+    }
+    var categoryName = []
+    function changeCategory(category_bar_color, category_bar_background){
+      var id = document.getElementById("categories").value;
+      
+      if(!categoryName.some(item => {
+          return item === id
+      })){            
+          categoryName.push(id)
+      }
+      var categoryShow = categoryName.filter(item => {
+          return item === id
+      })
+      var categoryHide = categoryName.filter(item => {
+          return item !== id
+      })
+      for(let i = 0; i < <%= faqs.categories.length %>; i++){
+        if(i == id){
+          if(document.getElementById(`category${i}`)){
+            document.getElementById(`category${i}`).style.display = 'block'
+            document.getElementById(`category${i}`).children[0].style.display = 'flex'
+          }
+        }
+        else{
+          if(document.getElementById(`category${i}`)){
+            document.getElementById(`category${i}`).style.display = 'none'          
+          }
+        }
+      }
+      if(document.getElementById('faq-list0')){
+        document.getElementById('faq-list0').style.display = 'none'
+      }
+      if(document.getElementById('faq-list-select0')){
+        document.getElementById('faq-list-select0').style.display = 'none'
+      }
+      for(let i = 0; i < categoryName.length; i++){
+        if(categoryName[i] == id){
+          if(document.getElementById(`faq-list-select${id}`)){
+            document.getElementById(`faq-list-select${id}`).style.display = 'block'
+          }
+          if(document.getElementById(`faq-list${id}`)){
+            var listFaqCurrent = document.getElementById(`faq-list${id}`)
+            listFaqCurrent.style.display = 'block'
+            listFaqCurrent.children[0].style.backgroundColor = `${category_bar_background}`
+            listFaqCurrent.children[0].style.color = '#fff'
+            listFaqCurrent.children[0].style.fontWeight = 'bold'
+          }
+        }
+        else{
+          if(document.getElementById(`faq-list${id}`)){
+            document.getElementById(`faq-list${categoryName[i]}`).style.display = 'none'
+          }
+          if(document.getElementById(`faq-list-select${categoryName[i]}`)){
+            document.getElementById(`faq-list-select${categoryName[i]}`).style.display = 'none'
+          }
+        }
+      }
+    }
+
+    function showHideContent(index, value) {
+      let selected = 0
+      if(index != -1){
+        console.log(index)
+        selected = index
+      }
+      else{
+        selected = document.getElementsByClassName('faq-dropdown-faq')[value].value
+      }
+      for(let i = 0; i < <%= faqs.faq.length %>; i++){
+        if(i == selected){
+          if(document.getElementById(`faq-id-${i}`)){
+            document.getElementById(`faq-id-${i}`).style.backgroundColor = '<%= setting.templateSetting.category_bar_background %>'
+            document.getElementById(`faq-id-${i}`).style.color = '#fff'
+            document.getElementById(`faq-id-${i}`).style.fontWeight = 'bold'
+          }
+          if(document.getElementById(`yanet-faq-container-${i}`)){
+            document.getElementById(`yanet-faq-container-${i}`).style.display = 'flex'
+          }
+        }
+        else{
+          if(document.getElementById(`faq-id-${i}`)){
+            document.getElementById(`faq-id-${i}`).style.backgroundColor = '#fff'
+            document.getElementById(`faq-id-${i}`).style.color = '<%= setting.templateSetting.category_bar_color %>'
+            document.getElementById(`faq-id-${i}`).style.fontWeight = '400'
+          }
+          if(document.getElementById(`yanet-faq-container-${i}`)){
+            document.getElementById(`yanet-faq-container-${i}`).style.display = 'none'
+          }
+        }
+      }    
+    }
+
+    function simpleSearch() {
+        document.getElementsByClassName('faq-main-container')[0].style.padding = '0'
+        var input = document.getElementById("search-text");
+        var filter = input.value.toLowerCase();
+        var filterByQuestion = document.getElementsByClassName('faq-question-search');
+        var filterByAnswer = document.getElementsByClassName('faq-answer-search');
+        var nodeCategory = document.getElementsByClassName('category-faq-search');
+        if(<%=  setting.data.dont_category_faq%> == false){
+            if(document.getElementById('search-text').value === ''){
+                document.getElementsByClassName("faq-main")[0].style.alignItems = "unset"
+                document.getElementsByClassName("category-faq-container")[0].style.display = "block"
+                document.getElementsByClassName('faq-category-menu')[0].style.display = "block"
+                // document.getElementsByClassName('faq-container')[0].style.width = "70%"
+                nodeCategory[0].style.display = "none"
+                for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
+                    document.getElementsByClassName("faq-category-search")[i].style.display = "block"
+                }
+            }
+            else{
+                document.getElementsByClassName("faq-main")[0].style.alignItems = "center"
+                document.getElementsByClassName("category-faq-container")[0].style.display = "none"
+                document.getElementsByClassName('faq-category-menu')[0].style.display = "none"
+                // document.getElementsByClassName('faq-container')[0].style.width = "100%"
+                nodeCategory[0].style.display = "flex"
+                for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
+                    document.getElementsByClassName("faq-category-search")[i].style.display = "none"
+                }
+            }
+            var checkexist = true;
+            for (i = 0; i < filterByQuestion.length; i++) {
+                if (filterByQuestion[i].innerText.toLowerCase().includes(filter)) {
+                    filterByQuestion[i].parentNode.parentNode.style.display = "block";
+                    checkexist = false;
+                } 
+                else {
+                    for(j = 0; j < filterByAnswer.length; j++){
+                        if(filterByAnswer[j].innerText.toLowerCase().includes(filter)){
+                            filterByQuestion[j].parentNode.parentNode.style.display = "block";
+                            checkexist = false;        
+                        }
+                        else{
+                            filterByQuestion[i].parentNode.parentNode.style.display = "none";
+                        }
+                    }
+                }
+            }
+            if (checkexist) {
+                document.getElementById("not-found-text").style.display = "block";
+                nodeCategory[0].style.display = "none";
+            } else {
+                document.getElementById("not-found-text").style.display = "none";
+            }
+        }
+        else{
+            if(document.getElementById('search-text').value == ''){
+                document.getElementsByClassName('faq-dont-category')[0].style.display = "flex"
+  
+                nodeCategory[0].style.display = "none"
+                for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
+                    document.getElementsByClassName("faq-category-search")[i].style.display = "block"
+                }
+            }
+            else{
+                document.getElementsByClassName('faq-dont-category')[0].style.display = "none"
+  
+                nodeCategory[0].style.display = "flex"
+                nodeCategory[0].style.justifyContent = "center"
+                for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
+                    document.getElementsByClassName("faq-category-search")[i].style.display = "none"
+                }
+            }
+            var checkexist = true;
+            for (i = 0; i < filterByQuestion.length; i++) {
+                if (filterByQuestion[i].innerText.toLowerCase().includes(filter)) {
+                    filterByQuestion[i].parentNode.parentNode.style.display = "flex";
+                    checkexist = false;
+                } 
+                else {
+                    for(j = 0; j < filterByAnswer.length; j++){
+                        if(filterByAnswer[j].innerText.toLowerCase().includes(filter)){
+                            filterByQuestion[j].parentNode.parentNode.style.display = "flex";
+                            checkexist = false;        
+                        }
+                        else{
+                            filterByQuestion[i].parentNode.parentNode.style.display = "none";
+                        }
+                    }
+                }
+            }
+            if (checkexist) {
+                document.getElementById("not-found-text").style.display = "block";
+                nodeCategory[0].style.display = "none";
+            } else {
+                document.getElementById("not-found-text").style.display = "none";
+            }        
+        }
+    }
+  </script>
+  <style scoped>
+    <% if(setting.templateSetting.width_faqs_accordian) { %>
+    .faq-main {
+        max-width: <%- setting.templateSetting.width_faqs_accordian%>px;
+        margin: auto;
+        padding: 0 20px;
+        display: flex;
+        flex-direction: column;
+    }
+    <% } %>
+    .faq-header-4745 {
+        display: flex; 
+        flex-direction: column; 
+        justify-content: space-between;
+        <% if (setting.templateSetting.image_banner) { %>
+            background-image: url('<%- setting.templateSetting.image_banner%>');
+        <% }
+        else {%> 
+            background-image: url('<%- setting.templateSetting.banner_default%>');
+            <%} 
+        %>;        
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position-y: center;
+        background-position-x: center;
+        text-align: center; 
+        margin: auto
+    }
+    .category-faq-search{
+        display: none; 
+        margin-top: 30px;
+        margin-bottom: 30px;
+        width: 100%;
+    }
+    .faq-search-input{
+        border: none;
+        line-height: 1 !important;
+        width: 100% !important; 
+        max-width: 100% !important;
+        outline: none !important; 
+        font-size: 16px !important;
+        margin: 0 !important;
+        background-color: rgb(245, 245, 245);        
+        box-shadow: none !important;
+        <% if (setting.templateSetting.search_placeholder_font) { %>
+            font-family: <%=  setting.templateSetting.search_placeholder_font %> !important;
+        <% } %>
+    }
+    .faq-search-input-style1{
+        border-radius: 4px !important; 
+        padding: 16px !important; 
+    }
+    .faq-search-input-style2{
+        // padding: 10px 16px 16px 0px !important
+    }
+    .faq-question-title {
+        display: flex; 
+        align-items: start;
+        justify-content: space-between;
+        width: 100%; 
+        cursor: pointer;
+        <% if (setting.templateSetting.faq_font_weight) { %>
+            font-weight: <%=  setting.templateSetting.faq_font_weight %>;
+        <% } if (setting.templateSetting.faq_font_color) { %>
+            color: <%=  setting.templateSetting.faq_font_color %>;
+        <% } if (setting.templateSetting.faq_font_size) { %>
+            font-size: <%=  setting.templateSetting.faq_font_size %>px;
+        <% } if (setting.templateSetting.faq_font_family) { %>
+            font-family: <%=  setting.templateSetting.faq_font_family %>;
+        <% } %>
+    }
+    .svg-icon{
+        margin-top: calc(<%- setting.templateSetting.faq_font_size%>px * 0.4);
+        width: <%- setting.templateSetting.faq_font_size%>px; 
+        height: <%- setting.templateSetting.faq_font_size%>px;
+    }
+    .svg-minus{
+        opacity: 0;
+        height: 14px;
+        width: 14px;
+    }
+    .yanet-faq-bar{
+        display: flex; 
+        flex-direction: column;
+        flex-wrap: wrap; 
+        // margin: calc(<%=  setting.templateSetting.category_font_size %>px*1.8 + 70px + (<%=  setting.templateSetting.faq_font_size %>px*.4 - 16px*.4 + 1px)) 0 30px 0; 
+        <% if (setting.templateSetting.category_font_family) { %>
+            font-family: <%=  setting.templateSetting.category_font_family %>;
+        <% } %>
+    }
+    .faq-category-search{
+        border-bottom: 1px solid #ccc; 
+        width: 100%; 
+        margin-top: 30px; 
+        padding-bottom: 10px
+    }
+    .faq-page-header{
+        display: flex;
+        align-items: center;
+        max-width: <%- setting.templateSetting.width_faqs_accordian%>px;
+        margin: auto;
+        padding: 3.275rem 4rem 3.3rem;
+    }
+    .faq-dropdown-category{
+      padding-left: 1.4rem;
+      padding-right: 4rem;
+      border-radius: 0.4rem;
+      border: 0.1rem solid rgb(187, 188, 188);
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 1.4rem;
+      line-height: 1;
+      position: relative;
+      height: 4rem;
+      color: rgb(68, 68, 68);
+      margin: 1.5rem 0px 1.2rem;
+      // appearance: none;
+    }
+    .faq-dropdown-faq{
+      width: 100%;
+      padding-left: 1.4rem;
+      padding-right: 4rem;
+      border-radius: 0.4rem;
+      border: 0.1rem solid rgb(187, 188, 188);
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 1.4rem;
+      line-height: 1;
+      position: relative;
+      height: 4rem;
+      color: rgb(68, 68, 68);
+      margin: 1.5rem 0px 1.2rem;
+      // appearance: none;
+    }
+    .faq-page-title{
+        <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
+            color: #fff;
+        <% }
+        else {%> 
+            color: inherit;
+            <%} 
+        %>; 
+        margin:0; 
+        font-weight: 900;
+        font-size:36px;
+        <% if (setting.templateSetting.page_title_font) { %>
+            font-family: <%=  setting.templateSetting.page_title_font %> !important;
+        <% } if (setting.templateSetting.page_title_fontsize) { %>
+            font-size: <%=  setting.templateSetting.page_title_fontsize %>px !important;
+        <% } if (setting.templateSetting.page_title_color) { %>
+            color: <%=  setting.templateSetting.page_title_color %> !important;
+        <% } if (setting.templateSetting.page_title_paddingtop) { %>
+            padding-top: <%=  setting.templateSetting.page_title_paddingtop %>px;
+        <% } if (setting.templateSetting.page_title_paddingbottom) { %>
+            padding-bottom: <%=  setting.templateSetting.page_title_paddingbottom %>px;
+        <% } %>
+        padding: 7.8rem 0px 7.8rem; 
+    }
+    .faq-main-content{
+        padding: 3.4rem 6rem;
+    }
+    .faq-main-container{
+        padding-bottom: 30px;
+    }
+    .faq-dont-category{
+        display: flex;
+        margin-top: 60px; 
+        padding-bottom: 30px;
+    }
+    .faq-category-menu{
+        width: 25%;
+        margin-right: 1.6rem
+    }
+    .faq-search{
+        width: 50%;
+        margin-left: 40px;
+        padding: 0;
+        overflow: hidden;
+        border: none;
+        background-color: unset;
+    }
+    .faq-search-no-title{
+        width: 50%;
+        margin-left: 20px;
+        margin: auto;
+        margin-top: 70px;
+        padding: 0;
+        overflow: hidden;
+    }
+    .faq-intro-text{
+        padding: 10px 30px; 
+        <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
+            color: #fff;
+        <% }
+        else {%> 
+            color: inherit;
+            <%} 
+        %>; 
+        font-size: 18px;
+        text-align: center; 
+        <% if (setting.templateSetting.intro_text_font) { %>
+            font-family: <%=  setting.templateSetting.intro_text_font %>;
+        <% }  if (setting.templateSetting.intro_text_fontsize) { %>
+            font-size: <%=  setting.templateSetting.intro_text_fontsize %>px;
+        <% }  if (setting.templateSetting.intro_text_color) { %>
+            color: <%=  setting.templateSetting.intro_text_color %>;
+        <% }  if (setting.templateSetting.intro_text_paddingtop) { %>
+            padding-top: <%=  setting.templateSetting.intro_text_paddingtop %>px;
+        <% }  if (setting.templateSetting.intro_text_paddingbottom) { %>
+            padding-bottom: <%=  setting.templateSetting.intro_text_paddingbottom %>px;
+        <% } %>
+    }
+    .faq-category-title{
+        width: 100%; 
+        margin-top: 30px; 
+        padding-bottom: 40px;
+        word-wrap: break-word;
+    }
+    #not-found-text{
+        display: none; 
+        text-align: center; 
+        font-size:36px; 
+        margin-top: 30px;
+        padding-bottom: 30px;
+        <% if (setting.templateSetting.search_placeholder_font) { %>
+            font-family: <%=  setting.templateSetting.search_placeholder_font %>;
+        <% } %>
+    }
+    .faq-container{
+      width: 77%;
+      margin-top: 60px
+    }
+    .page-under-contruction{
+        text-align: center;
+        font-size: 36px;
+        margin: 60px 0;
+        <% if (setting.templateSetting.footer_text_font) { %>
+            font-family: <%=  setting.templateSetting.footer_text_font %>;
+        <% } if (setting.templateSetting.footer_text_color) { %>
+            color: <%=  setting.templateSetting.footer_text_color %>;
+        <% } %>
+    }
+    .faq-category-container{
+        display: flex; 
+        width: 100%;
+    }
+    .faq-footer-text{
+        <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
+            color: #fff;
+        <% }
+        else {%> 
+            color: inherit;
+            <%} 
+        %>; 
+        padding: 10px 0; 
+        font-size: 18px;
+        text-align: center;
+        margin-top: 30px; 
+        <% if (setting.templateSetting.footer_text_font) { %>
+            font-family: <%=  setting.templateSetting.footer_text_font %>;
+        <% } if (setting.templateSetting.footer_text_fontsize) { %>
+            font-size: <%=  setting.templateSetting.footer_text_fontsize %>px;
+        <% } if (setting.templateSetting.footer_text_color) { %>
+            color: <%=  setting.templateSetting.footer_text_color %>;
+        <% } if (setting.templateSetting.footer_text_paddingtop) { %>
+            padding-top: <%=  setting.templateSetting.footer_text_paddingtop %>px;
+        <% } if (setting.templateSetting.footer_text_paddingbottom) { %>
+            padding-bottom: <%=  setting.templateSetting.footer_text_paddingbottom %>px;
+        <% } %>
+    }
+    .listed-faq{
+        flex: 1;
+        user-select: auto;
+        word-wrap: break-word;
+        word-break: break-word;
+        padding-right: <%- setting.templateSetting.faq_font_size%>px;
+    }
+    .faq-answer-content{
+        margin:0; 
+        // padding: 0px 10px 0px calc(<%- setting.templateSetting.faq_font_size%>px + 20px);
+        // position: relative;
+        word-wrap: break-word;
+    }
+    svg:not(:root) {
+        overflow:unset !important;
+    }
+    .yanet-faq-bar{
+      display: block;
+      margin: 60px 0 0 0;
+    }
+    .yanet-faq-select{
+      display: none
+    }
+    .yanet-faq-container{
+      display: none; 
+      justify-content: 
+      center; 
+      flex-direction: column; 
+      margin: 0px 0px 4.125rem 1.6rem; 
+      box-sizing: border-box;
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 0.2rem 1.3rem 0px; 
+      padding: 3.4rem 6rem;
+    }
+    @media only screen and (max-width: 768px) {
+      .faq-page-title {
+          padding: 4rem 0px 4rem;
+      }
+        .faq-search {
+            width: 100% !important;
+            margin: auto;
+            padding: 0;
+            overflow: hidden !important;
+          border: none !important;
+          background-color: unset !important;
+        }
+        .faq-search-no-title{
+            width: 100% !;
+            margin: auto;
+            margin-top: 70px;
+            padding: 0;
+            overflow: hidden;
+        }
+        .yanet-faq-container{
+          margin-left: 0;
+          margin-top: 0px;
+          padding: 2.6rem
+        }
+        .yanet-faq-bar{
+          display: none
+        }
+        .yanet-faq-select{
+          display: flex;
+          flex-direction: column;
+          margin: 3rem 0px 3rem 0px;
+          box-sizing: border-box;
+          box-shadow: rgba(0, 0, 0, 0.15) 0px 0.2rem 1.3rem 0px;
+          padding: 2.8rem 1.6rem;        
+        }
+        .faq-category-container{
+            flex-direction: column;
+        }
+        .faq-page-header{
+          flex-direction: column
+        }
+        .yanet-select-category{
+          width: 100%
+        }
+        .yanet-faq-bar{
+            flex-direction: row;
+            justify-content: center;
+            margin: 60px 0 0 0;
+            <% if (setting.templateSetting.category_font_family) { %>
+                font-family: <%=  setting.templateSetting.category_font_family %>;
+            <% } %>    
+        }
+        .faq-category-menu{
+            width: 100%;
+            margin-right: 0
+        }
+        .faq-container{
+            width: 100%;
+            margin-top: 0px
+        }
+    }
+
+    #micro-scope{
+    <% if (setting.templateSetting.micro_scope_color) { %>
+        fill: <%=  setting.templateSetting.micro_scope_color %>;
+    <% } %>    
+    }
+    <% if (setting.templateSetting.placeholder_color) { %>
+        ::placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important}
+        :-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important}
+        ::-ms-input-placeholder {color:<%=  setting.templateSetting.placeholder_color %> !important}
+    <% } %>
+    <%
+        if(setting.templateSetting.custom_css) { %>
+            <%= setting.templateSetting.custom_css%>
+        <%}
+    %>
+  </style>
