@@ -299,12 +299,16 @@ else{ %>
         })
         for(i = 0; i < document.getElementsByClassName('faq-answer-content').length; i++){
             document.getElementsByClassName('faq-answer-content')[i].style.display = 'none'
-            document.getElementsByClassName('svg-plus')[i].style.opacity = '1'
-            document.getElementsByClassName('svg-plus')[i].style.transform = "rotate(0deg)";
-            document.getElementsByClassName('svg-plus')[i].style.transition  = "all .7s";
-            document.getElementsByClassName('svg-minus')[i].style.transform = "rotate(0deg)";
-            document.getElementsByClassName('svg-minus')[i].style.transition  = "ease-in .3s";
-            document.getElementsByClassName('svg-minus')[i].style.opacity = '0'
+            if(document.getElementsByClassName('svg-plus')[i]){
+              document.getElementsByClassName('svg-plus')[i].style.opacity = '1'
+              document.getElementsByClassName('svg-plus')[i].style.transform = "rotate(0deg)";
+              document.getElementsByClassName('svg-plus')[i].style.transition  = "all .7s";
+            }
+            if(document.getElementsByClassName('svg-minus')[i]){
+              document.getElementsByClassName('svg-minus')[i].style.transform = "rotate(0deg)";
+              document.getElementsByClassName('svg-minus')[i].style.transition  = "ease-in .3s";
+              document.getElementsByClassName('svg-minus')[i].style.opacity = '0'
+            }
         }
         if(user_id == 1){
           document.querySelector('.faq-category-title').scrollMarginTop = "2000px"
