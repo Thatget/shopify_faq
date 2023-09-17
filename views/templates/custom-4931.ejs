@@ -273,14 +273,14 @@ else{ %>
     <ul class="sc-1c7beou-0 cyBMen">
       <% for(var i=0; i < faqs.categories.length; i++) { %>
         <li id="<%- faqs.categories[i].identify %>-category" onmouseover="mouseOver('<%- faqs.categories[i].identify %>')" onmouseout="mouseOut('<%- faqs.categories[i].identify %>')" class="sc-1c7beou-1 gigSpq">
-          <div id="<%- faqs.categories[i].identify %>-list" class="sc-1c7beou-2 ccEcXR" style="display: none">
+          <div id="<%- faqs.categories[i].identify %>-list" class="sc-1c7beou-2 ccEcXR">
             <div class="sc-1c7beou-3 sc-1c7beou-4 fJSBoD">
               <h3 class="sc-1c7beou-7 dYZgOO h3-content">
                 <%- faqs.categories[i].title %>
               </h3>
             </div>
           </div>
-          <div id="<%- faqs.categories[i].identify %>-list-faq" style="display: block" class="sc-1c7beou-2 ccEcXR">
+          <div id="<%- faqs.categories[i].identify %>-list-faq" style="display: none" class="sc-1c7beou-2 ccEcXR">
             <div class="sc-1c7beou-3 sc-1c7beou-4 fJSBoD">
               <h3 class="sc-1c7beou-7 dYZgOO h3-content" style="display: flex; flex-direction: column">
                 <span style="font-size: 16px"><%- faqs.categories[i].title %></span>
