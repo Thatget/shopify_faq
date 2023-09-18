@@ -4,7 +4,7 @@
 else{ %>
   <div class="root-faq-template">
 <% } %>
-  <div class="root-faq-main" id="root-faq-main">
+  <div class="root-faq-main" id="root-faq-main" style="display: none">
     <div class="faq-header-4745">
         <div>
             <% if(setting.data.page_title_content && setting.data.show_page_title) { %>
@@ -253,6 +253,97 @@ else{ %>
         <% } %>
     </div>
   </div>
+  <div class="root-faq-dashboard" id="root-faq-dashboard"><div/>
+    <div class="sc-128zwpz-0 IrKdk">
+      <div class="sc-128zwpz-1 sc-128zwpz-2 fidzCL">
+        <h2>How can we help?</h2>
+        <form method="GET" action="/en-US/search">
+          <fieldset class="sc-128zwpz-4 gBsaPP">
+            <input onkeyup="simpleSearch()" type="text" value="" name="term" placeholder="Search" class="sc-128zwpz-5 jrIqFs">
+            <button type="submit" title="Submit search query" class="sc-128zwpz-6 hVmGZX"></button>
+          </fieldset>
+        </form>
+      </div>
+      <div class="sc-128zwpz-3 eItbXO">
+        <div class="sc-128zwpz-7 jKsVie">
+          <b>NEED TO RETURN AN ITEM? <span style="font-weight: 400">No problem! Start your return</span> <span style="color: #fff; text-decoration: underline; cursor: pointer" onclick="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>', '0')">HERE</span></b>
+        </div>
+      </div>
+    </div>
+    <ul class="sc-1c7beou-0 cyBMen">
+      <% for(var i=0; i < faqs.categories.length; i++) { %>
+        <li id="<%- faqs.categories[i].identify %>-category" onmouseover="mouseOver('<%- faqs.categories[i].identify %>')" onmouseout="mouseOut('<%- faqs.categories[i].identify %>')" class="sc-1c7beou-1 gigSpq">
+          <div id="<%- faqs.categories[i].identify %>-list" class="sc-1c7beou-2 ccEcXR">
+            <div class="sc-1c7beou-3 sc-1c7beou-4 fJSBoD">
+              <h3 class="sc-1c7beou-7 dYZgOO h3-content">
+                <%- faqs.categories[i].title %>
+              </h3>
+            </div>
+          </div>
+          <div id="<%- faqs.categories[i].identify %>-list-faq" style="display: none" class="sc-1c7beou-2 ccEcXR">
+            <div class="sc-1c7beou-3 sc-1c7beou-4 fJSBoD">
+              <h3 class="sc-1c7beou-7 dYZgOO h3-content" style="display: flex; flex-direction: column">
+                <span style="font-size: 16px"><%- faqs.categories[i].title %></span>
+                <div style="text-align: center; margin-top: 16px">
+                  <% for(var j=0; j < faqs.faq.length; j++) { %>
+                      <% if(faqs.faq[j].category_identify === faqs.categories[i].identify) {%>
+                        <% if(setting.data.faq_page_schema) {%>
+                            <div style="color: <%= setting.templateSetting.faq_font_color %>; font-size: <%= setting.templateSetting.faq_font_size %>px" class="" id="faq-id-<%- j %>" onclick="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>', <%- i %>)" >
+                                <span onclick="showHideContent(<%- j %>, -1)" class="" id="faq-bar<%- j %>" style="font-size: 14px; text-transform: initial; cursor: pointer" value itemprop="name"><%= faqs.faq[j].title %></span>
+                            </div>
+                        <% }
+                        else{ %>
+                            <div style="color: <%= setting.templateSetting.faq_font_color %>; font-size: <%= setting.templateSetting.faq_font_size %>px" class="" id="faq-id-<%- j %>" onclick="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>', <%- i %>)">
+                                <span onclick="showHideContent(<%- j %>, -1)" class="" id="faq-bar<%- j %>" style="font-size: 14px; text-transform: initial; cursor: pointer"><%= faqs.faq[j].title %></span>
+                            </div>
+                        <% } %>
+                      <% } %>
+                  <%}%>
+                </div>
+                <div style="color: <%= setting.templateSetting.faq_font_color %>; font-size: <%= setting.templateSetting.faq_font_size %>px; text-transform: initial; font-weight: bold; font-size: 14px; text-transform: initial; margin-top: 10px; text-decoration: underline; cursor: pointer" onclick="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>', <%- i %>)">Show more</div>
+              </h3>
+            </div>
+          </div>
+        </li>
+      <% } %>     
+    </ul>
+    <div style="text-align: center">
+      <div>
+        <h3>POPULAR QUESTIONS</h3>
+        <p>Got a question? Check out our popular articles below to find the answer you're looking for.</p>
+      </div>
+      <div>
+        <ul class="sc-1c7beou-0 cyBMene">
+          <% for(var i=0; i < faqs.categories.length; i++) { %>
+            <% for(var j=0; j < faqs.faq.length; j++) { %>
+                <% if(faqs.faq[j].category_identify === faqs.categories[i].identify && faqs.faq[i].feature_faq == 1 && faqs.faq[i].is_visible == 1) {%>
+                  <li id="<%- faqs.categories[i].identify %>-category" onmouseover="mouseOver('<%- faqs.categories[i].identify %>')" onmouseout="mouseOut('<%- faqs.categories[i].identify %>')" class="sc-1c7beou-1 gigSpqe">
+                    <div id="<%- faqs.categories[i].identify %>-list-faq" class="sc-1c7beou-2 ccEcXR">
+                      <div class="sc-1c7beou-3 sc-1c7beou-4 fJSBoD">
+                        <h3 class="sc-1c7beou-7 dYZgOO h3-contente" style="display: flex; flex-direction: column">
+                          <div style="text-align: center">
+                            <% if(setting.data.faq_page_schema) {%>
+                              <div class="" id="faq-id-<%- j %>" onclick="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>', <%- i %>)" >
+                                  <span onclick="showHideContent(<%- j %>, -1)" class="" id="faq-bar<%- j %>" style="font-size: 14px; text-transform: initial; cursor: pointer" value itemprop="name"><%= faqs.faq[j].title %></span>
+                              </div>
+                            <% }
+                            else{ %>
+                              <div class="" id="faq-id-<%- j %>" onclick="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>', <%- i %>)">
+                                  <span onclick="showHideContent(<%- j %>, -1)" class="" id="faq-bar<%- j %>" style="font-size: 14px; text-transform: initial; cursor: pointer"><%= faqs.faq[j].title %></span>
+                              </div>
+                            <%}%>
+                          </div>
+                        </h3>
+                      </div>
+                    </div>
+                  </li>
+              <% } %>
+            <% } %>
+          <% } %>    
+        </ul>
+      </div>
+    </div>
+  </div>
   <script>
     for(let i = 0; i < <%= faqs.categories.length %>; i++){
       document.getElementById(`category0`).style.display = 'block'
@@ -302,6 +393,8 @@ else{ %>
     }
     var categoryName = []
     function changeCategory(category_bar_color, category_bar_background, category_id){
+      document.getElementById('root-faq-main').style.display = 'block'
+      document.getElementById('root-faq-dashboard').style.display = 'none'
       var id = category_id
       if(category_id === '-1'){
         id = document.getElementById("categories").value;
@@ -362,6 +455,8 @@ else{ %>
     }
 
     function showHideContent(index, value) {
+      document.getElementById('root-faq-main').style.display = 'block'
+      document.getElementById('root-faq-dashboard').style.display = 'none'
       let selected = 0
       if(index != -1){
         selected = index
@@ -737,6 +832,31 @@ else{ %>
         display: flex; 
         width: 100%;
     }
+
+    .IrKdk {
+    height: 656px;
+    position: relative;
+    z-index: 1;
+    background: url('https://images.ctfassets.net/mw19wi8id72e/37bTZXatimbjJIGJSNJ6uE/388b991316918e119aad559e6f674be3/Compressed-Image.jpg') center center / cover no-repeat;
+}
+
+.gBsaPP {
+    margin: 17px 0px 0px;
+    padding: 0px;
+    border: 0px;
+    position: relative;
+}
+.fidzCL {
+    padding: 86px 20px 65px;
+    margin: 0px auto;
+    max-width: 1110px;
+    text-align: center;
+    color: white;
+    position: relative;
+    z-index: 2;
+    background: url('https://images.ctfassets.net/mw19wi8id72e/37bTZXat…991316918e119aad559e6f674be3/Compressed-Image.jpg') center center / cover no-repeat;
+}
+
     .faq-footer-text{
         <% if (setting.templateSetting.image_banner || setting.templateSetting.banner_default) { %>
             color: #fff;
@@ -794,6 +914,334 @@ else{ %>
       box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 13px 0px; 
       padding: 34px 60px;
     }
+    .jrIqFs {
+      background: transparent;
+      width: 100%;
+      color: rgb(255, 255, 255);
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: lighter;
+      border-top: none;
+      border-right: none;
+      border-left: none;
+      border-image: initial;
+      padding: 11px 32px 11px 0px;
+      margin: 0px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      box-sizing: border-box;
+      outline: none !important
+    }
+    .jrIqFs::placeholder {
+      color: #757575
+    }
+    input:not([type="range"]):not([type="color"]):not([type="button"]):not([type="reset"]):not([type="submit"]):not([type="file"]) {
+      writing-mode: horizontal-tb !important;
+    }
+    input:not([type="file" i], [type="image" i], [type="checkbox" i], [type="radio" i]) {
+    }
+.eItbXO {
+    padding: 36px 20px 20px;
+}
+
+.fidzCL h2 {
+    color: rgb(255, 255, 255);
+    text-transform: uppercase;
+    font-size: 20px;
+    line-height: 24px;
+    margin: 16px 0px 24px;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: Montserrat,sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #000;
+}
+
+
+  .hVmGZX {
+      width: 20px;
+      height: 20px;
+      background: url('https://support.gymshark.com/icon-search-white.svg') center center / cover no-repeat;
+      border: none;
+      position: absolute;
+      right: 12px;
+      bottom: 13px;
+  }
+  .jKsVie {
+    font-family: Roboto, Arial, sans-serif;
+    color: rgb(255, 255, 255);
+    position: relative;
+    padding-left: 28px;
+    text-align: center;
+    font-size: 16px
+  }
+
+    .cyBMen {
+        padding: 7px 30px;
+        display: flex;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 2;
+        transform: translateY(-74px);
+        max-width: 1110px;
+        margin: auto;
+    }
+
+    .cyBMene {
+        padding: 7px 30px;
+        display: flex;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 2;
+        max-width: 1110px;
+        margin: auto;
+    }
+    ol, ul {
+        list-style: none;
+    }
+
+    .gigSpq {
+        margin: 10px;
+        -webkit-box-flex: 1;
+        flex-basis: calc(33.3333% - 20px);
+        background-color: #fff;
+        border-radius: 6px;
+        // flex-grow: 1;
+    }
+    .gigSpqe{
+        margin: 10px;
+        -webkit-box-flex: 1;
+        flex-basis: calc(50% - 20px);
+        background-color: #fff;
+        border-radius: 6px;
+    }
+
+    .fJSBoD {
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 13px 0px;
+        box-sizing: border-box;
+        font-family: Montserrat, Helvetica, Arial, sans-serif;
+        border-radius: 6px
+    }
+
+    .h3-content{
+      text-align: center;
+      padding: 36px 44px 16px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 233px;
+      text-transform: uppercase;
+      <% if (setting.templateSetting.category_font_size) { %>
+          font-size: <%=  setting.templateSetting.category_font_size %>px !important;
+      <% } %>;
+      <% if (setting.templateSetting.category_font_color) { %>
+          color: <%=  setting.templateSetting.category_font_color %> !important;
+      <% } %>;
+      <% if (setting.templateSetting.category_font_size) { %>
+          line-height: <%=  setting.templateSetting.category_font_size %>px !important;
+      <% } %>;      box-sizing: content-box;
+    }
+
+    .h3-contente{
+      text-align: center;
+      padding: 28px 16px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      <% if (setting.templateSetting.faq_font_size) { %>
+          font-size: <%=  setting.templateSetting.faq_font_size %>px !important;
+      <% } %>;
+      <% if (setting.templateSetting.faq_font_color) { %>
+          color: <%=  setting.templateSetting.faq_font_color %> !important;
+      <% } %>;
+      <% if (setting.templateSetting.faq_font_size) { %>
+          line-height: <%=  setting.templateSetting.faq_font_size %>px !important;
+      <% } %>;
+      text-transform: initial;
+      text-decoration: underline;
+      box-sizing: content-box;
+      cursor: pointer
+    }
+
+    @media only screen and (max-width: 760px){
+      .fJSBoD {
+          -webkit-box-pack: center;
+          justify-content: center;
+          z-index: 1;
+      }
+    }
+
+    @media only screen and (max-width: 760px){
+      .fJSBoD {
+          display: flex;
+          backface-visibility: hidden;
+          width: 100%;
+          height: 100%;
+      }
+    }
+
+  @media only screen and (max-width: 760px){
+    .cyBMen {
+      padding: 3px 20px;
+      margin: 0px auto;
+      transform: translateY(0px);
+    }
+  }
+
+  @media only screen and (max-width: 1022px){
+    .gigSpq {
+        -webkit-box-flex: 1;
+        flex-grow: 1;
+        flex-basis: calc(50% - 20px);
+    }
+    .gigSpqe{
+      -webkit-box-flex: 1;
+        flex-grow: 1;
+        flex-basis: calc(100%);
+    }
+  }
+  @media only screen and (max-width: 712px){
+    .gigSpq {
+      margin: 16px 0px;
+      flex-basis: 100%;
+    }
+    .h3-content{
+      height: 160px;
+      padding: 20px 20px 16px
+    }
+  }
+
+  @media only screen and (min-width: 800px){
+    .hVmGZX {
+        bottom: 16px;
+    }
+  }
+
+    @media only screen and (min-width: 1020px){
+      .eItbXO {
+        padding-top: 127px;
+      }
+    }
+
+@media only screen and (min-width: 800px){
+  .eItbXO {
+      padding-top: 44px;
+      padding-bottom: 57.5px;
+      text-align: center;
+  }
+}
+
+    @media only screen and (min-width: 1020px){
+      .jrIqFs {
+        font-size: 30px;
+        line-height: 34px;
+        padding: 17px 32px 17px 0px;
+      }
+    }
+    @media only screen and (min-width: 800px){
+      .jrIqFs {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 13px 32px 13px 0px;
+      }
+    }
+
+
+@media only screen and (min-width: 1020px){
+  .gBsaPP {
+      margin: 27px 0px 0px;
+  }
+}
+
+@media only screen and (min-width: 800px){
+  .gBsaPP {
+      margin: 24px 0px 0px;
+  }
+}
+
+  @media only screen and (min-width: 800px){
+    .hVmGZX {
+        bottom: 16px;
+    }
+  }
+
+@media only screen and (min-width: 800px){
+  
+  .hVmGZX {
+      right: 14px;
+      bottom: 24px;
+  }
+  
+  button {
+      background: none;
+      border: 0;
+  }
+  a, button {
+      cursor: pointer;
+      text-decoration: none;
+  }
+}
+@media only screen and (min-width: 1020px){
+  
+  .hVmGZX {
+      right: 14px;
+      bottom: 24px;
+  }  
+  
+  button {
+      background: none;
+      border: 0;
+  }
+  a, button {
+      cursor: pointer;
+      text-decoration: none;
+  }
+
+}
+
+@media only screen and (max-width: 700px){
+    .IrKdk {
+        height: 370px;
+    }
+}
+
+@media only screen and (min-width: 1020px){
+  .fidzCL {
+      padding-top: 163px;
+  }
+}
+
+@media only screen and (min-width: 800px){
+  .fidzCL {
+      background: transparent;
+      padding-top: 163px;
+  }
+}
+@media only screen and (min-width: 800px){
+  .fidzCL {
+      padding: 7 40px;
+  }
+}
+
+.IrKdk::before {
+  content: "";
+  display: block;
+  background-color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  inset: 0px;
+  z-index: -1;
+}
+
+@media only screen and (min-width: 1020px){
+  .fidzCL h2 {
+      font-size: 36px;
+      line-height: 40px;
+      margin-top: 66px;
+  }
+}
+
     @media only screen and (max-width: 768px) {
       .faq-page-title {
           padding: 40px 0px 40px;

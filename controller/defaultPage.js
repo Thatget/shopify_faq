@@ -45,7 +45,7 @@ exports.findFaqs = async (shop, locale_data, path_prefix = "", plan) => {
                 selectCondition = settingData.dataValues
             })
             try {
-                let selectQueryFaqs = "SELECT `faq`.`title`,`faq`.`content`,`faq`.`locale`,`faq`.`identify`,`faq`.`category_identify` FROM faq" +
+                let selectQueryFaqs = "SELECT `faq`.`title`, `faq`.`feature_faq`, `faq`.`is_visible`,`faq`.`content`,`faq`.`locale`,`faq`.`identify`,`faq`.`category_identify` FROM faq" +
                     " where `faq`.`user_id` = ? and `faq`.`is_visible` = 1 and (`faq`.`locale` = 'default' or `faq`.`locale` = ?)";
       
             if (selectCondition.faq_sort_name) {
