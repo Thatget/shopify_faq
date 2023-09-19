@@ -317,19 +317,21 @@ else{ %>
           <% for(var i=0; i < faqs.categories.length; i++) { %>
             <% for(var j=0; j < faqs.faq.length; j++) { %>
                 <% if(faqs.faq[j].category_identify === faqs.categories[i].identify && faqs.faq[i].feature_faq == 1 && faqs.faq[i].is_visible == 1) {%>
-                  <li id="<%- faqs.categories[i].identify %>-category" onmouseover="mouseOver('<%- faqs.categories[i].identify %>')" onmouseout="mouseOut('<%- faqs.categories[i].identify %>')" class="sc-1c7beou-1 gigSpqe">
+                  <li id="<%- faqs.categories[i].identify %>-category" class="sc-1c7beou-1 gigSpqe">
                     <div id="<%- faqs.categories[i].identify %>-list-faq" class="sc-1c7beou-2 ccEcXR">
-                      <div class="sc-1c7beou-3 sc-1c7beou-4 fJSBoD">
-                        <h3 class="sc-1c7beou-7 dYZgOO h3-contente" style="display: flex; flex-direction: column">
+                      <div onclick="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>', <%- i %>)" class="sc-1c7beou-3 sc-1c7beou-4 fJSBoD">
+                        <h3 
+                          onclick="showHideContent(<%- j %>, -1)" 
+                          class="sc-1c7beou-7 dYZgOO h3-contente" style="display: flex; flex-direction: column">
                           <div style="text-align: center">
                             <% if(setting.data.faq_page_schema) {%>
-                              <div class="" id="faq-id-<%- j %>" onclick="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>', <%- i %>)" >
-                                  <span onclick="showHideContent(<%- j %>, -1)" class="" id="faq-bar<%- j %>" style="font-size: 14px; text-transform: initial; cursor: pointer" value itemprop="name"><%= faqs.faq[j].title %></span>
+                              <div class="" id="faq-id-<%- j %>">
+                                  <span class="" id="faq-bar<%- j %>" style="font-size: 14px; text-transform: initial; cursor: pointer" value itemprop="name"><%= faqs.faq[j].title %></span>
                               </div>
                             <% }
                             else{ %>
-                              <div class="" id="faq-id-<%- j %>" onclick="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>', <%- i %>)">
-                                  <span onclick="showHideContent(<%- j %>, -1)" class="" id="faq-bar<%- j %>" style="font-size: 14px; text-transform: initial; cursor: pointer"><%= faqs.faq[j].title %></span>
+                              <div class="" id="faq-id-<%- j %>" >
+                                  <span class="" id="faq-bar<%- j %>" style="font-size: 14px; text-transform: initial; cursor: pointer"><%= faqs.faq[j].title %></span>
                               </div>
                             <%}%>
                           </div>
