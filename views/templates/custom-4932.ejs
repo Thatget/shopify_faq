@@ -837,7 +837,12 @@ else{ %>
     height: 656px;
     position: relative;
     z-index: 1;
-    background: url('https://images.ctfassets.net/mw19wi8id72e/37bTZXatimbjJIGJSNJ6uE/388b991316918e119aad559e6f674be3/Compressed-Image.jpg') center center / cover no-repeat;
+    <% if (setting.templateSetting.image_banner) { %>
+        background: url('<%- setting.templateSetting.image_banner%>') center center / cover no-repeat;
+    <% }
+    else {%> 
+        background: url('<%- setting.templateSetting.banner_default%>' center center / cover no-repeat);
+    <%} %>
 }
 
 .gBsaPP {
@@ -854,7 +859,12 @@ else{ %>
     color: white;
     position: relative;
     z-index: 2;
-    background: url('https://images.ctfassets.net/mw19wi8id72e/37bTZXat…991316918e119aad559e6f674be3/Compressed-Image.jpg') center center / cover no-repeat;
+    <% if (setting.templateSetting.image_banner) { %>
+        background: url('<%- setting.templateSetting.image_banner%>') center center / cover no-repeat;
+    <% }
+    else {%> 
+        background: url('<%- setting.templateSetting.banner_default%>' center center / cover no-repeat);
+    <%} %>
 }
 
     .faq-footer-text{
