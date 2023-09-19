@@ -345,7 +345,6 @@ else{ %>
     </div>
   </div>
   <script>
-    console.log(<%=  setting.templateSetting.image_banner %>)
     for(let i = 0; i < <%= faqs.categories.length %>; i++){
       document.getElementById(`category0`).style.display = 'block'
       document.getElementById(`category0`).children[0].style.display = 'flex'
@@ -505,7 +504,9 @@ else{ %>
                 // document.getElementsByClassName('faq-container')[0].style.width = "70%"
                 nodeCategory[0].style.display = "none"
                 for(i = 0; i < document.getElementsByClassName("faq-category-search").length; i++) {
+                  if(document.getElementsByClassName("faq-category-search")[i]){
                     document.getElementsByClassName("faq-category-search")[i].style.display = "block"
+                  }
                 }
             }
             else{
