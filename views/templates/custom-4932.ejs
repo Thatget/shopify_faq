@@ -316,7 +316,7 @@ else{ %>
         <ul class="sc-1c7beou-0 cyBMene">
           <% for(var i=0; i < faqs.categories.length; i++) { %>
             <% for(var j=0; j < faqs.faq.length; j++) { %>
-                <% if(faqs.faq[j].category_identify === faqs.categories[i].identify && faqs.faq[i].feature_faq == 1 && faqs.faq[i].is_visible == 1) {%>
+                <% if(faqs.faq[j].category_identify === faqs.categories[i].identify && faqs.faq[j].feature_faq == 1 && faqs.faq[j].is_visible == 1) {%>
                   <li id="<%- faqs.categories[i].identify %>-category" class="sc-1c7beou-1 gigSpqe">
                     <div id="<%- faqs.categories[i].identify %>-list-faq" class="sc-1c7beou-2 ccEcXR">
                       <div onclick="changeCategory('<%= setting.templateSetting.category_bar_color %>', '<%= setting.templateSetting.category_bar_background %>', <%- i %>)" class="sc-1c7beou-3 sc-1c7beou-4 fJSBoD">
