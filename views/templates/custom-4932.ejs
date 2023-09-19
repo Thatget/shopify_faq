@@ -345,6 +345,7 @@ else{ %>
     </div>
   </div>
   <script>
+    console.log(<%=  setting.templateSetting.image_banner %>)
     for(let i = 0; i < <%= faqs.categories.length %>; i++){
       document.getElementById(`category0`).style.display = 'block'
       document.getElementById(`category0`).children[0].style.display = 'flex'
