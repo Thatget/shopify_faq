@@ -605,13 +605,6 @@ else{ %>
         display: flex; 
         flex-direction: column; 
         justify-content: space-between;
-        <% if (setting.templateSetting.image_banner) { %>
-            background-image: url('<%- setting.templateSetting.image_banner%>');
-        <% }
-        else {%> 
-            background-image: url('<%- setting.templateSetting.banner_default%>');
-            <%} 
-        %>;        
         background-repeat: no-repeat;
         background-size: cover;
         background-position-y: center;
