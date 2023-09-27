@@ -167,6 +167,9 @@ module.exports = (sequelize, Sequelize) => {
             },
             btn_top_visible: {
                 type: Sequelize.BOOLEAN
+            },
+            width_faqs_product: {
+              type: Sequelize.INTEGER
             }
         },
         {

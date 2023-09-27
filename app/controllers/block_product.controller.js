@@ -63,6 +63,9 @@ exports.findAllProduct = async (req, res) => {
                           templateSetting.faq_uncategory_hidden = settingData.faq_uncategory_hidden
                           templateSetting.dont_category_faq = settingData.dont_category_faq
                           templateSetting.more_page_schema = settingData.more_page_schema
+                          templateSetting.page_title_content = settingData.page_title_content
+                          templateSetting.set_width_product_faq = settingData.set_width_product_faq
+                          templateSetting.title_product_faq = settingData.title_product_faq
                       }
                   })
                   .catch(e =>{

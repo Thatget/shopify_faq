@@ -78,6 +78,12 @@ module.exports = (sequelize, Sequelize) => {
     },
     meta_tag_description: {
       type: Sequelize.TEXT
+    },
+    set_width_product_faq:{
+      type: Sequelize.BOOLEAN
+    },
+    title_product_faq:{
+      type: Sequelize.BOOLEAN
     }
   },
   {
