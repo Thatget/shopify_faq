@@ -63,9 +63,11 @@ exports.findFaqs = async (shop, locale_data, path_prefix, plan, limit, offset) =
                     " where `faq`.`user_id` = ? and `faq`.`is_visible` = 1 and (`faq`.`locale` = 'default' or `faq`.`locale` = ?)";
             if (selectCondition.faq_sort_name) {
               if(plan == proPlan || userData.dataValues.plan_extra){
-                selectQueryFaqs += " ORDER BY `faq`.`title`"
                 if(userID == 4680){
                   selectQueryFaqs += " ORDER BY `faq`.`title`" + ` LIMIT ${limit}` + ` OFFSET ${offset}`
+                }
+                else{
+                  selectQueryFaqs += " ORDER BY `faq`.`title`"
                 }
               }
               else if(plan == freePlan01){
@@ -77,9 +79,11 @@ exports.findFaqs = async (shop, locale_data, path_prefix, plan, limit, offset) =
             }
             else{
               if(plan == proPlan || userData.dataValues.plan_extra){
-                selectQueryFaqs += " ORDER BY `faq`.`position`"
                 if(userID == 4680){
                   selectQueryFaqs += " ORDER BY `faq`.`position`" + ` LIMIT ${limit}` + ` OFFSET ${offset}`
+                }
+                else{
+                  selectQueryFaqs += " ORDER BY `faq`.`position`"
                 }
               }
               else if(plan == freePlan01){
