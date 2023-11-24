@@ -513,7 +513,7 @@ app.set("loadMoreCategory","./loadMoreCategory");
 
 const defaultPage = require('./controller/defaultPage');
 
-let limit = 100
+let limit = 500
 let setting_
 let category_
 let categoryRender = []
