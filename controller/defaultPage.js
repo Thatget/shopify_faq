@@ -10,9 +10,23 @@ const { QueryTypes } = require('sequelize');
 const freePlan = 'Free'
 const freePlan01 = 'Free_01'
 const proPlan = 'Pro'
+const Faq = db.faq;
 
 // Using in nodeJs
-exports.findFaqs = async (shop, locale_data, path_prefix = "", plan) => {
+exports.findCountFaqs = async (userID) => {
+  let count = 0
+  await Faq.count ({
+    where: {
+        user_id: userID,
+    },
+  })
+  .then(data => {
+    count = data
+  })
+  return count
+}
+
+exports.findFaqs = async (shop, locale_data, path_prefix, plan, limit, offset) => {
   let send_data = []
   let selectCondition = {}
   let locale
@@ -47,10 +61,12 @@ exports.findFaqs = async (shop, locale_data, path_prefix = "", plan) => {
             try {
                 let selectQueryFaqs = "SELECT `faq`.`title`, `faq`.`feature_faq`, `faq`.`is_visible`,`faq`.`content`,`faq`.`locale`,`faq`.`identify`,`faq`.`category_identify` FROM faq" +
                     " where `faq`.`user_id` = ? and `faq`.`is_visible` = 1 and (`faq`.`locale` = 'default' or `faq`.`locale` = ?)";
-      
             if (selectCondition.faq_sort_name) {
               if(plan == proPlan || userData.dataValues.plan_extra){
                 selectQueryFaqs += " ORDER BY `faq`.`title`"
+                if(userID === 3623){
+                  selectQueryFaqs += " ORDER BY `faq`.`title`" + ` LIMIT ${limit}` + ` OFFSET ${offset}`
+                }
               }
               else if(plan == freePlan01){
                 selectQueryFaqs += " ORDER BY `faq`.`title` LIMIT 30"
@@ -62,6 +78,9 @@ exports.findFaqs = async (shop, locale_data, path_prefix = "", plan) => {
             else{
               if(plan == proPlan || userData.dataValues.plan_extra){
                 selectQueryFaqs += " ORDER BY `faq`.`position`"
+                if(userID === 3623){
+                  selectQueryFaqs += " ORDER BY `faq`.`position`" + ` LIMIT ${limit}` + ` OFFSET ${offset}`
+                }
               }
               else if(plan == freePlan01){
                 selectQueryFaqs += " ORDER BY `faq`.`position` LIMIT 30"
@@ -438,4 +457,3 @@ async function deleteTemplate(list_template_number, setting_id) {
     errorLog.error(error)
   }
 }
-

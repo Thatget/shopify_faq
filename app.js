@@ -242,23 +242,6 @@ app.get('/', async (req, res) => {
   // return res.redirect(app_link + txt ); 
 });
 
-// async function checkBilling(query) {
-//   let plan
-//   await Plan.findOne({
-//     attributes:['plan','id'],
-//     where: {
-//       user_id: query.user_id
-//     }
-//   })
-//   .then(data => {
-//     plan = data.dataValues
-//   })
-//   .catch(err => {
-//     errorLog.error(err)
-//   });
-//   return plan
-// }
-
 app.use(authorize);
 
 app.get('/storeFAQs', async (req, res) => {
@@ -525,8 +508,45 @@ app.post('/uninstall', async (req, res) => {
 
 app.set("view engine","ejs");
 app.set("views","./views");
+app.set("loadMoreFaq","./loadMoreFaq");
+app.set("loadMoreCategory","./loadMoreCategory");
 
 const defaultPage = require('./controller/defaultPage');
+
+let limit = 100
+let setting_
+let category_
+let categoryRender = []
+
+app.get('/faq-proxy',  async (req, res) => {
+  let path_prefix = ''
+  let shop = req.query.shop
+  let plan = req.query.plan
+  let locale = req.query.locale
+  let offset = 0
+  if(req.query.page){
+    offset = limit*(req.query.page - 1)
+  }
+  const messagesSetting = await defaultPage.findMessagesSetting(shop, plan);
+  const faqData = await defaultPage.findFaqs(shop, locale, path_prefix, plan, limit, offset);
+  category_.forEach(element => {
+    if(!categoryRender.includes(element.title)){
+      categoryRender.push(element.title)
+    }
+  })
+
+  faqData.categories.forEach(item => {
+    if(!categoryRender.includes(item.title)){
+      categoryRender.push(item.title)
+    }
+  })
+  return res.set('Content-Type', 'application/liquid').render('loadMoreFaq',{faqs: faqData, setting: setting_, messagesSetting: messagesSetting, locale: locale, plan: plan, shop: shop});
+})
+
+app.get('/category-proxy',  async (req, res) => {
+  return res.set('Content-Type', 'application/liquid').render('loadMoreCategory',{setting: setting_, categoryRender: categoryRender});
+})
+
 
 app.get('/faq-page', async (req, res) => {
   let shop = req.query.shop;
@@ -631,10 +651,13 @@ app.get('/faq-page', async (req, res) => {
         errorLog.error(err)
       });
       const locale = req.headers['accept-language'].split(',')[0];
-      const faqs = await defaultPage.findFaqs(shop, locale, path_prefix, plan);
+      const faqs = await defaultPage.findFaqs(shop, locale, path_prefix, plan, limit, 0);
+      category_ = faqs.categories
       const setting = await defaultPage.findSetting(shop, locale, plan);
+      setting_ = setting
+      const countFaqsNumber = await defaultPage.findCountFaqs(faqs.user_id)
       const messagesSetting = await defaultPage.findMessagesSetting(shop, plan);
-      return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting, locale: locale});
+      return res.set('Content-Type', 'application/liquid').render('views',{faqs: faqs, setting: setting, messagesSetting: messagesSetting, locale: locale, plan: plan, shop: shop, countFaqs: countFaqsNumber});
     } catch (e) {
         errorLog.error(e.message);
         res.status(400).send('unexpected error occurred');

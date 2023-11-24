@@ -52,23 +52,27 @@ else{ %>
                 <div style="padding: 30px 0">
                     <div>
                         <% if(faqs.categories.length){%>
-                            <% if(setting.templateSetting.show_category_bar){%>
+                              <% if(setting.templateSetting.show_category_bar){%>
                                 <% if(setting.templateSetting.category_bar_number === 1){%>
+                                  <div class="category-yanet-main">
                                     <div class="category-bar">
                                         <% for(var i=0; i < faqs.categories.length; i++) { %>
                                             <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-link" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
                                         <% } %>
                                     </div>
+                                  </div>
                                 <% } %>
                                 <% if(setting.templateSetting.category_bar_number === 2){%>
+                                  <div class="category-yanet-main">
                                     <div class="category-bar">
                                         <% for(var i=0; i < faqs.categories.length; i++) { %>
                                             <a href="#<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-link-2" style="color: <%=  setting.templateSetting.category_bar_color %>"><%- faqs.categories[i].title %></a>
                                         <% } %>
                                     </div>
+                                  </div>
                                 <% } %>
-                            <% } %>
-                            <div>
+                              <% } %>
+                            <div class="faq-yanet-main">
                                 <% for(var i=0; i < faqs.categories.length; i++) { %>
                                     <div class="category-faq-container">
                                         <div id="<%- faqs.categories[i].title.replace(/ /g, '-') %>" class="faq-category-title faq-category-width"><%- faqs.categories[i].title %></div>
@@ -139,7 +143,7 @@ else{ %>
                 </div>
             <% }
             else{ %>
-                <div style="padding: 30px 0;">
+                <div class="faq-yanet-main" style="padding: 30px 0;">
                     <% for(var j=0; j < faqs.faq.length; j++) { %>
                       <div class="category-faq-container">
                         <% if(setting.data.faq_page_schema) {%>
@@ -175,6 +179,9 @@ else{ %>
                     <% } %>
                 </div>
             <% } %>
+            <% if(countFaqs > 100 && setting.data.id == 3623) {%>
+              <button onclick="loadMoreFaqs()" class="yanet-btn-toggle show-more-faq-button btn-show-faq">Show more</button>
+            <% } %>
         <% }  
         else{ %>
             <div class="page-under-contruction">
@@ -208,6 +215,8 @@ else{ %>
 </div>
 <script>
   let be_link = 'https://backend-faq.yanet.io'
+  // let be_link = 'https://3eea-2001-ee0-8206-576f-15e6-fcd1-aabf-b6c8.ngrok-free.app'
+
   if(document.getElementById("back-to-top")){
     let mybutton = document.getElementById("back-to-top");
     window.onscroll = function() {scrollFunction()};
@@ -263,6 +272,30 @@ else{ %>
           }
         }
         document.getElementsByClassName('btn-show-faq')[number].style.display = "none"
+      }
+    }
+
+    let page = 1
+    async function loadMoreFaqs(){
+      page += 1
+      if(page){
+        let link = `${be_link}/faq-proxy?shop=<%= shop %>&locale=<%= locale %>&plan=<%= plan %>&page=${page}`
+        await fetch(link)
+          .then(res => res.text())
+          .then(result => {
+            var faq = document.createElement('p'); // is a node
+            faq.innerHTML = result;
+            document.getElementsByClassName('faq-yanet-main')[0].appendChild(faq)
+          })
+        let linkCategory = `${be_link}/category-proxy?shop=<%= shop %>&locale=<%= locale %>&plan=<%= plan %>&page=${page}`
+        await fetch(linkCategory)
+          .then(res => res.text())
+          .then(result => {
+            document.getElementsByClassName('category-yanet-main')[0].innerHTML = result
+          })
+        if(<%= countFaqs %> <= page*100){
+          document.getElementsByClassName('show-more-faq-button')[0].style.display = 'none !important'
+        }
       }
     }
 
