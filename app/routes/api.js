@@ -53,12 +53,12 @@ let initAPIs = (app) => {
     router.get("/api/gdpr/customer-redact", ensureEnpoint.customerRedact);
     router.get("/api/gdpr/customer-data", ensureEnpoint.customerData);
     router.get("/api/gdpr/shop-redact", ensureEnpoint.shopRedact);
-    // Sử dụng authMiddleware.isAuth trước những api cần xác thực
-    router.use(AuthMiddleWare.isAuth);
-
     //admin router
     router.get("/api/data/admin/:offset/:limit/:plan", admin.findAllData)
     router.get("/api/data/admin/search", admin.searchByDomain)
+
+    // Sử dụng authMiddleware.isAuth trước những api cần xác thực
+    router.use(AuthMiddleWare.isAuth);
 
     //Tutorial Create
     router.post("/api/tutorial/create", tutorial.create);
