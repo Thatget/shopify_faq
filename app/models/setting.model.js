@@ -47,10 +47,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.TEXT
     },
     search_placehoder: {
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
     },
     search_not_found: {
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
     },
     show_page_construction: {
       type: Sequelize.BOOLEAN
