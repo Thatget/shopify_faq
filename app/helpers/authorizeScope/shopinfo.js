@@ -4,8 +4,11 @@ const apiGraphql = process.env.API_GRAPHQL;
 const errorLog = require('./../../../app/helpers/log.helper');
 
 const updateUserTable = async (shop, accessToken) => {
+  errorLog.error('updateUserTable')
   // Get shop info !
   const shopInfo = await getShopInfo(shop, accessToken);
+  errorLog.error(shopInfo, 'shopInfo')
+  
   const user = {
     store_name: shopInfo[0].shop.name,
     shopify_domain: shopInfo[0].shop.myshopify_domain,
