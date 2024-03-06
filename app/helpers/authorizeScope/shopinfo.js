@@ -16,6 +16,7 @@ const updateUserTable = async (shop, accessToken) => {
     email: shopInfo[0].shop.email,
     phone: shopInfo[0].shop.phone,
     shopLocales: shopInfo[1],
+    plan_extra: false
   };
 
   // Check and create update shop info in database
