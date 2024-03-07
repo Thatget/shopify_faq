@@ -226,12 +226,12 @@ app.get('/', async (req, res) => {
     try {
       let tokenData = await getToken(req.query)
       if (tokenData.accessToken) {
-        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken + '&host=' + req.query.host
       }
     } catch (e){
       errorLog.error(e)
     }
-    return res.redirect(app_link + txt ); 
+    return res.redirect(app_link + txt );
 	}
 
   // let tokenData = await getToken(req.query);
