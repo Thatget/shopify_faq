@@ -1,4 +1,0 @@
-1, Module_NOT_FOUND Sharp
-The problem with Node v13.14.0+, the problem will be solved
-npm install sharp@0.23.2
-You should downgrade Node version to >=10.0.0 if you are using sharp 0.22.1
