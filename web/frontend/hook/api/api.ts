@@ -1,21 +1,16 @@
-// import {useAuthenticatedFetch, useAppBridge} from "@shopify/app-bridge-react";
-// import {includes} from 'lodash-es'
 import {useCallback} from 'react'
-// import { UserApi } from "@/constants/shopify";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios';
-import { UserAllDataApi, UserApi } from '../../@type/user';
 import { Faq, FaqsApi } from '../../@type/faq';
 import { Category, CategoryApi } from '../../@type/category';
 import { Setting } from '../../@type/setting';
 import { ProductApi, ProductsSearchApi, ProductsShopifyApi } from '../../@type/product';
 import { FaqsMorePageSetting } from '../../@type/faq_more_page_setting';
 import { ProductFaqs, ProductFaqsUpdateAPI, ProductUpdate } from '../../@type/product_faqs';
-// import { useAppContext } from '../useAppContext';
 import { PlanApi } from '../../@type/plans';
 import { TemplateSettingApi } from '../../@type/template_setting';
 import { FaqMessageSettingsApi } from '../../@type/widget';
 import { FaqMorePageUpdateApi } from '../../@type/faq_more_page';
-// import { Params } from 'react-router-dom';
+import { UserAllDataApi, UserApi } from '@/@type/user';
 
 export interface IHttp {
   get<T = any, R = AxiosResponse<T>>(url: string, params?: Record<string, any>): Promise<R>,

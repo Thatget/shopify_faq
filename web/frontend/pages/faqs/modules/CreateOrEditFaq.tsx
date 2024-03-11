@@ -177,7 +177,7 @@ export default function CreateOrEditFaq(props?: Faq) {
             </div>
           </Card>
         </Layout.Section>
-        <Layout.Section oneThird>
+        <Layout.Section>
           <Card>
             f
             {/* <BlockStack gap="400">
