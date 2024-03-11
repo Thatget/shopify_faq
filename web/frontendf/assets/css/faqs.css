@@ -1,0 +1,11 @@
+.Polaris-IndexTable__TableCell:not(.Polaris-IndexTable__TableCell--flush) {
+  padding: var(--p-space-300) !important;
+}
+
+.Polaris-IndexTable__TableHeading{
+  padding: var(--p-space-150) var(--p-space-300) !important;
+}
+
+.tox-tinymce {
+  border: 1px solid #b3b3b3 !important
+}
