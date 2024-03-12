@@ -14,7 +14,7 @@
 
 module.exports = {
   HOST: "localhost",
-  USER: "newuser",
+  USER: "user",
   PASSWORD: "password",
   DB: "faq_app",
   dialect: "mysql",

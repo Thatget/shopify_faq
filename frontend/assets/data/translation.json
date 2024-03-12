@@ -1,0 +1,122 @@
+[
+  {
+    "country": "English",
+    "contact_us" : "Contact Us",
+    "faq" : "FAQs",
+    "categories" : "Categories",
+    "your_name" : "Your Name",
+    "messages" : "Messages",
+    "contact" : "Contact",
+    "send": "Send",
+    "search" : "Search"
+  },
+  {
+    "country": "VietNamese",
+    "contact_us" : "Liên hệ chúng tôi",
+    "faq" : "Câu hỏi thường gặp",
+    "categories" : "Danh mục",
+    "your_name" : "Họ Tên",
+    "messages" : "Tin nhắn",
+    "contact" : "Liên hệ",
+    "send": "Gửi",
+    "search" : "Tìm kiếm"
+  },
+  {
+    "country" : "French",
+    "contact_us" : "Contactez-nous",
+    "faq" : "FAQ",
+    "categories" : "Catégories",
+    "your_name" : "Votre nom",
+    "messages" : "Messagerie",
+    "contact" : "Contacter",
+    "send" : "Envoyer",
+    "search" : "Rechercher"  },
+  {
+    "country": "Thailand",
+    "contact_us": "ติดต่อเรา",
+    "faq": "คำถามที่พบบ่อย",
+    "categories": "หมวดหมู่",
+    "your_name": "ชื่อของคุณ",
+    "messages": "ข้อความ",
+    "contact": "ติดต่อ",
+    "send": "ส่ง",
+    "search": "ค้นหา"
+  },
+  {
+    "country": "Portuguese",
+    "contact_us": "Fale Conosco",
+    "faq": "Perguntas frequentes",
+    "categories": "Categoria",
+    "your_name": "Seu nome",
+    "messages": "Mensagem",
+    "contact": "Contato",
+    "send": "Enviar",
+    "search": "Pesquisar"
+  },
+  {
+    "country": "Germany",
+    "contact_us": "Kontaktieren Sie uns",
+    "faq": "Häufig gestellte Fragen",
+    "categories": "Kategorie",
+    "your_name": "Ihr Name",
+    "messages": "Nachricht",
+    "contact": "Kontakt",
+    "send": "Senden",
+    "search": "Suchen"
+  },
+  {
+    "country": "Japanese",
+    "contact_us": "お問い合わせ",
+    "faq": "よくある質問",
+    "categories": "カテゴリ",
+    "your_name": "あなたの名前",
+    "messages": "メッセージ",
+    "contact": "連絡先",
+    "send": "送信",
+    "search": "検索"
+  },
+  {
+    "country": "Spanish",
+    "contact_us": "Contáctenos",
+    "faq": "Preguntas frecuentes",
+    "categories": "Categoría",
+    "your_name": "Tu nombre",
+    "messages": "Mensaje",
+    "contact": "Contacto",
+    "send": "Enviar",
+    "search": "Buscar"
+  },
+  {
+    "country": "Laos",
+    "contact_us": "ຕິດຕໍ່ພວກເຮົາ",
+    "faq": "FAQ",
+    "categories": "ປະເພດ",
+    "your_name": "ຊື່ຂອງເຈົ້າ",
+    "messages": "ຂໍ້ຄວາມ",
+    "contact": "ຕິດຕໍ່",
+    "send": "ສົ່ງ",
+    "search": "ຄົ້ນຫາ"
+  },
+  {
+    "country": "Russian",
+    "contact_us": "Свяжитесь с нами",
+    "faq": "Часто задаваемые вопросы",
+    "categories": "Категория",
+    "your_name": "Ваше имя",
+    "messages": "Сообщение",
+    "contact": "Контакт",
+    "send": "Отправить",
+    "search": "Поиск"
+  },
+  {
+    "country": "Other",
+    "contact_us": "",
+    "faq": "",
+    "categories": "",
+    "your_name": "",
+    "messages": "",
+    "contact": "",
+    "send": "",
+    "search": ""
+  }
+]
