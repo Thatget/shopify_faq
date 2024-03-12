@@ -75,7 +75,6 @@ const AppProvider: React.FC<ContextProviderProps> = ({ children }) => {
       }
       setCurrentLevelPlan(level)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.plan, state.plan.plan])
 
   const params = new URLSearchParams(window.location.search);
@@ -181,7 +180,6 @@ const AppProvider: React.FC<ContextProviderProps> = ({ children }) => {
 
       dispatch(setFaqs(data.data.faq));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, dispatch, isSuccess]);
 
 

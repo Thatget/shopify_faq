@@ -14,7 +14,7 @@ import Translation from "./Translation";
 import { useAppContext } from "../../hook/useAppContext";
 // import { BannerWithDismiss } from "../../components/component/BannerWithDismiss";
 import { ESessionStorageKeys } from "../../@type/common";
-import { BannerWithDismiss } from "@/components copy/component/BannerWithDismiss";
+import { BannerWithDismiss } from "@/components/component/BannerWithDismiss";
 // import { useGetWidgetsApi } from "../../hook/api/widget";
 
 const Widget = () => {

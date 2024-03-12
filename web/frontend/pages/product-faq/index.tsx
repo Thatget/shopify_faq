@@ -27,7 +27,7 @@ import {
 import { setProduct, setProductFaqs } from "../store/actions";
 import { ProductApi } from "../../@type/product";
 import { useGetProductsApi } from "../../hook/api/product";
-import { BannerWithDismiss } from "@/components copy/component/BannerWithDismiss";
+import { BannerWithDismiss } from "@/components/component/BannerWithDismiss";
 
 const ProductFaq = () => {
   let listProductUpdate: ProductUpdate[] = [];

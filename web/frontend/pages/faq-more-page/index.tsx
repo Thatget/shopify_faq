@@ -1,6 +1,6 @@
 import { Card, Page } from "@shopify/polaris";
 import { useNavigate } from "react-router-dom";
-import { QuestionMarkMinor } from "@shopify/polaris-icons";
+import { AlertMinor, QuestionMarkMinor } from "@shopify/polaris-icons";
 import { ESessionStorageKeys } from "../../@type/common";
 import { useEffect, useState } from "react";
 import { FaqMorePageUpdateApi } from "../../@type/faq_more_page";
@@ -16,7 +16,7 @@ import {
 import ChooseFaqs from "./modules/ChooseFaqs";
 import { setFaqMorePage } from "../store/actions";
 import { useUpdateFaqsMorePageSettingApi } from "../../hook/api/faqs_more_page_setting";
-import { BannerWithDismiss } from "@/components copy/component/BannerWithDismiss";
+import { BannerWithDismiss } from "@/components/component/BannerWithDismiss";
 
 export default function FaqMorePage() {
   const navigate = useNavigate();

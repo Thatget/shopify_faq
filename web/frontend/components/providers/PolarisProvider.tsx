@@ -1,31 +1,43 @@
-import { useCallback } from "react";
-import { AppProvider } from "@shopify/polaris";
-import { useNavigate } from "@shopify/app-bridge-react";
-import "@shopify/polaris/build/esm/styles.css";
-import { getPolarisTranslations } from "../../utils/i18nUtils";
+// import { useNavigate } from '@shopify/app-bridge-react';
+import { AppProvider } from '@shopify/polaris';
+import '@shopify/polaris/build/esm/styles.css';
+// import { useCallback } from 'react';
+import translations from '@shopify/polaris/locales/en.json';
+import React from 'react';
 
-function AppBridgeLink({ url, children, external, ...rest }) {
-  const navigate = useNavigate();
-  const handleClick = useCallback(() => {
-    navigate(url);
-  }, [url]);
+// interface IAppBridgeLink {
+//   url: string;
+//   children?: React.ReactNode;
+//   external?: boolean;
+// }
 
-  const IS_EXTERNAL_LINK_REGEX = /^(?:[a-z][a-z\d+.-]*:|\/\/)/;
+// const AppBridgeLink: React.FC<IAppBridgeLink> = ({
+//   url,
+//   children,
+//   external,
+//   ...rest
+// }) => {
+//   // const navigate = useNavigate();
+//   const handleClick = useCallback(() => {
+//     // navigate(url);
+//   }, []);
 
-  if (external || IS_EXTERNAL_LINK_REGEX.test(url)) {
-    return (
-      <a {...rest} href={url} target="_blank" rel="noopener noreferrer">
-        {children}
-      </a>
-    );
-  }
+//   const IS_EXTERNAL_LINK_REGEX = /^(?:[a-z][a-z\d+.-]*:|\/\/)/;
 
-  return (
-    <a {...rest} onClick={handleClick}>
-      {children}
-    </a>
-  );
-}
+//   if (external || IS_EXTERNAL_LINK_REGEX.test(url)) {
+//     return (
+//       <a {...rest} href={url} target="_blank" rel="noopener noreferrer">
+//         {children}
+//       </a>
+//     );
+//   }
+
+//   return (
+//     <a {...rest} onClick={handleClick}>
+//       {children}
+//     </a>
+//   );
+// };
 
 /**
  * Sets up the AppProvider from Polaris.
@@ -47,12 +59,18 @@ function AppBridgeLink({ url, children, external, ...rest }) {
  * PolarisProvider also passes translations to Polaris.
  *
  */
-export function PolarisProvider({ children }) {
-  const translations = getPolarisTranslations();
+export const PolarisProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
 
   return (
-    <AppProvider i18n={translations} linkComponent={AppBridgeLink}>
+    <AppProvider 
+      i18n={translations}
+      // linkComponent={AppBridgeLink}
+    >
       {children}
     </AppProvider>
   );
-}
+};

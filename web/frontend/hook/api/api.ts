@@ -26,16 +26,13 @@ export class Http implements IHttp {
   constructor(axios: AxiosStatic) {
     // For fake login from admin user
     this.client = axios.create({
-      baseURL: baseURL+"/api",
+      baseURL: "/api",
       headers: {
         'Content-Type': 'application/json',
         "x-access-token": accessToken
       },
       withCredentials: true,
     });
-    // how to add header to axios
-    // https://stackoverflow.com/questions/45578844/how-to-add-headers-to-axios
-
   }
 
   public getClient(): AxiosInstance {
@@ -66,12 +63,11 @@ export class Http implements IHttp {
   }
 }
 
-const baseURL = process.env.REACT_APP_BACKEND_URL
 var url = window.location.href;
 let accessToken = url.slice(url.search('=') + 1, url.search('&'))
 
 const http = axios.create({
-  baseURL: baseURL+"/api",
+  baseURL: "/api",
   headers: {
     'Content-Type': 'application/json',
     "x-access-token": accessToken

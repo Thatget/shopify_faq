@@ -1,8 +1,7 @@
-import React from "react";
 import { useAppContext } from "../../../hook";
-import imageMenu1 from "../../../assets/images/add-block-shopify/Menu-item-1.png";
-import imageMenu2 from "../../../assets/images/add-block-shopify/Menu-item-2.png";
-import imageMenu3 from "../../../assets/images/add-block-shopify/Menu-item-3.png";
+// import imageMenu1 from '@/assets/images/add-block-shopify/Menu-item-1.png'
+// import imageMenu2 from "../../../assets/images/add-block-shopify/Menu-item-2.png";
+// import imageMenu3 from "../../../assets/images/add-block-shopify/Menu-item-3.png";
 
 export default function AddToMenu() {
   const { state } = useAppContext()
@@ -33,11 +32,11 @@ export default function AddToMenu() {
               add FAQs page
             </span>
           </p>
-          <img src={imageMenu1} className="w-100 my-3" alt="" />
+          {/* <img src={imageMenu1} className="w-100 my-3" alt="" /> */}
         </div>
         <div className="mb-4">
           <b className="text-base">Step 3: </b> Click <b>"Add menu item"</b>.
-          <img src={imageMenu2} className="w-100 mb-3 mt-2" alt="" />
+          {/* <img src={imageMenu2} className="w-100 mb-3 mt-2" alt="" /> */}
         </div>
         <div className="mb-4">
           <p>
@@ -57,7 +56,7 @@ export default function AddToMenu() {
               or <b>/apps/faqs</b> )
             </span>
           </p>
-          <img src={imageMenu3} className="w-100 mb-3 mt-2" alt="" />
+          {/* <img src={imageMenu3} className="w-100 mb-3 mt-2" alt="" /> */}
         </div>
         <p>
           <b className="text-base">Step 5: </b>Final click <b>"Save"</b> on{" "}
