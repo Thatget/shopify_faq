@@ -30,20 +30,14 @@ if (!process.env.FRONTEND_PORT) {
 if (!process.env.BACKEND_PORT) {
   process.env.BACKEND_PORT = process.env.PORT;
 }
-// if (!process.env.CLOUDFLARED_PORT) {
-//   CLOUDFLARED_PORT = process.env.FRONTEND_PORT ?? process.env.BACKEND_PORT ?? process.env.PORT;
-//   process.env.CLOUDFLARED_PORT = CLOUDFLARED_PORT;
-// }
 
 console.log('\x1b[33m%s\x1b[0m', 'FRONTEND_PORT', process.env.FRONTEND_PORT);
 console.log('\x1b[33m%s\x1b[0m', 'BACKEND_PORT', process.env.BACKEND_PORT);
 console.log('\x1b[33m%s\x1b[0m', 'PORT', process.env.PORT);
 console.log('\x1b[33m%s\x1b[0m', 'HOST', process.env.HOST);
-// console.log('\x1b[33m%s\x1b[0m', 'CLOUDFLARED_PORT', CLOUDFLARED_PORT);
-
 
 // Run the backend command
-const backendCommand = spawn('npm', ['run', 'dev', '--prefix', './']);
+const backendCommand = spawn('npm', ['run', 'dev']);
 backendCommand.stdout.pipe(process.stdout);
 backendCommand.stderr.pipe(process.stderr);
 

@@ -1,5 +1,5 @@
 {
-  "name": "vify-shopify-frontend-template-react",
+  "name": "rontend-template-react",
   "version": "1.0.0",
   "private": true,
   "license": "UNLICENSED",
@@ -45,6 +45,7 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^13.2.1",
     "react-query": "^3.39.3",
+    "react-refresh": "^0.14.0",
     "react-router-dom": "^6.15.0",
     "typescript": "^5.2.2",
     "use-immer": "^0.9.0",

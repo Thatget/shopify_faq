@@ -5,11 +5,13 @@ const nonce = require('nonce')();
 const querystring = require('querystring');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const serveStatic = require("serve-static");
 const freeExtraPlan = 'Free extra'
 const freePlan = "Free"
 const proPlan = "Pro"
 const ultimatePlan = "Ultimate"
 const freePlan01 = "Free_01"
+const tsnode = require('ts-node');
 const APP_SUBSCRIPTION_CREATE = `mutation createAppSubscription(
   $lineItems: [AppSubscriptionLineItemInput!]!
   $name: String!
@@ -119,132 +121,132 @@ if (process.env.NODE_ENV !== 'production') {
   console.log({ STATIC_PATH, PORT })
 }
 
-// app.get('/api/test', async (req, res) => {
-//   if(req.query.host){
-//     host = req.query.host
-//   }
-//   await User.findOne({
-//     attributes:['shopify_domain','id', 'shopify_access_token', 'plan_extra'],
-//     where: {
-//       shopify_domain: req.query.shop
-//     }
-//   })
-//   .then(async response => {
-//     let user_data = response.dataValues
-//     const client = new Shopify.Shopify.Clients.Graphql(
-//       user_data.shopify_domain,
-//       user_data.shopify_access_token,
-//     );
-//     const resp = await client.query({
-//       data: RECURRING_PURCHASES_QUERY,
-//     });
-//     let currentPlan
-//     if(resp.body.data.currentAppInstallation.activeSubscriptions){
-//       currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
-//     }
-//     if(currentPlan.length > 0){
-//       let data = {
-//         plan: currentPlan[0].name,
-//         shopify_plan_id: currentPlan[0].id,
-//       }
-//       await Plan.update(data, {
-//         where: {
-//           user_id: user_data.id
-//         }
-//       })
-//       .then(async() => {
-//         await User.update({plan_extra: false}, {
-//           where: {
-//             id: user_data.id
-//           }
-//         })  
-//         await Setting.update({yanet_logo_visible: false}, {
-//           where: {
-//             user_id: user_data.id
-//           }
-//         }) 
-//       })    
-//     }
-//     else{
-//       if(user_data.plan_extra){
-//         let data = {
-//           plan: freeExtraPlan,
-//           shopify_plan_id: ''
-//         }    
-//         await Plan.update(data, {
-//           where: {
-//             user_id: user_data.id
-//           }
-//         })  
-//       }
-//       else{
-//         await Plan.findOne({
-//           where: {
-//             user_id: user_data.id
-//           }
-//         })
-//         .then(async res => {
-//           if(res.dataValues.plan == 'Free_01'){
-//             let data = {
-//               plan: freePlan01,
-//               shopify_plan_id: ''
-//             }    
-//             await Plan.update(data, {
-//               where: {
-//                 user_id: user_data.id
-//               }
-//             })        
-//           }
-//           else{
-//             let data = {
-//               plan: freePlan,
-//               shopify_plan_id: ''
-//             }    
-//             await Plan.update(data, {
-//               where: {
-//                 user_id: user_data.id
-//               }
-//             })        
-//           }
-//         })
-//         .catch((e) => {
-//           errorLog.error(e)
-//         })
-//       }
-//     }
-//   })
-//   .catch(e => {
-//     console.log(e)
-//   })  
-//   if(!req.query.session) {    
-//     if(!req.query.host){
-//       const state = nonce()
-//       const redirectUri = forwardingAddress + '/shopify/callback'
-//       const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
-//         '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri
-//       // res.cookie('state',state)
-//       res.redirect(pageUri)
-//     }
-//     return res.render('index', {
-//       shop: req.query.shop,
-//       host: req.query.host,
-//       apiKey: apiKey,
-//       scopes: scopes,
-//       forwardingAddress: forwardingAddress
-//     });
-//   } else {
-//     let txt = ""
-//     try {
-//       let tokenData = await getToken(req.query)
-//       if (tokenData.accessToken) {
-//         txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
-//       }
-//     } catch (e){
-//       errorLog.error(e)
-//     }
-//     return res.redirect(app_link + txt ); 
-// 	}
-// });
+app.get('/', async (req, res) => {
+  if(req.query.host){
+    host = req.query.host
+  }
+  await User.findOne({
+    attributes:['shopify_domain','id', 'shopify_access_token', 'plan_extra'],
+    where: {
+      shopify_domain: req.query.shop
+    }
+  })
+  .then(async response => {
+    let user_data = response.dataValues
+    const client = new Shopify.Shopify.Clients.Graphql(
+      user_data.shopify_domain,
+      user_data.shopify_access_token,
+    );
+    const resp = await client.query({
+      data: RECURRING_PURCHASES_QUERY,
+    });
+    let currentPlan
+    if(resp.body.data.currentAppInstallation.activeSubscriptions){
+      currentPlan = resp.body.data.currentAppInstallation.activeSubscriptions
+    }
+    if(currentPlan.length > 0){
+      let data = {
+        plan: currentPlan[0].name,
+        shopify_plan_id: currentPlan[0].id,
+      }
+      await Plan.update(data, {
+        where: {
+          user_id: user_data.id
+        }
+      })
+      .then(async() => {
+        await User.update({plan_extra: false}, {
+          where: {
+            id: user_data.id
+          }
+        })  
+        await Setting.update({yanet_logo_visible: false}, {
+          where: {
+            user_id: user_data.id
+          }
+        }) 
+      })    
+    }
+    else{
+      if(user_data.plan_extra){
+        let data = {
+          plan: freeExtraPlan,
+          shopify_plan_id: ''
+        }    
+        await Plan.update(data, {
+          where: {
+            user_id: user_data.id
+          }
+        })  
+      }
+      else{
+        await Plan.findOne({
+          where: {
+            user_id: user_data.id
+          }
+        })
+        .then(async res => {
+          if(res.dataValues.plan == 'Free_01'){
+            let data = {
+              plan: freePlan01,
+              shopify_plan_id: ''
+            }    
+            await Plan.update(data, {
+              where: {
+                user_id: user_data.id
+              }
+            })        
+          }
+          else{
+            let data = {
+              plan: freePlan,
+              shopify_plan_id: ''
+            }    
+            await Plan.update(data, {
+              where: {
+                user_id: user_data.id
+              }
+            })        
+          }
+        })
+        .catch((e) => {
+          errorLog.error(e)
+        })
+      }
+    }
+  })
+  .catch(e => {
+    console.log(e)
+  })  
+  if(!req.query.session) {    
+    if(!req.query.host){
+      const state = nonce()
+      const redirectUri = forwardingAddress + '/shopify/callback'
+      const pageUri = 'https://' + req.query.shop + '/admin/oauth/authorize?client_id=' + apiKey +
+        '&scope=' + scopes + '&state=' + state + '&redirect_uri=' + redirectUri
+      // res.cookie('state',state)
+      res.redirect(pageUri)
+    }
+    return res.render('index', {
+      shop: req.query.shop,
+      host: req.query.host,
+      apiKey: apiKey,
+      scopes: scopes,
+      forwardingAddress: forwardingAddress
+    });
+  } else {
+    let txt = ""
+    try {
+      let tokenData = await getToken(req.query)
+      if (tokenData.accessToken) {
+        txt = '?accessToken=' + tokenData.accessToken + '&refreshToken=' + tokenData.refreshToken
+      }
+    } catch (e){
+      errorLog.error(e)
+    }
+    return res.redirect(app_link + txt ); 
+	}
+});
 
 // app.use(authorize);
 
@@ -653,6 +655,14 @@ if (process.env.NODE_ENV !== 'production') {
 // const { kMaxLength } = require('buffer');
 // initAPIs(app);
 
+app.use(express.json());
+
+app.use(serveStatic(STATIC_PATH, {
+  index: false, cacheControl: true, maxAge: 604800000, setHeaders: (res) => {
+    res.setHeader('Cache-Control', 'public, max-age=604800000');
+  }
+}));
+
 app.use("/*", async (_req, res, _next) => {
   return res
     .status(200)
@@ -665,7 +675,8 @@ app.listen(PORT, () => {
 });
 
 function verifyRequest(req, res, buf) {
-    req.rawBody=buf
+  req.rawBody = buf
+  
 }
 
 async function removeShop(shop) {
