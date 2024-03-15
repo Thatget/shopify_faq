@@ -5,7 +5,11 @@ const nonce = require('nonce')();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const serveStatic = require("serve-static");
-const errorLog = require('../helpers/log.helper');
+const errorLog = require('./app/helpers/log.helper');
+const getToken = require('./app/helpers/getToken.helper');
+require('react-refresh/runtime');
+const proxy = require("express-http-proxy");
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const RECURRING_PURCHASES_QUERY = `
   query appSubscription {
@@ -18,7 +22,6 @@ const RECURRING_PURCHASES_QUERY = `
     }
   }
 `;
-
 
 const authorize = require('./app/helpers/authorizeScope');
 const app = express();
@@ -68,7 +71,12 @@ if (process.env.NODE_ENV !== 'production') {
   console.log({ STATIC_PATH, PORT })
 }
 
-app.get('/', async (req, res) => {
+app.get('/', async (req, res, next) => {
+  next()
+  // res.send("FA")
+ })
+
+app.get('/api/test', async (req, res) => {
   if(req.query.host){
     host = req.query.host
   }
@@ -194,7 +202,7 @@ app.get('/', async (req, res) => {
 	}
 });
 
-app.use(authorize);
+// app.use(authorize);
 
 app.set("appSupcription","./views");
 
@@ -388,9 +396,9 @@ app.get('/faq-page', async (req, res) => {
 });
 
 //Api
-const initAPIs = require("./app/routes/api");
+// const initAPIs = require("./app/routes/api");
 const planName = require('./constant/planName');
-initAPIs(app);
+// initAPIs(app);
 
 app.use(express.json());
 
@@ -400,10 +408,19 @@ app.use(serveStatic(STATIC_PATH, {
   }
 }));
 
-app.use("/*", async (_req, res, _next) => {
+app.use(
+  '/@react-refresh',
+  createProxyMiddleware({
+    target: `http://localhost:3003`,
+    changeOrigin: true,
+  })
+);
+
+app.use("/*", async (_req, res) => {
   return res
     .status(200)
     .set("Content-Type", "text/html")
+    .set("Cache-Control", "public, max-age=1800")
     .send(fs.readFileSync(path.join(STATIC_PATH, "index.html")));
 });
 
@@ -417,7 +434,7 @@ function verifyRequest(req, res, buf) {
 }
 
 async function removeShop(shop) {
-  try {f
+  try {
     await User.destroy({
         where: { shopify_domain: shop }
     })

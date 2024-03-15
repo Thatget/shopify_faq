@@ -1,4 +1,4 @@
-export const APP_SUBSCRIPTION_CREATE = `
+const APP_SUBSCRIPTION_CREATE = `
   mutation createAppSubscription(
     $lineItems: [AppSubscriptionLineItemInput!]!
     $name: String!
@@ -25,7 +25,7 @@ export const APP_SUBSCRIPTION_CREATE = `
   }
 `;
 
-export const APP_SUBSCRIPTION_CANCEL = `
+const APP_SUBSCRIPTION_CANCEL = `
   mutation cancelAppSubscription($id: ID!) {
     appSubscriptionCancel(id: $id) {
       appSubscription {
@@ -38,3 +38,8 @@ export const APP_SUBSCRIPTION_CANCEL = `
     }
   }
 `;
+
+module.exports  = {
+  APP_SUBSCRIPTION_CREATE,
+  APP_SUBSCRIPTION_CANCEL
+}

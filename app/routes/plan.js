@@ -4,6 +4,12 @@ const Shopify = require("@shopify/shopify-api");
 const planName = require('../../constant/planName');
 const errorLog = require('../helpers/log.helper');
 const appName = process.env.SHOPIFY_APP_NAME;
+const apiKey = process.env.SHOPIFY_API_KEY;
+const apiSecret = process.env.SHOPIFY_API_SECRET;
+const scopes = process.env.SCOPES;
+const forwardingAddress = process.env.HOST;
+
+const appSubscription = require('../plan/appSubscription')
 
 const db = require("./app/models");
 const Plan = db.merchants_plan;
@@ -16,31 +22,6 @@ var host
 var shopAccessToken
 var shopRefreshToken
 var linkApproveSupcription
-
-const APP_SUBSCRIPTION_CREATE = `mutation createAppSubscription(
-  $lineItems: [AppSubscriptionLineItemInput!]!
-  $name: String!
-  $returnUrl: URL!
-  $test: Boolean = false
-  $trialDays: Int
-) {
-  appSubscriptionCreate(
-    lineItems: $lineItems
-    name: $name
-    returnUrl: $returnUrl
-    test: $test
-    trialDays: $trialDays
-  ) {
-    appSubscription {
-      id
-    }
-    confirmationUrl
-    userErrors {
-      field
-      message
-    }
-  }
-}`
 
 const APP_SUBSCRIPTION_CANCEL = `
   mutation AppSubscriptionCancel($id: ID!) {
@@ -160,7 +141,7 @@ async function getlinkApproveSupcription(query) {
     try {
       const session = await client.query({
         data: {
-          query: APP_SUBSCRIPTION_CREATE,
+          query: appSubscription.APP_SUBSCRIPTION_CREATE,
           variables: {
             lineItems: [
               {

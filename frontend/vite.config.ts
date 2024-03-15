@@ -50,7 +50,6 @@ export default defineConfig({
   resolve: {
     preserveSymlinks: true,
     alias: {
-      '@': path.resolve(__dirname, './'),
       'vify-types': path.resolve(__dirname, './@types'),
       'app-types': path.resolve(__dirname, './types'),
     },

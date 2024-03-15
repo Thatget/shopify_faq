@@ -3,9 +3,9 @@ const accessTokenSecret = process.env.JWT_KEY;
 const refreshTokenLife = process.env.REFRESH_JWT_KEY_LIFE;
 const refreshTokenSecret = process.env.REFRESH_JWT_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
-const errorLog = require('../helpers/log.helper');
+const errorLog = require('./log.helper');
 const querystring = require('querystring');
-const db = require("./app/models");
+const db = require("../models");
 const User = db.user;
 
 async function getToken(query) {

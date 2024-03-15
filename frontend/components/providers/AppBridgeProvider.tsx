@@ -21,6 +21,7 @@ interface IAppBridgeProvider {
 export const AppBridgeProvider: React.FC<IAppBridgeProvider> = ({
   children,
 }) => {
+  alert(process.env.SHOPIFY_API_KEY)
   const location = useLocation();
   const navigate = useNavigate();
   const history = useMemo(
