@@ -300,7 +300,7 @@ app.get("/select/plan", async (req, res) => {
       );
     }
     if (linkApproveSupcription) {
-      res.redirect(linkApproveSupcription)
+      window.open(linkApproveSupcription)
       // return res.render("appSupcription", {
       //   shop: req.query.shop,
       //   host: host,
