@@ -280,7 +280,7 @@ app.get("/storeFAQs", async (req, res) => {
 
 app.set("appSupcription", "./views");
 
-app.get("/select/plan", async (req, res) => {
+app.get("/api/select/plan", async (req, res) => {
   // errorLog.error(req.query)
   let query = {
     shop: req.query.shop,
@@ -291,16 +291,23 @@ app.get("/select/plan", async (req, res) => {
   linkApproveSupcription = await getlinkApproveSupcription(query);
   if (req.query.price != "0" && req.query.plan != freePlan) {
     if (!linkApproveSupcription) {
-      return res.redirect(
-        app_link +
-          "?accessToken=" +
-          shopAccessToken +
-          "&refreshToken=" +
-          shopRefreshToken
-      );
+      // return res.redirect(
+      //   app_link +
+      //     "?accessToken=" +
+      //     shopAccessToken +
+      //     "&refreshToken=" +
+      //     shopRefreshToken
+      // );
+      return res.status(200).json({
+        link: app_link +
+        "?accessToken=" +
+        shopAccessToken +
+        "&refreshToken=" +
+        shopRefreshToken
+      })
     }
     if (linkApproveSupcription) {
-      window.open(linkApproveSupcription)
+      // window.open(linkApproveSupcription)
       // return res.render("appSupcription", {
       //   shop: req.query.shop,
       //   host: host,
@@ -308,6 +315,9 @@ app.get("/select/plan", async (req, res) => {
       //   scopes: scopes,
       //   forwardingAddress: linkApproveSupcription,
       // });
+      return res.status(200).json({
+        link: linkApproveSupcription
+      })
     }
     // if(req.query.redirect == 'false'){
     //   linkApproveSupcription = await getlinkApproveSupcription(req.query)
@@ -328,13 +338,13 @@ app.get("/select/plan", async (req, res) => {
         },
       }
     ).then(() => {
-      return res.redirect(
-        app_link +
-          "?accessToken=" +
-          shopAccessToken +
-          "&refreshToken=" +
-          shopRefreshToken
-      );
+      return res.status(200).json({
+        link: app_link +
+        "?accessToken=" +
+        shopAccessToken +
+        "&refreshToken=" +
+        shopRefreshToken
+      })
     });
   }
   if (req.query.price == "0" && req.query.plan != freePlan) {
@@ -380,13 +390,13 @@ app.get("/select/plan", async (req, res) => {
           },
         }
       ).then(() => {
-        return res.redirect(
-          app_link +
-            "?accessToken=" +
-            shopAccessToken +
-            "&refreshToken=" +
-            shopRefreshToken
-        );
+        return res.status(200).json({
+          link: app_link +
+          "?accessToken=" +
+          shopAccessToken +
+          "&refreshToken=" +
+          shopRefreshToken
+        })
       });
     }
   }
