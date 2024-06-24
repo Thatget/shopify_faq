@@ -289,6 +289,7 @@ app.get("/api/select/plan", async (req, res) => {
     plan: req.query.plan,
   };
   linkApproveSupcription = await getlinkApproveSupcription(query);
+  console.log(linkApproveSupcription, 'query')
   if (req.query.price != "0" && req.query.plan != freePlan) {
     if (!linkApproveSupcription) {
       // return res.redirect(
@@ -435,6 +436,7 @@ async function getlinkApproveSupcription(query) {
                     amount: query.price,
                     currencyCode: "USD",
                   },
+                  test: true
                 },
               },
             },
