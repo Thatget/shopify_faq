@@ -338,7 +338,11 @@ app.get("/api/select/plan", async (req, res) => {
           shopify_plan_id: req.query.shopify_plan_id,
         },
       }
-    )
+    ).then(() => {
+      return res.status(200).json({
+        link: `https://${req.query.shop}/admin/apps/yanet-professional-faq-page`
+      })
+    });
   }
   if (req.query.price == "0" && req.query.plan != freePlan) {
     Shopify.Shopify.Context.initialize({
@@ -382,7 +386,11 @@ app.get("/api/select/plan", async (req, res) => {
             shopify_plan_id: req.query.shopify_plan_id,
           },
         }
-      )
+      ).then(() => {
+        return res.status(200).json({
+          link: `https://${req.query.shop}/admin/apps/yanet-professional-faq-page`
+        })
+      });
     }
   }
 });
