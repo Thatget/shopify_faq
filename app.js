@@ -434,7 +434,6 @@ async function getlinkApproveSupcription(query) {
           ],
           name: `${query.plan}`,
           trialDays: 7,
-          test: true,
           returnUrl: `https://admin.shopify.com/store/${query.shop.slice(
             0,
             query.shop.indexOf(".")
