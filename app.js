@@ -338,15 +338,7 @@ app.get("/api/select/plan", async (req, res) => {
           shopify_plan_id: req.query.shopify_plan_id,
         },
       }
-    ).then(() => {
-      return res.status(200).json({
-        link: app_link +
-        "?accessToken=" +
-        shopAccessToken +
-        "&refreshToken=" +
-        shopRefreshToken
-      })
-    });
+    )
   }
   if (req.query.price == "0" && req.query.plan != freePlan) {
     Shopify.Shopify.Context.initialize({
@@ -390,15 +382,7 @@ app.get("/api/select/plan", async (req, res) => {
             shopify_plan_id: req.query.shopify_plan_id,
           },
         }
-      ).then(() => {
-        return res.status(200).json({
-          link: app_link +
-          "?accessToken=" +
-          shopAccessToken +
-          "&refreshToken=" +
-          shopRefreshToken
-        })
-      });
+      )
     }
   }
 });
