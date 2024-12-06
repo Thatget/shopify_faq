@@ -212,14 +212,15 @@ const getAllColecttion = async(shop, token) => {
             title
             handle
             updatedAt
-            productsCount
+            productsCount {
+              count
+            }
             sortOrder
           }
         }
       }
     }`,
   });
-  console.log(data.body.data.collections.edges)
 }
 
 const syncLanguage = async(req, res) => {

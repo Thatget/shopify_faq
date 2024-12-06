@@ -50,9 +50,9 @@ let initAPIs = (app) => {
     router.get("/api/shop/faq-category/:shop", category.findAllInFaqPage);
     router.get("/api/no-token/block/:shop/:product_id/:locale", block.findAllProduct)
     router.get("/api/no-token/block-more-page/:shop/:page/:locale", block_faq_more_page.findFaqOnPage)
-    router.get("/api/gdpr/customer-redact", ensureEnpoint.customerRedact);
-    router.get("/api/gdpr/customer-data", ensureEnpoint.customerData);
-    router.get("/api/gdpr/shop-redact", ensureEnpoint.shopRedact);
+    router.post("/api/gdpr/customer-redact", ensureEnpoint.customerRedact);
+    router.post("/api/gdpr/customer-data", ensureEnpoint.customerData);
+    router.post("/api/gdpr/shop-redact", ensureEnpoint.shopRedact);
     //admin router
     router.get("/api/data/admin/:offset/:limit/:plan", admin.findAllData)
     router.get("/api/data/admin/search", admin.searchByDomain)
